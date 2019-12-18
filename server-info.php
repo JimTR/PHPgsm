@@ -20,6 +20,7 @@
  * MA 02110-1301, USA.
  * 
  *  this holds an array of servers to query
+ * now deprecated we have moved to database records to store this
  */
 $servers = [
        [
