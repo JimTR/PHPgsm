@@ -582,14 +582,25 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR;
 }
 function display_games() {
+	$database = new db();
+	$sql = 'select * from servers';
+    $res = $database->get_results($sql);
+    $servers = array(); // gameq array
+foreach ($res as $data) {
+	//add the data array for GameQ
+	//this does allow remote locations
+	$key =$data['host_name'];
+	$servers[$key]['id'] = $key;
+	$servers[$key]['host'] = $data['host'].':'.$data['port'] ;
+	$servers[$key]['type'] = $data['type'];
+	}
 	require_once('GameQ/Autoloader.php'); //load gameq
-	$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null");	
+	$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null"); // get local servers	
 	$tm =running_games(explode("\n",$tm));
-	//print_r($tm);
 	echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
 	if(!empty($tm)) {
 		$GameQ = new \GameQ\GameQ();
-		include ("server-info.php");
+		//include ("server-info.php");
     $GameQ->addServers($servers);
     $results = $GameQ->process();
     
@@ -631,5 +642,17 @@ else {
 
 	exit;
 }
-
+function array_insert(&$array, $position, $insert)
+{
+    if (is_int($position)) {
+        array_splice($array, $position, 0, $insert);
+    } else {
+        $pos   = array_search($position, array_keys($array));
+        $array = array_merge(
+            array_slice($array, 0, $pos),
+            $insert,
+            array_slice($array, $pos)
+        );
+    }
+}
 ?>
