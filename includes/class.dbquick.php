@@ -41,6 +41,7 @@
  NOTE:
  All examples provided below assume that this class has been initiated
  Examples below assume the class has been iniated using $database = DB::getInstance();
+ * Altered by JimTR December 18th 2019
 ********************************/
 class db
 {
@@ -89,7 +90,7 @@ class db
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
         {
-            echo $error;   
+            //echo $error;   
         }
     }
     
