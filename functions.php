@@ -610,6 +610,7 @@ function display_games() {
 		foreach ($player_list as $k=>$v) 
 		{
 		//print_r ($results[$key]['players']);
+		// need to format user name to a length
 		echo  "\t\t\t".$player_list[$k]['gq_name']." \t\t".$player_list[$k]['gq_score']."\t\t".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
 		
 	}
