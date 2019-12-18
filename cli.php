@@ -89,7 +89,6 @@ switch (strtolower($argv[1]))
 }
 	
 	echo 'Please Wait ';
-	
 	echo '.';
     $mem_info = get_mem_info();
 	echo '.';
