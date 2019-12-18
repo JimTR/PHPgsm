@@ -2,6 +2,7 @@
 <?php
 define ("CR","\r\n");
 global $argv;
+require 'includes/cli_master.inc.php'; 
 error_reporting(E_ERROR | E_PARSE);
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
 	//echo "called directly"; 
