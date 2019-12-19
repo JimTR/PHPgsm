@@ -611,23 +611,26 @@ foreach ($res as $data) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
     echo " Players Online ".$players.CR;
     if ($players >0) {
-		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t       Online For\t   Active\e[97m".CR;
+		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
 		//echo "list Players".CR;
 		$player_list = $results[$key]['players'];
 		foreach ($player_list as $k=>$v) 
 		{
-		//print_r ($results[$key]['players']);
-		// need to format user name to a length
-		//echo strlen($player_list[$k]['gq_name']).CR;
-		//if (trim(strlen($player_list[$k]['gq_name'])) <> 30 ) {
-			//echo 'pad';
-			//$PlayerN = trim($player_list[$k]['gq_name']);
+		
 			$playerN = substr($player_list[$k]['gq_name'],0,20);
-			echo "strlen = ".strlen($playerN);
-			$playerN = str_pad($playerN,25 + strlen($playerN));
-			echo " new strlen = ".strlen($playerN).CR;
-		//}
-		echo  "\t\t\t".$playerN."     ".$player_list[$k]['gq_score']."             ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
+			$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
+			$playerN = str_pad($playerN,25); //pad to 25 chrs
+		
+		if ($player_list[$k]['gq_score'] <10) {
+			$pscore ="  ".$player_list[$k]['gq_score'];
+		}
+		elseif ($player_list[$k]['gq_score'] <100)  {
+			$pscore = " ".$player_list[$k]['gq_score'];
+		}
+		else {
+			$pscore = $player_list[$k]['gq_score'];
+		}
+		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
 		
 	}
 		echo CR;
