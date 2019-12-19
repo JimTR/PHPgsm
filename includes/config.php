@@ -13,6 +13,4 @@ $config['database']['encoding'] = 'utf8';
 $config['database']['errors'] = "jim@noideersoftware.co.uk";
 $config['database']['useDBSessions'] =  "1";
 $config['database']['display_error'] = "1";
-$config['folder']['root'] = "rootie folder";
-$config['folder']['templates'] = 'template folder';
 ?>
