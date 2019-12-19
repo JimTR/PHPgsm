@@ -399,17 +399,18 @@ function format_num ($string) {
 function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false) {
 	//if ($positive = "null") { unset($positive);}
 	run:
-echo $salute;
-$handle = fopen ("php://stdin","r");
-$line = fgets($handle);
-if ($press_any_key === true) {
-	return trim($line);
+echo $salute; // display question
+$handle = fopen ("php://stdin","r"); //open stdin
+$line = fgets($handle); //record it
+if ($press_any_key === true and empty($positive)) {
+	return true; // return a press any key
 }
 if ($line === PHP_EOL) {
 	errors:
+	// entered empty string
 	echo "You must have a valid response".CR;
-	unset($line);
-	goto run;
+	unset($line); // clear input
+	goto run; // have another go
 }
 //if (preg_match('/\s/',trim($line)) ) {
 if (ctype_space($line)) {
@@ -418,16 +419,11 @@ if (ctype_space($line)) {
 	}
 if ($positive <>"null"){	
 	if(trim($line) !== $positive){
-		echo "ABORTING!".CR;
-		echo trim($line).CR;
-		echo $positive.CR;
-        exit;
+	     return false;
 	}
 }
 
-echo CR;
-echo CR.trim($line).CR;
-echo "Thank you, continuing...".CR;
+return true;
 }
 function display_mem($mem_info,$colour) {
 	// mem display
@@ -615,17 +611,26 @@ foreach ($res as $data) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
     echo " Players Online ".$players.CR;
     if ($players >0) {
-		echo "\t\t\t\e[1m \e[34m Player\t\t    Score\t   Cached\t   Active\e[97m".CR;
+		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t       Online For\t   Active\e[97m".CR;
 		//echo "list Players".CR;
 		$player_list = $results[$key]['players'];
 		foreach ($player_list as $k=>$v) 
 		{
 		//print_r ($results[$key]['players']);
 		// need to format user name to a length
-		echo  "\t\t\t".$player_list[$k]['gq_name']." \t\t".$player_list[$k]['gq_score']."\t\t".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
+		//echo strlen($player_list[$k]['gq_name']).CR;
+		//if (trim(strlen($player_list[$k]['gq_name'])) <> 30 ) {
+			//echo 'pad';
+			//$PlayerN = trim($player_list[$k]['gq_name']);
+			$playerN = substr($player_list[$k]['gq_name'],0,20);
+			echo "strlen = ".strlen($playerN);
+			$playerN = str_pad($playerN,25 + strlen($playerN));
+			echo " new strlen = ".strlen($playerN).CR;
+		//}
+		echo  "\t\t\t".$playerN."     ".$player_list[$k]['gq_score']."             ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
 		
 	}
-		//echo "done".CR;
+		echo CR;
 	}
 }
 else {
