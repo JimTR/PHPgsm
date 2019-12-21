@@ -45,7 +45,12 @@ switch (strtolower($argv[1]))
 	case "version":
 		system('clear');
 		display_version();
-		//ask_question ("Enter Database Name: ","database","",false);
+		//if (ask_question ("Enter Database Name: ","jim","",true)===false) {
+		//	echo "you got this wrong !".CR;
+		//}
+		//else {
+		//	echo "correct !!!".CR;
+		//}
 		exit;
 	case "g":
 	case "games":
