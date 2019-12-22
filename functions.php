@@ -278,11 +278,13 @@ function get_software_info() {
 	 $php_version = explode('.', PHP_VERSION);
 	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
 	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
-	 $apache = shell_exec("apache2 -v");
+	 
+	 $apache = shell_exec("/usr/sbin/apache2 -v");
 	 $software['apache'] = substr($apache,23,6);
+     
 	 $software['tmux'] = trim(shell_exec("tmux -V | awk -F'[ ,]+' '{print $2}'"));
 	 $software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
-	 $nginx = shell_exec("nginx -v 2> nginx.txt");
+	 $nginx = shell_exec("/usr/sbin/nginx -v 2> nginx.txt");
 	 $nginx = file_get_contents("nginx.txt");
 	 if(strpos($nginx,"not found")){
 		 $software['nginx'] = 'Not Installed';
@@ -301,8 +303,10 @@ function get_software_info() {
 		  // get quota version
 		  $software['quota'] =  substr($q,24,4);
 	  }
-	  $postfix = shell_exec("postconf -d mail_version 2> /dev/null");
+	  //if (is_cli()) {
+	  $postfix = shell_exec("/usr/sbin/postconf -d mail_version 2> /dev/null");
 	  $postfix = explode("=",$postfix);
+  
 	  if (!empty($postfix[1])) {
 		  $software['postfix'] = trim($postfix[1]);
 	  }
@@ -427,6 +431,7 @@ return true;
 }
 function display_mem($mem_info,$colour) {
 	// mem display
+	if (is_cli()){
 	if ($colour === true) {
 		//echo "colour".CR;
 		echo "\t\e[1m\e[31m Memory\e[0m".CR;
@@ -443,6 +448,15 @@ else {
 		echo "\t\tSwap\t".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached'].CR.CR;
 }
 }
+else {
+	$disp = '<table style="width100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
+	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;">'.$mem_info['MemTotal'].'</td><td>'.$mem_info['MemFree'].'</td><td>'.$mem_info['Cached'].'<td>'.$mem_info['Active'].'</td></tr>
+	<tr><td style="color:red;">Swap</td><td>'.$mem_info['SwapTotal'].'</td><td>'.$mem_info['SwapFree'].'</td><td>'.$mem_info['SwapCached'].'</td></tr></table>';
+	
+	return $disp;
+}
+	
+}
 function running_games($data) {
 	// returns running games
 	foreach ($data as &$value) {
@@ -455,7 +469,7 @@ function running_games($data) {
 		 }
 		  $return[$key] = trim(substr($value,$i+1));
 		}
-		//print_r($return);
+		
 		return $return;
 }
 function formatBytes($bytes, $precision = 2) { 
@@ -507,8 +521,10 @@ function display_cpu ($cpu_info) {
 		echo CR." \r\n\e[1m \e[34mHardware Information\e[0m".CR;
 	}
 	else{
-    echo "\t\e[1m\e[31mHardware\e[97m".CR;
+   
 }
+if (is_cli()) {
+	 echo "\t\e[1m\e[31mHardware\e[97m".CR;
     echo "\t\t\e[38;5;82mUptime         \t\e[97m".$cpu_info['boot_time'].CR;
     echo "\t\t\e[38;5;82mCpu Model      \t\e[97m".$cpu_info['model name'].CR;
     echo "\t\t\e[38;5;82mCpu Processors \t\e[97m".$cpu_info['processors'].CR;
@@ -517,7 +533,25 @@ function display_cpu ($cpu_info) {
     echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache size'].CR;
     echo "\t\t\e[38;5;82mCpu Load       \t\e[97m".$cpu_info['load'].CR;
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
-	
+}
+else {
+	/*echo '<table><tr><td style="width:50%;color:red;">Uptime</td><td>'.$cpu_info['boot_time'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Cpu Load</td><td>'.$cpu_info['load'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr>';
+	echo '</table>'; */
+	$disp = '<table><tr><td style="width:50%;color:red;">Uptime</td><td>'.$cpu_info['boot_time'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Load</td><td>'.$cpu_info['load'].'</td></tr>
+	<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
+	return $disp;
+}
 }
 function display_disk($disk_info) {
 	echo CR."\e[1m \e[34m Disk Information\e[0m".CR;
@@ -538,6 +572,7 @@ function display_disk($disk_info) {
 	echo "\e[0m";
 }
 function display_user($user_info) {
+	if (is_cli()) {
 	echo " \r\n\e[1m \e[34mUser Information\e[0m".CR;
 	echo "\t\e[1m\e[31mDetail\e[97m".CR;
 	echo "\t\e[38;5;82m\tUser\t\t\e[97m".$user_info['name'].CR;
@@ -551,10 +586,28 @@ function display_user($user_info) {
 	echo "\t\e[1m\e[31mQuota\e[97m".CR;
 	echo "\t\e[38;5;82m\tQuota\e[97m\t\t".$user_info['quota'].CR;
 	echo "\t\e[38;5;82m\tUsed \e[97m\t\t".$user_info['quota used'].CR;
-	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota free']."\e[0m".CR;	
+	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota free']."\e[0m".CR;
+}	
+	else {
+		// html
+	/*echo '<table style="width:100%;"><tr><td style="width:50%;color:red;">User Name</td><td>'.$user_info['name'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Quota Used</td><td>'.$user_info['quota used'].'</td></tr>';
+	echo '<tr><td style="width:50%;color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>';
+	//echo '<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'</td></tr>';
+	echo '</table>'; */
+	$disp = '<table style="width:100%;"><tr><td style="width:50%;color:red;">User Name</td><td>'.$user_info['name'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Quota Used</td><td>'.$user_info['quota used'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>
+	
+	</table>';
+	return $disp;
+	}
 } 	
 function display_version() {
-		echo CR."Software Version 1.0.20.1β".CR;
+	if (is_cli()) {
+		echo CR."Software Version 1.0.25.1β".CR;
 		echo CR.'Copyright (c) '.date("Y").', NoIdeer Software
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that
@@ -575,22 +628,48 @@ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.'.CR.CR;}
+else {
+	$version = CR."Software Version 1.0.25.1β".CR.
+	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
+All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+Redistributions of source code must retain the above copyright notice, this list of conditions and the
+following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+following disclaimer in the documentation and/or other materials provided with the distribution.
+Neither the name of the NoIdeer Software nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR;
+return $version;
+}
 }
 function display_games() {
-	$database = new db();
-	$sql = 'select * from servers';
-    $res = $database->get_results($sql);
-    $servers = array(); // gameq array
+	$database = new db(); // connect to database
+	$sql = 'select * from servers'; //select all recorded servers
+    $res = $database->get_results($sql); // pull results
+    $servers = array(); // set GameQ array
 foreach ($res as $data) {
 	//add the data array for GameQ
 	//this does allow remote locations
+	// as long as you have the remote software installed
 	$key =$data['host_name'];
 	$servers[$key]['id'] = $key;
 	$servers[$key]['host'] = $data['host'].':'.$data['port'] ;
 	$servers[$key]['type'] = $data['type'];
 	}
-	require_once('GameQ/Autoloader.php'); //load gameq
+	require_once('GameQ/Autoloader.php'); //load GameQ
 	$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null"); // get local servers	
 	$tm =running_games(explode("\n",$tm));
 	echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
@@ -609,26 +688,27 @@ foreach ($res as $data) {
 	$online  = $results[$key]['gq_online'];
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
-    echo " Players Online ".$players.CR;
+    echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
     if ($players >0) {
 		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		//echo "list Players".CR;
+		
 		$player_list = $results[$key]['players'];
 		foreach ($player_list as $k=>$v) 
 		{
 		
-			$playerN = substr($player_list[$k]['gq_name'],0,20);
+			$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 			$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 			$playerN = str_pad($playerN,25); //pad to 25 chrs
 		
 		if ($player_list[$k]['gq_score'] <10) {
-			$pscore ="  ".$player_list[$k]['gq_score'];
+			// switch statement !! rather than if's
+			$pscore ="  ".$player_list[$k]['gq_score']; //format score
 		}
 		elseif ($player_list[$k]['gq_score'] <100)  {
-			$pscore = " ".$player_list[$k]['gq_score'];
+			$pscore = " ".$player_list[$k]['gq_score']; //format score
 		}
 		else {
-			$pscore = $player_list[$k]['gq_score'];
+			$pscore = $player_list[$k]['gq_score']; //format score
 		}
 		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
 		
