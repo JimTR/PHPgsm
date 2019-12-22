@@ -10,7 +10,7 @@ if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
 
 if(root()) {
 	echo "This script Can not be run by Root User".CR;
-	//exit;
+	exit;
 }
 
 if (isset($argc)) {
@@ -19,7 +19,9 @@ if (isset($argc)) {
 	}
 }
 else {
-	echo "argc and argv disabled\n";
+	echo "<head><title>PHPgsm Error</title></head>";
+	echo "This can only be ran from the command line";
+	exit;
 }
 s1:
 
@@ -45,12 +47,6 @@ switch (strtolower($argv[1]))
 	case "version":
 		system('clear');
 		display_version();
-		//if (ask_question ("Enter Database Name: ","jim","",true)===false) {
-		//	echo "you got this wrong !".CR;
-		//}
-		//else {
-		//	echo "correct !!!".CR;
-		//}
 		exit;
 	case "g":
 	case "games":
