@@ -11,7 +11,7 @@
     if (!defined('DOC_ROOT')) {
     define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
 }
-    echo DOC_ROOT.CR;
+    //echo DOC_ROOT.CR;
     //die();
     // Global include files
     //require DOC_ROOT . '/includes/class.uaparser.php';
