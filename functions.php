@@ -26,7 +26,6 @@ if($days>0){
       $days="";
      
      }
-
      //$mins = str_pad($mins,2,'0',STR_PAD_LEFT);
      
      $sec = str_pad($secs,2,'0',STR_PAD_LEFT);
@@ -55,7 +54,6 @@ if($days>0){
 		$mins ="00";
 	}	      
 return  $days.$return_days.$hrs.$return_hours.$mins.$return_mins.$sec." seconds";
-
     //return ;
 }
 function is_cli()
@@ -64,26 +62,21 @@ function is_cli()
     {
         return true;
     }
-
     if ( php_sapi_name() === 'cli' )
     {
         return true;
     }
-
     if ( array_key_exists('SHELL', $_ENV) ) {
         return true;
     }
-
     if ( empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) 
     {
         return true;
     } 
-
     if ( !array_key_exists('REQUEST_METHOD', $_SERVER) )
     {
         return true;
     }
-
     return false;
 }
 function root() {
@@ -102,7 +95,6 @@ function root() {
 }
 function check_sudo($user)
 {
-
 $user=trim($user);
 $j= shell_exec('getent group sudo | cut -d: -f4');
 $yes= strpos($j, $user);
@@ -192,7 +184,6 @@ function get_mem_info() {
 		 //echo dataSize(implode(' ', $matches[0])*1024).CR;
 		
 		 $temp = trim(implode(' ', $matches[0])*1024);
-
 		 $mem_info[$key] = formatBytes($temp);
 		 
 	}
@@ -222,7 +213,6 @@ foreach ($mem_info as $key=>&$value){
 	return $mem_info;
 		
 }
-
 function get_cpu_info() {
 	//get cpu info & return as array
 	$cpu = file('/proc/cpuinfo');
@@ -244,7 +234,6 @@ function get_cpu_info() {
 		$cpu_info['local_ip'] = getHostByName(getHostName());
 		return $cpu_info;
 }
-
 function get_user_info ($Disk_info) {
 	// return user info as an array
 	//print_r($Disk_info);
@@ -272,7 +261,6 @@ function get_user_info ($Disk_info) {
 	return $user;    
 	
 }
-
 function get_software_info() {
 	// return software info as array
 	 $php_version = explode('.', PHP_VERSION);
@@ -322,7 +310,6 @@ function get_software_info() {
 	  }
 	 return $software;
 }
-
 function get_disk_info() {
 	// return disk info as array
 	$disks = shell_exec("lsblk -l");
@@ -426,7 +413,6 @@ if ($positive <>"null"){
 	     return false;
 	}
 }
-
 return true;
 }
 function display_mem($mem_info,$colour) {
@@ -474,19 +460,15 @@ function running_games($data) {
 }
 function formatBytes($bytes, $precision = 2) { 
     $units = array('B ', 'KB', 'MB', 'GB', 'TB'); 
-
     $bytes = max($bytes, 0); 
     $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
     $pow = min($pow, count($units) - 1); 
-
     // Uncomment one of the following alternatives
     // $bytes /= pow(1024, $pow);
      $bytes /= (1 << (10 * $pow)); 
-
     return round($bytes, $precision, PHP_ROUND_HALF_UP) . ' ' . $units[$pow];
     // $base = log($size, 1024);
     //$suffixes = array('', 'K', 'M', 'G', 'T');   
-
     //return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)]; 
 } 
 function display_software($os,$software) {
@@ -670,9 +652,14 @@ foreach ($res as $data) {
 	$servers[$key]['type'] = $data['type'];
 	}
 	require_once('GameQ/Autoloader.php'); //load GameQ
-	$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null"); // get local servers	
+	if (is_cli()) {
+		$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null");
+		echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
+		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
+		} // get local servers	
+	else { $tm = file_get_contents("tm.txt"); }	
 	$tm =running_games(explode("\n",$tm));
-	echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
+	//echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
 	if(!empty($tm)) {
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
@@ -680,18 +667,26 @@ foreach ($res as $data) {
     $results = $GameQ->process();
     
     	
-		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
+		
 		foreach( $tm as $key=>$value)
 {   
-
 	$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'];
 	$online  = $results[$key]['gq_online'];
 	if (!empty($online)) {
-    echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
-    echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+    if (is_cli()){echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
+		 echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;}
+    else { 
+		//echo  $results[$key]["gq_hostname"]." started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
+		$disp .= $results[$key]["gq_hostname"]." started at ". date('g:ia \o\n l jS F Y \(e\)', $value)." Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+		}
+   
     if ($players >0) {
+		if (is_cli()) {
 		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		
+	}
+	else {
+		$disp .= '<table><tr><td style="width:60%;">Name</td><td style="width:20%;">Score</td><td>Time Online</td></tr>';
+	}
 		$player_list = $results[$key]['players'];
 		foreach ($player_list as $k=>$v) 
 		{
@@ -710,16 +705,27 @@ foreach ($res as $data) {
 		else {
 			$pscore = $player_list[$k]['gq_score']; //format score
 		}
-		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
+		if(is_cli()) {echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;}
+		else {
+			$disp .='<tr><td>'.$playerN.'</td><td>'.$pscore.'</td><td>'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+		}
 		
 	}
 		echo CR;
+		$disp .='</table>';
+		
 	}
 }
 else {
+	if (is_cli()){
 	echo "\t\t".$key." is not responding, please recheck the server configuration".CR;
 }
+else {
+	$disp .= $key." is not responding, please recheck the server configuration".CR;
 }
+}
+}
+     return $disp;
 	echo"\e[0m";
 	
 }
@@ -727,7 +733,6 @@ else {
 	
 	echo "\t\tNo Game Servers Running !".CR.CR;
 }
-
 	exit;
 }
 function array_insert(&$array, $position, $insert)
