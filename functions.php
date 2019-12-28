@@ -525,12 +525,12 @@ else {
 	echo '<tr><td style="width:50%;color:red;">Cpu Load</td><td>'.$cpu_info['load'].'</td></tr>';
 	echo '<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr>';
 	echo '</table>'; */
-	$disp = '<table><tr><td style="width:50%;color:red;">Uptime</td><td>'.$cpu_info['boot_time'].'</td></tr>
+	$disp = '<table><tr><td style="width:50%;color:red;">Uptime</td><td id="boot">'.$cpu_info['boot_time'].'</td></tr>
 	<tr><td style="width:50%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
 	<tr><td style="width:50%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:50%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
 	<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Load</td><td>'.$cpu_info['load'].'</td></tr>
+	<tr><td style="width:50%;color:red;">Cpu Load</td><td id="load">'.$cpu_info['load'].'</td></tr>
 	<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
 }
@@ -677,7 +677,7 @@ foreach ($res as $data) {
 		 echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;}
     else { 
 		//echo  $results[$key]["gq_hostname"]." started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
-		$disp .= $results[$key]["gq_hostname"]." started at ". date('g:ia \o\n l jS F Y \(e\)', $value)." Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+		$disp .= '<i style="color:green;">'.$results[$key]["gq_hostname"]."</i> started at ". date('g:ia \o\n l jS F Y \(e\)', $value)." Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
 		}
    
     if ($players >0) {
@@ -707,7 +707,7 @@ foreach ($res as $data) {
 		}
 		if(is_cli()) {echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;}
 		else {
-			$disp .='<tr><td>'.$playerN.'</td><td>'.$pscore.'</td><td>'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+			$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td>'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 		}
 		
 	}
@@ -721,12 +721,13 @@ else {
 	echo "\t\t".$key." is not responding, please recheck the server configuration".CR;
 }
 else {
-	$disp .= $key." is not responding, please recheck the server configuration".CR;
+	$disp .= '<i style=color:red;>'.$key."</i> is not responding, please recheck the server configuration".CR;
 }
 }
 }
+	if(is_cli()) { echo"\e[0m";}
      return $disp;
-	echo"\e[0m";
+	
 	
 }
 else {
