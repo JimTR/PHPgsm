@@ -110,7 +110,7 @@ switch (strtolower($argv[1]))
 	display_software($os,$software);
 	display_user($user_info);
 	display_games();
-	
+	exit;
 	default:
 			echo $argv[1]." is an invalid command. Use one from the list below\r\n";
 			$argv[1]="h";
