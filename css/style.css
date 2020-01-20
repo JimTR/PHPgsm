@@ -8202,9 +8202,9 @@ table.sliders tr td {
 
     border: none !important;
 
-    border-radius: 15px !important;
+    /*border-radius: 15px !important;
 
-    -webkit-border-radius: 15px !important;
+    -webkit-border-radius: 15px !important;*/
 
 }
 
@@ -8228,15 +8228,15 @@ table.sliders tr td {
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 
-    background: #fff !important;
+    /*background: #fff !important;*/
 
     /*border: 3px solid #22bacf !important;*/
 
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 
-    border-radius: 50% !important;
+    /*border-radius: 50% !important;
 
-    -webkit-border-radius: 50% !important;
+    -webkit-border-radius: 50% !important;*/
 
 }
 
