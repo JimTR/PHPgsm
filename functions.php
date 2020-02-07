@@ -229,7 +229,7 @@ function get_cpu_info() {
 		}
 		$cpu_info['processors'] = trim(shell_exec(" grep -c ^processor /proc/cpuinfo")); // count processors
 		$load = sys_getloadavg();
-		$cpu_info['load'] = $load[0]." (1 min)  ".$load[1]." (10 Mins)  ".$load[2]." (15 Mins)";
+		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['boot_time'] = get_boot_time();
 		$cpu_info['local_ip'] = getHostByName(getHostName());
 		return $cpu_info;
@@ -253,9 +253,21 @@ function get_user_info ($Disk_info) {
 	else {
 		// run quota
 		$q = explode("  ",$q);
-	    $user['quota'] = dataSize(intval($q[15]) * 1000000);
+		if (intval($q[15]) === 0) {
+			// unlimited
+			$user['quota'] = 'Unlimited';
+			
+		}
+	    else {
+			$user['quota'] = dataSize(intval($q[15]) * 1000000);
+			}
 	    $user['quota used'] = dataSize(intval($q[14]) * 1000000);
-	    $user['quota free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);
+	    //echo intval($q[15]).CR;
+	    if (intval($q[15]) === 0 ) {
+						
+			$user['quota free'] = $Disk_info['boot free'];
+		}
+	    else {$user['quota free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);}
 	}
 	//print_r($user);
 	return $user;    
@@ -308,6 +320,9 @@ function get_software_info() {
 	  else {
 		  $software['screen'] = "Not Installed";
 	  }
+	  //$curl = shell_exec( " curl -V  2> /dev/null| awk -F'[  ]+' '{print $2}' ");
+	  $curl = curl_version();
+	  $software['curl'] = $curl['version'];
 	 return $software;
 }
 function get_disk_info() {
@@ -328,9 +343,9 @@ function get_disk_info() {
 		$boot = array_slice($boot, 0);
 		//print_r($boot).CR;
 		$disk_info['boot filesystem'] = $boot[0];
-		$disk_info['boot size'] = format_num($boot[1]);
-		$disk_info['boot used'] = format_num($boot[2]);
-		$disk_info['boot free'] = format_num($boot[3]);
+		$disk_info['boot size'] = format_num($boot[1],2);
+		$disk_info['boot used'] = format_num($boot[2],2);
+		$disk_info['boot free'] = format_num($boot[3],2);
 		$disk_info['boot %'] = $boot[4];
 		$disk_info['boot mount'] = $boot[5];
 		$disk_info['boot hide'] = "ok";
@@ -458,7 +473,7 @@ function running_games($data) {
 		
 		return $return;
 }
-function formatBytes($bytes, $precision = 2) { 
+function formatBytes($bytes, $precision = 0) { 
     $units = array('B ', 'KB', 'MB', 'GB', 'TB'); 
     $bytes = max($bytes, 0); 
     $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
@@ -466,7 +481,7 @@ function formatBytes($bytes, $precision = 2) {
     // Uncomment one of the following alternatives
     // $bytes /= pow(1024, $pow);
      $bytes /= (1 << (10 * $pow)); 
-    return round($bytes, $precision, PHP_ROUND_HALF_UP) . ' ' . $units[$pow];
+    return round($bytes, $precision) . ' ' . $units[$pow];
     // $base = log($size, 1024);
     //$suffixes = array('', 'K', 'M', 'G', 'T');   
     //return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)]; 
@@ -478,8 +493,9 @@ function display_software($os,$software) {
 		echo CR." \r\n\e[1m \e[34mSoftware Information\e[0m".CR;
 	}
 	else {
+if (is_cli()) {		
 	echo "\t\e[1m\e[31mSoftware\e[97m".CR;
-}
+
 	echo "\t\e[1m   Server".CR;
 	echo "\t\t\e[38;5;82mServer OS        \e[97m".PHP_OS." (".$os['PRETTY_NAME'].")".CR;
 	echo "\t\t\e[38;5;82mKernel Version   \e[97m".php_uname('r').CR;
@@ -489,14 +505,36 @@ function display_software($os,$software) {
 	echo "\t\t\e[38;5;82mTmux Version     \e[97m".$software['tmux'].CR;
 	echo "\t\t\e[38;5;82mGlibc Version\e[97m    " .$software['glibc'].CR;
 	 echo "\t\t\e[38;5;82mMysql Version\e[97m    " .$software['mysql'].CR;
+	 echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
+	 echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
 	echo "\t   Optional".CR;
-    echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
+    
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
     echo "\t\t\e[38;5;82mScreen Version\e[97m   " .$software['screen']."\e[0m".CR;
-	
+}	
+else {
+	$disp = '<table><tr><td width="40%"><i style="color:red">Server OS</i></td><td>'.PHP_OS." (".$os['PRETTY_NAME'].")".'</td></tr>';
+	$disp .= '<tr><td width="40%"><i style="color:red">Kernel Version</i></td><td>'.php_uname('r').'</td></tr>';
+	$disp .= '<tr><td width="40%"><i style="color:red">Host Name</i></td><td>'.php_uname('n').'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:green">Required</i></td><td></td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">PHP Version</i></td><td>'.$software['php'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Tmux Version</i></td><td>'.$software['tmux'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Glibc Version</i></td><td>'.$software['glibc'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Mysql Version</i></td><td>'.$software['mysql'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Apache Version</i></td><td>'.$software['apache'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Curl Version</i></td><td>'.$software['curl'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:green">Optional</i></td><td></td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Nginx Version</i></td><td>'.$software['nginx'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Quota Version</i></td><td>'.$software['quota'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Postfix Version</i></td><td>'.$software['postfix'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Screen Version</i></td><td>'.$software['screen'].'</td></tr>';
+	$disp .='</table>'; 
+	return $disp;
+}
 	}
+}
 function display_cpu ($cpu_info) {
 	global $argv;
 	if (isset($argv[2])) {
@@ -517,25 +555,19 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
 }
 else {
-	/*echo '<table><tr><td style="width:50%;color:red;">Uptime</td><td>'.$cpu_info['boot_time'].'</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">Cpu Load</td><td>'.$cpu_info['load'].'</td></tr>';
-	echo '<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr>';
-	echo '</table>'; */
-	$disp = '<table><tr><td style="width:50%;color:red;">Uptime</td><td id="boot">'.$cpu_info['boot_time'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
-	<tr><td style="width:50%;color:red;">Cpu Load</td><td id="load">'.$cpu_info['load'].'</td></tr>
-	<tr><td style="width:50%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
+	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot">'.$cpu_info['boot_time'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load">'.$cpu_info['load'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache size'].'</td></tr>
+	<tr><td style="width:20%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
 }
 }
 function display_disk($disk_info) {
+	if (is_cli()) {
 	echo CR."\e[1m \e[34m Disk Information\e[0m".CR;
 	if (!isset($disk_info['boot hide'])) {echo "\t\e[1m\e[31m Boot\e[0m".CR;}
 	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot filesystem'].CR;
@@ -552,6 +584,22 @@ function display_disk($disk_info) {
 	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home free']."\e[0m".CR;
 	}
 	echo "\e[0m";
+}
+else {
+	// html
+	if (!isset($disk_info['boot hide'])) {$disp .= '<i>Boot</i>'.CR;}
+	$disp .= '<table style ="width:100%;">';
+	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot filesystem'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot mount'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot size'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot used'].' ('.$disk_info['boot %'].')</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot free'].'</td></tr>';
+	if (isset($disk_info['home filesystem'])) {
+		// home  file system different to boot file system 
+	}
+	$disp .= '</table>';
+	return $disp;
+}
 }
 function display_user($user_info) {
 	if (is_cli()) {
@@ -578,10 +626,17 @@ function display_user($user_info) {
 	echo '<tr><td style="width:50%;color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>';
 	//echo '<tr><td style="width:50%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'</td></tr>';
 	echo '</table>'; */
-	$disp = '<table style="width:100%;"><tr><td style="width:50%;color:red;">User Name</td><td>'.$user_info['name'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Quota Used</td><td>'.$user_info['quota used'].'</td></tr>
-	<tr><td style="width:50%;color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>
+	if(check_sudo($user_info['name']) or root()) {
+	$user_priv = 'Super User';
+	}
+	else {
+		$user_priv = "User";
+	}
+	$disp = '<table style="width:100%;"><tr><td style="width:24%;color:red;">Name</td><td>'.$user_info['name'].'</td></tr>
+	<tr><td style="color:red;">Level</td><td>'.$user_priv.'</td></tr>
+	<tr><td style="color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>
+	<tr><td style="color:red;">Used</td><td>'.$user_info['quota used'].'</td></tr>
+	<tr><td style="color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>
 	
 	</table>';
 	return $disp;
@@ -612,7 +667,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR;}
 else {
-	$version = CR."Software Version 1.0.25.1β".CR.
+	$version ='<br style="clear:both;">'. CR."Software Version 1.0.25.1β".CR.
 	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that
@@ -653,19 +708,24 @@ foreach ($res as $data) {
 	}
 	require_once('GameQ/Autoloader.php'); //load GameQ
 	if (is_cli()) {
-		$tm = shell_exec("tmux ls -F#{session_name},#{session_created}  2> /dev/null");
+		
 		echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
 		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
 		} // get local servers	
-	else { $tm = file_get_contents("tm.txt"); }	
+	
+		 $tm = get_sessions();
 	$tm =running_games(explode("\n",$tm));
-	//echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
 	if(!empty($tm)) {
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
     $GameQ->addServers($servers);
     $results = $GameQ->process();
-    
+    // order servers on players
+    //orderBy($results,'gq_numplayers',"d");
+    if (!is_cli()) {
+		$disp = html_display ($tm,$results);
+		return $disp;
+	}
     	
 		
 		foreach( $tm as $key=>$value)
@@ -673,27 +733,17 @@ foreach ($res as $data) {
 	$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'];
 	$online  = $results[$key]['gq_online'];
 	if (!empty($online)) {
-    if (is_cli()){echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
-		 echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;}
-    else { 
-		//echo  $results[$key]["gq_hostname"]." started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
-		$disp .= '<i style="color:green;">'.$results[$key]["gq_hostname"]."</i> started at ". date('g:ia \o\n l jS F Y \(e\)', $value)." Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
-		}
-   
+    echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
+	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+       
     if ($players >0) {
-		if (is_cli()) {
-		echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-	}
-	else {
-		$disp .= '<table><tr><td style="width:60%;">Name</td><td style="width:20%;">Score</td><td>Time Online</td></tr>';
-	}
-		$player_list = $results[$key]['players'];
-		foreach ($player_list as $k=>$v) 
-		{
-		
-			$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
-			$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
-			$playerN = str_pad($playerN,25); //pad to 25 chrs
+			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
+			$player_list = $results[$key]['players'];
+			orderBy($player_list,'gq_score',"d"); // order by score
+				foreach ($player_list as $k=>$v) {
+					$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
+					$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
+					$playerN = str_pad($playerN,25); //pad to 25 chrs
 		
 		if ($player_list[$k]['gq_score'] <10) {
 			// switch statement !! rather than if's
@@ -705,28 +755,24 @@ foreach ($res as $data) {
 		else {
 			$pscore = $player_list[$k]['gq_score']; //format score
 		}
-		if(is_cli()) {echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;}
-		else {
-			$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td>'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
-		}
+		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
 		
 	}
 		echo CR;
-		$disp .='</table>';
-		
-	}
+			}
 }
 else {
 	if (is_cli()){
 	echo "\t\t".$key." is not responding, please recheck the server configuration".CR;
 }
 else {
-	$disp .= '<i style=color:red;>'.$key."</i> is not responding, please recheck the server configuration".CR;
+	$disp .= '<i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration'.CR;
 }
 }
 }
 	if(is_cli()) { echo"\e[0m";}
-     return $disp;
+	
+    
 	
 	
 }
@@ -736,17 +782,134 @@ else {
 }
 	exit;
 }
-function array_insert(&$array, $position, $insert)
-{
-    if (is_int($position)) {
-        array_splice($array, $position, 0, $insert);
-    } else {
-        $pos   = array_search($position, array_keys($array));
-        $array = array_merge(
-            array_slice($array, 0, $pos),
-            $insert,
-            array_slice($array, $pos)
-        );
-    }
+/*
+ * 
+ * name: html_display
+ * $
+ * @return
+ * cure html div bug
+ */
+function html_display($tm,$results) {
+	
+	// cure html div bug
+	foreach( $tm as $key=>$value) {
+		// loop through servers
+			$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers']; //players online
+			$online  = $results[$key]['gq_online']; //server responding
+			switch (strtolower($results[$key]['game_id'])) {
+				//logo
+				case "265630" :
+					$logo = 'img/265630.ico';
+					break;
+				case "4000" :
+					$logo = 'img/4000.ico';
+					break;
+				case "minecraft" :
+					$logo = 'img/mcraft.png';
+					break;		
+				case "240" : 
+					$logo = 'img/240.ico';
+					break;
+				case "440" : 
+					$logo = 'img/440.ico';
+					break;	
+				case "317360" :
+					$logo = 'img/317360.ico';	
+					break;
+			}
+			if (!empty($online)) {
+				// the server is up display title
+				// add sub template ?
+				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"].'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ". date('g:ia \o\n l jS F Y \(e\)', $value)."<br> Players Online ".$players."<br> Map - ".$results[$key]["gq_mapname"].'</div>';
+				if ($players >0) {
+					// we have players
+					// add sub template
+					$disp .= '<table><tr><td style="width:60%;">Name</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
+					$player_list = $results[$key]['players']; // get the player array
+					orderBy($player_list,'gq_score','d'); // order by score
+					foreach ($player_list as $k=>$v) {
+						//loop through player array
+						$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
+						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
+						$playerN = str_pad($playerN,25); //pad to 25 chrs
+						switch (true) {
+							// format score
+							case  ($player_list[$k]['gq_score']<0) :
+								// minus
+								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
+								break;
+							case  ($player_list[$k]['gq_score']<10) :
+								//
+								$pscore = '&nbsp;&nbsp;&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
+								break;
+								case  ($player_list[$k]['gq_score']<100) :
+								//
+								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
+								break;
+							case  ($player_list[$k]['gq_score']<1000)	:
+								//
+								$pscore = $player_list[$k]['gq_score']; //format score
+								break;
+						}
+						// format display here
+						// add sub template
+						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						
+					}
+					// end of players for each
+					$disp .='</table><br>';
+				}
+				//end of players
+				// close div
+				$disp .= '<br></div>';
+				
+			}
+			else {
+				//server not responding
+				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration</div>';
+			}
+			//return $disp;
+		}
+			// no servers running
+			if (empty($disp)) {
+			$disp .= '<div  class="col-lg-6"><i style=color:red;>No Servers Running</i><div>';
+		}
+			return $disp;
 }
+function orderBy(&$data, $field,$order)
+  {
+    if ($order ="d") {
+		$code = "return strnatcmp(\$b['$field'], \$a['$field']);";
+	}
+	else {
+		$code = "return strnatcmp(\$a['$field'], \$b['$field']);";
+	}	
+    usort($data, create_function('$a,$b', $code));
+  }
+  function get_sessions() {
+	  /* Recover screen & Tmux sessions
+	   * Feb 2020
+	   * the tmux sessions will be removed as php run via apache can not access them
+	   */
+	   
+	   $sql = 'select * from base_servers where extraip = 0';
+	   $database = new db(); // connect to database
+	   $res = $database->get_results($sql); // pull results
+	   foreach ($res as $data){
+	     // check for tmux
+	     $ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/tm.txt');
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $tm .= curl_exec($ch);
+		 curl_close($ch);
+		 // check for screen
+		 $ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&path=&cmd=ls&exe=&text=');
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $tm .= curl_exec($ch);
+		 curl_close($ch);
+	 }
+	 
+	 return $tm;
+   }
 ?>
