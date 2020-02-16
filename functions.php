@@ -714,7 +714,8 @@ foreach ($res as $data) {
 		} // get local servers	
 	
 		 $tm = get_sessions();
-	$tm =running_games(explode("\n",$tm));
+	$tm =running_games(explode("*",$tm));
+	//print_r($tm);
 	if(!empty($tm)) {
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
@@ -816,11 +817,16 @@ function html_display($tm,$results) {
 				case "317360" :
 					$logo = 'img/317360.ico';	
 					break;
+				case "224260" :
+					$logo = 'img/224260.ico';
+					break;	
 			}
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
-				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"].'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ". date('g:ia \o\n l jS F Y \(e\)', $value)."<br> Players Online ".$players."<br> Map - ".$results[$key]["gq_mapname"].'</div>';
+				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
+				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
+				 date('g:ia \o\n l jS F Y \(e\)', $value)."<br> Players Online ".$players." - Map - ".$results[$key]["gq_mapname"].'</div>';
 				if ($players >0) {
 					// we have players
 					// add sub template
@@ -897,16 +903,28 @@ function orderBy(&$data, $field,$order)
 	   $res = $database->get_results($sql); // pull results
 	   foreach ($res as $data){
 	     // check for tmux
-	     $ch = curl_init();
-	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/tm.txt');
-	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 $tm .= curl_exec($ch);
-		 curl_close($ch);
+	     //$ch = curl_init();
+	     //curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/tm.txt');
+	     //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 //$tm .= curl_exec($ch);
+		 //curl_close($ch);
 		 // check for screen
+		 //$tm = trim($tm,PHP_EOL);
+		 //
+		
 		 $ch = curl_init();
-	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&path=&cmd=ls&exe=&text=');
+	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls');
+	     //echo $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls'.'<br>';
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 $tm .= curl_exec($ch);
+		 $xm .= curl_exec($ch);
+		 //$xm = preg_replace( "/\r|\n/", "", $xm );
+		 $xm = trim($xm);
+		 $tm .= $xm;
+		 file_put_contents($data['port'].'.txt',$tm);
+		 
+		
+		 //echo $data['port'].'   '. $tm.CR;
+		 
 		 curl_close($ch);
 	 }
 	 

@@ -25,9 +25,17 @@
  require 'includes/cli_master.inc.php';
  include 'functions.php';
  define ("CR","<br>");
- if(isset($_GET['action'])) {
-//echo $_GET['action'].CR;
-switch ($_GET['action']) {
+ if (!empty($_POST)) {
+	 $cmds = $_POST;
+ }
+ else {
+	 $cmds = $_GET;
+ }
+ $cmds = change_value_case($cmds,CASE_LOWER);
+  
+ if(isset($cmds['action'])) {
+
+switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
 			exit;
@@ -74,17 +82,163 @@ switch ($_GET['action']) {
 			$user_info = get_user_info($disk_info);
 			$data .= display_user($user_info);
 			echo $data;
+			exit;
+	case "version":
+			echo 'Ajax version 1.0';
+			exit;
+	case "allservers":
+			// return servers
+	$sql = 'select * from base_servers where extraip="0"';			
+	$database = new db(); // connect to database
+	$template = new Template; // load template class
+	$res = $database->get_results($sql); // pull results
+	$servers = array(); // set array
+	
+foreach ($res as $data) {
+	
+	
+	$template->load('html/base_server.html'); // load blank template
+	//add the data array for base server 
+	//this does allow remote locations
+	// as long as you have the remote software installed
+	
+	$subpage['server_title'] = $data['name'].' ('.$data['ip'].')';
+	$subpage['host'] = $data['url'].':'.$data['port'] ;
+	$subpage['id'] = 'collapse'.$acc ;
+	$subpage['ip'] = $data['ip'];
+	// curl the data for the server
+		$ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $subpage['host'].'/ajax.php?action=all');
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $server = curl_exec($ch);
+		 curl_close($ch);
+	     $server= explode('\n',$server);
+	
+	$subpage['cpu'] = $server[0];
+	$subpage['software'] = $server[1];
+	$subpage['disk'] = $server[2];
+	$subpage['mem'] = $server[3];
+	$subpage['user'] = $server[4];
+	$template->replace_vars($subpage);
+	$page1.= $template->get_template(); 
+	}
+	 echo $page1.'*';
+		
+	//Game server(s) 
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>""';
+	$res = $database->get_results($sql);
+	
+	foreach ($res as $data) {
+		// loop servers
+		
+		$template->load('html/game_server.html'); // load blank template
+		$action ='dt';
+		$server = $data['location'].'/'.$data['host_name'];
+		$url = $data['url'].':'.$data['port'];
+		
+		 $ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $url.'/ajax.php?action=exelgsm&path='.$server.'&cmd=dt');
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $x1 = curl_exec($ch);
+		 curl_close($ch);
+		
+		$x1 = explode(PHP_EOL,$x1 );
+		$servers = refactor_array($x1);
+		$cmd = array_search_partial($x1,'Command-line Parameters' )+2;
+		 $servers['cmd'] = $x1[$cmd];
+		 // make gameq call
+		 //print_r($servers);
+		 //echo CR;
+		 require_once('GameQ/Autoloader.php'); //load GameQ
+		 $key = $data['host_name'];
+		 $x2['id'] = $data['host_name'];
+	     $x2['host'] = $servers['Server IP'] ;
+	     $x2['type'] = $data['type'];
+	     //print_r($x2);
+	     //echo CR;
+	     $ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $url.'/ajax.php?action=user');
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $user = curl_exec($ch);
+		 curl_close($ch);
+		 
+	     $GameQ = new \GameQ\GameQ();
+		//include ("server-info.php");
+          $GameQ->addServer($x2);
+          $results = $GameQ->process();
+          $gameport = array_search_partial($x1,'DESCRIPTION' )+1;
+		  $sourceport = $gameport+1;
+		  $clientport = $sourceport+1;	
+		  $subpage['Current map'] = $results[$key]["gq_mapname"];
+		 if (isset($servers['Game world'])) {
+			 $servers['Default map'] = $servers['Game world'];
+			 }
+		 if ($results[$key]['gq_online'] == 1 ){
+			  //online
+			  $online = 'img/online.png';
+		  }
+		  else {$online = 'img/offline.png';}
+		 
+		 $subpage['gameport'] = filter_var($x1[$gameport], FILTER_SANITIZE_NUMBER_INT);
+		 $subpage['sourceport'] = filter_var($x1[$sourceport],FILTER_SANITIZE_NUMBER_INT);
+		 $subpage['clientport'] = filter_var($x1[$clientport],FILTER_SANITIZE_NUMBER_INT);	
+		 $subpage['server_name'] = $servers['Server name'].' ('.$servers['Server IP'].')';
+		 $subpage['lgsm'] = substr($servers['LinuxGSM version'],1);
+		 $subpage['cmd'] = $servers['cmd'];
+		 $subpage['Discord alert'] = $servers['Discord alert'];
+		 $subpage['Slack alert'] = $servers['Slack alert'];
+		 $subpage['Email alert'] = $servers['Email alert'];
+		 $subpage['Update on start'] = $servers['Update on start'];
+		 $subpage['Pushbullet alert'] = $servers['Pushbullet alert'];
+		 $subpage['IFTTT alert'] = $servers['IFTTT alert'];
+		 $subpage['Mailgun (email) alert'] = $servers['Mailgun (email) alert'];
+		 $subpage['Pushover alert'] = $servers['Pushover alert'];
+		 $subpage['Telegram alert'] = $servers['Telegram alert'];
+		 $subpage['players'] = $results[$key]['gq_numplayers'];
+		 $subpage['Maxplayers'] = $servers['Maxplayers'];
+		 $subpage['Server password'] = $servers['Server password'];
+		 $subpage['RCON password'] = $servers['RCON password'];
+		 $subpage['Default map'] = $servers['Default map'];
+		 $subpage['Location'] = $servers['Location'];
+		 $subpage['Config file'] = $servers['Config file'];
+		 $subpage['Status'] = $online;
+		 $subpage['user'] = $user;
+		 $template->replace_vars($subpage);
+		 $page2.= $template->get_template(); 
+        // echo $page2.CR;
+		
+		
+}	
+echo $page2;
 	case "exelgsm":
-			if(isset($_GET['path'])) {
-			 $server = $_GET['path'];
-			 $cmd = $_GET['cmd'];
-			 $exe = $_GET['exe'];
+			if(isset($cmds['path'])) {
+			 $server = $cmds['path'];
+			 $cmd = $cmds['cmd'];
+			 $exe = trim($cmds['exe']);
 			 //echo 'you requested '.$server.'<br>';
-			 $output = exe_lgsm($server,$cmd,$exe);
+			 
 			 //print_r($_GET);
+			 $output = exe_lgsm($server,$cmd,$exe);
 			 echo $output;
-			 exit;
-		 }													  		
+			 exit;}
+	 case "exescreen":
+	        $alreadyrunning = 0; 
+			$server = $cmds['path'];
+			$cmd = $cmds['cmd'];
+			$exe = trim($cmds['exe']);
+			$text= trim($cmds['text']);
+		    $s= exe_screen("",'ls',$exe,$text,$status);
+		    $x=strpos($s,',');
+		
+		$server1=substr($s,0,$x);
+		if ($server1 <> $exe) {unset($server1);}
+			if (!empty($server1)){
+			//running
+			$alreadyrunning = 1;
+		}
+		
+		echo exe_screen($server,$cmd,$exe,$text,$alreadyrunning);
+											  		
 }
 }
 else {
@@ -99,6 +253,7 @@ function exe_lgsm($server,$action,$exe)
 	   * note lgsm c/console  & h/help will not be supported via this function
 	   * will be used in ajax.php 
 	   */
+	   //echo $server.' '.$action.' '.$exe;
 	   switch($action) 
 	   {
 		   // choose action
@@ -108,8 +263,14 @@ function exe_lgsm($server,$action,$exe)
 			break 1;
 		  case "sp" :
 			//$command = 'tmux kill-session -t '.$handle;
-			exit; 
+			exit;
+		  case "st":
+				$command = $server.' '.$action;	
+				echo $command;
+				$disp = shell_exec($command);
+				exit;
 		   default:
+		   		   echo $command;
 		   $disp = shell_exec($command);
 		   return $disp;
 	   }
@@ -119,4 +280,128 @@ function exe_lgsm($server,$action,$exe)
 	   return $disp;
 	   
   }
+  function exe_screen($server,$action,$exe,$text="",$status="")
+  {
+	  /* run screen commands
+	   * first off get all you need b4 running the action
+	   * with start get the command line from lgsm
+	  */
+	   //echo $server.' action '.$action.' file '.$exe.' status '.$status.'Text '.$text.'<br>';
+	   if (!empty($server)) {
+	   $command = $server.' dt';	
+	   $detail = shell_exec($command); // get lgsm array
+	   $detail = explode(PHP_EOL,$detail );
+	   $cmdline = array_search_partial($detail,'Command-line Parameters' )+2; // got startup
+	   $cmdline = $detail[$cmdline];
+	   $detail = refactor_array($detail); // switched array
+   } 
+	   switch($action)
+		{
+		  case "s":
+			//start screen session
+			if($status === 1) {
+				$disp = $detail['Server name'].' is already running !';
+				break;
+			}
+			chdir($detail['Location'].'/serverfiles');
+			$cmd = 'screen -L -Logfile '.$detail['Location'].'/log/console/'.$detail['Script name'].'-console.log -dmS '.$detail['Script name'].' bash -c "'.$cmdline.'^M"'; //start server
+			//echo $cmd.'<br>';
+			exec($cmd); // run it
+			$disp = 'Started Server '.$detail['Server name'];
+			break;
+		  case "q":
+			// stop screen session
+			if($status === 0) {
+			  $disp = "start ".$detail['Server name']." before stopping it";
+			  break;
+				}
+			$cmd = 'screen -S '.$detail['Script name'] .' -p 0 -X stuff "quit^M"';
+			//echo $cmd;
+			exec($cmd);
+			$disp = 'Server Stopped';
+			break;
+		  case	"c":
+		  	  if($status === 0) {
+			  $disp = "start Server before issuing commands";
+			  break;
+		 	  }
+		  $cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.$text.'^M"';
+		  exec($cmd);
+		  $disp = 'Command Sent';
+			// send console command
+			break;
+		  case "ls":
+			// read screen sessions
+			$cmd = 'screen -ls '.$exe;
+			$screenList = shell_exec($cmd);
+			$screenList = explode(PHP_EOL,$screenList);
+			foreach (array_slice($screenList,1) as $key=>$value) {
+				// loop array
+				//echo $value.'<br>';
+				$value= trim($value);
+				$temp = preg_replace('/^[0-9]+./', '', $value);
+				//echo $temp.'<br>';
+				if (strpos($temp,'/run/screen/S') >1) {
+					//echo 'hit end <br>';
+					break;
+				}
+				$x =strpos($temp,'(');
+				$server = trim(substr($temp,0,$x));
+				//if ($x=0){continue;}
+				//echo 'Server = '.$server.'<br>';
+				preg_match('/([\/[0-9]+\/+[0-9]+\/+[0-9]+[0-9])/', $temp, $date);
+				preg_match('/([\/[0-9]+:+[0-9]+:+[0-9]+[0-9])/', $temp, $time);
+				$timestamp = $date[1].' '.$time[1];
+				$timestamp = strtotime($timestamp);
+				//echo $timestamp.'<br>';
+				if (!empty($server)) { 
+					if ($server==$exe) {
+						$disp .= $server.','.$timestamp."*" ;
+				}
+				elseif (empty($exe)) {
+					$disp .= $server.','.$timestamp."*" ;
+				}
+					
+				//echo $server.' '.$timestamp.'<br>';
+			}
+			} 
+			//print_r($screenList);
+			//echo $disp;
+			break;		
+		}
+		return $disp;
+		
+	} 
+	
+	function refactor_array($array) {
+	// refactor array with keys
+	foreach ($array as &$value) {
+			//read data
+			$i = strpos($value,":",0);
+            $key = trim(substr($value,0,$i));
+		    $nos[$key] = trim(substr($value,$i+1));
+		}
+		return $nos;
+//print_r($nos);
+}
+
+function array_search_partial($arr, $keyword) {
+    foreach($arr as $index => $string) {
+        if (strpos($string, $keyword) !== FALSE)
+            return $index;
+    }
+}
+ function change_value_case($array,$case = CASE_LOWER){
+        $array =array_change_key_case($array, $case);
+        switch ($case) {
+			case CASE_LOWER:
+				$array = array_map('strtolower', $array);
+				break;
+			case CASE_UPPER:
+				$array = array_map('strtoupper',$array);
+				break;	
+       }
+        return $array;
+    }
+
 ?>
