@@ -1,0 +1,198 @@
+<!--console.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><!--#title#--></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Console viewer for phpgsm">
+  <meta name="author" content="jim" >
+  <meta name="keyword" content="LGSM, Servers, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+  <link rel="shortcut icon" href="img/favicon.png">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- bootstrap theme -->
+  <link href="css/bootstrap-theme.css" rel="stylesheet">
+  <!--external css-->
+  <!-- font icon -->
+  <link href="css/elegant-icons-style.css" rel="stylesheet" />
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/08a3755b76.js" crossorigin="anonymous"></script>
+<script>
+
+function FetchLog() {
+
+var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    var lines = vars["lines"];
+    var str = document.getElementById("log").innerHTML;
+    if ($("#log").is(":empty")) {
+            lines = 20;
+            }
+            else{ 
+					lines=1;            
+            } 
+$.ajax({
+ 
+ url: "<!--#url#-->/readlog.php?path=<!--#path#-->&lines="+lines,
+  type: "get",
+  success: function(data){
+  var str = document.getElementById("log").innerHTML;
+  data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  var ld =data.split("<br>");
+  var res = str.split("<br>");
+  if (res[res.length-2] !== ld[ld.length-2]) {
+  document.getElementById("log").innerHTML = str+data;
+   var element = document.getElementById("log");
+        element.scrollTop = element.scrollHeight;
+}
+  },
+  complete:function(data){
+   setTimeout(FetchLog,1000);
+  }
+
+});
+}
+
+function FetchPlayers() {
+
+$.ajax({
+  url: "<!--#url#-->/viewplayers.php?id=<!--#id#-->&type=<!--#type#-->&host=<!--#host#-->",
+  type: "get",
+  success: function(data){
+    document.getElementById("player").innerHTML = data;
+  },
+  complete:function(data){
+   setTimeout(FetchPlayers,5000);
+  }
+
+});
+
+}
+function updateClock ()
+    {
+    var currentTime = new Date ( );
+    var currentHours = currentTime.getHours ( );
+    var currentMinutes = currentTime.getMinutes ( );
+    var currentSeconds = currentTime.getSeconds ( );
+ 
+    // Pad the minutes and seconds with leading zeros, if required
+    currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+    currentSeconds = ( currentSeconds < 10 ? "0" : "" ) + currentSeconds;
+ 
+    // Choose either "AM" or "PM" as appropriate
+    var timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+ 
+    // Convert the hours component to 12-hour format if needed
+    currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+ 
+    // Convert an hours component of "0" to "12"
+    currentHours = ( currentHours == 0 ) ? 12 : currentHours;
+ 
+    // Compose the string for display
+    var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+     
+     
+    $("#clock").html(currentTimeString);
+    // $('#clock').css('color','red');
+         
+ }
+ 
+
+function submitdata()
+{
+ alert('submit data');
+ //e.preventDefault();
+ var cmd=document.getElementById( "cmd" );
+ 
+ $.ajax({
+  
+  url: "<!--#url#-->/ajax.php?action=exescreen&cmd=c&exe=<!--#id#-->&text="+cmd,
+  type: 'get',
+  success: function (data) {
+   //$('#success__para').html("You data will be saved");
+   alert(cmd);
+   alert(data);
+  }
+ });
+	
+ //return false;
+}
+
+
+
+$(document).ready(function(){
+    //initializeJS();
+    console.log( "ready!" );
+    FetchLog();
+    console.log("Fetch Log started")
+    FetchPlayers()
+    console.log("Fetch Players started")
+    updateClock();
+    setInterval('updateClock()', 1000);
+    $('#sendcmd').on('submit', function(e) {
+        e.preventDefault();
+        //alert('send command');
+        $.ajax({
+            type: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(data) {
+            
+                $('#ajax-response').html(data);
+                $('#text').val(""); 
+                $("#send").blur(); 
+            }
+        });
+
+    });
+ });
+</script>
+</head>
+
+    <body style="color:#797979;background:#eeeeee;">
+    <header class="header dark-bg" style="top:0;">
+	<!--#logo#--> <a class="logo">&nbsp;Console</a>
+	<ul class="nav pull-right top-menu">
+       <li style="margin-top: 23%;">
+                                 <a style="color:#bdbdbd;font-size: 13px;"><i id="clock">&nbsp;clock</i></a>
+          </li>
+        </ul>
+	</header>
+	<section class="wrapper">
+        
+        <!-- page start-->
+          <section class="panel">
+    <div class="panel-body">  
+	<div style="padding:1%;" class="col-lg-6">
+	
+	</div>
+	<div class="row">
+	<span class="lite" style="font-size:17px;">&nbsp;<!--#name#--></span>
+		<div class="col-lg-6" id ="log" style="background:#000;color:#fff;width:55%;max-height:520px !important;min-height:520px;overflow:scroll;padding:1%;float:left;margin-left:2%;white-space: nowrap;border-style:double;"></div>
+		<div class="col-lg-6" id = "player" style ="clear:none;padding:1%;width:40%;float:right;">
+			players
+		</div>
+		<div style="clear:both;padding:2%;">
+			   
+	   <form id="sendcmd" action="<!--#url#-->/ajax.php" method="post">
+    
+    Send Command &nbsp;&nbsp;
+    <input name="text" type="text" id="text" size="50" />&nbsp;&nbsp;
+    <input type="hidden" id="action" name="action" value="exescreen">
+    <input type="hidden" id="exe" name="exe" value="<!--#id#-->">
+    <input type="hidden" id="cmd" name="cmd" value="c">
+    <input  class="btn btn-primary"type="submit" value="Send!" id="send" />
+    <div style="clear:none;margin-left:1%;" id="ajax-response"></div>
+</form>
+	</div>
+	</div>
+	</div>
+	</section>
+	</section>
+	
+</body>
+</html>
