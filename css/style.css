@@ -9903,3 +9903,38 @@ span.customSelect.changed {
 #sendmessage.show, #errormessage.show, .show {
 	display:block;
 }
+.collapsible {
+  #background-color: #777;
+  #color: black;
+  cursor: pointer;
+  padding: 1%;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  #background-color: #555;
+}
+
+.collapsible:after {
+  #content: '\2212';
+  color: black;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active, .collapsible:after {
+  #content: "\002B";
+}
+
+.content {
+  #padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  #background-color: #f1f1f1;
+}
