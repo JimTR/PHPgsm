@@ -644,7 +644,7 @@ function display_user($user_info) {
 } 	
 function display_version() {
 	if (is_cli()) {
-		echo CR."Software Version 1.0.25.1β".CR;
+		echo CR."Software Version 1.0.34.0β".CR;
 		echo CR.'Copyright (c) '.date("Y").', NoIdeer Software
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that
@@ -667,7 +667,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR;}
 else {
-	$version ='<br style="clear:both;">'. CR."Software Version 1.0.25.1β".CR.
+	$version ='<br style="clear:both;">'. CR."Software Version 1.0.34.0β".CR.
 	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that
@@ -920,7 +920,7 @@ function orderBy(&$data, $field,$order)
 		 //$xm = preg_replace( "/\r|\n/", "", $xm );
 		 $xm = trim($xm);
 		 $tm .= $xm;
-		 file_put_contents($data['port'].'.txt',$tm);
+		 //file_put_contents($data['port'].'.txt',$tm);
 		 
 		
 		 //echo $data['port'].'   '. $tm.CR;
