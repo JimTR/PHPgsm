@@ -1,0 +1,4 @@
+# ignore txt files
+*.txt
+html.php
+includes/config.php
