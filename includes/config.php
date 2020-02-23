@@ -4,7 +4,7 @@
  *
  */
 $config['database']['type'] = 'mysqli';
-$config['database']['database'] = 'gsm';
+$config['database']['database'] = 'database';
 $config['database']['default_table_prefix'] = 'gsm_'; // for shared database
 $config['database']['hostname'] = 'localhost';
 $config['database']['username'] = 'username';
