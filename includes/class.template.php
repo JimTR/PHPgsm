@@ -86,9 +86,9 @@ class Template {
 
 	function listv ($file) {
 		/* return template with the vars in place from a file
-		  *use $file as the variable list file in php array format
+		 * use $file as the variable list file in php array format
 		 * each var populated or left blank if the var has no value
-		 * 
+		 * used for constant text such as language variables
 		 */ 
 		  include $file;
 		 $lang->group = &$l;
