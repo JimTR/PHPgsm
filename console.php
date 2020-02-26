@@ -27,6 +27,14 @@
 require 'includes/master.inc.php'; // do login and stuff
 include("functions.php"); // add functions
 define ("CR", "<br>");
+$template = new Template; // load template class
+if (empty($Auth->id)) {
+		
+		$template->load('html/login.html');
+		$template->replace('servername', $_SERVER['SERVER_NAME']);
+		$template->publish();
+		exit;
+	}
  if (!empty($_POST)) {
 	 $cmds = $_POST;
 	 echo "post set".CR;
@@ -50,7 +58,7 @@ foreach ($results as $server) {
           $GameQ->addServer($x2);
           $sresults = $GameQ->process();
          
-$template = new Template; // load template class
+
 $page['path'] = $server['location'].'/log/console/'.$server['host_name'].'-console.log';
 $page['url'] = $server['url'].':'.$server['bport'];
 $page['host'] = $server['host'].':'.$server['port'];
