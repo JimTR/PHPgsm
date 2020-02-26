@@ -3,44 +3,30 @@
   <!-- container section start -->
 
 <style>
-.collapsible {
-  #background-color: #777;
-  #color: black;
-  cursor: pointer;
-  padding: 1%;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
+.progress-bar {
+  background-color: whiteSmoke;
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+
+  width: 250px;
+  height: 20px;
+  
+  position: relative;
+  display: block;
 }
+  
+.progress-bar > span {
+  background-color: red;
+  border-radius: 2px;
 
-.active, .collapsible:hover {
-  #background-color: #555;
+  display: block;
+  text-indent: -9999px;
 }
-
-.collapsible:after {
-  #content: '\2212';
-  color: black;
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
+progress[value] {
+  width: 250px;
+  height: 20px;
 }
-
-.active, .collapsible:after {
-  #content: "\002B";
-}
-
-.content {
-  #padding: 0 18px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  #background-color: #f1f1f1;
-}
-
-</style> 
-
+</style>
 
     <!--main content start-->
     <section id="main-content">
@@ -55,8 +41,12 @@
                   	
 
                  <div style="clear:both;padding:1%;">
-                 		<p>Running Game Servers</p>
+                 		<p>Online Game Servers</p>
                  			<i id="rgames">
+                 			<div style="text-align:center;">
+                 			<h3>Loading</h3>
+                 			<img src="img/loading.gif">
+                 			</div>
                   			<!--#rgames#-->
                   		</i>
                  	</div>
@@ -68,7 +58,7 @@
 				<div class="about-info">
 			
 					<div class="about-info2" style="margin-top:1%">
-					<div><a class="logo">PHP <span class="lite">gsm</span> Control</a></div>
+					<div><a class="logo">PHP <span class="lite">gsm</span></a></div>
 					<br>
 					   
 						<!--#about#-->
@@ -92,62 +82,30 @@ Settings
 </div>
                  
                   <div id="calc" class="tab-pane">
-                  
-                  		 
-                  			             
-                					
+ 
               					<br>
-              					
-              					
-           
-                      
-             
-             
-               	<div id="accordion">
-               	<div class="panel panel-success" style="margin-bottom:0px;">
+ <div class="panel panel-success" style="margin-bottom:0px;">
                   			<div class="panel-heading">Host Servers</div>
                  			 </div>
- 
-   <!--#tabs#-->
-   
-   </div>
-   
-   <div id="accordion2">
+
+               	<div id="accordion">
+               	   <!--#tabs#-->
+  					  </div>
    <div class="panel panel-primary" style="margin-bottom:0px;">
                   <div class="panel-heading">Game Servers</div>
             </div> 
-  
-  <!--#games#-->
-  
-                 
-                      <!--<button class="collapsible panel-heading">
-                                          Jim's Frags Server 1
-                                      </button>
-                                  
-                
-                <div class="content">
-                  <div class="panel-body">
-                    nothing here yet here
-                  </div>
-                </div>
-                 
-                
-                
-                
-                      <button class="collapsible panel-heading">
-                                          Jim's Frags Server 2
-                                      </button>
-                                 
-                <div class="content">
-                  <div class="panel-body">
-                    nothing here yet here
-                  </div>
-                </div>-->      
+   <div id="accordion2">
+     <!--#games#-->
 </div>
 	 </div>
                   
                   <div id="distance" class="tab-pane">install
-                  <p>server should be here</p>
+                  <p>Currently, Servers can only be installed via the command line utility</p>
+                  <progress value="3" max="8">
+                  <div class="progress-bar">
+        <span style="width: 80%;">Progress: 80%</span>
+    </div>
+                  </progress>
                   </div>
                             
 									
