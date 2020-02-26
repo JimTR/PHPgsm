@@ -2,3 +2,6 @@
 *.txt
 html.php
 includes/config.php
+ext.php
+post.php
+includes/settings.php
