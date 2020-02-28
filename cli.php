@@ -20,7 +20,7 @@ if (isset($argc)) {
 }
 else {
 	echo "<head><title>PHPgsm Error</title></head>";
-	echo "This can only be ran from the command line";
+	echo "<h1>This can only be ran from the command line</h1>";
 	exit;
 }
 s1:
