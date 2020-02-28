@@ -4,7 +4,7 @@ require 'includes/master.inc.php'; // do login and stuff
 include("functions.php");
 define ("CR", "</br>");
 
-$sql = 'select * from base_servers where extraip="0"';
+$sql = 'select * from base_servers where extraip="0" and enabled="1"';
 if (is_cli()) {
 //$x=check_sudo(get_current_user());
 
@@ -16,7 +16,13 @@ else {
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
 	$servers = array(); // set array
-	
+	if (empty($Auth->id)) {
+		
+		$template->load('html/login.html');
+		$template->replace('servername', $_SERVER['SERVER_NAME']);
+		$template->publish();
+		exit;
+	}
 foreach ($res as $data) {
 	
 	
@@ -48,7 +54,7 @@ foreach ($res as $data) {
 	
 		
 	//Game server(s) 
-	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>""';
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
@@ -92,7 +98,7 @@ foreach ($res as $data) {
           $gameport = array_search_partial($x1,'DESCRIPTION' )+1;
 		  $sourceport = $gameport+1;
 		  $clientport = $sourceport+1;	
-		  $subpage['Current map'] = $results[$key]["gq_mapname"];
+		  $subpage['Current map'] = $results[$key]['gq_mapname'];
 		 if (isset($servers['Game world'])) {
 			 $servers['Default map'] = $servers['Game world'];
 			 }
@@ -144,6 +150,7 @@ foreach ($res as $data) {
 	$page['games'] = $page2;
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	 
+	// lang goes here
 	$template->publish();
 	//print_r($servers);
 	}
