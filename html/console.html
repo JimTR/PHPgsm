@@ -136,6 +136,8 @@ $(document).ready(function(){
     $('#sendcmd').on('submit', function(e) {
         e.preventDefault();
         //alert('send command');
+       
+        
         $.ajax({
             type: $(this).attr('method'),
             url: $(this).attr('action'),
@@ -143,8 +145,10 @@ $(document).ready(function(){
             success: function(data) {
             
                 $('#ajax-response').html(data);
+                $("#ajax-response").show();
                 $('#text').val(""); 
                 $("#send").blur(); 
+                $('#ajax-response').delay(5000).fadeOut('slow');
             }
         });
 
@@ -178,7 +182,7 @@ $(document).ready(function(){
 		</div>
 		<div style="clear:both;padding:2%;">
 			   
-	   <form id="sendcmd" action="<!--#url#-->/ajax.php" method="post">
+	   <form id="sendcmd"  style ="width:35%" action="<!--#url#-->/ajax.php" method="post">
     
     Send Command &nbsp;&nbsp;
     <input name="text" type="text" id="text" size="50" />&nbsp;&nbsp;
@@ -186,8 +190,9 @@ $(document).ready(function(){
     <input type="hidden" id="exe" name="exe" value="<!--#id#-->">
     <input type="hidden" id="cmd" name="cmd" value="c">
     <input  class="btn btn-primary"type="submit" value="Send!" id="send" />
-    <div style="clear:none;margin-left:1%;" id="ajax-response"></div>
+    
 </form>
+<div style="clear:none;margin-left:35%;margin-top:-1.6%;" id="ajax-response"></div>
 	</div>
 	</div>
 	</div>
