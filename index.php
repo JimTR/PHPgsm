@@ -54,7 +54,7 @@ foreach ($res as $data) {
 	
 		
 	//Game server(s) 
-	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
@@ -63,25 +63,15 @@ foreach ($res as $data) {
 		$template->load('html/game_server.html'); // load blank template
 		$action ='dt';
 		$server = $data['location'].'/'.$data['host_name'];
-		$url = $data['url'].':'.$data['port'];
-		
-		 $ch = curl_init();
-	     curl_setopt($ch, CURLOPT_URL, $url.'/ajax.php?action=exelgsm&path='.$server.'&cmd=dt');
-	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 $x1 = curl_exec($ch);
-		 curl_close($ch);
-		
-		$x1 = explode(PHP_EOL,$x1 );
-		$servers = refactor_array($x1);
-		$cmd = array_search_partial($x1,'Command-line Parameters' )+2;
-		 $servers['cmd'] = $x1[$cmd];
+		$url = $data['url'].':'.$data['bport'];
+		$servers['cmd'] = $data['startcmd'];
 		 // make gameq call
 		 //print_r($servers);
 		 //echo CR;
 		 require_once('GameQ/Autoloader.php'); //load GameQ
 		 $key = $data['host_name'];
 		 $x2['id'] = $data['host_name'];
-	     $x2['host'] = $servers['Server IP'] ;
+	     $x2['host'] = $data['host'].':'.$data['port'] ;
 	     $x2['type'] = $data['type'];
 	     //print_r($x2);
 	     //echo CR;
@@ -97,21 +87,34 @@ foreach ($res as $data) {
           $results = $GameQ->process();
           $gameport = array_search_partial($x1,'DESCRIPTION' )+1;
 		  $sourceport = $gameport+1;
-		  $clientport = $sourceport+1;	
-		  $subpage['Current map'] = $results[$key]['gq_mapname'];
-		 if (isset($servers['Game world'])) {
-			 $servers['Default map'] = $servers['Game world'];
-			 }
+		  $clientport = $sourceport+1;
+		  $logo = $data['logo'];
+		
 		 if ($results[$key]['gq_online'] == 1 ){
 			  //online
 			  $online = 'img/online.png';
+			  $subpage['sbstate']='disabled';
+			  $subpage['ststate']='';
+			  $subpage['scstate']='';
+			  $subpage['ustate']='disabled';
+			  $subpage['vstate']='disabled';
+			  $subpage['rstate']='';
+			  $subpage['bstate']='disabled';
 		  }
-		  else {$online = 'img/offline.png';}
+		  else {$online = 'img/offline.png';
+			    $subpage['sbstate']='';
+			    $subpage['ststate']='disabled';
+			    $subpage['scstate']='disabled';
+			    $subpage['ustate']='';
+			    $subpage['vstate']='';
+			    $subpage['rstate']='disabled';
+			    $subpage['bstate']='';
+			  }
 		 
-		 $subpage['gameport'] = filter_var($x1[$gameport], FILTER_SANITIZE_NUMBER_INT);
-		 $subpage['sourceport'] = filter_var($x1[$sourceport],FILTER_SANITIZE_NUMBER_INT);
-		 $subpage['clientport'] = filter_var($x1[$clientport],FILTER_SANITIZE_NUMBER_INT);	
-		 $subpage['server_name'] = $servers['Server name'].' ('.$servers['Server IP'].')';
+		 $subpage['gameport'] = $data['port'];
+		 $subpage['sourceport'] = $data['source_port'];
+		 $subpage['clientport'] = $data['client_port'];	
+		 $subpage['server_name'] = $key.' ('.$data['host'].':'.$data['port'].')';
 		 $subpage['lgsm'] = substr($servers['LinuxGSM version'],1);
 		 $subpage['cmd'] = $servers['cmd'];
 		 $subpage['Discord alert'] = $servers['Discord alert'];
@@ -124,14 +127,18 @@ foreach ($res as $data) {
 		 $subpage['Pushover alert'] = $servers['Pushover alert'];
 		 $subpage['Telegram alert'] = $servers['Telegram alert'];
 		 $subpage['players'] = $results[$key]['gq_numplayers'];
-		 $subpage['Maxplayers'] = $servers['Maxplayers'];
-		 $subpage['Server password'] = $servers['Server password'];
-		 $subpage['RCON password'] = $servers['RCON password'];
-		 $subpage['Default map'] = $servers['Default map'];
-		 $subpage['Location'] = $servers['Location'];
-		 $subpage['Config file'] = $servers['Config file'];
+		 $subpage['Current map'] = $results[$key]['gq_mapname'];
+		 $subpage['Maxplayers'] = $data['max_players'];
+		 $subpage['Server password'] = $data['server_password'];
+		 $subpage['RCON password'] = $data['rcon_password'];
+		 $subpage['Default map'] = $data['default_map'];
+		 $subpage['Location'] = $data['location'];
+		 $subpage['Config file'] = $data['location'].'/serverfiles/';
 		 $subpage['Status'] = $online;
 		 $subpage['user'] = $user;
+		 $subpage['key'] = $key;
+		 $subpage['url'] = $url;
+		 $subpage['logo']  = $logo;
 		 $template->replace_vars($subpage);
 		 $page2.= $template->get_template(); 
         // echo $page2.CR;
