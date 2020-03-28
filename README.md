@@ -8,4 +8,6 @@ Written in PHP
 <li>No More Room In Hell</li>
 <li>Counter Strike Source</li>
 <li>Team Fortress 2</li>
+<li>Sticky Bots</li>
+<li>Project Cars 3</li>
 </ul>
