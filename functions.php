@@ -492,7 +492,7 @@ function display_software($os,$software) {
 	if (isset($argv[2])) {
 		echo CR." \r\n\e[1m \e[34mSoftware Information\e[0m".CR;
 	}
-	else {
+	//else {
 if (is_cli()) {		
 	echo "\t\e[1m\e[31mSoftware\e[97m".CR;
 
@@ -502,17 +502,16 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mHost Name        \e[97m".php_uname('n').CR;
 	echo "\t   Required".CR;
 	echo "\t\t\e[38;5;82mPHP Version  \e[97m    " .$software['php'].CR;
-	echo "\t\t\e[38;5;82mTmux Version     \e[97m".$software['tmux'].CR;
+	echo "\t\t\e[38;5;82mScreen Version\e[97m   " .trim($software['screen']).CR;
 	echo "\t\t\e[38;5;82mGlibc Version\e[97m    " .$software['glibc'].CR;
-	 echo "\t\t\e[38;5;82mMysql Version\e[97m    " .$software['mysql'].CR;
-	 echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
-	 echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
+	echo "\t\t\e[38;5;82mMysql Version\e[97m    " .$software['mysql'].CR;
+	echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
+	echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
 	echo "\t   Optional".CR;
-    
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
-    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
-    echo "\t\t\e[38;5;82mScreen Version\e[97m   " .$software['screen']."\e[0m".CR;
+    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix']."\e[0m".CR;
+   
 }	
 else {
 	$disp = '<table><tr><td width="40%"><i style="color:red">Server OS</i></td><td>'.PHP_OS." (".$os['PRETTY_NAME'].")".'</td></tr>';
@@ -520,7 +519,7 @@ else {
 	$disp .= '<tr><td width="40%"><i style="color:red">Host Name</i></td><td>'.php_uname('n').'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:green">Required</i></td><td></td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">PHP Version</i></td><td>'.$software['php'].'</td></tr>';
-	$disp .= '<tr><td width="50%"><i style="color:red">Tmux Version</i></td><td>'.$software['tmux'].'</td></tr>';
+	$disp .= '<tr><td width="50%"><i style="color:red">Screen Version</i></td><td>'.$software['screen'].'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">Glibc Version</i></td><td>'.$software['glibc'].'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">Mysql Version</i></td><td>'.$software['mysql'].'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">Apache Version</i></td><td>'.$software['apache'].'</td></tr>';
@@ -529,11 +528,11 @@ else {
 	$disp .= '<tr><td width="50%"><i style="color:red">Nginx Version</i></td><td>'.$software['nginx'].'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">Quota Version</i></td><td>'.$software['quota'].'</td></tr>';
 	$disp .= '<tr><td width="50%"><i style="color:red">Postfix Version</i></td><td>'.$software['postfix'].'</td></tr>';
-	$disp .= '<tr><td width="50%"><i style="color:red">Screen Version</i></td><td>'.$software['screen'].'</td></tr>';
+	
 	$disp .='</table>'; 
 	return $disp;
 }
-	}
+	//}
 }
 function display_cpu ($cpu_info) {
 	global $argv;
@@ -694,7 +693,7 @@ return $version;
 }
 function display_games() {
 	$database = new db(); // connect to database
-	$sql = 'select * from servers'; //select all recorded servers
+	$sql = 'select * from servers where enabled ="1"'; //select all enabled recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
 foreach ($res as $data) {
@@ -797,30 +796,8 @@ function html_display($tm,$results) {
 		// loop through servers
 			$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers']; //players online
 			$online  = $results[$key]['gq_online']; //server responding
-			switch (strtolower($results[$key]['game_id'])) {
-				//logo
-				case "265630" :
-					$logo = 'img/265630.ico';
-					break;
-				case "4000" :
-					$logo = 'img/4000.ico';
-					break;
-				case "minecraft" :
-					$logo = 'img/mcraft.png';
-					break;		
-				case "240" : 
-					$logo = 'img/240.ico';
-					break;
-				case "440" : 
-					$logo = 'img/440.ico';
-					break;	
-				case "317360" :
-					$logo = 'img/317360.ico';	
-					break;
-				case "224260" :
-					$logo = 'img/224260.ico';
-					break;	
-			}
+			$logo ='img/'.strtolower($results[$key]['game_id']).'.ico';
+			
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
@@ -872,7 +849,7 @@ function html_display($tm,$results) {
 			}
 			else {
 				//server not responding
-				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration</div>';
+				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start</div>';
 			}
 			//return $disp;
 		}
@@ -898,32 +875,19 @@ function orderBy(&$data, $field,$order)
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers where extraip = 0';
+	   $sql = 'select * from base_servers where extraip = 0 and enabled = 1' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
 	   foreach ($res as $data){
-	     // check for tmux
-	     //$ch = curl_init();
-	     //curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/tm.txt');
-	     //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 //$tm .= curl_exec($ch);
-		 //curl_close($ch);
-		 // check for screen
-		 //$tm = trim($tm,PHP_EOL);
-		 //
-		
+	    
 		 $ch = curl_init();
 	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls');
-	     //echo $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls'.'<br>';
+	     
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		 $xm .= curl_exec($ch);
-		 //$xm = preg_replace( "/\r|\n/", "", $xm );
+		 
 		 $xm = trim($xm);
 		 $tm .= $xm;
-		 //file_put_contents($data['port'].'.txt',$tm);
-		 
-		
-		 //echo $data['port'].'   '. $tm.CR;
 		 
 		 curl_close($ch);
 	 }
