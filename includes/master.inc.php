@@ -61,7 +61,7 @@
     define ("CLEAR", 15*60); // should be a setting *60
     //using the in-built templates these entries must be in this order
     // modules can alter their values or add extra elements
-    $page['header'] = '';
+        $page['header'] = '';
 	$page['footer'] = '';
 	$page['include'] = '';
 	$page['login'] = '';
@@ -130,12 +130,12 @@ if($site->settings['siteclosed'] === "1" & $Auth->level <>'admin') {
 }
 
 
-      if($site->settings['session'] === "0") 
+      if($site->settings['session'] === "1") 
       { 
 		 
         DBSession::gc (CLEAR); // delete old sessions depends on settings if no sql events do this line 
         
-       }
+       
        
     // Initialize our session
 		DBSession::register(); // register the session
@@ -143,12 +143,13 @@ if($site->settings['siteclosed'] === "1" & $Auth->level <>'admin') {
 		session_start();
 	    $id = session_id();
 	    $_SESSION['userid'] = intval($Auth->id);
-	   $_SESSION['nid'] = $Auth->nid;
-	   $_SESSION['steamid'] = '';
-	   DBSession::write($id,$$_SESSION);
+	    $_SESSION['nid'] = $Auth->nid;
+	    $_SESSION['steamid'] = '';
+	    DBSession::write($id,$$_SESSION);
 	    DBSession::read ($id);
+	}
 	    //print_r($_SESSION);
     // Object for tracking and displaying error messages
    // $Error = Error::getError();
-    $our_plugin = new plugin;
+    //$our_plugin = new plugin;
   // die ('end of the page now');
