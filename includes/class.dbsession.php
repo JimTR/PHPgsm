@@ -96,9 +96,9 @@
              * if you can not switch on do it or else exit ! 
              */ 
             $time = time() - $maxi;
-            echo " time = ".$maxi.'  current = '.time().'<br>' ;
+           // echo " time = ".$maxi.'  current = '.time().'<br>' ;
             $sql = "DELETE FROM `sessions` WHERE `updated_on` < ".$time;
-            echo $sql;
+           // echo $sql;
             $db->query($sql);
            // add clean up code for attachments 
             return true;
