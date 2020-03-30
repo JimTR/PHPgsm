@@ -1,0 +1,97 @@
+<!--
+   install.html
+   
+   Copyright 2020 Jim Richardson <jim@noideersoftware.co.uk>
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+   
+   
+-->
+
+                 <div class="col-lg-6">
+                  <div class="panel">
+                  <h3>Install a Game Server</h3>
+                  <p>Choose a server from the list</p>
+                  <form id="installs" action="">
+                  <!--#options#-->
+                  <div style="clear:none;float:left;margin-left:16px;"><button type="submit" id="install" class="btn btn-primary" >Install</button></div>
+                  </form>
+                  <div>
+                  
+                  </div>
+                  </div>
+                  </div>
+                     <div class="col-lg-6">
+                  <h3>Add Host Server</h3>
+                  <div>
+                     All Host servers must have PHPGsm installed <br> We can try to install a host server from here, but a better bet is to install the software on the host and 
+                     then add it here 
+                     <p>Enter the URL of the host server</p>
+                     
+                  </div>
+                  
+                  <!--<progress value="3" max="8">
+                  <div class="progress-bar">
+                   <span style="width: 80%;">Progress: 80%</span>
+                  </div>
+                  </progress>-->
+                  <div class="modal fade" id="installer" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id='ititle' >Modal Header</h4>
+        </div>
+        <div class="modal-body">
+                  <div style="float:left;clear:left;">Current Disk Space</div>
+                  <div style="clear:both;">Approx Installed size</div>
+                  <div style="clear:both;">Dependencies Installed</div>
+                  <form action ="">
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="path" class="col-sm-3 control-label">Path</label><input id="path" type="text" placeholder="" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="sname" class="col-sm-3 control-label">Server Name</label><input id="sname" type="text" placeholder="PHPGsm" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="pass" class="col-sm-3 control-label">Server Password</label><input id="pass" type="password" placeholder="" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="rcon" class="col-sm-3 control-label" >Rcon Password</label><span style="color:red;">*</span><input id="rcon" type="password" placeholder="" class="col-sm-4"></input>
+					  </div>
+                  </form>
+        </div>
+        <div class="modal-footer">
+		  <button type="submit" class="btn btn-primary">Install</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+                  </div>
+<script>
+	 function test(server,servern) {
+    // alert('test hit');
+     $("#ititle").html('install '+server);
+     $("#path").attr("placeholder", servern);
+     $("#installer").modal();
+}
+</script>
