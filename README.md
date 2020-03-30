@@ -10,4 +10,5 @@ Written in PHP
 <li>Team Fortress 2</li>
 <li>Sticky Bots</li>
 <li>Project Cars 3</li>
+  <li>Pirates, Vikings & Knights 3</li>  
 </ul>
