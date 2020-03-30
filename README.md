@@ -1,4 +1,4 @@
-New Concecpt of lgsm controler
+Steam Game Server Controller
 Written in PHP
 <p><h2>PHP Controller for Steam games</h2>currently totally unstable </p>
 <p>Game support is currently limited</p>
