@@ -1,6 +1,7 @@
 <?PHP
 
     require 'includes/master.inc.php'; // load required files
+    echo 'here';
     //require ('steamauth/steamauth.php');
 	$time = microtime();
 	$time = explode(' ', $time);
@@ -12,7 +13,7 @@ if (!isset($_SERVER['HTTP_REFERER']))
 	redirect("index.php");
 	} 
 //die();
-//print_r($_SERVER);
+print_r($_SERVER);
     if($Auth->id > 0) 
            {
 			   // already logged in default to the main index
