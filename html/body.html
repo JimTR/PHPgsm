@@ -41,7 +41,7 @@ progress[value] {
                   	
 
                  <div style="clear:both;padding:1%;">
-                 		<p>Online Game Servers</p>
+                 		<!--<p>Online Game Servers</p>-->
                  			<i id="rgames">
                  			<div style="text-align:center;">
                  			<h3>Loading</h3>
@@ -81,7 +81,7 @@ Settings
       </div>
 </div>
                  
-                  <div id="calc" class="tab-pane">
+                  <div id="servers" class="tab-pane">
  
               					<br>
  <div class="panel panel-success" style="margin-bottom:0px;">
@@ -99,15 +99,10 @@ Settings
 </div>
 	 </div>
                   
-                  <div id="distance" class="tab-pane">install
-                  <p>Currently, Servers can only be installed via the command line utility</p>
-                  <progress value="3" max="8">
-                  <div class="progress-bar">
-        <span style="width: 80%;">Progress: 80%</span>
-    </div>
-                  </progress>
-                  </div>
-                            
+                  <div id="install" class="tab-pane">
+                                   
+                      <!--#install#-->
+                  </div>       
 									
                   <div id="contact" class="tab-pane">
 							<section>
@@ -228,6 +223,24 @@ for (i = 0; i < coll.length; i++) {
         }
       });
   } );
+  
+					  $( "#installs" ).submit(function( event ) {
+                      if ( $( "select").val()) {
+						  event.preventDefault();
+                       //alert( $( "select").val() );
+                       server = $( "#gs option:selected" ).text();
+                       var servern = $( "select").val();
+                       test(server,servern);
+                       $("#install").blur();
+                        return;
+                       }
+ 
+                      //alert("no go");
+                       event.preventDefault();
+                       $("#install").blur();
+                       return;
+                      });
+                  
   </script>
 <script>  
   $( function() {
@@ -251,6 +264,7 @@ for (i = 0; i < coll.length; i++) {
         }
       });
   } );
+ 
   </script>
 </body>
 
