@@ -92,11 +92,59 @@ jQuery(document).ready(function(){
     initializeJS();
     updateClock();
     setInterval('updateClock()', 1000);
-    fetchboot();
-    fetchload();
-    fetchgames();	
+    //fetchboot();
+    //fetchload();
+    fetchgames();
+    fetchservers();	
 
 });
+ $( function() {
+  var icons = {
+      header: "ui-icon-circle-arrow-e",
+      activeHeader: "ui-icon-circle-arrow-s"
+    };
+    $( "#accordion" )
+      .accordion({
+      icons: icons,
+      collapsible: true,
+      active: false ,
+      heightStyle: "content",
+        header: "> div > h4"
+      })
+      .sortable( {
+        axis: "y",
+        handle: "i",
+        stop: function( event, ui ) {
+          // IE doesn't register the blur when sorting
+          // so trigger focusout handlers to remove .ui-state-focus
+          ui.item.children( "h3" ).triggerHandler( "focusout" );
+ 
+          // Refresh accordion to handle new order
+          $( this ).accordion( "refresh" );
+        }
+      });
+  } );
+   $( function() {
+    $( "#accordion2" )
+      .accordion({
+      collapsible: true,
+      active: false ,
+      heightStyle: "content",
+        header: "> div > h4"
+      })
+      .sortable( {
+        axis: "y",
+        handle: "i",
+        stop: function( event, ui ) {
+          // IE doesn't register the blur when sorting
+          // so trigger focusout handlers to remove .ui-state-focus
+          ui.item.children( "h3" ).triggerHandler( "focusout" );
+ 
+          // Refresh accordion to handle new order
+          $( this ).accordion( "refresh" );
+        }
+      });
+  } );
 function updateClock ()
     {
     var currentTime = new Date ( );
@@ -164,6 +212,28 @@ function fetchgames(){
   },
   complete:function(data){
    setTimeout(fetchgames,3000);
+  }
+ });
+}
+function fetchservers(){
+ $.ajax({
+ url: 'ajax.php?action=allservers',
+  type: 'get',
+  success: function(data){
+   // Perform operation on return value
+   //alert(data);
+   //data = data.replace((/\n/g, "<br />"), "<br>");
+   var ld =data.split("*");
+   var base = ld[0];
+   var games = ld[1];
+   //$("#rgames").html(data);
+   //console.log (base);
+   //$("#accordion").html(base);
+   document.getElementById("accordion").innerHTML = base;
+  },
+  complete:function(data){
+   $( "#accordion" ).accordion( "refresh" );
+   setTimeout(fetchservers,13000);
   }
  });
 }
