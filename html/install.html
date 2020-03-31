@@ -49,7 +49,7 @@
                   </div>
                   </progress>-->
                   <div class="modal fade" id="installer" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:60%;">
     
       <!-- Modal content-->
       <div class="modal-content">
@@ -58,10 +58,10 @@
           <h4 class="modal-title" id='ititle' >Modal Header</h4>
         </div>
         <div class="modal-body">
-                  <div style="float:left;clear:left;">Current Disk Space</div>
+                  <!--<div style="float:left;clear:left;">Current Disk Space</div>
                   <div style="clear:both;">Approx Installed size</div>
                   <div style="clear:both;">Dependencies Installed</div>
-                  <form action ="">
+                  <form action ="javascript:install();">
 					  <div class="form-group" style="padding-bottom:3%;">
 					  <label for="path" class="col-sm-3 control-label">Path</label><input id="path" type="text" placeholder="" class="col-sm-4"></input>
 					  </div>
@@ -74,24 +74,84 @@
 					  <div class="form-group" style="padding-bottom:3%;">
 					  <label for="rcon" class="col-sm-3 control-label" >Rcon Password</label><span style="color:red;">*</span><input id="rcon" type="password" placeholder="" class="col-sm-4"></input>
 					  </div>
-                  </form>
-        </div>
+                  
+        </div> -->
+         <form action ="javascript:install();">
+        <section class="panel">
+              <header class="panel-heading tab-bg-primary" style="background:#007aff;">
+                <ul class="nav nav-tabs">
+				<li class="active">
+                    <a data-toggle="tab" href="#about1">Game Settings</a>
+                  </li>	
+                  <li class="">
+                    <a data-toggle="tab" href="#home1">Host Server</a>
+                  </li>
+                  <li class="">
+                    <a data-toggle="tab" href="#profile1">Terminal</a>
+                  </li>
+                  <li class="">
+                    <a data-toggle="tab" href="#contact1">Contact Em</a>
+
+                  </li>
+                </ul>
+              </header>
+              <div class="panel-body">
+                <div class="tab-content">
+                  <div id="home1" class="tab-pane" style="padding-top:1%;">
+                  <div style="float:left;clear:left;">Current Disk Space</div>
+                  <div style="float:left;clear:both;">Approx Installed size</div>
+                  <div style="float:left;clear:both;">Dependencies Installed</div>
+                  </div>
+                  <div id="about1" class="tab-pane active" style="padding-top:1%;">
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="path" class="col-sm-2 control-label">Install Path</label><input id="path" type="text" placeholder="" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="sn" class="col-sm-2 control-label">Server Name</label><input id="sn" type="text" placeholder="PHPGsm" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="sp" class="col-sm-2 control-label">Server Password</label><input id="sp" type="password" placeholder="" class="col-sm-4"></input>
+					  </div>
+					  <div class="form-group" style="padding-bottom:3%;">
+					  <label for="rcon" class="col-sm-2 control-label" >Rcon Password</label><span style="color:red;">&nbsp;*</span><input id="rcon" type="password" placeholder="" class="col-sm-4"></input>
+					  </div>
+                  </div>
+                  <div id="profile1" class="tab-pane" style="padding-top:1%;">Profile</div>
+                  <div id="contact1" class="tab-pane" style="padding-top:1%;">Contact</div>
+                </div>
+              </div>
+            </section>
         <div class="modal-footer">
 		  <button type="submit" class="btn btn-primary">Install</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
+        </form>
       </div>
       
     </div>
   </div>
-  
+  </div>
 
                   </div>
 <script>
 	 function test(server,servern) {
     // alert('test hit');
-     $("#ititle").html('install '+server);
+     $("#ititle").html('Install '+server);
      $("#path").attr("placeholder", servern);
      $("#installer").modal();
 }
+    function install() {
+		// install routine
+		alert('install hit');
+		 var windowSizeArray = [ "width=200,height=200",
+                                "width=300,height=400,scrollbars=yes" ];
+		 var url ="install.php";
+                var windowName = "popUp";//$(this).attr("name");
+                var windowSize = windowSizeArray[ $(this).attr("rel") ];
+
+                window.open(url, windowName,"_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=10px,left=500,width=400,height=400,location=someshit");
+
+                //event.preventDefault();
+
+	}
 </script>
