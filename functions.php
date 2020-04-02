@@ -465,7 +465,7 @@ function running_games($data) {
 			$i = strpos($value,",",0);
             $key = trim(substr($value,0,$i));
 		 if (strlen($key) === 0) {
-			 // only take the first processor
+			 
 			 break ;
 		 }
 		  $return[$key] = trim(substr($value,$i+1));
@@ -696,6 +696,7 @@ function display_games() {
 	$sql = 'select * from servers where enabled ="1"'; //select all enabled recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
+   
 foreach ($res as $data) {
 	//add the data array for GameQ
 	//this does allow remote locations
@@ -712,10 +713,11 @@ foreach ($res as $data) {
 		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
 		} // get local servers	
 	
-		 $tm = get_sessions();
+	$tm = get_sessions();
 	$tm =running_games(explode("*",$tm));
 	//print_r($tm);
 	if(!empty($tm)) {
+		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
     $GameQ->addServers($servers);
