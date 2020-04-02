@@ -81,13 +81,13 @@
               <header class="panel-heading tab-bg-primary" style="background:#007aff;">
                 <ul class="nav nav-tabs">
 				<li class="active">
-                    <a data-toggle="tab" href="#about1">Game Settings</a>
+                    <a data-toggle="tab" href="#gsettings">Game Settings</a>
                   </li>	
                   <li class="">
-                    <a data-toggle="tab" href="#home1">Host Server</a>
+                    <a data-toggle="tab" href="#host">Host Server</a>
                   </li>
                   <li class="">
-                    <a data-toggle="tab" href="#profile1">Terminal</a>
+                    <a data-toggle="tab" href="#terminal">Terminal</a>
                   </li>
                   <li class="">
                     <a data-toggle="tab" href="#contact1">Contact Em</a>
@@ -97,12 +97,12 @@
               </header>
               <div class="panel-body">
                 <div class="tab-content">
-                  <div id="home1" class="tab-pane" style="padding-top:1%;">
+                  <div id="host" class="tab-pane" style="padding-top:1%;max-height:520px !important;min-height:520px;">
                   <div style="float:left;clear:left;">Current Disk Space</div>
                   <div style="float:left;clear:both;">Approx Installed size</div>
                   <div style="float:left;clear:both;">Dependencies Installed</div>
                   </div>
-                  <div id="about1" class="tab-pane active" style="padding-top:1%;">
+                  <div id="gsettings" class="tab-pane active" style="padding-top:1%;max-height:520px !important;min-height:520px;">
 					  <div class="form-group" style="padding-bottom:3%;">
 					  <label for="path" class="col-sm-2 control-label">Install Path</label><input id="path" type="text" placeholder="" class="col-sm-4"></input>
 					  </div>
@@ -116,8 +116,13 @@
 					  <label for="rcon" class="col-sm-2 control-label" >Rcon Password</label><span style="color:red;">&nbsp;*</span><input id="rcon" type="password" placeholder="" class="col-sm-4"></input>
 					  </div>
                   </div>
-                  <div id="profile1" class="tab-pane" style="padding-top:1%;">Profile</div>
-                  <div id="contact1" class="tab-pane" style="padding-top:1%;">Contact</div>
+                  <div id="terminal" class="tab-pane" style="padding-top:1%;">
+                  <div class="col-lg-6" id ="log" style="background:#000;color:#fff;width:95%;max-height:520px !important;min-height:520px;overflow:scroll;padding:1%;float:left;margin-left:2%;white-space: nowrap;border-style:double;">
+                  Terminal has not started, check back after you install a game server 
+                  </div>
+                  
+                  </div>
+                  <div id="contact1" class="tab-pane" style="padding-top:1%;max-height:520px !important;min-height:520px;">Contact</div>
                 </div>
               </div>
             </section>
