@@ -146,16 +146,26 @@ foreach ($res as $data) {
 		
 }
 //die();
+  //echo $page2.CR;
+  //echo 'all data loaded'.CR;
 	//$template = new Template;
 	$sql = 'select * from game_servers';
 	$opts = $database->get_results($sql);
+	//print_r($opts);
+	$test = array();
 	$test['options']='<select id ="gs" class="form-control m-bot15" style="width:fit-content;float:left;">
                   <option value="">Choose Server</option>';
 	foreach ($opts as $options) {
 		// get servers back
-		$test['options'].= '<option value="'.$options['default_path'].'">'.$options['game_name'].'</option>';
+		//echo $options['game_name'].' '.$options['default_path'].CR;
+		$test['options'] = $test['options']. '<option value="'.$options['default_path'].'">'.$options['game_name'].'</option>';
+		//echo $test;
 	}
-	$test['options'].= '</select>';
+	$test['options']= $test['options'].'</select>';
+	
+	//echo 'options loaded'.CR;
+	//echo $test['options'];
+	//die;
 	$page['header'] = $template->load('html/header.html'); //load header
 	$page['body'] = $template->load('html/body.html'); //load body
 	$page['logo'] = $template->load('html/logo.html'); //logo
@@ -164,13 +174,13 @@ foreach ($res as $data) {
 	$page['tabs'] = $page1;
 	$page['games'] = $page2;
 	$page['install'] = $template->load('html/install.html');
-	//$page['options'= "";
+	//$page['options']= "";
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	
 	$template->replace_vars($test); 
 	// lang goes here
 	$template->publish();
-	//print_r($servers);
+	
 	}
 function array_search_partial($arr, $keyword) {
     foreach($arr as $index => $string) {

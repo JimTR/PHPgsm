@@ -78,9 +78,9 @@
         </div> -->
          <form action ="javascript:install();">
         <section class="panel">
-              <header class="panel-heading tab-bg-primary" style="background:#007aff;">
+              <header class="panel-heading tab-bg-primary" style="background:#007aff;" id="tabs">
                 <ul class="nav nav-tabs">
-				<li class="active">
+				<li class="active" id="gsettings">
                     <a data-toggle="tab" href="#gsettings">Game Settings</a>
                   </li>	
                   <li class="">
@@ -107,13 +107,13 @@
 					  <label for="path" class="col-sm-2 control-label">Install Path</label><input id="path" type="text" placeholder="" class="col-sm-4"></input>
 					  </div>
 					  <div class="form-group" style="padding-bottom:3%;">
-					  <label for="sn" class="col-sm-2 control-label">Server Name</label><input id="sn" type="text" placeholder="PHPGsm" class="col-sm-4"></input>
+					  <label for="sn" class="col-sm-2 control-label">Server Name</label><input id="sn" type="text" placeholder="PHPGsm" autocomplete="" class="col-sm-4"></input>
 					  </div>
 					  <div class="form-group" style="padding-bottom:3%;">
-					  <label for="sp" class="col-sm-2 control-label">Server Password</label><input id="sp" type="password" placeholder="" class="col-sm-4"></input>
+					  <label for="sp" class="col-sm-2 control-label">Server Password</label><input id="sp" type="password" placeholder="" autocomplete="" class="col-sm-4"></input>
 					  </div>
 					  <div class="form-group" style="padding-bottom:3%;">
-					  <label for="rcon" class="col-sm-2 control-label" >Rcon Password</label><span style="color:red;">&nbsp;*</span><input id="rcon" type="password" placeholder="" class="col-sm-4"></input>
+					  <label for="rcon" class="col-sm-2 control-label" >Rcon Password</label><span style="color:red;">&nbsp;*</span><input id="rcon" type="password" placeholder=""autocomplete="" class="col-sm-4"></input>
 					  </div>
                   </div>
                   <div id="terminal" class="tab-pane" style="padding-top:1%;">
@@ -143,6 +143,8 @@
     // alert('test hit');
      $("#ititle").html('Install '+server);
      $("#path").attr("placeholder", servern);
+     //var active = $( "#tabs" ).tabs( "option", "active" );
+     //alert (active);
      $("#installer").modal();
 }
     function install() {

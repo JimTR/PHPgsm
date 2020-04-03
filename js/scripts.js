@@ -187,20 +187,7 @@ function fetchboot(){
   }
  });
 }
-function fetchload(){
- $.ajax({
- url: 'ajax.php?action=load',
-  type: 'post',
-  success: function(data){
-   // Perform operation on return value
-   //alert(data);
-   $("#load").html(data);
-  },
-  complete:function(data){
-   setTimeout(fetchload,3000);
-  }
- });
-}
+
 function fetchgames(){
  $.ajax({
  url: 'ajax.php?action=rgames',
@@ -217,23 +204,30 @@ function fetchgames(){
 }
 function fetchservers(){
  $.ajax({
- url: 'ajax.php?action=allservers',
-  type: 'get',
-  success: function(data){
-   // Perform operation on return value
-   //alert(data);
-   //data = data.replace((/\n/g, "<br />"), "<br>");
-   var ld =data.split("*");
-   var base = ld[0];
-   var games = ld[1];
-   //$("#rgames").html(data);
-   //console.log (base);
-   //$("#accordion").html(base);
-   document.getElementById("accordion").innerHTML = base;
+ url: 'https:/noideersoftware.co.uk:7862/xml.php',
+  type: 'post',
+  dataType: "xml" ,
+  success: function(xml,status){
+   
+    $(xml).find('Servers').children('base_server').each(function(){
+     var sname = $(this).find('name').text();
+     var distro = $(this).find('distro').text();
+     var boot = $(this).find('uptime').text();
+     var load = $(this).find('load').text();
+     var x = sname+'boot'
+     $("#boot").html(boot);
+     $("#load").html(load);
+     //alert ('app id\n'+ app);
+     //console.log('name '+ sname + ' boot '+ boot);
+     //console.log(x);
+     
+    }); 
+       
+
+  
   },
-  complete:function(data){
-   $( "#accordion" ).accordion( "refresh" );
-   setTimeout(fetchservers,13000);
+  complete:function(xml){
+     setTimeout(fetchservers,1300);
   }
  });
 }
