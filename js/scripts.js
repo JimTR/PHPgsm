@@ -204,7 +204,7 @@ function fetchgames(){
 }
 function fetchservers(){
  $.ajax({
- url: 'https:/noideersoftware.co.uk:7862/xml.php',
+ url: 'xml.php',
   type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
