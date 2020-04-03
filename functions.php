@@ -852,7 +852,8 @@ function html_display($tm,$results) {
 			}
 			else {
 				//server not responding
-				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start</div>';
+				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
+				<br> or perhaps there is something else wrong</div>';
 			}
 			//return $disp;
 		}
