@@ -173,20 +173,6 @@ function updateClock ()
     // $('#clock').css('color','red');
          
  }
-function fetchboot(){
- $.ajax({
-  url: 'ajax.php?action=boottime',
-  type: 'post',
-  success: function(data){
-   // Perform operation on return value
-   //alert(data);
-   $("#boot").html(data);
-  },
-  complete:function(data){
-   setTimeout(fetchboot,3000);
-  }
- });
-}
 
 function fetchgames(){
  $.ajax({
@@ -204,7 +190,7 @@ function fetchgames(){
 }
 function fetchservers(){
  $.ajax({
- url: 'xml.php',
+ url: 'https://noideersoftware.co.uk:7862/xml.php',
   type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
