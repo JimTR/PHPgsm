@@ -196,24 +196,109 @@ function fetchservers(){
   success: function(xml,status){
    
     $(xml).find('Servers').children('base_server').each(function(){
-     var sname = $(this).find('name').text();
+	 var fname = $(this).find('fname').text(); //element name important	
+     var hname = $(this).find('name').text();
      var distro = $(this).find('distro').text();
      var boot = $(this).find('uptime').text();
      var load = $(this).find('load').text();
+     var ip = $(this).find('ip').text();
+     var cpu_model = $(this).find('cpu_model').text();
+     var cpu_processors = $(this).find('cpu_processors').text();
+     var cpu_cores = $(this).find('cpu_cores').text();
+     var cpu_speed = $(this).find('cpu_speed').text();
+     var cpu_cache = $(this).find('cpu_cache').text();
+     var kernel = $(this).find('kernel').text();
+     var php = $(this).find('php').text();
+     var screen = $(this).find('screen').text();
+     var glibc = $(this).find('glibc').text();
+     var mysql = $(this).find('mysql').text();
+     var apache = $(this).find('apache').text();
+     var curl = $(this).find('curl').text();
+     var nginx = $(this).find('nginx').text();
+     var quota = $(this).find('quota').text();
+     var postfix = $(this).find('postfix').text();
+     var memTotal = $(this).find('memTotal').text();
+     var memfree = $(this).find('memfree').text();
+     var memcache = $(this).find('memcache').text();
+     var memactive = $(this).find('memactive').text();
+     var swaptotal = $(this).find('swaptotal').text();
+     var swapfree = $(this).find('swapfree').text();
+     var swapcache = $(this).find('swapcache').text();
+     var boot_filesystem = $(this).find('boot_filesystem').text();
+     var boot_mount = $(this).find('boot_mount').text();
+     var boot_size = $(this).find('boot_size').text();
+     var boot_used = $(this).find('boot_used').text();
+     var boot_free = $(this).find('boot_mount').text();
      //var x = sname'
-     $("#boot"+sname).html(boot);
-     $("#load").html(load);
+     $("#boot"+fname).html(boot);
+     $("#load"+fname).html(load);
+     $("#memtotal"+fname).html(memTotal);
+     $("#memfree"+fname).html(memfree);
+     $("#memcached"+fname).html(memcache);
+     $("#memactive"+fname).html(memactive);
+     $("#cpu_model"+fname).html(cpu_model);
+     $("#cpu_processors"+fname).html(cpu_processors);
+     $("#cpu_cores"+fname).html(cpu_cores);
+     $("#cpu_speed"+fname).html(cpu_speed);
+     $("#cpu_cache"+fname).html(cpu_cache);
+     $("#ip"+fname).html(ip);
+     $("#boot_filesystem"+fname).html(boot_filesystem);
+     $("#boot_mount"+fname).html(boot_mount);
+     $("#boot_size"+fname).html(boot_size);
+     $("#boot_used"+fname).html(boot_used);
+     $("#boot_free"+fname).html(boot_free);
+     $("#swaptotal"+fname).html(swaptotal);
+     $("#swapfree"+fname).html(swapfree);
+     $("#swapcache"+fname).html(swapcache);
+     $("#distro"+fname).html(distro);
+     $("#kernel"+fname).html(kernel);
+     $("#hname"+fname).html(hname);
+     $("#php"+fname).html(php);
+     $("#screen"+fname).html(screen);
+     $("#apache"+fname).html(apache);
+     $("#glibc"+fname).html(glibc);
+     $("#mysql"+fname).html(mysql);
+     $("#curl"+fname).html(curl);
+     $("#nginx"+fname).html(nginx);
+     $("#quota"+fname).html(quota);
+     $("#postfix"+fname).html(postfix);
+     
      //alert ('app id\n'+ app);
-     console.log('boot'+ sname.trim() + ' boot '+ boot);
+     //console.log('fname '+ fname + ' boot '+ boot);
      //console.log(x);
      
     }); 
-       
-
+   var xmlDoc = xml;
+      
+    y=0;    
+$(xml).find('Servers').children('game_server').each(function(){
+	 var fname = $(this).find('name').text(); //element name important
+	 var players = $(this).find('players').text();
+	 if (players >0 ){
+	 var x = xmlDoc.getElementsByTagName("current_players")[y];
+	 //console.log(x) ;
+	 
+	 jr  = fname + "  " + $(x).find('pname1').text()+" "+$(x).find('pscore1').text() +"  "+$(x).find('ponline1').text() ;
+	 jr2  = fname+"  " + $(x).find('pname2').text()+" "+$(x).find('pscore2').text()+"  "+$(x).find('ponline1').text();
+	 
+	 console.log('player 1 '+jr);
+	 console.log('Player 2 '+jr2);
+ }
+ y=y+1; 
+	 //$(xml).find('Servers').children('game_server').children('fofserver2').each(function(){
+	 //var test = 
+	 	
+    //console.log(fname);
+     
+     //alert ('app id\n'+ app);
+     //console.log('fname '+ fname + ' boot '+ boot);
+     //console.log(x);
+     
+    }); 
   
   },
   complete:function(xml){
-     setTimeout(fetchservers,1300);
+     setTimeout(fetchservers,4000);
   }
  });
 }
