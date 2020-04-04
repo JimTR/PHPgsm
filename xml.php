@@ -53,12 +53,16 @@ foreach ($res as $data) {
     $track->addChild('maxplayers',$results[$data['host_name']]['gq_maxplayers']); 
     $players = $track->addChild('current_players');
     $i=0;
-   // foreach ($data['players'] as $op) {
-		//$i++
-    $players->addChild('pname', 'player name');
-    $players->addChild('pscore', 1);
-    $players->addChild('ponline','00:01:57');
-//}
+    $player_list = $results[$data['host_name']]['players']; // get the player array
+   foreach ($player_list as $pz) {
+		$i++;
+		$xname='pname'.$i;
+		$xscore='pscore'.$i;
+		$xonline='ponline'.$i;
+    $players->addChild($xname, $pz['name']);
+    $players->addChild($xscore, $pz['score']);
+    $players->addChild($xonline,$pz['time']);
+}
     
 }
 $xmlserver = "base_server";
