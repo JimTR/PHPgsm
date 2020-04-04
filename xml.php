@@ -2,6 +2,14 @@
 require 'includes/class.dbquick.php';
 require 'includes/config.php'; // get config
 include 'functions.php';
+if (!empty($_POST)) {
+	 $cmds = $_POST;
+ }
+ else {
+	 $cmds = $_GET;
+ }
+//$cmds = strtolower( $cmds );
+if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 $mem_info = get_mem_info();
 $disk_info = get_disk_info();
 $up_time = get_boot_time();
@@ -57,9 +65,9 @@ foreach ($res as $data) {
     orderBy($player_list,'gq_score','d');
    foreach ($player_list as $pz) {
 		$i++;
-		$xname='pname'.$i;
-		$xscore='pscore'.$i;
-		$xonline='ponline'.$i;
+		$xname='pname';
+		$xscore='pscore';
+		$xonline='ponline';
     $players->addChild($xname, $pz['name']);
     $players->addChild($xscore, $pz['score']);
     $players->addChild($xonline,gmdate("H:i:s",$pz['time']));
@@ -111,10 +119,35 @@ foreach ($base_servers as $data) {
 		
 	}
 }
-Header('Content-type: text/xml');
-header('Access-Control-Allow-Origin: *');
-print($xml->asXML());
+if (!(isset($cmds['action']))){ 
+XML_print($xml);
+}
+else {
+	XML_array($xml);
+}
+function XML_print($xml) {
+	Header('Content-type: text/xml');
+	header('Access-Control-Allow-Origin: *');
+	print($xml->asXML());
+}
+function XML_array($xml) {
+	$new = simplexml_load_string($xml->asXML());
+	$con = json_encode($new);  
+	$newArr = json_decode($con, true); 
+  
+print_r($newArr);         
+}  
+function change_value_case($array,$case = CASE_LOWER){
+        $array =array_change_key_case($array, $case);
+        switch ($case) {
+			case CASE_LOWER:
+				$array = array_map('strtolower', $array);
+				break;
+			case CASE_UPPER:
+				$array = array_map('strtoupper',$array);
+				break;	
+       }
+        return $array;
+    }
 
-          
-//          print_r ($results);
 ?>
