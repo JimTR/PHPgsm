@@ -561,7 +561,7 @@ else {
 	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load">'.$cpu_info['load'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load'.$sname.'">'.$cpu_info['load'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache size'].'</td></tr>
 	<tr><td style="width:20%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
