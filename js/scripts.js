@@ -200,11 +200,11 @@ function fetchservers(){
      var distro = $(this).find('distro').text();
      var boot = $(this).find('uptime').text();
      var load = $(this).find('load').text();
-     var x = sname+'boot'
-     $("#boot").html(boot);
+     //var x = sname'
+     $("#boot"+sname).html(boot);
      $("#load").html(load);
      //alert ('app id\n'+ app);
-     //console.log('name '+ sname + ' boot '+ boot);
+     console.log('boot'+ sname.trim() + ' boot '+ boot);
      //console.log(x);
      
     }); 

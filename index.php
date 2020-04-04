@@ -1,18 +1,17 @@
 <?php
 @ob_end_clean();
 require 'includes/master.inc.php'; // do login and stuff
-include("functions.php");
+
+//include("functions.php");
 define ("CR", "</br>");
 
 $sql = 'select * from base_servers where extraip="0" and enabled="1"';
-if (is_cli()) {
-//$x=check_sudo(get_current_user());
 
-//include  'cli.php';
-}
-else {
+
+
 	
 	$database = new db(); // connect to database
+	
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
 	$servers = array(); // set array
@@ -23,6 +22,7 @@ else {
 		$template->publish();
 		exit;
 	}
+	
 foreach ($res as $data) {
 	
 	
@@ -167,21 +167,27 @@ foreach ($res as $data) {
 	//echo $test['options'];
 	//die;
 	$page['header'] = $template->load('html/header.html'); //load header
+	//echo '<br>header loaded<br>';
 	$page['body'] = $template->load('html/body.html'); //load body
+	//echo 'body loaded<br>';
 	$page['logo'] = $template->load('html/logo.html'); //logo
+	//echo 'logo loaded<br>';
 	$page['sidebar'] = $template->load('html/sidebar.html'); // menu
-	$page['about'] = display_version();
+	//echo 'sidebar loaded<br>';
+	$page['about'] = 'rewrite';
+	//echo 'about loaded<br>';
 	$page['tabs'] = $page1;
 	$page['games'] = $page2;
 	$page['install'] = $template->load('html/install.html');
 	//$page['options']= "";
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	
-	$template->replace_vars($test); 
+	$template->replace_vars($test);
+	//echo '<br>about to publish'; 
 	// lang goes here
 	$template->publish();
 	
-	}
+	
 function array_search_partial($arr, $keyword) {
     foreach($arr as $index => $string) {
         if (strpos($string, $keyword) !== FALSE)

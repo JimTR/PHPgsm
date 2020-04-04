@@ -1,4 +1,5 @@
 <?php
+echo 'functions 1.01';
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
@@ -554,8 +555,8 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
 }
 else {
-	
-	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot">'.$cpu_info['boot_time'].'</td></tr>
+	$sname='ickleh';
+	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot'.$sname.'">'.$cpu_info['boot_time'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
