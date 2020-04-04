@@ -54,6 +54,7 @@ foreach ($res as $data) {
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
+    orderBy($player_list,'gq_score','d');
    foreach ($player_list as $pz) {
 		$i++;
 		$xname='pname'.$i;
@@ -61,7 +62,7 @@ foreach ($res as $data) {
 		$xonline='ponline'.$i;
     $players->addChild($xname, $pz['name']);
     $players->addChild($xscore, $pz['score']);
-    $players->addChild($xonline,$pz['time']);
+    $players->addChild($xonline,gmdate("H:i:s",$pz['time']));
 }
     
 }
@@ -70,6 +71,7 @@ foreach ($base_servers as $data) {
 	
     $track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['name']);
+    $track->addChild('fname',$data['fname']);
     $track->addChild('distro',$data['distro']);
     $track->addChild('ip', $data['ip']);
     $track->addChild('cpu_model', $data['cpu_model']);
