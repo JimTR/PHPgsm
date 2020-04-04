@@ -14,6 +14,14 @@ $sql = 'select * from base_servers where extraip="0" and enabled="1"';
 	
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
+	foreach ($res as $data) {
+		// get friendly name
+		$fname = $data['fname'];
+	}
+	$template->load('html/base_server_detail.html');
+	$template->replace('fname',$fname); //add id's
+	$bs1=$template->get_template();
+	//exit;
 	$servers = array(); // set array
 	if (empty($Auth->id)) {
 		
@@ -27,11 +35,16 @@ foreach ($res as $data) {
 	
 	
 	$template->load('html/base_server.html'); // load blank template
+	$template->replace('bs1',$bs1);
+	$subpage['server_title'] = $data['name'].' ('.$data['ip'].')';
+	$template->replace_vars($subpage);
+	$page1.= $template->get_template();
+	//use xml
 	//add the data array for base server 
 	//this does allow remote locations
 	// as long as you have the remote software installed
 	
-	$subpage['server_title'] = $data['name'].' ('.$data['ip'].')';
+	/*$subpage['server_title'] = $data['name'].' ('.$data['ip'].')';
 	$subpage['host'] = $data['url'].':'.$data['port'] ;
 	$subpage['id'] = 'collapse'.$acc ;
 	$subpage['ip'] = $data['ip'];
@@ -49,7 +62,8 @@ foreach ($res as $data) {
 	$subpage['mem'] = $server[3];
 	$subpage['user'] = $server[4];
 	$template->replace_vars($subpage);
-	$page1.= $template->get_template(); 
+	$page1.= $template->get_template();
+	*/  
 	}
 	
 		
