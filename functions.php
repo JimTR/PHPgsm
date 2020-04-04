@@ -452,7 +452,7 @@ else {
 }
 else {
 	$disp = '<table style="width100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
-	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;" id="memtotalickleh">'.$mem_info['MemTotal'].'</td><td>'.$mem_info['MemFree'].'</td><td>'.$mem_info['Cached'].'<td>'.$mem_info['Active'].'</td></tr>
+	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;" id="memtotalickleh">'.$mem_info['MemTotal'].'</td><td id="memfreeickleh">'.$mem_info['MemFree'].'</td><td id="memcachedickleh">'.$mem_info['Cached'].'<td>'.$mem_info['Active'].'</td></tr>
 	<tr><td style="color:red;">Swap</td><td>'.$mem_info['SwapTotal'].'</td><td>'.$mem_info['SwapFree'].'</td><td>'.$mem_info['SwapCached'].'</td></tr></table>';
 	
 	return $disp;
