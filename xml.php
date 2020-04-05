@@ -65,9 +65,9 @@ foreach ($res as $data) {
     orderBy($player_list,'gq_score','d');
    foreach ($player_list as $pz) {
 		$i++;
-		$xname='pname'.$i;
-		$xscore='pscore'.$i;
-		$xonline='ponline'.$i;
+		$xname='pname';
+		$xscore='pscore';
+		$xonline='ponline';
     $players->addChild($xname, $pz['name']);
     $players->addChild($xscore, $pz['score']);
     $players->addChild($xonline,gmdate("H:i:s",$pz['time']));
