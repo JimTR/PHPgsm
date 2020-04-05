@@ -317,6 +317,7 @@ function exe_lgsm($server,$action,$exe)
 			$disp = 'Starting Server '.$detail['host_name'];
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
+			$update['starttime'] = time();
 			$where['host_name'] = $exe; 
 			$database->update('servers',$update,$where);
 			break;
@@ -332,6 +333,7 @@ function exe_lgsm($server,$action,$exe)
 			exec($cmd);
 			$disp = 'Stopped Server '.$detail['host_name'];
 			$update['running'] = 0;
+			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
 			$database->update('servers',$update,$where);
 			
@@ -356,6 +358,7 @@ function exe_lgsm($server,$action,$exe)
 				$disp = 'Restarting Server '.$detail['host_name'];
 				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 				$update['running'] = 1;
+				$update['starttime'] = time();
 				$where['host_name'] = $exe; 
 				$database->update('servers',$update,$where);
 				break;
