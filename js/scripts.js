@@ -273,27 +273,49 @@ function fetchservers(){
     y=0;    
 $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text(); //element name important
-	 var players = $(this).find('players').text();
+	 
+	 var mplayers = $(this).find('maxplayers').text();
+	 var online = $(this).find('online').text();
+	 if (online === "Online") {
+		 var cmap = $(this).find('currentmap').text();
+	     var players = $(this).find('players').text();
 	 if (players >0 ){
 	 var x = xmlDoc.getElementsByTagName("current_players")[y];
-	 //console.log(x) ;
 	 
-	 jr  = fname + "  " + $(x).find('pname1').text()+" "+$(x).find('pscore1').text() +"  "+$(x).find('ponline1').text() ;
-	 jr2  = fname+"  " + $(x).find('pname2').text()+" "+$(x).find('pscore2').text()+"  "+$(x).find('ponline1').text();
-	 
-	 console.log('player 1 '+jr);
-	 console.log('Player 2 '+jr2);
+     console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap  );
+            var corpName = $(this).find('pname').text();
+            var result = corpName.split('|');
+            var corpName = $(this).find('pscore').text();
+            var score = corpName.split('|');
+            var corpName = $(this).find('ponline').text();
+            var time = corpName.split('|');
+			//console.log("cn "+corpName);
+			$.each(result, function (index, value) {
+				if (time[index]===""){
+					// this can happen .. ignore it
+				}
+				else if ( typeof time[index] === "undefined") {
+					// throw away tat
+				}
+				else {
+					console.log("Player "+value+" Score "+ score[index]+" Time "+time[index]);
+					// here process the playerlist 
+	}
+    });
+           
+ 
+ }
+ else {
+	 console.log("no one is playing on "+fname);
+	 //here make sure playerlist is empty & update times etc
  }
  y=y+1; 
-	 //$(xml).find('Servers').children('game_server').children('fofserver2').each(function(){
-	 //var test = 
-	 	
-    //console.log(fname);
-     
-     //alert ('app id\n'+ app);
-     //console.log('fname '+ fname + ' boot '+ boot);
-     //console.log(x);
-     
+	
+ }
+ else {
+	 console.log(fname+" is off line");
+	 // todo add screen session Id to xml 
+ }
     }); 
   
   },
