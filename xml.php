@@ -68,9 +68,9 @@ foreach ($res as $data) {
 		$xname='pname';
 		$xscore='pscore';
 		$xonline='ponline';
-    $players->addChild($xname, $pz['name'].'\n');
-    $players->addChild($xscore, $pz['score'].'\n');
-    $players->addChild($xonline,gmdate("H:i:s",$pz['time']).'\n');
+    $players->addChild($xname, $pz['name'].'|');
+    $players->addChild($xscore, $pz['score'].'|');
+    $players->addChild($xonline,gmdate("H:i:s",$pz['time']).'|');
 }
     
 }
