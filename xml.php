@@ -59,6 +59,7 @@ foreach ($res as $data) {
     $track->addChild('startcmd',$data['startcmd']);
     $track->addChild('starttime',$time);
     $track->addChild('online',$online);
+    $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
     $track->addChild('maxplayers',$results[$data['host_name']]['gq_maxplayers']); 
