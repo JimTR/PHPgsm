@@ -49,12 +49,14 @@ foreach ($res as $data) {
     $track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['host_name']);
     $track->addChild('app_id',$data['app_id']);
+    $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
     $track->addChild('location', $data['location']);
     $track->addChild('url', $data['url'].':'.$data['bport']);
     $track->addChild('engine',$data['type']);
     $track->addChild('enabled',$data['enabled']);
     $track->addChild('startcmd',$data['startcmd']);
+    $track->addChild('starttime',gmdate("H:i:s",$data['starttime']));
     $track->addChild('online',$online);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
