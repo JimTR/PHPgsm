@@ -56,7 +56,7 @@ foreach ($res as $data) {
     $track->addChild('engine',$data['type']);
     $track->addChild('enabled',$data['enabled']);
     $track->addChild('startcmd',$data['startcmd']);
-    $track->addChild('starttime',gmdate("H:i:s",$data['starttime']));
+    $track->addChild('starttime',gmdate("g:ia \o\n l jS F Y \(e\)",$data['starttime']));
     $track->addChild('online',$online);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
