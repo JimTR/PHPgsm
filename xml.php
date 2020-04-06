@@ -46,7 +46,8 @@ foreach ($res as $data) {
 	else {
 		$online = 'Online';
 	}
-    $track = $xml->addChild($xmlserver);
+	$time= date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
+	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['host_name']);
     $track->addChild('app_id',$data['app_id']);
     $track->addChild('logo',$data['logo']);
@@ -56,7 +57,7 @@ foreach ($res as $data) {
     $track->addChild('engine',$data['type']);
     $track->addChild('enabled',$data['enabled']);
     $track->addChild('startcmd',$data['startcmd']);
-    $track->addChild('starttime',gmdate("g:ia \o\n l jS F Y \(e\)",$data['starttime']));
+    $track->addChild('starttime',$time);
     $track->addChild('online',$online);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
