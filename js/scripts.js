@@ -197,6 +197,9 @@ function fetchservers(){
    
     $(xml).find('Servers').children('base_server').each(function(){
 	 var fname = $(this).find('fname').text(); //element name important	
+	
+	 	 var bfname = fname;
+	 console.log(bfname);
      var hname = $(this).find('name').text();
      var distro = $(this).find('distro').text();
      var boot = $(this).find('uptime').text();
@@ -269,20 +272,27 @@ function fetchservers(){
      
     }); 
    var xmlDoc = xml;
-      
-    y=0;    
+    //console.log(bfname);  
+    y=0;
+    totalplayers=0; 
+    totgames=0;
+    activegames=0;   
 $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text(); //element name important
-	 
+	 var bname = $(this).find('fname').text();
 	 var mplayers = $(this).find('maxplayers').text();
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
 		 var cmap = $(this).find('currentmap').text();
 	     var players = $(this).find('players').text();
+	     totgames = parseInt(totgames)+1;
+	     totalplayers = parseInt(totalplayers,10) + parseInt(players,10);
+	     var start = $(this).find('starttime').text();
 	 if (players >0 ){
+		 activegames=parseInt(activegames)+1;
 	 var x = xmlDoc.getElementsByTagName("current_players")[y];
 	 
-     console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap  );
+     console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap+ " started at "+start  );
             var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
@@ -296,9 +306,10 @@ $(xml).find('Servers').children('game_server').each(function(){
 				}
 				else if ( typeof time[index] === "undefined") {
 					// throw away tat
+					//console.log("Player "+value+" Score "+ score[index]+" Time "+time[index]);
 				}
 				else {
-					console.log("Player "+value+" Score "+ score[index]+" Time "+time[index]);
+					//console.log("Player "+value+" Score "+ score[index]+" Time "+time[index]);
 					// here process the playerlist 
 	}
     });
@@ -306,17 +317,22 @@ $(xml).find('Servers').children('game_server').each(function(){
  
  }
  else {
-	 console.log("no one is playing on "+fname);
+	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
  }
+ 
  y=y+1; 
 	
  }
  else {
-	 console.log(fname+" is off line");
+	 //console.log(fname+" is off line");
 	 // todo add screen session Id to xml 
  }
-    }); 
+  $("#gsr"+bname).html(totgames);
+  $("#asr"+bname).html(activegames);
+  $("#tp"+bname).html(totalplayers);
+    });
+    
   
   },
   complete:function(xml){
