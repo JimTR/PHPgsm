@@ -22,7 +22,7 @@ require_once('GameQ/Autoloader.php'); //load GameQ
  define( 'DB_NAME', $site->config['database']['database'] ); // set database name
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
 $res = $database->get_results($sql); 
 $sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
@@ -49,6 +49,7 @@ foreach ($res as $data) {
 	$time= date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['host_name']);
+    $track->addChild(fname,$data['fname']);
     $track->addChild('app_id',$data['app_id']);
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
