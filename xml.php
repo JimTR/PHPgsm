@@ -46,7 +46,6 @@ foreach ($res as $data) {
 	else {
 		$online = 'Online';
 	}
-	$time= date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['host_name']);
     $track->addChild(fname,$data['fname']);
@@ -58,7 +57,7 @@ foreach ($res as $data) {
     $track->addChild('engine',$data['type']);
     $track->addChild('enabled',$data['enabled']);
     $track->addChild('startcmd',$data['startcmd']);
-    $track->addChild('starttime',$time);
+    $track->addChild('starttime',date('g:ia \o\n l jS F Y \(e\)', $data['starttime']));
     $track->addChild('online',$online);
     $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
@@ -73,9 +72,9 @@ foreach ($res as $data) {
 		$xname='pname';
 		$xscore='pscore';
 		$xonline='ponline';
-    $players->addChild($xname, $pz['name'].'|');
-    $players->addChild($xscore, $pz['score'].'|');
-    $players->addChild($xonline,gmdate("H:i:s",$pz['time']).'|');
+    $players->addChild('pname', $pz['name'].'|');
+    $players->addChild('pscore', $pz['score'].'|');
+    $players->addChild('ponline',gmdate("H:i:s",$pz['time']).'|');
 }
     
 }
