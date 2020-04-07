@@ -816,7 +816,7 @@ function html_display($tm,$results) {
 					orderBy($player_list,'gq_score','d'); // order by score
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
-						$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
+						$playerN = $player_list[$k]['gq_name']; // chop to 20 chrs
 						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						switch (true) {
