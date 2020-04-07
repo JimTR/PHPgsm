@@ -50,6 +50,7 @@ foreach ($res as $data) {
     $track->addChild('name',$data['host_name']);
     $track->addChild(fname,$data['fname']);
     $track->addChild('app_id',$data['app_id']);
+    $track->addChild('rt',date_diff($data['starttime'], date()));
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
     $track->addChild('location', $data['location']);
