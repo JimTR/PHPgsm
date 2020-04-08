@@ -40,16 +40,13 @@ foreach ($res as $getgames) {
 $xml = new SimpleXMLElement('<Servers/>');
 $xmlserver="game_server";
 foreach ($res as $data) {
-	//$rt = abs(time() - $data['starttime']);
-	//echo $data['starttime'];
-	//die();
+	
 	$now = new Datetime();
 	$date = date("Y-m-d",$data['starttime']);
 	 
 	$date = new DateTime();
 	$date->setTimestamp($data['starttime']);
-	//$january = new DateTime('2010-01-01');
-    //$february = new DateTime('2010-02-01');
+	
 	$interval = $now->diff($date);
 
     $rt = $interval->format('%a days %I mins %S Seconds');
@@ -63,6 +60,9 @@ foreach ($res as $data) {
     $track->addChild('name',$data['host_name']);
     $track->addChild(fname,$data['fname']);
     $track->addChild('app_id',$data['app_id']);
+    $track->addChild('game_port',$data['port']);
+    $track->addChild('source_port',$data['source_port']);
+    $track->addChild('client_port',$data['client_port']);
     $track->addChild('rt',$rt );
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
@@ -89,8 +89,9 @@ foreach ($res as $data) {
     $players->addChild('pname', $pz['name'].'|');
     $players->addChild('pscore', $pz['score'].'|');
     $players->addChild('ponline',gmdate("H:i:s",$pz['time']).'|');
+  
 }
-    
+  $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);    
 }
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
