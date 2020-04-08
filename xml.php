@@ -78,7 +78,7 @@ foreach ($res as $data) {
     $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
-    $track->addChild('maxplayers',$results[$data['host_name']]['gq_maxplayers']); 
+    $track->addChild('maxplayers',$data['max_players']); 
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
