@@ -49,7 +49,7 @@ foreach ($res as $data) {
 	
 	$interval = $now->diff($date);
 
-    $rt = $interval->format('%a days %I mins %S Seconds');
+    $rt = $interval->format('%a days %h hours %I mins %S Seconds');
 	if (empty($results[$data['host_name']]['gq_online'])) {
 		$online = 'Offline';
 	}
