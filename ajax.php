@@ -34,7 +34,7 @@
  $cmds = change_value_case($cmds,CASE_LOWER);
   
  if(isset($cmds['action'])) {
-
+header('Access-Control-Allow-Origin: *');
 switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
