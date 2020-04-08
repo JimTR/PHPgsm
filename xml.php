@@ -63,6 +63,8 @@ foreach ($res as $data) {
     $track->addChild('game_port',$data['port']);
     $track->addChild('source_port',$data['source_port']);
     $track->addChild('client_port',$data['client_port']);
+    $track->addChild('server_pass',$data['server_password']);
+    $track->addChild('rcon_pass',$data['rcon_password']);
     $track->addChild('rt',$rt );
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
