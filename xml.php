@@ -40,6 +40,19 @@ foreach ($res as $getgames) {
 $xml = new SimpleXMLElement('<Servers/>');
 $xmlserver="game_server";
 foreach ($res as $data) {
+	//$rt = abs(time() - $data['starttime']);
+	//echo $data['starttime'];
+	//die();
+	$now = new Datetime();
+	$date = date("Y-m-d",$data['starttime']);
+	 
+	$date = new DateTime();
+	$date->setTimestamp($data['starttime']);
+	//$january = new DateTime('2010-01-01');
+    //$february = new DateTime('2010-02-01');
+	$interval = $now->diff($date);
+
+    $rt = $interval->format('%a days %I mins %S Seconds');
 	if (empty($results[$data['host_name']]['gq_online'])) {
 		$online = 'Offline';
 	}
@@ -50,7 +63,7 @@ foreach ($res as $data) {
     $track->addChild('name',$data['host_name']);
     $track->addChild(fname,$data['fname']);
     $track->addChild('app_id',$data['app_id']);
-    $track->addChild('rt',date_diff($data['starttime'], date()));
+    $track->addChild('rt',$rt );
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
     $track->addChild('location', $data['location']);
