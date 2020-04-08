@@ -1,20 +1,23 @@
 
 <div class="group">
-    <h4><i style="margin-left:1.5%;"id="<!--#key#-->name"><!--#server_name#--> </i><i style="float:right;"><img id="<!--#key#-->status" src ="<!--#Status#-->"></i></h4>
+    <h4><i style="margin-left:1.5%;"id="sid<!--#key#-->"></i><i style="float:right;"><img id="status<!--#key#-->" src =""></i></h4>
     <div>
-       
+       <div style="width:100%;padding-bottom:1%;"><img id="lg<!--#key#-->" style="width:5%;" src="" /></div>
     <div class="col-lg-6">
-       <img style="width:10%;" src="<!--#logo#-->" />
+       
        <p style="width:100%;color:blue;">General Options</p> 
-       <table style="width:100%;"> 
-       <tr><td style="width:25%;color:red;">Server password</td><td> <!--#Server password#--></td></tr> 
-       <tr><td style="color:red;">RCON password</td><td><!--#RCON password#--></td></tr>
-       <tr><td style="color:red;">Default map</td><td><!--#Default map#--></td></tr>
-       <tr><td style="color:red;">Current map</td><td><!--#Current map#--></td></tr>
-        <tr><td style="color:red;">Online Players</td><td><!--#players#--></td></tr>
-       <tr><td style="color:red;">Max Players</td><td> <!--#Maxplayers#--></td></tr> 
-       <tr><td style="color:red;"> Update On Start</td><td> <!--#Update on start#--></td></tr>
-      
+       <table style="width:100%;">
+       <tbody id="gopt<!--#key#-->"> 
+       	<tr><td style="width:25%;color:red;">Server Name</td><td id="sn<!--#key#-->"></td></tr> 
+       	<tr><td style="color:red;">Server password</td><td id="sp<!--#key#-->"></td></tr>
+       	<tr><td style="color:red;">RCON password</td><td id="rp<!--#key#-->"></td></tr>
+       	<tr><td style="color:red;">Default map</td><td id="dm<!--#key#-->"></td></tr>
+       	<tr><td style="color:red;">Max Players</td><td id="mp<!--#key#-->"></td></tr> 
+       	<tr><td style="color:red;">Game Port</td><td id="gp<!--#key#-->"></td></tr>
+       	<tr><td style="color:red;">Source Port</td><td id="sp1<!--#key#-->"></td></tr> 
+       	<tr><td style="color:red;">Client Port</td><td id="cp<!--#key#-->"></td></tr>
+       	
+      </tbody>
       </table>
     </div>
     
@@ -23,94 +26,41 @@
                          <!--#user#-->
                      </div>
        <div  class="col-lg-6" style="margin-top:1%;float:right;">
-       <p style="width:100%;color:blue;">Ports</p>
+       <p style="width:100%;color:blue;">Server Stats</p>
        <table style="width:100%;">
-       <tr><td style="width:20%;color:red;">Game Port</td><td> <!--#gameport#--></td></tr>
-       <tr><td style="color:red;">Source Port</td><td><!--#sourceport#--></td></tr> 
-       <tr><td style="color:red;">Client Port</td><td><!--#clientport#--></td></tr>
+       <tr><td style="width:25%;color:red;">Current map</td><td id="cm<!--#key#-->" ></td></tr>
+        	<tr><td style="color:red;">Online Players</td><td id="po<!--#key#-->" ></td></tr>
+       	
+       	<tr><td style="color:red;">Up Time</td><td id="to<!--#key#-->"></td></tr>
        </table>
        </div>  
        <div style="padding-top:1%;clear:both;">
-       
-                                 
-                <div>
-                  <div class="panel-body">
-                  <!--<a href="#<!--#key#-->start" data-toggle="modal" class="btn btn-primary">Commands</a>-->
-                  <div style="clear:both;">
-								<button #sbstate# id ="<!--#key#-->sbutton" data-original-title="Start <!--#key#-->" data-content="Start <!--#key#--> with the current configuration" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Start</button>
-								<button #ststate# id ="<!--#key#-->qbutton" data-original-title="Stop <!--#key#-->" data-content="This will stop <!--#key#--> now ! No warning will be given to players online" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Stop</button>
-								<button #rstate# id ="<!--#key#-->rbutton" data-original-title="Restart <!--#key#-->" data-content="Restart game server this could take a minute or two" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Restart</button>
-								<button #scstate# id ="<!--#key#-->cbutton" data-original-title="Start <!--#key#--> Console" data-content="Console opens in a new tab" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Console</button>
-								<button #ustate# id ="<!--#key#-->ubutton" data-original-title="Update <!--#key#--> Server" data-content="Update <!--#key#--> to the latest version from the steam repositories" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Update</button>
-								<button #vstate# id ="<!--#key#-->vbutton" data-original-title="Validate <!--#key#--> Server" data-content="Validate <!--#key#--> server against steam servers, this may over write some custom settings" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Validate</button>
-								<button #bstate# id ="<!--#key#-->bbutton" data-original-title="Back Up <!--#key#--> Server" data-content="Back up <!--#key#--> server data to your local server you can use the cron tab to do this automatically" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Backup</button>
+								<button id ="<!--#key#-->sbutton" data-original-title="Start <!--#key#-->" data-content="Start <!--#key#--> with the current configuration" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Start</button>
+								<button id ="<!--#key#-->qbutton" data-original-title="Stop <!--#key#-->" data-content="This will stop <!--#key#--> now ! No warning will be given to players online" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Stop</button>
+								<button id ="<!--#key#-->rbutton" data-original-title="Restart <!--#key#-->" data-content="Restart game server this could take a minute or two" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Restart</button>
+								<button id ="<!--#key#-->cbutton" data-original-title="Start <!--#key#--> Console" data-content="Console opens in a new tab" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Console</button>
+								<button id ="<!--#key#-->ubutton" data-original-title="Update <!--#key#--> Server" data-content="Update <!--#key#--> to the latest version from the steam repositories" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Update</button>
+								<button id ="<!--#key#-->vbutton" data-original-title="Validate <!--#key#--> Server" data-content="Validate <!--#key#--> server against steam servers, this may over write some custom settings" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Validate</button>
+								<button id ="<!--#key#-->bbutton" data-original-title="Back Up <!--#key#--> Server" data-content="Back up <!--#key#--> server data to your local server you can use the cron tab to do this automatically" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Backup</button>
 								<button id ="<!--#key#-->ebutton" data-original-title="Edit <!--#key#--> Server" data-content="Edit <!--#key#--> server configuration files & settings" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Edit</button>
 								<span class="alert alert-danger fade in" id = "<!--#key#-->response" style="display:none;margin-left:1%;"></span>
-								</div>
-                  
-          <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="<!--#key#-->path" class="modal fade">
-                  <div class="modal-dialog" style="width:fit-content;margin-top:16%;">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                        <h4 class="modal-title">Paths</h4>
-                      </div>
-                      <div class="modal-body">
-								<table style="clear:both;">
-       <tr><td style="color:red;width:10%;">Command Line</td><td> <!--#cmd#--></td></tr>
-       <tr><td style="color:red;">Location</td><td><!--#Location#--></td></tr>
-       <tr><td style="color:red">Config file</td><td><!--#Config file#--></td></tr> 
-       </table>
-                  
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>                    
-         <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="<!--#key#-->start" class="modal fade">
-                  <div class="modal-dialog" style="width:fit-content;margin-top:16%;">
-                    <div class="modal-content">
-                      <div class="modal-header ui-state-active">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                        <h4 class="modal-title"><!--#key#--> Commands</h4>
-                      </div>
-                      <div class="modal-body">
-                      <img src="img/favicon.png"/>
-								<p>Use the buttons below to control your server.<br>Some of the options can be automated please refer to the settings page for details you can also command this server from the command line</p>
-								
-                      </div>
-                    </div>
-                  </div>
-                </div>                         
-       
-       </div>            
-  </div>
-  </div>
+  		</div>
   </div>
   </div>
   <script src="js/jquery.js"></script>
   <script>
   $("#<!--#key#-->sbutton").click(function() {
-  //var test = $("#<!--#key#-->scmd").html();
-  //alert( "<!--#key#--> \r\nStart with \r\n"+ test );
+  $("#<!--#key#-->sbutton").blur(); 
   $.ajax({
- url: 'ajax.php?action=exescreen&cmd=s&exe=<!--#key#-->',
+ url: '<!--#url#-->/ajax.php?action=exescreen&cmd=s&exe=<!--#key#-->',
   type: 'get',
-  success: function(data){
-   
-   document.getElementById("<!--#key#-->response").innerHTML = data;
+    success: function(data){
+   console.log('ajax return');
+   //document.getElementById("<!--#key#-->response").innerHTML = data;
       $("#<!--#key#-->response").show();
-      $("#<!--#key#-->sbutton").blur(); 
       $("#<!--#key#-->sbutton").popover("hide");
-      $('#<!--#key#-->response').delay(5000).fadeOut('slow');
-      $("#<!--#key#-->status").attr("src","img/online.png");
-      $('#<!--#key#-->qbutton').attr('disabled' , false);
-      $('#<!--#key#-->sbutton').attr('disabled' , true);
-      $('#<!--#key#-->cbutton').attr('disabled' , false);
-      $('#<!--#key#-->rbutton').attr('disabled' , false);
-      $('#<!--#key#-->vbutton').attr('disabled' , true);
-      $('#<!--#key#-->ubutton').attr('disabled' , true);
-      $('#<!--#key#-->bbutton').attr('disabled' , true);
+      $("#<!--#key#-->response").html('Starting <!--#key#-->');
+      
   
   },
   complete:function(data){
@@ -123,7 +73,7 @@
   //var test = $("#<!--#key#-->scmd").html();
   //alert( "<!--#key#--> \r\nStart with \r\n"+ test );
   $.ajax({
- url: 'ajax.php?action=exescreen&cmd=q&exe=<!--#key#-->',
+ url: '<!--#url#-->/ajax.php?action=exescreen&cmd=q&exe=<!--#key#-->',
   type: 'get',
   success: function(data){
    
@@ -131,8 +81,8 @@
       $("#<!--#key#-->response").show();
       $("#<!--#key#-->qbutton").blur(); 
       $("#<!--#key#-->qbutton").popover("hide");
-      $('#<!--#key#-->response').delay(5000).fadeOut('slow');
-      $("#<!--#key#-->status").attr("src","img/offline.png");
+      //$('#<!--#key#-->response').delay(5000).fadeOut('slow');
+      $("#<!--#key#-->status").attr("src","img/offline1.png");
       $('#<!--#key#-->qbutton').attr('disabled' , true);
       $('#<!--#key#-->sbutton').attr('disabled' , false);
       $('#<!--#key#-->cbutton').attr('disabled' , true);
@@ -152,7 +102,7 @@ $("#<!--#key#-->rbutton").click(function() {
   //var test = $("#<!--#key#-->scmd").html();
   //alert( "<!--#key#--> \r\nStart with \r\n"+ test );
   $.ajax({
- url: 'ajax.php?action=exescreen&cmd=r&exe=<!--#key#-->',
+ url: '<!--#url#-->/ajax.php?action=exescreen&cmd=r&exe=<!--#key#-->',
   type: 'get',
   success: function(data){
    
