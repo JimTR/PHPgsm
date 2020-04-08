@@ -52,82 +52,20 @@ foreach ($res as $data) {
 		// loop servers
 		
 		$template->load('html/game_server.html'); // load blank template
-		$server = $data['location'].'/'.$data['host_name'];
 		$url = $data['url'].':'.$data['bport'];
-		$servers['cmd'] = $data['startcmd'];
 		 $ch = curl_init();
 	     curl_setopt($ch, CURLOPT_URL, $url.'/ajax.php?action=user');
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		 $user = curl_exec($ch);
 		 curl_close($ch);
-		 
-		 // make gameq call
-		 //print_r($servers);
-		 //echo CR;
-		 //xml remove starts here
-		 require_once('GameQ/Autoloader.php'); //load GameQ
 		 $key = $data['host_name'];
-		 $x2['id'] = $data['host_name'];
-	     $x2['host'] = $data['host'].':'.$data['port'] ;
-	     $x2['type'] = $data['type'];
-	     //print_r($x2);
-	     //echo CR;
-
-	     $GameQ = new \GameQ\GameQ();
-		//include ("server-info.php");
-          $GameQ->addServer($x2);
-          $results = $GameQ->process();
-          $gameport = array_search_partial($x1,'DESCRIPTION' )+1;
-		  $sourceport = $gameport+1;
-		  $clientport = $sourceport+1;
-		  $logo = $data['logo'];
-		
-		 if ($results[$key]['gq_online'] == 1 ){
-			  //online xml needs to do this
-			  $online = 'img/online.png';
-			  $subpage['sbstate']='disabled';
-			  $subpage['ststate']='';
-			  $subpage['scstate']='';
-			  $subpage['ustate']='disabled';
-			  $subpage['vstate']='disabled';
-			  $subpage['rstate']='';
-			  $subpage['bstate']='disabled';
-		  }
-		  else {$online = 'img/offline.png';
-			  // xml needs to do this 
-			    $subpage['sbstate']='';
-			    $subpage['ststate']='disabled';
-			    $subpage['scstate']='disabled';
-			    $subpage['ustate']='';
-			    $subpage['vstate']='';
-			    $subpage['rstate']='disabled';
-			    $subpage['bstate']='';
-			  }
-		 
-		 $subpage['gameport'] = $data['port'];
-		 $subpage['sourceport'] = $data['source_port'];
-		 $subpage['clientport'] = $data['client_port'];	
-		 $subpage['server_name'] = $key.' ('.$data['host'].':'.$data['port'].')';
-		 $subpage['cmd'] = $servers['cmd'];
-		 $subpage['players'] = $results[$key]['gq_numplayers'];
-		 $subpage['Current map'] = $results[$key]['gq_mapname'];
-		 $subpage['Maxplayers'] = $data['max_players'];
-		 $subpage['Server password'] = $data['server_password'];
-		 $subpage['RCON password'] = $data['rcon_password'];
-		 $subpage['Default map'] = $data['default_map'];
-		 $subpage['Location'] = $data['location'];
-		 $subpage['Config file'] = $data['location'].'/serverfiles/';
-		 $subpage['Status'] = $online;
-		 $subpage['user'] = $user;
 		 $subpage['key'] = $key;
+		 $subpage['user'] = $user;
 		 $subpage['url'] = $url;
-		 $subpage['logo']  = $logo;
 		 // xml finish
 		 $template->replace_vars($subpage);
 		 $page2.= $template->get_template(); 
-        // echo $page2.CR;
-		
-		
+        		
 }
 //die();
   //echo $page2.CR;
