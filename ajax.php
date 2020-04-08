@@ -331,7 +331,7 @@ function exe_lgsm($server,$action,$exe)
 			$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 			//echo $cmd;
 			exec($cmd);
-			$disp = 'Stopped Server '.$detail['host_name'];
+			$disp = 'Stopping Server '.$detail['host_name'];
 			$update['running'] = 0;
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
