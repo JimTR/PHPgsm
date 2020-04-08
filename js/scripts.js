@@ -199,7 +199,7 @@ function fetchservers(){
 	 var fname = $(this).find('fname').text(); //element name important	
 	
 	 	 var bfname = fname;
-	 console.log(bfname);
+	 //console.log(bfname);
      var hname = $(this).find('name').text();
      var distro = $(this).find('distro').text();
      var boot = $(this).find('uptime').text();
@@ -280,11 +280,49 @@ function fetchservers(){
 $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text(); //element name important
 	 var bname = $(this).find('fname').text();
+	 var sid = fname+" ("+$(this).find('ip').text()+")";
 	 var mplayers = $(this).find('maxplayers').text();
+	 var dm = $(this).find('defaultmap').text();
+	 var sp = $(this).find('server_pass').text();
+	 var rp = $(this).find('rcon_pass').text();
+	 var gp = $(this).find('game_port').text();
+	 var sp1 = $(this).find('source_port').text();
+	 var cp = $(this).find('client_port').text();
+	 var st = $(this).find('starttime').text();
+	 console.log('st = '+st);
+	 $("#dm"+fname).html(dm);
+	 $("#sp"+fname).html(sp);
+	 $("#rp"+fname).html(rp);
+	 $("#mp"+fname).html(mplayers);
+	 $("#sid"+fname).html(sid);
+	 $("#gp"+fname).html(gp);
+	 $("#sp1"+fname).html(sp1);
+	 $("#cp"+fname).html(cp);
+	 $("#lg"+fname).attr("src",$(this).find('logo').text());
+	 $("#status"+fname).attr("src","img/offline1.png"); // set to not sure
+	 var rt = $(this).find('rt').text();
+	 var players = 0;
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
+	  $('#'+fname+'response').html(fname+' has started') ; 
+	  $('#'+fname+'qbutton').show();
+      $('#'+fname+'sbutton').hide();
+      $('#'+fname+'cbutton').show();
+      $('#'+fname+'rbutton').show();
+      $('#'+fname+'vbutton').hide();
+      $('#'+fname+'ubutton').hide();
+      $('#'+fname+'bbutton').hide();
+      console.log (fname+' turn off start'); 
+      $('#'+fname+'response').delay(5000).fadeOut('slow');
+		 $("#status"+fname).attr("src","img/online.png"); // set to online
 		 var cmap = $(this).find('currentmap').text();
 	     var players = $(this).find('players').text();
+	     var hn = $(this).find('host_name').text();
+	     $("#po"+fname).html(players);
+	     $("#to"+fname).html(rt);
+	     $("#sn"+fname).html(hn);
+	     $("#cm"+fname).html(cmap);
+	     
 	     totgames = parseInt(totgames)+1;
 	     totalplayers = parseInt(totalplayers,10) + parseInt(players,10);
 	     var start = $(this).find('starttime').text();
@@ -292,7 +330,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 		 activegames=parseInt(activegames)+1;
 	 var x = xmlDoc.getElementsByTagName("current_players")[y];
 	 
-     console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap+ " started at "+start  );
+     //console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap+ " started at "+start  );
             var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
@@ -327,10 +365,35 @@ $(xml).find('Servers').children('game_server').each(function(){
  else {
 	 //console.log(fname+" is off line");
 	 // todo add screen session Id to xml 
+	 if (st === "" ) {
+		$('#'+fname+'response').html(fname+' has stopped') ; 
+		$("#status"+fname).attr("src","img/offline.png"); // set to offline
+		$('#'+fname+'response').delay(5000).fadeOut('slow');
+		$('#'+fname+'qbutton').hide();
+		$('#'+fname+'sbutton').show();
+		$('#'+fname+'cbutton').hide();
+		$('#'+fname+'rbutton').hide();
+		$('#'+fname+'vbutton').show();
+		$('#'+fname+'ubutton').show();
+		$('#'+fname+'bbutton').show();
+		
+	}
+	else {
+		// mid state screen open but no response
+		$("#status"+fname).attr("src","img/offline1.png"); // set to mid state
+		//$('#'+fname+'response').delay(5000).fadeOut('slow');
+	}
+	 $("#to"+fname).html('N/A');
+	 $("#cm"+fname).html('N/A');
+	 $("#po"+fname).html('N/A');
+	
+     //
  }
+  //add outer data 
   $("#gsr"+bname).html(totgames);
   $("#asr"+bname).html(activegames);
   $("#tp"+bname).html(totalplayers);
+  
     });
     
   
