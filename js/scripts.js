@@ -231,7 +231,7 @@ function fetchservers(){
      var boot_mount = $(this).find('boot_mount').text();
      var boot_size = $(this).find('boot_size').text();
      var boot_used = $(this).find('boot_used').text();
-     var boot_free = $(this).find('boot_mount').text();
+     var boot_free = $(this).find('boot_free').text();
      //var x = sname'
      $("#boot"+fname).html(boot);
      $("#load"+fname).html(load);
@@ -328,10 +328,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     var start = $(this).find('starttime').text();
 	 if (players >0 ){
 		 activegames=parseInt(activegames)+1;
-	 var x = xmlDoc.getElementsByTagName("current_players")[y];
-	 
-     //console.log(fname+" Players = "+players+"/"+mplayers+" Current Map "+cmap+ " started at "+start  );
-            var corpName = $(this).find('pname').text();
+			var x = xmlDoc.getElementsByTagName("current_players")[y];
+	        var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
             var score = corpName.split('|');
