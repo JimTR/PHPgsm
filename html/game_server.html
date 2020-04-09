@@ -36,8 +36,8 @@
        </div>  
        <div style="padding-top:1%;clear:both;">
 								<button id ="<!--#key#-->sbutton" data-original-title="Start <!--#key#-->" data-content="Start <!--#key#--> with the current configuration" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Start</button>
-								<button id ="<!--#key#-->qbutton" data-original-title="Stop <!--#key#-->" data-content="This will stop <!--#key#--> now ! No warning will be given to players online" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Stop</button>
-								<button id ="<!--#key#-->rbutton" data-original-title="Restart <!--#key#-->" data-content="Restart game server this could take a minute or two" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Restart</button>
+								<button id ="<!--#key#-->qbutton" data-original-title="Stop <!--#key#-->" data-content="This will stop <!--#key#--> now !<br> No warning will be given to players online" data-placement="top" data-html="true" data-trigger="hover" class="btn btn-primary popovers">Stop</button>
+								<button id ="<!--#key#-->rbutton" data-original-title="Restart <!--#key#-->" data-content="Restart game server<br>this could take a minute or two" data-placement="top" data-trigger="hover" data-html="true" class="btn btn-primary popovers">Restart</button>
 								<button id ="<!--#key#-->cbutton" data-original-title="Start <!--#key#--> Console" data-content="Console opens in a new tab" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Console</button>
 								<button id ="<!--#key#-->ubutton" data-original-title="Update <!--#key#--> Server" data-content="Update <!--#key#--> to the latest version from the steam repositories" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Update</button>
 								<button id ="<!--#key#-->vbutton" data-original-title="Validate <!--#key#--> Server" data-content="Validate <!--#key#--> server against steam servers, this may over write some custom settings" data-placement="top" data-trigger="hover" class="btn btn-primary popovers">Validate</button>
@@ -81,16 +81,8 @@
       $("#<!--#key#-->response").show();
       $("#<!--#key#-->qbutton").blur(); 
       $("#<!--#key#-->qbutton").popover("hide");
-      //$('#<!--#key#-->response').delay(5000).fadeOut('slow');
       $("#<!--#key#-->status").attr("src","img/offline1.png");
-      $('#<!--#key#-->qbutton').attr('disabled' , true);
-      $('#<!--#key#-->sbutton').attr('disabled' , false);
-      $('#<!--#key#-->cbutton').attr('disabled' , true);
-      $('#<!--#key#-->rbutton').attr('disabled' , true);
-      $('#<!--#key#-->vbutton').attr('disabled' , false);
-      $('#<!--#key#-->ubutton').attr('disabled' , false);
-      $('#<!--#key#-->bbutton').attr('disabled' , false);
-  
+      
   },
   complete:function(data){
    //$( "#accordion" ).accordion( "refresh" );
