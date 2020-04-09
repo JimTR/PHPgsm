@@ -7,12 +7,12 @@ define ("CR", "</br>");
 
 $sql = 'select * from base_servers where extraip="0" and enabled="1"';
 	
-	$database = new db(); // connect to database
+	//$database = new db(); // connect to database no need
 	
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
 	foreach ($res as $data) {
-		// get friendly name
+		// get friendly name 
 		$fname = $data['fname'];
 	}
 	$template->load('html/base_server_detail.html');
