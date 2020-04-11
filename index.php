@@ -45,7 +45,7 @@ foreach ($res as $data) {
 	
 		
 	//Game server(s) 
-	$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
