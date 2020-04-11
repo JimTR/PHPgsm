@@ -312,6 +312,7 @@ $(xml).find('Servers').children('game_server').each(function(){
       $('#'+fname+'vbutton').hide();
       $('#'+fname+'ubutton').hide();
       $('#'+fname+'bbutton').hide();
+      $('#'+fname+'dbutton').hide();
       console.log (fname+' turn off start'); 
       $('#'+fname+'response').delay(5000).fadeOut('slow');
 		 $("#status"+fname).attr("src","img/online.png"); // set to online
@@ -374,7 +375,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 		$('#'+fname+'vbutton').show();
 		$('#'+fname+'ubutton').show();
 		$('#'+fname+'bbutton').show();
-		
+		$('#'+fname+'dbutton').show();
 	}
 	else {
 		// mid state screen open but no response
