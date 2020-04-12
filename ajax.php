@@ -329,12 +329,13 @@ function exe_lgsm($server,$action,$exe)
 			  $disp = "start ".$detail['host_name']." before stopping it";
 			  break;
 				}
-			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
-			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
-			rename($logFile, $savedLogfile);	
+			
 			$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 			//echo $cmd;
 			exec($cmd);
+			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
+			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+			rename($logFile, $savedLogfile);	
 			$disp = 'Stopping Server '.$detail['host_name'];
 			$update['running'] = 0;
 			$update['starttime'] = '';
