@@ -308,7 +308,7 @@ function exe_lgsm($server,$action,$exe)
 			}
 			chdir($detail['location'].'/serverfiles');
 			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
-			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
 			rename($logFile, $savedLogfile);	
 			//$cmd = 'screen -L -Logfile '.$detail['Location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'].' bash -c "'.$detail['startcmd'].'^M"'; //start server
 			//$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
@@ -348,7 +348,7 @@ function exe_lgsm($server,$action,$exe)
 				//echo $cmd.CR;
 				exec($cmd);
 				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
-				//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+				//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
 				//rename($logFile, $savedLogfile);
 				$update['running'] = 0;
 				$update['starttime'] = '';
