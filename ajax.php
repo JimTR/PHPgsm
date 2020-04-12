@@ -330,8 +330,8 @@ function exe_lgsm($server,$action,$exe)
 			  break;
 				}
 			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
-			//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
-			//rename($logFile, $savedLogfile);	
+			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+			rename($logFile, $savedLogfile);	
 			$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 			//echo $cmd;
 			exec($cmd);
