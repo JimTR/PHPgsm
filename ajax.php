@@ -307,8 +307,10 @@ function exe_lgsm($server,$action,$exe)
 				break;
 			}
 			chdir($detail['location'].'/serverfiles');
+			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
 			//$cmd = 'screen -L -Logfile '.$detail['Location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'].' bash -c "'.$detail['startcmd'].'^M"'; //start server
-			$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
+			//$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
+			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
 			exec($cmd); // open session
 			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
 			exec($cmd);
@@ -327,7 +329,9 @@ function exe_lgsm($server,$action,$exe)
 			  $disp = "start ".$detail['host_name']." before stopping it";
 			  break;
 				}
-				
+			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
+			//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+			//rename($logFile, $savedLogfile);	
 			$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 			//echo $cmd;
 			exec($cmd);
@@ -342,11 +346,15 @@ function exe_lgsm($server,$action,$exe)
 				$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 				//echo $cmd.CR;
 				exec($cmd);
+				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
+				//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d/m/Y").'-console.log' ;
+				//rename($logFile, $savedLogfile);
 				$update['running'] = 0;
+				$update['starttime'] = '';
 			    $where['host_name'] = $exe; 
 			    $database->update('servers',$update,$where);
 			    chdir($detail['location'].'/serverfiles');
-				$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
 				//echo $cmd.CR;
 				exec($cmd); // open session
 				//$cmd = 'screen -S '.$detail['host_name'].'  -X stuff "'.$detail['startcmd'].'^M"'; //start server
