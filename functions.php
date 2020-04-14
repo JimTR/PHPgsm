@@ -811,7 +811,7 @@ function html_display($tm,$results) {
 				if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<div id="ops'.$key.'"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+					$disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 					$disp .= '<tbody id ="pbody'.$key.'">'; // add body
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score','d'); // order by score
