@@ -331,7 +331,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#cm"+fname).html(cmap);
 	     $("#pol1"+fname).html(tp);
 	     $("#gol"+fname).html(tp);
-	     $("#cmap"+fname).html(cmap);
+	     $("#cmap"+fname).html(cmap); //front page
 	     var sid = hn+" ("+$(this).find('ip').text()+")";
 	     $("#sid"+fname).html(sid);
 	     $("#padd"+fname).html(sid); // front page
@@ -367,22 +367,20 @@ $(xml).find('Servers').children('game_server').each(function(){
 					//console.log(score[index]);
 					var pscore = parseInt(score[index]);
 					//console.log("pscore = "+pscore);
-					switch(pscore) {
-					case pscore < 0:
-							console.log("less than 0");
-							break;
-					case pscore < "10":
-							// code block
-							console.log("less than 10");
-							break;
-					 case y:
-							// code block
-							break;
-					default:
-							// code block
-							console.log("hit rock bottom "+pscore);
-				}
-					newRowContent='<tr><td><i style="color:green;">'+value+'</i></td><td align="left"><span>'+score[index]+'</span></td><td>&nbsp;'+time[index]+'</td></tr>'; 
+					if (pscore < 0) { 
+						console.log("less than 0"); 
+						} 
+					else
+					if (pscore < 10) {
+						 console.log("less than 10"); 
+						 pscore= "&nbsp;&nbsp;&nbsp;&nbsp;"+pscore;
+						 } 
+					else if (pscore < 100) 
+					{ console.log("less than 100"); 
+						pscore= "&nbsp;&nbsp;"+pscore;
+						}
+						
+					newRowContent='<tr><td><i style="color:green;">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
