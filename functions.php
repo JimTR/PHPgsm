@@ -811,7 +811,7 @@ function html_display($tm,$results) {
 				if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+					$disp .= '<div id="ops'.$key.'"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 					$disp .= '<tbody id ="pbody'.$key.'">'; // add body
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score','d'); // order by score
@@ -841,11 +841,11 @@ function html_display($tm,$results) {
 						}
 						// format display here
 						// add sub template
-						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td><span style="float:right">'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td><span>'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						
 					}
 					// end of players for each
-					$disp .='</tbody></table><br>';
+					$disp .='</tbody></table><br></div>';
 				}
 				//end of players
 				// close div
