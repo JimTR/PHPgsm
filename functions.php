@@ -812,7 +812,7 @@ function html_display($tm,$results) {
 					// we have players
 					// add sub template
 					$disp .= '<table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
-					$disp .= '<tbody id ="pbody"'.$key.'">'; // add body
+					$disp .= '<tbody id ="pbody'.$key.'">'; // add body
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score','d'); // order by score
 					foreach ($player_list as $k=>$v) {
