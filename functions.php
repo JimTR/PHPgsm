@@ -846,14 +846,15 @@ function html_display($tm,$results) {
 						
 					}
 					// end of players for each
-					$disp .='</tbody></table><br></div><script>
+					
+				}
+				//end of players
+				// close div
+				$disp .='</tbody></table><br></div><script>
 		$("#op1'.$key.'").click(function(){
 		$("#ops'.$key.'").slideToggle("fast");
   });
  	</script>';
-				}
-				//end of players
-				// close div
 				$disp .= '<br></div>';
 				
 			}
