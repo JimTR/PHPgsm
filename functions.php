@@ -807,7 +807,7 @@ function html_display($tm,$results) {
 				// add sub template ?
 				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1"'.$key.'>Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span></span> - Map - '.$results[$key]["gq_mapname"].'</div>';
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span></span> - Map - '.$results[$key]["gq_mapname"].'</div>';
 				if ($players >0) {
 					// we have players
 					// add sub template
