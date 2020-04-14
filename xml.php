@@ -1,4 +1,5 @@
 <?php
+//require 'includes/master.inc.php';
 require 'includes/class.dbquick.php';
 require 'includes/config.php'; // get config
 include 'functions.php';
