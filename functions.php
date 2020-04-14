@@ -808,11 +808,12 @@ function html_display($tm,$results) {
 				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
 				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span></span> - Map - '.$results[$key]["gq_mapname"].'</div>';
+				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
 				if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
-					$disp .= '<tbody id ="pbody'.$key.'">'; // add body
+					
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score','d'); // order by score
 					foreach ($player_list as $k=>$v) {
