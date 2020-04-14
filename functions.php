@@ -807,7 +807,7 @@ function html_display($tm,$results) {
 				// add sub template ?
 				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value)."<br> Players Online ".$players." - Map - ".$results[$key]["gq_mapname"].'</div>';
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br> <span style="cursor:pointer;" id="gol'.$key.'">Players Online '.$players.'</span> - Map - '.$results[$key]["gq_mapname"].'</div>';
 				if ($players >0) {
 					// we have players
 					// add sub template
@@ -841,7 +841,7 @@ function html_display($tm,$results) {
 						}
 						// format display here
 						// add sub template
-						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td><span style="float:right">'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						
 					}
 					// end of players for each
