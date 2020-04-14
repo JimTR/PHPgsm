@@ -184,7 +184,7 @@ function fetchgames(){
    $("#rgames").html(data);
   },
   complete:function(data){
-   setTimeout(fetchgames,3000);
+   //setTimeout(fetchgames,13000);
   }
  });
 }
@@ -266,9 +266,7 @@ function fetchservers(){
      $("#quota"+fname).html(quota);
      $("#postfix"+fname).html(postfix);
      
-     //alert ('app id\n'+ app);
-     //console.log('fname '+ fname + ' boot '+ boot);
-     //console.log(x);
+
      
     }); 
    var xmlDoc = xml;
@@ -277,8 +275,10 @@ function fetchservers(){
     totalplayers=0; 
     totgames=0;
     activegames=0;   
+    players = 0 ;
 $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text(); //element name important
+	 
 	 var bname = $(this).find('fname').text();
 	 var sid = fname+" ("+$(this).find('ip').text()+")";
 	 var mplayers = $(this).find('maxplayers').text();
@@ -289,7 +289,6 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var sp1 = $(this).find('source_port').text();
 	 var cp = $(this).find('client_port').text();
 	 var st = $(this).find('starttime').text();
-	 console.log('st = '+st);
 	 $("#dm"+fname).html(dm);
 	 $("#sp"+fname).html(sp);
 	 $("#rp"+fname).html(rp);
@@ -298,12 +297,19 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#gp"+fname).html(gp);
 	 $("#sp1"+fname).html(sp1);
 	 $("#cp"+fname).html(cp);
+	 $("#sid"+fname).html(sid);
 	 $("#lg"+fname).attr("src",$(this).find('logo').text());
+	 $("#gdate"+fname).html(st); //front page
+	 $("#plogo"+fname).attr("src",$(this).find('logo').text()); //front page
 	 $("#status"+fname).attr("src","img/offline1.png"); // set to not sure
 	 var rt = $(this).find('rt').text();
 	 var players = 0;
+	 var tp = players+"/"+mplayers;
+	 $("#gol"+fname).html(tp);
+	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
+	  $("#game"+fname).show(); //show game panel
 	  $('#'+fname+'response').html(fname+' has started') ; 
 	  $('#'+fname+'qbutton').show();
       $('#'+fname+'sbutton').hide();
@@ -313,23 +319,32 @@ $(xml).find('Servers').children('game_server').each(function(){
       $('#'+fname+'ubutton').hide();
       $('#'+fname+'bbutton').hide();
       $('#'+fname+'dbutton').hide();
-      console.log (fname+' turn off start'); 
       $('#'+fname+'response').delay(5000).fadeOut('slow');
-		 $("#status"+fname).attr("src","img/online.png"); // set to online
+	  $("#status"+fname).attr("src","img/online.png"); // set to online
 		 var cmap = $(this).find('currentmap').text();
 	     var players = $(this).find('players').text();
 	     var hn = $(this).find('host_name').text();
+	     var tp = players+"/"+mplayers;
 	     $("#po"+fname).html(players);
 	     $("#to"+fname).html(rt);
 	     $("#sn"+fname).html(hn);
 	     $("#cm"+fname).html(cmap);
-	     
+	     $("#pol1"+fname).html(tp);
+	     $("#gol"+fname).html(tp);
+	     $("#cmap"+fname).html(cmap);
+	     var sid = hn+" ("+$(this).find('ip').text()+")";
+	     $("#sid"+fname).html(sid);
+	     $("#padd"+fname).html(sid); // front page
+	     //$('#op1'+fname).off(click); //front page
 	     totgames = parseInt(totgames)+1;
 	     totalplayers = parseInt(totalplayers,10) + parseInt(players,10);
 	     var start = $(this).find('starttime').text();
+	     $("#pbody"+fname).empty(); // clear player table rows
 	 if (players >0 ){
+		 //console.log(fname);
 		 activegames=parseInt(activegames)+1;
-			var x = xmlDoc.getElementsByTagName("current_players")[y];
+		    //$('#op1'+fname).click(true);
+			//var x = xmlDoc.getElementsByTagName("current_players")[y];
 	        var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
@@ -347,7 +362,30 @@ $(xml).find('Servers').children('game_server').each(function(){
 				}
 				else {
 					//console.log("Player "+value+" Score "+ score[index]+" Time "+time[index]);
-					// here process the playerlist 
+					// here process the playerlist
+					//score = score[index].val();
+					//console.log(score[index]);
+					var pscore = parseInt(score[index]);
+					//console.log("pscore = "+pscore);
+					switch(pscore) {
+					case pscore < 0:
+							console.log("less than 0");
+							break;
+					case pscore < "10":
+							// code block
+							console.log("less than 10");
+							break;
+					 case y:
+							// code block
+							break;
+					default:
+							// code block
+							console.log("hit rock bottom "+pscore);
+				}
+					newRowContent='<tr><td><i style="color:green;">'+value+'</i></td><td align="left"><span>'+score[index]+'</span></td><td>&nbsp;'+time[index]+'</td></tr>'; 
+					$("#pbody"+fname).append(newRowContent);
+					
+					//console.log(newRowContent);
 	}
     });
            
@@ -356,6 +394,9 @@ $(xml).find('Servers').children('game_server').each(function(){
  else {
 	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
+	 $("#pol1"+fname).html("");
+	 $("#ops"+fname).slideUp(); //close player panel
+	 //$('#op1'+fname).click(false);
  }
  
  y=y+1; 
@@ -364,7 +405,10 @@ $(xml).find('Servers').children('game_server').each(function(){
  else {
 	 //console.log(fname+" is off line");
 	 // todo add screen session Id to xml 
+	 $("#pol1"+fname).html("");
+	 
 	 if (st === "" ) {
+		$("#game"+fname).hide(); //hide game panel
 		$('#'+fname+'response').html(fname+' has stopped') ; 
 		$("#status"+fname).attr("src","img/offline.png"); // set to offline
 		$('#'+fname+'response').delay(5000).fadeOut('slow');
@@ -386,7 +430,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#cm"+fname).html('N/A');
 	 $("#po"+fname).html('N/A');
 	
-     //
+     // clear current map/players etc
  }
   //add outer data 
   $("#gsr"+bname).html(totgames);
@@ -394,7 +438,7 @@ $(xml).find('Servers').children('game_server').each(function(){
   $("#tp"+bname).html(totalplayers);
   
     });
-    
+    // end foreach
   
   },
   complete:function(xml){
