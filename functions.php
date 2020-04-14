@@ -847,7 +847,7 @@ function html_display($tm,$results) {
 					// end of players for each
 					$disp .='</tbody></table><br></div><script>
 		$("#gol'.$key.'").click(function(){
-		$("#ops'.$key.").slideToggle("slow");
+		$("#ops'.$key.'").slideToggle("slow");
   });
  	</script>';
 				}
