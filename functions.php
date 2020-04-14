@@ -841,11 +841,15 @@ function html_display($tm,$results) {
 						}
 						// format display here
 						// add sub template
-						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td><span>'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td align="center"><td><span>'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						
 					}
 					// end of players for each
-					$disp .='</tbody></table><br></div>';
+					$disp .='</tbody></table><br></div><script>
+		$("#gol#key#").click(function(){
+		$("#ops#key#").slideToggle("slow");
+  });
+ 	</script>';
 				}
 				//end of players
 				// close div
