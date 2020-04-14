@@ -850,7 +850,7 @@ function html_display($tm,$results) {
 				}
 				//end of players
 				// close div
-				$disp .='</tbody></table><br></div><script>
+				$disp .='</tbody></table></div><script>
 		$("#op1'.$key.'").click(function(){
 		$("#ops'.$key.'").slideToggle("fast");
   });
