@@ -1,6 +1,6 @@
 
 <div class="group">
-    <h4><i style="margin-left:1.5%;"id="sid<!--#key#-->"></i><i style="float:right;"><img id="status<!--#key#-->" src =""></i></h4>
+    <h4><i style="margin-left:1.5%;"id="sid<!--#key#-->"></i><i style="float:right;"><img id="status<!--#key#-->" src =""></i><span id="pol1<!--#key#-->" style="float:right;padding-right:3px;margin-top:3px;">here</span></h4>
     <div>
        <div style="width:100%;padding-bottom:1%;"><img id="lg<!--#key#-->" style="width:5%;" src="" /></div>
     <div class="col-lg-6">
@@ -57,8 +57,7 @@
  url: '<!--#url#-->/ajax.php?action=exescreen&cmd=s&exe=<!--#key#-->',
   type: 'get',
     success: function(data){
-   console.log('ajax return');
-   //document.getElementById("<!--#key#-->response").innerHTML = data;
+   
       $("#<!--#key#-->response").show();
       $("#<!--#key#-->sbutton").popover("hide");
       $("#<!--#key#-->response").html('Starting <!--#key#-->');
@@ -66,20 +65,17 @@
   
   },
   complete:function(data){
-   //$( "#accordion" ).accordion( "refresh" );
-   //setTimeout(fetchservers,13000);
+   
   }
  });
 });
  $("#<!--#key#-->qbutton").mousedown(function() {
-  //var test = $("#<!--#key#-->scmd").html();
-  //alert( "<!--#key#--> \r\nStart with \r\n"+ test );
+  
   $.ajax({
  url: '<!--#url#-->/ajax.php?action=exescreen&cmd=q&exe=<!--#key#-->',
   type: 'get',
   success: function(data){
-   
-   document.getElementById("<!--#key#-->response").innerHTML = data;
+      $("#<!--#key#-->response").html(data);
       $("#<!--#key#-->response").show();
       $("#<!--#key#-->qbutton").blur(); 
       $("#<!--#key#-->qbutton").popover("hide");
@@ -87,8 +83,7 @@
       
   },
   complete:function(data){
-   //$( "#accordion" ).accordion( "refresh" );
-   //setTimeout(fetchservers,13000);
+
   }
  });
 });
@@ -100,7 +95,7 @@ $("#<!--#key#-->rbutton").click(function() {
   type: 'get',
   success: function(data){
    
-   document.getElementById("<!--#key#-->response").innerHTML = data;
+      $("#<!--#key#-->response").html(data);
       $("#<!--#key#-->response").show();
       $("#<!--#key#-->rbutton").blur();
       $("#<!--#key#-->rbutton").popover("hide");
@@ -109,15 +104,12 @@ $("#<!--#key#-->rbutton").click(function() {
   
   },
   complete:function(data){
-   //$( "#accordion" ).accordion( "refresh" );
-   //setTimeout(fetchservers,13000);
+ 
   }
  });
 });
-$("#<!--#key#-->cbutton").click(function() {
-  //var test = $("#<!--#key#-->scmd").html();
-  //alert( "<!--#key#--> console\nOpen's in a new tab" );
-  //e.preventDefault(); 
+$("#<!--#key#-->cbutton").click(function(e) {
+    e.preventDefault(); 
     var url= "<!--#url#-->/console.php?id=<!--#key#-->"; 
     $("#<!--#key#-->cbutton").blur(); 
     window.open(url, '_blank');
