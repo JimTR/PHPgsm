@@ -5,9 +5,8 @@ require 'includes/master.inc.php'; // do login and stuff
 //include("functions.php");
 define ("CR", "</br>");
 
-$sql = 'select * from base_servers where extraip="0" and enabled="1"';
+    $sql = 'select * from base_servers where extraip="0" and enabled="1"';
 	
-	//$database = new db(); // connect to database no need
 	
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
@@ -64,8 +63,9 @@ foreach ($res as $data) {
 		 $subpage['url'] = $url;
 		 // xml finish
 		 $template->replace_vars($subpage);
-		 $page2.= $template->get_template(); 
-        		
+		 $page2.= $template->get_template();
+		 // now load front page template 
+         //set all to display:none & use js to turn them on/off	via xml data	
 }
 //die();
   //echo $page2.CR;
@@ -105,26 +105,9 @@ foreach ($res as $data) {
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	
 	$template->replace_vars($test);
-	//echo '<br>about to publish'; 
+	
 	// lang goes here
 	$template->publish();
+?>	
 	
-	
-function array_search_partial($arr, $keyword) {
-    foreach($arr as $index => $string) {
-        if (strpos($string, $keyword) !== FALSE)
-            return $index;
-    }
-}
-function refactor_array($array) {
-	// refactor array with keys
-	foreach ($array as &$value) {
-			//read data
-			$i = strpos($value,":",0);
-            $key = trim(substr($value,0,$i));
-		    $nos[$key] = trim(substr($value,$i+1));
-		}
-		return $nos;
-//print_r($nos);
-}
-?>
+

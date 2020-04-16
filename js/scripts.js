@@ -351,6 +351,8 @@ $(xml).find('Servers').children('game_server').each(function(){
             var score = corpName.split('|');
             var corpName = $(this).find('ponline').text();
             var time = corpName.split('|');
+            var tp = '<span style="color:green;font-weight: bold;">'+players+"/"+mplayers+'</span>';
+            $("#gol"+fname).html(tp);
 			//console.log("cn "+corpName);
 			$.each(result, function (index, value) {
 				if (time[index]===""){
@@ -368,15 +370,13 @@ $(xml).find('Servers').children('game_server').each(function(){
 					var pscore = parseInt(score[index]);
 					//console.log("pscore = "+pscore);
 					if (pscore < 0) { 
-						console.log("less than 0"); 
+						 pscore= "&nbsp;&nbsp;&nbsp;"+pscore;
 						} 
 					else
 					if (pscore < 10) {
-						 console.log("less than 10"); 
 						 pscore= "&nbsp;&nbsp;&nbsp;&nbsp;"+pscore;
 						 } 
-					else if (pscore < 100) 
-					{ console.log("less than 100"); 
+					else if (pscore < 100) { 
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						

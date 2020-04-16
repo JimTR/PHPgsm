@@ -11,7 +11,7 @@ if (!empty($_POST)) {
  }
 //$cmds = strtolower( $cmds );
 if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
-$mem_info = get_mem_info();
+$mem_info = get_mem_info(); //theses need to be the server in question
 $disk_info = get_disk_info();
 $up_time = get_boot_time();
 $cpu_info = get_cpu_info();
