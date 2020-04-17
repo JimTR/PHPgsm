@@ -738,6 +738,11 @@ foreach ($res as $data) {
 	$online  = $results[$key]['gq_online'];
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
+                $update['running'] = 1;
+				$update['starttime'] = date();
+			    $where['host_name'] = $key;
+			    echo $key.'<br>'; 
+			    $database->update('servers',$update,$where);
 	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
        
     if ($players >0) {
