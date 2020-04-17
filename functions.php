@@ -801,12 +801,17 @@ else {
 function html_display($tm,$results) {
 	
 	// cure html div bug
+	$database = new db(); // connect to database
 	foreach( $tm as $key=>$value) {
 		// loop through servers
 			$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers']; //players online
 			$online  = $results[$key]['gq_online']; //server responding
 			$logo ='img/'.strtolower($results[$key]['game_id']).'.ico';
-			
+			    $update['running'] = 1;
+				$update['starttime'] = $value;
+			    $where['host_name'] = $key;
+			    //echo $key.'<br>'; 
+			    $database->update('servers',$update,$where);
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
