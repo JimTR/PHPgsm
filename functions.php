@@ -717,7 +717,7 @@ foreach ($res as $data) {
 	
 	$tm = get_sessions();
 	$tm =running_games(explode("*",$tm));
-	print_r($tm);
+	//print_r($tm);
 	if(!empty($tm)) {
 		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
