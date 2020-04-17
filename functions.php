@@ -717,7 +717,7 @@ foreach ($res as $data) {
 	
 	$tm = get_sessions();
 	$tm =running_games(explode("*",$tm));
-	//print_r($tm);
+	print_r($tm);
 	if(!empty($tm)) {
 		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
@@ -887,7 +887,7 @@ function orderBy(&$data, $field,$order)
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers where extraip = 0 and enabled = 1' ;
+	   $sql = 'select * from base_servers where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
 	   foreach ($res as $data){
