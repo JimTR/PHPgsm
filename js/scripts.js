@@ -404,7 +404,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 //console.log(fname+" is off line");
 	 // todo add screen session Id to xml 
 	 $("#pol1"+fname).html("");
-	 
+	 st = "";
 	 if (st === "" ) {
 		$("#game"+fname).hide(); //hide game panel
 		$('#'+fname+'response').html(fname+' has stopped') ; 
@@ -444,3 +444,8 @@ $(xml).find('Servers').children('game_server').each(function(){
   }
  });
 }
+
+$("#aboutcheck").click(function() {
+alert("not cooking yet");
+$('#aboutcheck').blur();
+});
