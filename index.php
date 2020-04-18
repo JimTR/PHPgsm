@@ -85,9 +85,7 @@ foreach ($res as $data) {
 	}
 	$test['options']= $test['options'].'</select>';
 	
-	//echo 'options loaded'.CR;
-	//echo $test['options'];
-	//die;
+	
 	$page['header'] = $template->load('html/header.html'); //load header
 	//echo '<br>header loaded<br>';
 	$page['body'] = $template->load('html/body.html'); //load body
@@ -96,11 +94,13 @@ foreach ($res as $data) {
 	//echo 'logo loaded<br>';
 	$page['sidebar'] = $template->load('html/sidebar.html'); // menu
 	//echo 'sidebar loaded<br>';
-	$page['about'] = 'rewrite';
+	$page['about'] = $template->load('html/about.html');
 	//echo 'about loaded<br>';
 	$page['tabs'] = $page1;
 	$page['games'] = $page2;
 	$page['install'] = $template->load('html/install.html');
+	$page['version'] = $settings['version'];
+	$page['date'] = date("Y");
 	//$page['options']= "";
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	
