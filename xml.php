@@ -1,7 +1,5 @@
 <?php
-//require 'includes/master.inc.php';
-require 'includes/class.dbquick.php';
-require 'includes/config.php'; // get config
+include 'includes/cli_master.inc.php';
 include 'functions.php';
 if (!empty($_POST)) {
 	 $cmds = $_POST;
@@ -9,7 +7,7 @@ if (!empty($_POST)) {
  else {
 	 $cmds = $_GET;
  }
-//$cmds = strtolower( $cmds );
+
 if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 $mem_info = get_mem_info(); //theses need to be the server in question
 $disk_info = get_disk_info();
@@ -17,10 +15,6 @@ $up_time = get_boot_time();
 $cpu_info = get_cpu_info();
 $site->config = &$config; // load the config
 require_once('GameQ/Autoloader.php'); //load GameQ
- define( 'DB_HOST', $site->config['database']['hostname'] ); // set database host
- define( 'DB_USER', $site->config['database']['username'] ); // set database user
- define( 'DB_PASS', $site->config['database']['password'] ); // set database password
- define( 'DB_NAME', $site->config['database']['database'] ); // set database name
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
