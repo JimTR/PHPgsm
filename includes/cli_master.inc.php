@@ -30,10 +30,3 @@
     // if database connection fails terminate with error message
     die(FORMAT_TIME.' - Failed To Connect To Database '.DB_NAME.CR.'check settings in config.php'.CR);
 }
-    
-      
-    
-   
-
-
-    

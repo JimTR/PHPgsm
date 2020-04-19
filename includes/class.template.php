@@ -160,4 +160,3 @@ class Template {
 		while ($start > 0);
 	}
 ?>
-
