@@ -20,21 +20,14 @@
  * MA 02110-1301, USA.
  * 
  * 
- * This runs as a frame the url is not visable to the browser
- * we cannot run an instance per game server as the malloc & cpu go sky high
+ * displays game console ... safer than opening screen or tmux
+ * 
  */
 @ob_end_clean();
 require 'includes/master.inc.php'; // do login and stuff
 include("functions.php"); // add functions
 define ("CR", "<br>");
 $template = new Template; // load template class
-if (empty($Auth->id)) {
-		
-		$template->load('html/login.html');
-		$template->replace('servername', $_SERVER['SERVER_NAME']);
-		$template->publish();
-		exit;
-	}
  if (!empty($_POST)) {
 	 $cmds = $_POST;
 	 echo "post set".CR;
@@ -43,6 +36,10 @@ if (empty($Auth->id)) {
 	 $cmds = $_GET;
  }
  //print_r($cmds);
+ if (empty($cmds['id'])) {
+	 // need to refine this for remote servers
+	 exit;
+ }
  require_once('GameQ/Autoloader.php'); //load GameQ
 $database = new db(); // connect to database
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name ="'.$cmds['id'].'"';

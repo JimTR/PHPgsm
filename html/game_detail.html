@@ -1,0 +1,37 @@
+<html>
+<!-- front page template ! per game -->
+<div id="game#key#" class="col-lg-6">
+	<div>
+		<img id="plogo#key#>" style="width:10%;padding:1%;" src="/img/minecraft.ico">
+`		<i id="phost#key#" style="color:green;">'.$results[$key]["gq_hostname"].'</i>
+ 		<i id="padd#key#" style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)
+ 		<br>
+ 		<span>Started at
+ 		<span id="gdate#key#">gdate</span>
+ 		</span>
+ 		<br>
+ 		<span>Players Online </span> 
+ 		<span id="gol#key#" style="cursor:pointer;">$players."</span>
+ 		<span> - Map - </span><span id="pmap">map</span>
+ 	</div>
+ 	<div id = "ops#key#" style="display: none;">
+ 		<!-- player rows -->
+ 		<table>
+ 			<thead>
+ 				<tr>
+ 					<th style="width:60%;">Name</th>
+ 					<th style="width:20%;">Score</th>
+ 					<th>Time Online</th>
+ 				</tr>
+ 			</thead>
+ 			<tbody id ="pbody#key#">
+ 				<!-- player rows here -->
+ 			</tbody>	
+ 	</div>
+ 	
+ 	<script>
+		$("#gol#key#").click(function(){
+		$("#ops#key#").slideToggle("slow");
+  });
+ 	</script>
+</html>

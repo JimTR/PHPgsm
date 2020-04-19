@@ -1,4 +1,5 @@
 <?php
+//echo 'functions 1.01';
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
@@ -451,7 +452,7 @@ else {
 }
 else {
 	$disp = '<table style="width100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
-	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;">'.$mem_info['MemTotal'].'</td><td>'.$mem_info['MemFree'].'</td><td>'.$mem_info['Cached'].'<td>'.$mem_info['Active'].'</td></tr>
+	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;" id="memtotalickleh">'.$mem_info['MemTotal'].'</td><td id="memfreeickleh">'.$mem_info['MemFree'].'</td><td id="memcachedickleh">'.$mem_info['Cached'].'<td id="memactiveickleh">'.$mem_info['Active'].'</td></tr>
 	<tr><td style="color:red;">Swap</td><td>'.$mem_info['SwapTotal'].'</td><td>'.$mem_info['SwapFree'].'</td><td>'.$mem_info['SwapCached'].'</td></tr></table>';
 	
 	return $disp;
@@ -465,7 +466,7 @@ function running_games($data) {
 			$i = strpos($value,",",0);
             $key = trim(substr($value,0,$i));
 		 if (strlen($key) === 0) {
-			 // only take the first processor
+			 
 			 break ;
 		 }
 		  $return[$key] = trim(substr($value,$i+1));
@@ -554,12 +555,13 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
 }
 else {
-	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot">'.$cpu_info['boot_time'].'</td></tr>
+	$sname='ickleh';
+	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot'.$sname.'">'.$cpu_info['boot_time'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load">'.$cpu_info['load'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load'.$sname.'">'.$cpu_info['load'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache size'].'</td></tr>
 	<tr><td style="width:20%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
@@ -696,6 +698,7 @@ function display_games() {
 	$sql = 'select * from servers where enabled ="1"'; //select all enabled recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
+   
 foreach ($res as $data) {
 	//add the data array for GameQ
 	//this does allow remote locations
@@ -712,10 +715,11 @@ foreach ($res as $data) {
 		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
 		} // get local servers	
 	
-		 $tm = get_sessions();
+	$tm = get_sessions();
 	$tm =running_games(explode("*",$tm));
 	//print_r($tm);
 	if(!empty($tm)) {
+		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
     $GameQ->addServers($servers);
@@ -734,6 +738,11 @@ foreach ($res as $data) {
 	$online  = $results[$key]['gq_online'];
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
+                $update['running'] = 1;
+				$update['starttime'] = date();
+			    $where['host_name'] = $key;
+			    echo $key.'<br>'; 
+			    $database->update('servers',$update,$where);
 	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
        
     if ($players >0) {
@@ -792,27 +801,34 @@ else {
 function html_display($tm,$results) {
 	
 	// cure html div bug
+	$database = new db(); // connect to database
 	foreach( $tm as $key=>$value) {
 		// loop through servers
 			$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers']; //players online
 			$online  = $results[$key]['gq_online']; //server responding
 			$logo ='img/'.strtolower($results[$key]['game_id']).'.ico';
-			
+			    $update['running'] = 1;
+				$update['starttime'] = $value;
+			    $where['host_name'] = $key;
+			    //echo $key.'<br>'; 
+			    $database->update('servers',$update,$where);
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
 				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value)."<br> Players Online ".$players." - Map - ".$results[$key]["gq_mapname"].'</div>';
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
+				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
 				if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<table><tr><td style="width:60%;">Name</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
+					
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score','d'); // order by score
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
-						$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
+						$playerN = $player_list[$k]['gq_name']; // chop to 20 chrs
 						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						switch (true) {
@@ -836,20 +852,26 @@ function html_display($tm,$results) {
 						}
 						// format display here
 						// add sub template
-						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td align="center"><td><span>'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						
 					}
 					// end of players for each
-					$disp .='</table><br>';
+					
 				}
 				//end of players
 				// close div
+				$disp .='</tbody></table></div><script>
+		$("#op1'.$key.'").click(function(){
+		$("#ops'.$key.'").slideToggle("fast");
+  });
+ 	</script>';
 				$disp .= '<br></div>';
 				
 			}
 			else {
 				//server not responding
-				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start</div>';
+				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
+				<br> or perhaps there is something else wrong</div>';
 			}
 			//return $disp;
 		}
@@ -875,7 +897,7 @@ function orderBy(&$data, $field,$order)
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers where extraip = 0 and enabled = 1' ;
+	   $sql = 'select * from base_servers where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
 	   foreach ($res as $data){
@@ -894,4 +916,31 @@ function orderBy(&$data, $field,$order)
 	 
 	 return $tm;
    }
+   function html_display_version() {
+	   echo 'started version'.CR;
+	   /*	$version ='<br style="clear:both;">'. CR."Software Version 1.0.34.0β".CR.
+	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
+All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+Redistributions of source code must retain the above copyright notice, this list of conditions and the
+following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+following disclaimer in the documentation and/or other materials provided with the distribution.
+Neither the name of the NoIdeer Software nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.'.CR.CR; */
+echo 'ready to return version'.CR;
+//return $version;
+}
 ?>

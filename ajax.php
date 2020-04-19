@@ -34,7 +34,7 @@
  $cmds = change_value_case($cmds,CASE_LOWER);
   
  if(isset($cmds['action'])) {
-
+header('Access-Control-Allow-Origin: *');
 switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
@@ -84,11 +84,11 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.0';
+			echo 'Ajax version 1.1';
 			exit;
 	case "allservers":
 			// return servers
-	$sql = 'select * from base_servers where extraip="0"';			
+	$sql = 'select * from base_servers where extraip="0" and enabled ="1"';			
 	$database = new db(); // connect to database
 	$template = new Template; // load template class
 	$res = $database->get_results($sql); // pull results
@@ -119,13 +119,15 @@ foreach ($res as $data) {
 	$subpage['disk'] = $server[2];
 	$subpage['mem'] = $server[3];
 	$subpage['user'] = $server[4];
+	$subpage['ajax'] = '1.0';
+	$subpage['version'] = $settings['version'];
 	$template->replace_vars($subpage);
 	$page1.= $template->get_template(); 
 	}
 	 echo $page1.'*';
 		
 	//Game server(s) 
-	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>""';
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and base_servers.enabled="1"';
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
@@ -223,11 +225,10 @@ echo $page2;
 			 exit;}
 	 case "exescreen":
 	        $alreadyrunning = 0; 
-			$server = $cmds['path'];
 			$cmd = $cmds['cmd'];
 			$exe = trim($cmds['exe']);
 			$text= trim($cmds['text']);
-		    $s= exe_screen("",'ls',$exe,$text,$status);
+		    $s= exe_screen('ls',$exe,$text,$status);
 		    $x=strpos($s,',');
 		
 		$server1=substr($s,0,$x);
@@ -237,7 +238,7 @@ echo $page2;
 			$alreadyrunning = 1;
 		}
 		
-		echo exe_screen($server,$cmd,$exe,$text,$alreadyrunning);
+		echo exe_screen($cmd,$exe,$text,$alreadyrunning);
 											  		
 }
 }
@@ -280,47 +281,97 @@ function exe_lgsm($server,$action,$exe)
 	   return $disp;
 	   
   }
-  function exe_screen($server,$action,$exe,$text="",$status="")
+  function exe_screen($action,$exe="",$text="",$status="")
   {
 	  /* run screen commands
 	   * first off get all you need b4 running the action
 	   * with start get the command line from lgsm
 	  */
 	   //echo $server.' action '.$action.' file '.$exe.' status '.$status.'Text '.$text.'<br>';
-	   if (!empty($server)) {
-	   $command = $server.' dt';	
-	   $detail = shell_exec($command); // get lgsm array
-	   $detail = explode(PHP_EOL,$detail );
-	   $cmdline = array_search_partial($detail,'Command-line Parameters' )+2; // got startup
-	   $cmdline = $detail[$cmdline];
-	   $detail = refactor_array($detail); // switched array
-   } 
+	   if( $exe <>"") {
+	   $database = new db(); // connect to database   
+	   $sql = 'select * from servers where host_name = "'.$exe.'"';
+	   $x = $database->get_results($sql); // pull results
+	   //print_r($x);
+	   $detail =$x[0];
+	   //print_r($detail);
+   }
+	  
 	   switch($action)
 		{
 		  case "s":
 			//start screen session
+			
 			if($status === 1) {
-				$disp = $detail['Server name'].' is already running !';
+				$disp = $exe.' is already running !';
 				break;
 			}
-			chdir($detail['Location'].'/serverfiles');
-			$cmd = 'screen -L -Logfile '.$detail['Location'].'/log/console/'.$detail['Script name'].'-console.log -dmS '.$detail['Script name'].' bash -c "'.$cmdline.'^M"'; //start server
-			//echo $cmd.'<br>';
-			exec($cmd); // run it
-			$disp = 'Started Server '.$detail['Server name'];
+			chdir($detail['location'].'/serverfiles');
+			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
+			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
+			rename($logFile, $savedLogfile);	
+			//$cmd = 'screen -L -Logfile '.$detail['Location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'].' bash -c "'.$detail['startcmd'].'^M"'; //start server
+			//$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
+			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
+			exec($cmd); // open session
+			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
+			exec($cmd);
+			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; //start server
+			exec($cmd); // start game
+			$disp = 'Starting Server '.$detail['host_name'];
+			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+			$update['running'] = 1;
+			$update['starttime'] = time();
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
 			break;
 		  case "q":
 			// stop screen session
 			if($status === 0) {
-			  $disp = "start ".$detail['Server name']." before stopping it";
+			  $disp = "start ".$detail['host_name']." before stopping it";
 			  break;
 				}
-			$cmd = 'screen -S '.$detail['Script name'] .' -p 0 -X stuff "quit^M"';
+			
+			$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
 			//echo $cmd;
 			exec($cmd);
-			$disp = 'Server Stopped';
+			
+			$disp = 'Stopping Server '.$detail['host_name'];
+			$update['running'] = 0;
+			$update['starttime'] = '';
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
+			
 			break;
-		  case	"c":
+		  case "r":
+				$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
+				//echo $cmd.CR;
+				exec($cmd);
+				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
+				//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				//rename($logFile, $savedLogfile);
+				$update['running'] = 0;
+				$update['starttime'] = '';
+			    $where['host_name'] = $exe; 
+			    $database->update('servers',$update,$where);
+			    chdir($detail['location'].'/serverfiles');
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
+				//echo $cmd.CR;
+				exec($cmd); // open session
+				//$cmd = 'screen -S '.$detail['host_name'].'  -X stuff "'.$detail['startcmd'].'^M"'; //start server
+				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
+				exec($cmd);
+				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; //start server
+				//echo $cmd.CR;
+				exec($cmd); // start game
+				$disp = 'Restarting Server '.$detail['host_name'];
+				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+				$update['running'] = 1;
+				$update['starttime'] = time();
+				$where['host_name'] = $exe; 
+				$database->update('servers',$update,$where);
+				break;
+		  case "c":
 		  	  if($status === 0) {
 			  $disp = "start Server before issuing commands";
 			  break;
@@ -332,8 +383,11 @@ function exe_lgsm($server,$action,$exe)
 			break;
 		  case "ls":
 			// read screen sessions
+			//echo "<br>LS<br>";
 			$cmd = 'screen -ls '.$exe;
+			//echo '<br>'.$cmd;
 			$screenList = shell_exec($cmd);
+			//echo $screenList;
 			$screenList = explode(PHP_EOL,$screenList);
 			foreach (array_slice($screenList,1) as $key=>$value) {
 				// loop array
