@@ -88,7 +88,10 @@ foreach ($res as $data) {
     $players->addChild('ponline',gmdate("H:i:s",$pz['time']).'|');
   
 }
-  $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);    
+  $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);   
+  $update['server_name'] = $results[$data['host_name']]['gq_hostname'];
+  $where['host_name'] = $results[$data['host_name']];
+  $database->update('servers',$update,$where); 
 }
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
