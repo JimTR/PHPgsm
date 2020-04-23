@@ -90,7 +90,11 @@ foreach ($res as $data) {
 }
   $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);   
   $update['server_name'] = $results[$data['host_name']]['gq_hostname'];
-  $where['host_name'] = $results[$data['host_name']];
+  //print_r($update);
+  //echo '<br>';
+  $where['host_name'] = $data['host_name'];
+  //print_r ($where);
+  //echo '<br>';
   $database->update('servers',$update,$where); 
 }
 $xmlserver = "base_server";
@@ -138,6 +142,7 @@ foreach ($base_servers as $data) {
 		
 	}
 }
+//die();
 if (!(isset($cmds['action']))){ 
 XML_print($xml);
 }
