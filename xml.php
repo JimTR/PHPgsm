@@ -37,7 +37,6 @@ $xmlserver="game_server";
 foreach ($res as $data) {
 	
 	$now = new Datetime();
-	$date = date("Y-m-d",$data['starttime']);
 	 
 	$date = new DateTime();
 	$date->setTimestamp($data['starttime']);
@@ -61,6 +60,7 @@ foreach ($res as $data) {
     $track->addChild('server_pass',$data['server_password']);
     $track->addChild('rcon_pass',$data['rcon_password']);
     $track->addChild('rt',$rt );
+    $track->addChild('secure',$results[$data['host_name']]['secure']);
     $track->addChild('logo',$data['logo']);
     $track->addChild('ip', $data['host'].':'.$data['port']);
     $track->addChild('location', $data['location']);
