@@ -49,6 +49,8 @@ foreach ($res as $data) {
 	}
 	else {
 		$online = 'Online';
+		$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
+		
 	}
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['host_name']);
@@ -75,6 +77,8 @@ foreach ($res as $data) {
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
     $track->addChild('maxplayers',$data['max_players']);
     $track->addChild('bots', $results[$data['host_name']]['num_bots']);
+    $track->addChild('update_msg',$update['message']);
+    $track->addChild('version',$update['required_version']);
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
@@ -90,7 +94,7 @@ foreach ($res as $data) {
   
 }
   $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);  
-  
+ unset ($update); 
 }
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
@@ -173,7 +177,7 @@ function xmlResponse($app,$version) {
 	   
 		$version = str_replace('.','',$version); // remove points
 		 if (!is_numeric($version) ) {
-			$response['message'] = 'invalid Server ID';
+			$response['message'] = 'invalid Server version';
 			return $response;
 		} 
 		//echo version
@@ -185,9 +189,7 @@ function xmlResponse($app,$version) {
 		 curl_close($ch);
 		 //$response = json_decode($response,true);
 		 $response=($response['response']);
-		 print_r($response);
-		 //exit;
-		//$xml = simplexml_load_file($url); //retrieve URL and parse XML content
+		
 		
 	 if ($response['success'] === true){
 		 //unset($response['success']);
@@ -196,6 +198,7 @@ function xmlResponse($app,$version) {
 			//unset($response['up_to_date']);
 			unset($response['version_is_listable']);
 			$response['message'] = 'Server is up to date';
+			$response['required_version'] = $version;
 			
 }
 		else {
