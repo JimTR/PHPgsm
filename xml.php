@@ -73,7 +73,8 @@ foreach ($res as $data) {
     $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
-    $track->addChild('maxplayers',$data['max_players']); 
+    $track->addChild('maxplayers',$data['max_players']);
+    $track->addChild('bots', $results[$data['host_name']]['num_bots']);
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
@@ -89,15 +90,7 @@ foreach ($res as $data) {
   
 }
   $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);  
-  $database = new db(); 
-  $update['server_name'] = '"'.$results[$data['host_name']]['gq_hostname'].'"';
-  //print_r($update);
-  //echo '<br>';
-  $where['host_name'] = '"'.$data['host_name'].'"';
-  //print_r ($where);
- // echo '<br>';
-  $sql = 'update servers set server_name = "'.$results[$data['host_name']]['gq_hostname'].'" where host_name = '.$where['host_name'].'<br>';
-  $database->query($sql); 
+  
 }
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
@@ -175,5 +168,44 @@ function change_value_case($array,$case = CASE_LOWER){
        }
         return $array;
     }
+    
+function xmlResponse($app,$version) {
+	   
+		$version = str_replace('.','',$version); // remove points
+		 if (!is_numeric($version) ) {
+			$response['message'] = 'invalid Server ID';
+			return $response;
+		} 
+		//echo version
+		$url = "https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?appid=".$app."&version=".$version;
+		$ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, $url);
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $response = json_decode(curl_exec($ch),true);
+		 curl_close($ch);
+		 //$response = json_decode($response,true);
+		 $response=($response['response']);
+		 print_r($response);
+		 //exit;
+		//$xml = simplexml_load_file($url); //retrieve URL and parse XML content
+		
+	 if ($response['success'] === true){
+		 //unset($response['success']);
+		 unset($response['version_is_listable']);
+		if ($response['up_to_date'] === true) {
+			//unset($response['up_to_date']);
+			unset($response['version_is_listable']);
+			$response['message'] = 'Server is up to date';
+			
+}
+		else {
+			$response['up_to_date'] = 0;
+			
+			$response['message'] = 'Server is out of date';
+			
+}
+}
+return $response;
+}
 
 ?>
