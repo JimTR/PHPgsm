@@ -197,7 +197,7 @@ function xmlResponse($app,$version) {
 		if ($response['up_to_date'] === true) {
 			//unset($response['up_to_date']);
 			unset($response['version_is_listable']);
-			$response['message'] = 'Server is up to date';
+			$response['message'] = '<span style="color:green">Server is up to date</span>';
 			$response['required_version'] = $version;
 			
 }
