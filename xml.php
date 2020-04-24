@@ -176,7 +176,7 @@ function change_value_case($array,$case = CASE_LOWER){
 function xmlResponse($app,$version) {
 	   
 		$version = str_replace('.','',$version); // remove points
-		 if (!is_numeric($version) ) {
+		 if (!is_numeric($app) ) {
 			$response['message'] = 'invalid Server version';
 			return $response;
 		} 
