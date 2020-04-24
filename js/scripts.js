@@ -289,6 +289,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var sp1 = $(this).find('source_port').text();
 	 var cp = $(this).find('client_port').text();
 	 var st = $(this).find('starttime').text();
+	 var us = $(this).find('update_msg').text();
+	 var sv = $(this).find('version').text();
 	 $("#dm"+fname).html(dm);
 	 $("#sp"+fname).html(sp);
 	 $("#rp"+fname).html(rp);
@@ -298,6 +300,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#sp1"+fname).html(sp1);
 	 $("#cp"+fname).html(cp);
 	 $("#sid"+fname).html(sid);
+	 $("#us"+fname).html(us);
+	 $("#sv"+fname).html(sv);
 	 $("#lg"+fname).attr("src",$(this).find('logo').text());
 	 $("#gdate"+fname).html(st); //front page
 	 $("#plogo"+fname).attr("src",$(this).find('logo').text()); //front page
