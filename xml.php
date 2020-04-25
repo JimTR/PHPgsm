@@ -182,6 +182,7 @@ function xmlResponse($app,$version) {
 		} 
 		//echo version
 		$url = "https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?appid=".$app."&version=".$version;
+		//file_put_contents('debug.txt', $url.PHP_EOL, FILE_APPEND | LOCK_EX);
 		$ch = curl_init();
 	     curl_setopt($ch, CURLOPT_URL, $url);
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
