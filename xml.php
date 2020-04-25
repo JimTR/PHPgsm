@@ -176,7 +176,7 @@ function change_value_case($array,$case = CASE_LOWER){
 function xmlResponse($app,$version) {
 	   
 		$version = str_replace('.','',$version); // remove points
-		 if (!is_numeric($app) ) {
+		 if (!is_numeric($version) ) {
 			$response['message'] = 'invalid Server version';
 			return $response;
 		} 
@@ -197,14 +197,14 @@ function xmlResponse($app,$version) {
 		if ($response['up_to_date'] === true) {
 			//unset($response['up_to_date']);
 			unset($response['version_is_listable']);
-			$response['message'] = '<span style="color:green">Up To Date</span>';
+			$response['message'] = 'Up To Date';
 			$response['required_version'] = $version;
 			
 }
 		else {
 			$response['up_to_date'] = 0;
 			
-			$response['message'] = '<span style="color:red;">Update Required</span>';
+			$response['message'] = 'Update Required';
 			
 }
 }
