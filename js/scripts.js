@@ -336,6 +336,9 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#pol1"+fname).html(tp);
 	     $("#gol"+fname).html(tp);
 	     $("#cmap"+fname).html(cmap); //front page
+	    
+	     //$( "#dataTable tbody tr" ).on( "click", function() {  console.log( $( this ).text() );});
+	     //$("#op1"+fname).style.pointerEvents = 'auto'; 
 	     var sid = hn+" ("+$(this).find('ip').text()+")";
 	     $("#sid"+fname).html(sid);
 	     $("#padd"+fname).html(sid); // front page
@@ -345,8 +348,9 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     var start = $(this).find('starttime').text();
 	     $("#pbody"+fname).empty(); // clear player table rows
 	 if (players >0 ){
-		 //console.log(fname);
-		 activegames=parseInt(activegames)+1;
+		 console.log(fname);
+		    $('#op1'+fname).off().on('click',function() {$("#ops"+fname).slideToggle("fast");});
+			activegames=parseInt(activegames)+1;
 		    //$('#op1'+fname).click(true);
 			//var x = xmlDoc.getElementsByTagName("current_players")[y];
 	        var corpName = $(this).find('pname').text();
@@ -399,6 +403,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#pol1"+fname).html("");
 	 $("#ops"+fname).slideUp(); //close player panel
 	 //$('#op1'+fname).click(false);
+	 $('#op1'+fname).off('click');
+	 //$('#op1'+fname).style.pointerEvents = 'none'; 
  }
  
  y=y+1; 
