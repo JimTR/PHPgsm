@@ -817,7 +817,7 @@ function html_display($tm,$results) {
 				// add sub template ?
 				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
 				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
 				if ($players >0) {
@@ -861,8 +861,8 @@ function html_display($tm,$results) {
 				//end of players
 				// close div
 				$disp .='</tbody></table></div><script>
-		$("#op1'.$key.'").click(function(){
-		$("#ops'.$key.'").slideToggle("fast");
+				$("#op1'.$key.'").click(function(){
+				$("#ops'.$key.'").slideToggle("fast");
   });
  	</script>';
 				$disp .= '<br></div>';

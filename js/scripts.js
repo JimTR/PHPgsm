@@ -337,8 +337,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#gol"+fname).html(tp);
 	     $("#cmap"+fname).html(cmap); //front page
 	    
-	     //$( "#dataTable tbody tr" ).on( "click", function() {  console.log( $( this ).text() );});
-	     //$("#op1"+fname).style.pointerEvents = 'auto'; 
+	  
 	     var sid = hn+" ("+$(this).find('ip').text()+")";
 	     $("#sid"+fname).html(sid);
 	     $("#padd"+fname).html(sid); // front page
@@ -349,10 +348,11 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#pbody"+fname).empty(); // clear player table rows
 	 if (players >0 ){
 		 console.log(fname);
-		    $('#op1'+fname).off().on('click',function() {$("#ops"+fname).slideToggle("fast");});
+		    $('#op1'+fname).css('cursor','pointer');
+		    $('#op1'+fname).off().on('click',function() 
+		    {$("#ops"+fname).slideToggle("fast");});
 			activegames=parseInt(activegames)+1;
-		    //$('#op1'+fname).click(true);
-			//var x = xmlDoc.getElementsByTagName("current_players")[y];
+		   
 	        var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
@@ -404,7 +404,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#ops"+fname).slideUp(); //close player panel
 	 //$('#op1'+fname).click(false);
 	 $('#op1'+fname).off('click');
-	 //$('#op1'+fname).style.pointerEvents = 'none'; 
+	 $('#op1'+fname).css('cursor','default');
+	
  }
  
  y=y+1; 
