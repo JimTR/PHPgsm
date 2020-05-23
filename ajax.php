@@ -35,6 +35,7 @@
   
  if(isset($cmds['action'])) {
 header('Access-Control-Allow-Origin: *');
+check_update();
 switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
@@ -348,8 +349,8 @@ function exe_lgsm($server,$action,$exe)
 				//echo $cmd.CR;
 				exec($cmd);
 				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
-				//$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
-				//rename($logFile, $savedLogfile);
+				$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				rename($logFile, $savedLogfile);
 				$update['running'] = 0;
 				$update['starttime'] = '';
 			    $where['host_name'] = $exe; 
@@ -457,5 +458,24 @@ function array_search_partial($arr, $keyword) {
        }
         return $array;
     }
-
+function check_update()
+{
+	//update for xml
+	$database = new db();
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and base_servers.enabled="1"';
+	$res = $database->get_results($sql);
+	
+	foreach ($res as $data) {
+		// loop
+		
+		$acf_loc = $data['location'].'/serverfiles/steamapps';
+		$find = 'appmanifest_';
+		$files = glob($acf_loc."/*" . $find . "*");
+		if (!empty($files)){
+			echo $files[0];// get file
+			echo '<br>';
+			}
+			else {echo $data['location'].'/serverfiles/steamapps<br>';}
+			}
+}
 ?>
