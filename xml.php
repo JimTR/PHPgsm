@@ -42,9 +42,11 @@ foreach ($res as $data) {
 	if ($data['buildid'] < $data['rbuildid']) {
 		// needs update
 		$update = 'Requires Update';
+		$updatei = 1;
 	}  
 	else {
 		$update = 'Up To Date';
+		$updatei = 0;
 	}
 	$now = new Datetime();
 	 
@@ -88,7 +90,8 @@ foreach ($res as $data) {
     $track->addChild('maxplayers',$data['max_players']);
     $track->addChild('bots', $results[$data['host_name']]['num_bots']);
     $track->addChild('update_msg',$update);
-    $track->addChild('version',$data['buildid'].' last updated '.date('l jS F Y \a\t g:ia',$data['server_update']));
+    $track->addChild('uds',$updatei);
+    $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
