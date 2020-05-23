@@ -41,7 +41,7 @@ $xmlserver="game_server";
 foreach ($res as $data) {
 	if ($data['buildid'] < $data['rbuildid']) {
 		// needs update
-		$update = 'Requires Update to '.$data['rbuildid'];
+		$update = 'Requires Update to version '.$data['rbuildid'];
 		$updatei = 1;
 	}  
 	else {
