@@ -473,7 +473,7 @@ function check_update()
 		$files = glob($acf_loc."/*" . $find . "*");
 		if (!empty($files)){
 			echo $files[0];// get file 
-			$acf_file = get_file_contents($files[0]);
+			$acf_file = file_get_contents($files[0]);
 			echo $acf_file.'<br>';
 			$local =  local_build($acf_file);
 			echo 'Local Build id '.$local['buildid'];
