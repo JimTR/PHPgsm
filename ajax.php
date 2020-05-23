@@ -476,6 +476,7 @@ function check_update()
 			$acf_file = file_get_contents($files[0]);
 			//echo $acf_file.'<br>';
 			$local =  local_build($acf_file);
+			echo 'Details for App Id '.$local['appid'];
 			echo 'Local Build id '.$local['buildid'].'<br>';
             echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']);
 			echo '<br>';
