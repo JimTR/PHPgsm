@@ -1,16 +1,7 @@
 <?php
 echo 'checking'.PHP_EOL;
-$options = getopt("a:v:i:p:t:"); // read valid options 
-$required = array('p'); // required command line options
-///games/serverfiles/steamapps/appmanifest_4020.acf
-if (count(array_intersect_key(array_flip($required), $options)) <> count($required)) {
-    // missing  options ! print error message
-    echo 'usage'.PHP_EOL;
-	echo $_SERVER['SCRIPT_NAME'].' -a<game_id> -v<version> -i<ip_address> -p<server_port> optional -t<type>'.PHP_EOL;
-	exit (1); // terminate with error level 1
-}
 $find = 'appmanifest_';
-$files = glob($options['p']."/*" . $find . "*");
+$files = glob($_GET['p']."/*" . $find . "*");
 $acf = file_get_contents($files[0]);
 $local=local_build($acf);
 echo 'Local Build id '.$local['buildid'].PHP_EOL;
