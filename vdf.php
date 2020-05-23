@@ -2,6 +2,7 @@
 echo 'checking'.PHP_EOL;
 $find = 'appmanifest_';
 $files = glob($_GET['p']."/*" . $find . "*");
+echo $files[0].'<br>';
 $acf = file_get_contents($files[0]);
 $local=local_build($acf);
 echo 'Local Build id '.$local['buildid'].PHP_EOL;
