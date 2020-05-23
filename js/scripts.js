@@ -357,6 +357,9 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#pbody"+fname).empty(); // clear player table rows
 	 if (players >0 ){
 		 console.log(fname);
+		 //btn-primary
+		 $('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
+		    //$('#'+fname+'qbutton').;  
 		    $('#op1'+fname).css('cursor','pointer');
 		    $('#op1'+fname).off().on('click',function() 
 		    {$("#ops"+fname).slideToggle("fast");});
@@ -410,7 +413,9 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
 	 $("#pol1"+fname).html("");
+	 
 	 $("#ops"+fname).slideUp(); //close player panel
+	 $('#'+fname+'qbutton').removeClass('btn-danger').addClass('btn-primary');
 	 //$('#op1'+fname).click(false);
 	 $('#op1'+fname).off('click');
 	 $('#op1'+fname).css('cursor','default');
