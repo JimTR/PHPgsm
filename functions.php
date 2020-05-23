@@ -945,13 +945,13 @@ echo 'ready to return version'.CR;
 }
 
 function local_build($ldata) {
-	echo 'starting local<br>';
+	
 $string = trim(preg_replace('/\t/', '', $ldata));
 $string = trim(preg_replace('/""/', ',', $string));
 $string = trim(preg_replace('/"/', '', $string));
 $string = trim(preg_replace('/{/', '', $string));
 $string = trim(preg_replace('/}/', '', $string));
-echo 'ready to explode<br>';
+
 $ta = explode(PHP_EOL,$string);
 $ta = array_filter($ta);
 $j = refactor_local($ta);

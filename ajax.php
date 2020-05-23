@@ -477,7 +477,7 @@ function check_update()
 			    $local =  local_build($acf_file);
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
-				$update['server_update'];
+				$update['server_update']= $local['update'];
 			    $where['host_name'] = $data['host_name']; 
 			    $database->update('servers',$update,$where);
 			//echo 'Details for App Id '.$local['appid'];
