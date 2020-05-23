@@ -475,8 +475,8 @@ function check_update()
 			echo $files[0];// get file 
 			$acf_file = get_file_contents($files[0]);
 			$local =  local_build($acf_file);
-			//echo 'Local Build id '.$local['buildid'];
-            //echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
+			echo 'Local Build id '.$local['buildid'];
+            echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
 			echo '<br>';
 			}
 			else {echo $data['location'].'/serverfiles/steamapps<br>';}
