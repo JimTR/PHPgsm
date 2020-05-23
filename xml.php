@@ -1,6 +1,7 @@
 <?php
 include 'includes/cli_master.inc.php';
 include 'functions.php';
+
 if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
@@ -18,7 +19,7 @@ require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
-$res = $database->get_results($sql); 
+$res = $database->get_results($sql);
 $sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
 $Gq = array();
@@ -28,14 +29,23 @@ foreach ($res as $getgames) {
 		 $Gq[$key]['id'] = $getgames['host_name'];
 	     $Gq[$key]['host'] = $getgames['host'].':'.$getgames['port'];
 	     $Gq[$key]['type'] = $getgames['type'];
+	  
+	    
 } 
+ 
           $GameQ->addServers($Gq);
           $results = $GameQ->process();
 
 $xml = new SimpleXMLElement('<Servers/>');
 $xmlserver="game_server";
 foreach ($res as $data) {
-	
+	if ($data['buildid'] < $data['rbuildid']) {
+		// needs update
+		$update = 'Requires Update';
+	}  
+	else {
+		$update = 'Up To Date';
+	}
 	$now = new Datetime();
 	 
 	$date = new DateTime();
@@ -49,7 +59,7 @@ foreach ($res as $data) {
 	}
 	else {
 		$online = 'Online';
-		$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
+		//$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
 		
 	}
 	$track = $xml->addChild($xmlserver);
@@ -77,8 +87,8 @@ foreach ($res as $data) {
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
     $track->addChild('maxplayers',$data['max_players']);
     $track->addChild('bots', $results[$data['host_name']]['num_bots']);
-    $track->addChild('update_msg',$update['message']);
-    $track->addChild('version',$update['required_version']);
+    $track->addChild('update_msg',$update);
+    $track->addChild('version',$data['buildid'].' last updated '.date('l jS F Y \a\t g:ia',$data['server_update']));
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
@@ -174,7 +184,7 @@ function change_value_case($array,$case = CASE_LOWER){
     }
     
 function xmlResponse($app,$version) {
-	   
+	   //client version
 		$version = str_replace('.','',$version); // remove points
 		 if (!is_numeric($version) ) {
 			$response['message'] = 'invalid Server version';

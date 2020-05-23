@@ -485,7 +485,7 @@ function check_update()
             //echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']);
 			//echo '<br>';
 			}
-			else {echo $data['location'].'/serverfiles/steamapps<br>';}
+			//else {echo $data['location'].'/serverfiles/steamapps<br>';}
 			}
 }
 ?>
