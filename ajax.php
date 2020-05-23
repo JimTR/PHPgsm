@@ -35,7 +35,7 @@
   
  if(isset($cmds['action'])) {
 header('Access-Control-Allow-Origin: *');
-check_update();
+//check_update();
 switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
