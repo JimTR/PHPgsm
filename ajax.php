@@ -472,14 +472,18 @@ function check_update()
 		$find = 'appmanifest_';
 		$files = glob($acf_loc."/*" . $find . "*");
 		if (!empty($files)){
-			//echo $files[0];// get file 
 			$acf_file = file_get_contents($files[0]);
 			//echo $acf_file.'<br>';
-			$local =  local_build($acf_file);
-			echo 'Details for App Id '.$local['appid'];
-			echo 'Local Build id '.$local['buildid'].'<br>';
-            echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']);
-			echo '<br>';
+			    $local =  local_build($acf_file);
+			    $update['server_id'] = $local['appid'];;
+				$update['buildid'] = $local['buildid'];
+				$update['server_update'];
+			    $where['host_name'] = $data['host_name']; 
+			    $database->update('servers',$update,$where);
+			//echo 'Details for App Id '.$local['appid'];
+			//echo 'Local Build id '.$local['buildid'].'<br>';
+            //echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']);
+			//echo '<br>';
 			}
 			else {echo $data['location'].'/serverfiles/steamapps<br>';}
 			}
