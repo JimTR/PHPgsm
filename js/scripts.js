@@ -291,6 +291,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var st = $(this).find('starttime').text();
 	 var us = $(this).find('update_msg').text();
 	 var sv = $(this).find('version').text();
+	 var udi = $(this).find('uds').text();
+	 //alert (udi);
 	 $("#dm"+fname).html(dm);
 	 $("#sp"+fname).html(sp);
 	 $("#rp"+fname).html(rp);
@@ -306,6 +308,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#gdate"+fname).html(st); //front page
 	 $("#plogo"+fname).attr("src",$(this).find('logo').text()); //front page
 	 $("#status"+fname).attr("src","img/offline1.png"); // set to not sure
+	 $('#status'+fname).prop('title', 'Update Required');
 	 var rt = $(this).find('rt').text();
 	 var players = 0;
 	 var tp = players+"/"+mplayers;
@@ -313,6 +316,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
+	  $('#status'+fname).prop('title', 'Online');	 
 	  $("#game"+fname).show(); //show game panel
 	  $('#'+fname+'response').html(fname+' has started') ; 
 	  $('#'+fname+'qbutton').show();
@@ -325,6 +329,11 @@ $(xml).find('Servers').children('game_server').each(function(){
       $('#'+fname+'dbutton').hide();
       $('#'+fname+'response').delay(5000).fadeOut('slow');
 	  $("#status"+fname).attr("src","img/online.png"); // set to online
+	  if (udi ==1) {
+			// update req
+			$("#status"+fname).attr("src","img/offline1.png"); // set to offline
+			$('#status'+fname).prop('title', 'Requires Update');
+			}
 		 var cmap = $(this).find('currentmap').text();
 	     var players = $(this).find('players').text();
 	     var hn = $(this).find('host_name').text();
@@ -420,6 +429,13 @@ $(xml).find('Servers').children('game_server').each(function(){
 		$("#game"+fname).hide(); //hide game panel
 		$('#'+fname+'response').html(fname+' has stopped') ; 
 		$("#status"+fname).attr("src","img/offline.png"); // set to offline
+		$('#status'+fname).prop('title', 'Off Line');
+		if (udi ==1) {
+			// update req
+			$("#status"+fname).attr("src","img/offline1.png"); // set to offline
+			$('#status'+fname).prop('title', 'Requires Update');
+			}
+		
 		$('#'+fname+'response').delay(5000).fadeOut('slow');
 		$('#'+fname+'qbutton').hide();
 		$('#'+fname+'sbutton').show();
