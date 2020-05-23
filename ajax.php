@@ -462,7 +462,7 @@ function check_update()
 {
 	//update for xml
 	$database = new db();
-	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and base_servers.enabled="1"';
+	$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and base_servers.enabled="1" and servers.server_id >=0';
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {

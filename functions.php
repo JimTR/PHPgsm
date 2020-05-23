@@ -815,7 +815,7 @@ function html_display($tm,$results) {
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
-				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
+				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
 				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
 				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
@@ -860,7 +860,7 @@ function html_display($tm,$results) {
 				}
 				//end of players
 				// close div
-				$disp .='</tbody></table></div><script>
+				$disp .='</tbody></table></div><!--End template--><script>
 				$("#op1'.$key.'").click(function(){
 				$("#ops'.$key.'").slideToggle("fast");
   });
@@ -942,5 +942,103 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR; */
 echo 'ready to return version'.CR;
 //return $version;
+}
+
+function local_build($data) {
+$string = trim(preg_replace('/\t/', '', $data));
+$string = trim(preg_replace('/""/', ',', $string));
+$string = trim(preg_replace('/"/', '', $string));
+$string = trim(preg_replace('/{/', '', $string));
+$string = trim(preg_replace('/}/', '', $string));
+$ta = explode(PHP_EOL,$string);
+$ta = array_filter($ta);
+$j = refactor_local($ta);
+$return['appid'] = $j['AppState']['appid'];
+$return['buildid'] = $j['AppState']['buildid'];
+$return['update'] = $j['AppState']['LastUpdated'];
+return $return;
+}
+
+function refactor_local($array) {
+	// refactor array with keys
+	global $keyset;
+	foreach ($array as &$value) {
+			//read data
+			if(empty($value)) { 
+			//echo 'empty'.PHP_EOL;
+			}
+		else {
+			// make array
+			//if ($keyset = 1) {echo 'keyset'.PHP_EOL;}
+			 $i = strpos($value,",",0);
+			 if ($i == 0) {
+			 $key1 = trim($value);
+			 $nos[$key1] =array();
+			 $keyset=1;
+			 continue;
+		 }
+		   else {
+			   //echo 'hit else'.PHP_EOL;
+			   $i = strpos($value,",",0);
+			if ($i > 0 )
+			{
+            $key = trim(substr($value,0,$i));
+            if (isset($key1)) {
+		    $nos[$key1][$key] = trim(substr($value,$i+1));
+		}
+		else {
+			$nos[$key] = trim(substr($value,$i+1));
+		}
+		}
+		   }
+		}	
+			
+		
+		}
+		return $nos;
+//print_r($nos);
+}
+function test_remote($file) {
+$string = trim(preg_replace('/\t/', '', $file));
+$string = trim(preg_replace('/""/', ',', $string));
+$string = trim(preg_replace('/"/', '', $string));
+$string = trim(preg_replace('/{/', '', $string));
+$string = trim(preg_replace('/}/', '', $string));
+$ta = explode(PHP_EOL,$string);
+$j = refactor_remote($ta);
+$return['buildid'] = $j['public']['buildid'];
+$return['update'] = $j['public']['timeupdated'];
+return $return;
+}
+function refactor_remote($array) {
+	// refactor array with keys
+	foreach ($array as &$value) {
+			//read data
+			if(empty($value)) { 
+			//echo 'empty'.PHP_EOL;
+			}
+		else {
+			// make array
+			 $i = strpos($value,",",0);
+			 if ($i == 0) {
+			 $key1 = trim($value);
+			 $nos[$key1] =array();
+		 }
+		}	
+			$i = strpos($value,",",0);
+			if ($i > 0 )
+			{
+            $key = trim(substr($value,0,$i));
+            if (isset($key1)) {
+		    $nos[$key1][$key] = trim(substr($value,$i+1));
+		}
+		else {
+			$nos[$key] = trim(substr($value,$i+1));
+		}
+		}
+		
+		}
+		return $nos;
+//print_r($nos);
 }
 ?>
