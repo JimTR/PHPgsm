@@ -472,12 +472,12 @@ function check_update()
 		$find = 'appmanifest_';
 		$files = glob($acf_loc."/*" . $find . "*");
 		if (!empty($files)){
-			echo $files[0];// get file 
+			//echo $files[0];// get file 
 			$acf_file = file_get_contents($files[0]);
-			echo $acf_file.'<br>';
+			//echo $acf_file.'<br>';
 			$local =  local_build($acf_file);
-			echo 'Local Build id '.$local['buildid'];
-            echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
+			echo 'Local Build id '.$local['buildid'].'<br>';
+            echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']);
 			echo '<br>';
 			}
 			else {echo $data['location'].'/serverfiles/steamapps<br>';}
