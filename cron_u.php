@@ -40,7 +40,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    $local =  local_build($acf_file);
 			    if (!in_array($local['appid'],$processed)) {
 					print_r($processed);
-					echo cr.$local['app_id'].cr;
+					echo cr.$local['appid'].cr;
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					$result = shell_exec($cmd);
 					$remote = test_remote($result);
