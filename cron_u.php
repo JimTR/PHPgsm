@@ -44,7 +44,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					$result = shell_exec($cmd);
 					$remote = test_remote($result);
-			}
+			
 			//print_r($remote);
 			//echo PHP_EOL;
 			if (isset($remote['buildid'])) {
@@ -62,6 +62,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Remote Build id '.$remote['buildid'].PHP_EOL;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
 			}
+		}
 			//echo '<br>';
 			}
 			//else {echo $data['location'].'/serverfiles/steamapps'.PHP_EOL;}
