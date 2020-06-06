@@ -39,7 +39,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    $acf_file = file_get_contents($files[0]);
 			    $local =  local_build($acf_file);
 			    if (!in_array($local['appid'],$processed)) {
-					$print_r($processed);
+					print_r($processed);
 					echo cr.$local['app_id'].cr;
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					$result = shell_exec($cmd);
