@@ -37,7 +37,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 		if (!empty($files)){
 			    $acf_file = file_get_contents($files[0]);
 			    $local =  local_build($acf_file);
-			    if (!in_array(local['appid'],$processed)) {
+			    if (!in_array($local['appid'],$processed)) {
+					
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					$result = shell_exec($cmd);
 					$remote = test_remote($result);
