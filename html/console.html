@@ -46,8 +46,10 @@ $.ajax({
   type: "get",
   success: function(data){
   var str = document.getElementById("log").innerHTML;
+  console.log(str);
   data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
   var ld =data.split("<br>");
+  console.log(ld);
   var res = str.split("<br>");
   if (res[res.length-2] !== ld[ld.length-2]) {
   document.getElementById("log").innerHTML = str+data;
