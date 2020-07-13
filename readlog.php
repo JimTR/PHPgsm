@@ -35,6 +35,7 @@ foreach ($data['content'] as $k => $v ) {
 	$tuni = strpos($v,'team Unassigned');
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
+	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>');
 	//$v = str_replace('Console','',$v,2);
 	if ($tuni >0 ) {
 		$v = str_replace('team ','team Unassigned',$v);
