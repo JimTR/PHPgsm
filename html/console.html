@@ -52,7 +52,9 @@ $.ajax({
   console.log(ld);
   alert("ld ="+ld);
   var res = str.split("<br>");
-  alert(res);
+  
+  restest = res.replace('"','');
+  alert(restest);
   console.log(res);
   if (res[res.length-2] !== ld[ld.length-2]) {
   console.log('not the same !');
