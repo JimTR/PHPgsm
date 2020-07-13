@@ -21,7 +21,7 @@ foreach ($data['content'] as $k => $v ) {
     $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
     $replacement = '<span style="color:yellow;"><b>${2}/$1/$3</b></span>';  
     //display the result returned by preg_replace  
-    $v = preg_replace($pattern, $replacement, $v,,$count);  
+    $v = preg_replace($pattern, $replacement, $v,-1,$count);  
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	
