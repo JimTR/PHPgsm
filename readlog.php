@@ -28,15 +28,12 @@ foreach ($data['content'] as $k => $v ) {
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	
 	//$v = preg_replace('/<[^0-9]+>/',' ',$v);
-	
-	$at = substr($v,0,22);
-	//$v = preg_replace('/^'.$at.'+:/','',$v);
 	$v = trim($v);
 	//$v = preg_replace('~^(\S+)\s+(\S+)$~', '<b>$1</b><i>$2</i>', $v);
 	$tuni = strpos($v,'team Unassigned');
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
-	$v = str_replace('committed suicide with world','<span style="color:magenta;">committed suicide with world</span>',$v);
+	$v = str_replace('victim_position','<span style="color:magenta;">victim_position</span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 	$v = str_replace('Server logging enabled','<span style="color:green;"><b>Server logging enabled</b></span>',$v);
 	//$v = str_replace('Console','',$v,2);
