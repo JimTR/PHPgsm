@@ -52,15 +52,15 @@ $.ajax({
   var ld = data.split("<br>");
   
   console.log(ld);
-  alert("ld ="+ld[ld.length-2]);
+  //alert("ld ="+ld[ld.length-2]);
   var res = str.split("<br>");
   
   //restest = res.replace('"','');
-  alert("res = "+res[res.length-2]);
+  //alert("res = "+res[res.length-2]);
   var x = ld[ld.length-2].replace('style=c', 'style="c');
   x = x.replace(';>',';">');
-  alert("x = "+x);
-  console.log(res);
+  //alert("x = "+x);
+  //console.log(res);
   if (res[res.length-2] !== x) {
   console.log('not the same !');
   document.getElementById("log").innerHTML = str+data;
