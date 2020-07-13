@@ -36,7 +36,7 @@ foreach ($data['content'] as $k => $v ) {
 	$tuni = strpos($v,'team Unassigned');
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
-	$v = str_replace(' say ','<span style="color:magenta;"><b> say </b></span>',$v);
+	//$v = str_replace(' say ','<span style="color:magenta;"><b> say </b></span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 	$v = str_replace('Server logging enabled','<span style="color:green;"><b>Server logging enabled</b></span>',$v);
 	//$v = str_replace('Console','',$v,2);
