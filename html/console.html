@@ -50,8 +50,7 @@ $.ajax({
   data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
   //data = data.replace('style=c', 'style="c');
   var ld = data.split("<br>");
-  
-  console.log(ld);
+  console.log('ld = '+ ld[ld.length-2]);
   //alert("ld ="+ld[ld.length-2]);
   var res = str.split("<br>");
   
