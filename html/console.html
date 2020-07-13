@@ -48,11 +48,11 @@ $.ajax({
   var str = document.getElementById("log").innerHTML;
   //console.log(str);
   data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
-  data = data.replace('style=c', 'style="c');
+  //data = data.replace('style=c', 'style="c');
   var ld = data.split("<br>");
   
   console.log(ld);
-  alert("ld ="+ld);
+  alert("ld ="+ld.length-2);
   var res = str.split("<br>");
   
   //restest = res.replace('"','');
