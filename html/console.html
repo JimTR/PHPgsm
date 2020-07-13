@@ -49,6 +49,7 @@ $.ajax({
   //console.log(str);
   data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
   var ld =data.split("<br>");
+  ld = ld.replace('style=c', 'style="c');
   console.log(ld);
   alert("ld ="+ld);
   var res = str.split("<br>");
