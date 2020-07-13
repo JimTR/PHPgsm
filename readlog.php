@@ -16,7 +16,7 @@ foreach ($data['content'] as $k => $v ) {
 	//$v = preg_replace('/L .. /', '', $v);
 	$date ='L '. date("m/d/Y");
     $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
-    $replacement = '<span style="color:blue;">${2}/$1/$3</span>';  
+    $replacement = '\<span style="color:blue;"\>${2}/$1/$3\</span\>';  
 
     //display the result returned by preg_replace  
     $v = preg_replace($pattern, $replacement, $v);  
