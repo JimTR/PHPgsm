@@ -57,8 +57,8 @@ $.ajax({
   //restest = res.replace('"','');
   console.log("res = "+res[res.length-2]);
   // ->/\+/g, ' '
-  var x = ld[ld.length-2].replace('/style=c/', 'style="c');
-  x = x.replace('/;>/',';">');
+  var x = ld[ld.length-2].replace(/style=c/, 'style="c');
+  x = x.replace(/;>/,';">');
   //alert("x = "+x);
   console.log("x = "+x);
   if (res[res.length-2] !== x) {
