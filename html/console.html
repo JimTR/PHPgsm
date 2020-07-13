@@ -50,7 +50,9 @@ $.ajax({
   data = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
   var ld =data.split("<br>");
   console.log(ld);
+  alert(ld);
   var res = str.split("<br>");
+  alert(res);
   console.log(res);
   if (res[res.length-2] !== ld[ld.length-2]) {
   console.log('not the same !');
