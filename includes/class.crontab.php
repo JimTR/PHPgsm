@@ -30,7 +30,7 @@
     
     static private function stringToArray($jobs = '') {
         $array = explode("\n", trim($jobs)); // trim() gets rid of the last \r\n
-        foreach ($array as $key => $item) {
+          foreach ($array as $key => $item) {
             if ($item == '') {
                 unset($array[$key]);
             }
@@ -39,7 +39,7 @@
     }
     
     static private function arrayToString($jobs = array()) {
-        $string = implode("\n", $jobs);
+        $string = implode(PHP_EOL, $jobs);
         return $string;
     }
     
@@ -50,12 +50,15 @@
     
     static public function saveJobs($jobs = array()) {
         $output = shell_exec('echo "'.self::arrayToString($jobs).'" | crontab -');
+        
+        
         return $output;	
     }
     
     static public function doesJobExist($job = '') {
         $jobs = self::getJobs();
         if (in_array($job, $jobs)) {
+			echo 'Found It !!!!<br>';
             return true;
         } else {
             return false;
@@ -66,21 +69,41 @@
         if (self::doesJobExist($job)) {
             return false;
         } else {
+			//echo 'adding job '.$job.'<br>';
             $jobs = self::getJobs();
             $jobs[] = $job;
-            return self::saveJobs($jobs);
+            self::saveJobs($jobs);
+            return self::getJobs();
         }
     }
     
     static public function removeJob($job = '') {
-        if (self::doesJobExist($job)) {
+		
+       if (self::doesJobExist($job)) {
+		    echo 'found job<br>';
             $jobs = self::getJobs();
             unset($jobs[array_search($job, $jobs)]);
-            return self::saveJobs($jobs);
+            self::saveJobs($jobs);
+            return self::getJobs();
         } else {
+			
             return false;
         }
     }
     
+    static public function updateJob($job = '') {
+			if (self::doesJobExist($job)) {
+		    //echo 'update found job<br>';
+		    $jobs = self::getJobs();
+		    //$update = array_map($job, $jobs);
+		    //$update = preg_grep('/^'.$job.'\s.*/', $jobs);
+		    $update = array_search($job,$jobs,true); // get
+		    //echo 'should be at '.$update.'<br>'; 
+		} else {
+			//echo 'no good<br>';
+			return false;
+		}
+		
+    }
 }
 ?>
