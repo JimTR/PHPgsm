@@ -61,7 +61,7 @@ $.ajax({
   x = x.replace(';>',';">');
   alert("x = "+x);
   console.log(res);
-  if (res[res.length-2] !== ld[ld.length-2]) {
+  if (res[res.length-2] !== x) {
   console.log('not the same !');
   document.getElementById("log").innerHTML = str+data;
    var element = document.getElementById("log");
