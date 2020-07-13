@@ -13,6 +13,8 @@ $data['content'] = $_GET['time'] < $data['time']
 
 foreach ($data['content'] as $k => $v ) {
 	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
+	$v = preg_replace('/</',' ',$v);
+	$v = preg_replace('/>/',' ',$v);
 	//$v = preg_replace('/L .. /', '', $v);
 	$date ='L '. date("m/d/Y");
     $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
@@ -25,8 +27,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	//$v = preg_replace('/<[^0-9]+>/',' ',$v);
-	//$v = preg_replace('/</',' ',$v);
-	//$v = preg_replace('/>/',' ',$v);
+	
 	$at = substr($v,0,22);
 	//$v = preg_replace('/^'.$at.'+:/','',$v);
 	$v = trim($v);
