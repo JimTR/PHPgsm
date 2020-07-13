@@ -46,8 +46,8 @@ foreach ($data['content'] as $k => $v ) {
 	$at = strtotime($at);
 	if  (date("d-m-Y H:i:s",$v) === '01-01-1970 01:00:00') {
 		$at = date("d/m/Y - H:i:s");
-		continue;
-		//$v = $at.': '.$v;
+		//continue;
+		$v = $at.': '.$v;
 		} 
 	else {
 		$j = preg_replace ('/(\d{2})/(\d{2})/(\d{4})/',"$3/$1/$2",$v);
