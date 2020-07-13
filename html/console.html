@@ -59,7 +59,7 @@ $.ajax({
   var x = ld[ld.length-2].replace('style=c', 'style="c');
   x = x.replace(';>',';">');
   //alert("x = "+x);
-  //console.log(res);
+  console.log("x = "+x);
   if (res[res.length-2] !== x) {
   console.log('not the same !');
   document.getElementById("log").innerHTML = str+data;
