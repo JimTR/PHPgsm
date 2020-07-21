@@ -12,7 +12,7 @@ $data['content'] = $_GET['time'] < $data['time']
     : false;
 
 foreach ($data['content'] as $k => $v ) {
-	$v = preg_replace('/Console<0><Console><Console>/','<span style="color:#328ba8">Console</span>',$v);
+	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	$v = preg_replace('/</',' ',$v);
 	$v = preg_replace('/>/',' ',$v);
@@ -33,6 +33,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
 	$v = str_replace(' say ',' <span style="color:magenta;"><b> say </b></span>',$v);
+	$v = str_replace(' Console ',' <span style="color:#328ba8;"><b> Console </b></span>
 	$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 	$v = str_replace('Server logging enabled','<span style="color:green;"><b>Server logging enabled</b></span>',$v);
