@@ -12,7 +12,7 @@ $data['content'] = $_GET['time'] < $data['time']
     : false;
 
 foreach ($data['content'] as $k => $v ) {
-	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
+	$v = preg_replace('/Console<0><Console><Console>/','<span style="color:#328ba8">Console</span>',$v);
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	$v = preg_replace('/</',' ',$v);
 	$v = preg_replace('/>/',' ',$v);
