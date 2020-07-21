@@ -26,7 +26,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	
-	//$v = preg_replace('/<[^0-9]+>/',' ',$v);
+	//$v = preg_replace('/<[^0-9]+>/',' ',$v); //remove
 	$v = trim($v);
 	//$v = preg_replace('~^(\S+)\s+(\S+)$~', '<b>$1</b><i>$2</i>', $v);
 	$tuni = strpos($v,'team Unassigned');
