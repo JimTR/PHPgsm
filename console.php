@@ -19,7 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
+ *  tmux  :- tmux send-keys -t mySession.0 "echo 'Hello World'" ENTER
  * 
+ * tmux send-keys -t gmodserver.0 "say hello there" Enter
  * displays game console ... safer than opening screen or tmux
  * 
  */
@@ -27,6 +29,14 @@
 require 'includes/master.inc.php'; // do login and stuff
 include("functions.php"); // add functions
 define ("CR", "<br>");
+if (empty($Auth->id)) {
+		
+		$template->load('html/login.html');
+		$template->replace('servername', $_SERVER['SERVER_NAME']);
+		$template->publish();
+		exit;
+	}
+	
 $template = new Template; // load template class
  if (!empty($_POST)) {
 	 $cmds = $_POST;
