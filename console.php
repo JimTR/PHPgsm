@@ -29,6 +29,7 @@
 require 'includes/master.inc.php'; // do login and stuff
 include("functions.php"); // add functions
 define ("CR", "<br>");
+$template = new Template; // load template class
 if (empty($Auth->id)) {
 		
 		$template->load('html/login.html');
@@ -37,7 +38,7 @@ if (empty($Auth->id)) {
 		exit;
 	}
 	
-$template = new Template; // load template class
+
  if (!empty($_POST)) {
 	 $cmds = $_POST;
 	 echo "post set".CR;
