@@ -40,6 +40,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:yellow"><b>Writing cfg/banned_user.cfg.</b></span>',$v);
 	$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:red;"></span><b>Writing cfg/banned_user.cfg.</b></span>',$v);
 	$v = str_replace('fof_cripplecreek','<span style="color:#0d1f54;"><b>fof_cripplecreek</b></span>',$v); 
+	$v = str_replace('validated','<span style="color:green;"><b>validated</b></span>',$v); 
 	//$v = str_replace('Console','',$v,2);
 	if ($tuni >0 ) {
 		$v = str_replace('team ','team Unassigned',$v);
