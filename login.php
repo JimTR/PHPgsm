@@ -1,20 +1,20 @@
 <?PHP
 
     require 'includes/master.inc.php'; // load required files
-    echo 'here';
+   // echo 'here';
     //require ('steamauth/steamauth.php');
 	$time = microtime();
 	$time = explode(' ', $time);
 	$time = $time[1] + $time[0];
 	$start = $time;
-	echo 'there<br>';
+//	echo 'there<br>';
 if (!isset($_SERVER['HTTP_REFERER'])) 
 { 
 	redirect("index.php");
 	} 
 //die();
-print_r($_SERVER);
-echo 'loaded<br>';
+//print_r($_SERVER);
+//echo 'loaded<br>';
 //die();
     if($Auth->id > 0) 
            {
@@ -55,8 +55,12 @@ if ($_SERVER['HTTPS'])
 			//die ('no user name');
             $Error = "You have entered an incorrect username/password combination.<br> Please try again. ";
             //include ('steamauth/userInfo.php');
-            echo '<br> in the else thingy<br>'; 
-            print_r($steamprofile);
+                //echo '<br> in the else thingy<br>';
+		$template = new Template;
+		$template->load('html/login.html');
+		$template->publish();
+		exit;
+           // print_r($steamprofile);
     
            
            
@@ -87,7 +91,7 @@ if ($_SERVER['HTTPS'])
 	$template = new Template;
 	$name ="Guest";
 	$login = $template->load($page['template_path'].'guest.html', COMMENT) ;
-    $page['header'] = $template->load($page['template_path'].'header.html', COMMENT);
+        $page['header'] = $template->load($page['template_path'].'header.html', COMMENT);
 	$page['footer'] = $template->load($page['template_path'].'footer.tmpl', COMMENT);
 	$page['include'] = $template->load($page['template_path'].'include.tmpl', COMMENT);
 	$page['login'] = $login;
