@@ -96,7 +96,7 @@ jQuery(document).ready(function(){
     //fetchload();
     fetchgames();
     fetchservers();	
-
+	setInterval('fetchgames()', 60000);
 });
  $( function() {
   var icons = {

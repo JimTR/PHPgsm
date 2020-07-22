@@ -9,8 +9,8 @@
   <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
   <link rel="shortcut icon" href="/img/favicon.png">
 
-  <title>Sign into PHPgsm Control</title>
-
+  <title>Register At PHPgsm Control</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <!-- Bootstrap CSS -->
   <link href="/css/bootstrap.min.css" rel="stylesheet">
   <!-- bootstrap theme -->
@@ -28,16 +28,10 @@ body.session_login {
     background-size: cover;
 }
 </style>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
-    <script src="https://www.google.com/recaptcha/api.js?render=6Lc8cbQZAAAAAOLSkLzdEvcAj8mtkLZpqTT_ZT0o"></script>
-    <script>
-        grecaptcha.ready(function () {
-            grecaptcha.execute('6Lc8cbQZAAAAAOLSkLzdEvcAj8mtkLZpqTT_ZT0o', { action: 'contact' }).then(function (token) {
-                var recaptchaResponse = document.getElementById('recaptchaResponse');
-                recaptchaResponse.value = token;
-            });
-        });
-    </script>
+<link rel="stylesheet" type="text/css" href="/css/jquery.realperson.css"> 
+<script type="text/javascript" src="/js/jquery.plugin.js"></script> 
+<script type="text/javascript" src="/js/jquery.realperson.js"></script>
+
 </head>
 
 <body class = "session_login">
@@ -52,6 +46,7 @@ body.session_login {
         <h5 style = "text-align:center;color:#000000;">You must enter a username and password to register at</h5>
         <h3 style = "text-align:center;color:#ffffff;margin-top:7px;"><!--#servername#--></h3>
         </p>
+        <!--#error#-->
         <div class="input-group">
           <span class="input-group-addon" style="background-color:red;color:#d6d6d6;"><i class="icon_profile"></i></span>
           <input type="text" class="form-control" placeholder="Username" name="username" autofocus>
@@ -60,17 +55,20 @@ body.session_login {
           <span class="input-group-addon" style="background-color:red;color:#d6d6d6;"><i class="icon_key_alt"></i></span>
           <input type="password" class="form-control" placeholder="Password" name="password">
         </div>
-        <label class="checkbox" style="color:#000000;">
-                <input type="checkbox" value="remember-me"> Remember me
-                <span class="pull-right" > <a href="#" style="color:#000000 !important;"> Forgot Password?</a></span>
-            </label>
+        <div class="input-group" style="width:100%;">
+           
+           <input type="text" class="form-control" id="defaultReal" name="defaultReal" style = "display:inline">
+           
+        </div>   
+        <span class="input-group-addon" style="color:#000000;background:transparent;"> Enter the code above</span>
+       
         <button class="btn btn-success btn-lg btn-block" type="submit">Register</button>
-       <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
+      
       </div>
     </form>
     
   </div>
-
+<script>$(function() {$('#defaultReal').realperson();});</script>
 
 </body>
 
