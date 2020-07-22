@@ -1,6 +1,6 @@
 Steam Game Server Controller
 Written in PHP
-<p><h2>PHP Controller for Steam games</h2>currently totally unstable </p>
+<p><h2>PHP Controller for Steam games</h2>Currently <b>stable</b></p>
 <p>if you clone this project you will, most likely, need help installing the project</p>
 <p>Please open an issue and I will guide you through what you need to do.</p>
 <p>Game support is currently limited</p>
