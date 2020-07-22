@@ -346,8 +346,7 @@ function exe_lgsm($server,$action,$exe)
 			break;
 		  case "r":
 				$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
-				//echo $cmd.CR;
-				exec($cmd);
+				exec($cmd); //kill session
 				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
 				$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
 				rename($logFile, $savedLogfile);
@@ -356,14 +355,11 @@ function exe_lgsm($server,$action,$exe)
 			    $where['host_name'] = $exe; 
 			    $database->update('servers',$update,$where);
 			    chdir($detail['location'].'/serverfiles');
-				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
-				//echo $cmd.CR;
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name']; 
 				exec($cmd); // open session
-				//$cmd = 'screen -S '.$detail['host_name'].'  -X stuff "'.$detail['startcmd'].'^M"'; //start server
 				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
-				exec($cmd);
-				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; //start server
-				//echo $cmd.CR;
+			    exec($cmd); //make sure we are in the right place
+				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; 
 				exec($cmd); // start game
 				$disp = 'Restarting Server '.$detail['host_name'];
 				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
