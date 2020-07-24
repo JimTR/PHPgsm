@@ -276,6 +276,16 @@ function get_user_info ($Disk_info) {
 }
 function get_software_info() {
 	// return software info as array
+	// apt-show-versions
+	//glibc = libc-bin ubuntu 
+	//curl = libcurl
+	//php = fpm/cli/cgi
+	// mysql = mysql-server-core
+	// quota = quota
+	// screen = screen 
+	// steamcmd = steam
+	// postfix = postfix
+	// dovecot = dovecot-core
 	 $php_version = explode('.', PHP_VERSION);
 	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
 	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
@@ -870,8 +880,15 @@ function html_display($tm,$results) {
 			}
 			else {
 				//server not responding
-				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
-				<br> or perhaps there is something else wrong</div>';
+				$logo ='img/warning.png';
+				$players = '<i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start';
+				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
+				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;"><span id="gol'.$key.'">'.$players.'</span><span id="cmap'.$key.'"></span></span></div>';
+				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
+				//$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
+				//<br> or perhaps there is something else wrong</div>';
 			}
 			//return $disp;
 		}

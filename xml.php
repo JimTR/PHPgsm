@@ -1,5 +1,5 @@
 <?php
-include 'includes/cli_master.inc.php';
+include 'includes/master.inc.php';
 include 'functions.php';
 
 if (!empty($_POST)) {
@@ -14,7 +14,6 @@ $mem_info = get_mem_info(); //theses need to be the server in question
 $disk_info = get_disk_info();
 $up_time = get_boot_time();
 $cpu_info = get_cpu_info();
-$site->config = &$config; // load the config
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
@@ -29,8 +28,6 @@ foreach ($res as $getgames) {
 		 $Gq[$key]['id'] = $getgames['host_name'];
 	     $Gq[$key]['host'] = $getgames['host'].':'.$getgames['port'];
 	     $Gq[$key]['type'] = $getgames['type'];
-	  
-	    
 } 
  
           $GameQ->addServers($Gq);

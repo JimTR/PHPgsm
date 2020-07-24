@@ -58,8 +58,7 @@
     static public function doesJobExist($job = '') {
         $jobs = self::getJobs();
         if (in_array($job, $jobs)) {
-			echo 'Found It !!!!<br>';
-            return true;
+			return true;
         } else {
             return false;
         }

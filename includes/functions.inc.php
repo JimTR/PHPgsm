@@ -25,12 +25,14 @@ global $database;
 
     function printr($var,$return)
     {
-        $output = print_r($var, $return);
+		
+        $output = print_r($var,true);
         $output = str_replace("\n", "<br>", $output);
         $output = str_replace(' ', '&nbsp;', $output);
-        if ($return === 0){
+        if ($return === true){
+			
         echo "<div style='font-family:courier;'>$output</div>";}
-        if ($return === 1) {
+        if ($return === false) {
 			
 			return $output;
 		}
@@ -246,7 +248,7 @@ global $database;
     }
 
     // Outputs hour, minute, am/pm dropdown boxes
-    function hourmin($hid = 'hour', $mid = 'minute', $pid = 'ampm', $hval = null, $mval = null, $pval = null)
+    function hourmin($outputformat ='h m',$hid = 'hour', $mid = 'minute', $pid = 'ampm', $hval = null, $mval = null, $pval = null)
     {
         // Dumb hack to let you just pass in a timestamp instead
         if(func_num_args() == 1)
@@ -262,27 +264,36 @@ global $database;
             if(is_null($mval)) $mval = date('i');
             if(is_null($pval)) $pval = date('a');
         }
-
-        $hours = array(12, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11);
-        $out = "<select name='$hid' id='$hid'>";
+		for ($i = 0; $i<=23;$i++)
+		{
+			$hours[] = $i;
+		}
+        //$hours = array(0,1, 2, 3, 4, 5, 6, 7, 9, 10, 11,12);
+        $out = "<select name='$hid' id='$hid' multiple size = \"24\">";
         foreach($hours as $hour)
             if(intval($hval) == intval($hour)) $out .= "<option value='$hour' selected>$hour</option>";
             else $out .= "<option value='$hour'>$hour</option>";
         $out .= "</select>";
-
-        $minutes = array('00', 15, 30, 45);
-        $out .= "<select name='$mid' id='$mid'>";
+        // end hours
+        
+        
+		for ($i = 0; $i<=59;$i++)
+		{
+			$minutes[] = $i;
+		}
+        //$minutes = array('00', 15, 30, 45);
+        $out .= "<select name='$mid' id='$mid' multiple>";
         foreach($minutes as $minute)
             if(intval($mval) == intval($minute)) $out .= "<option value='$minute' selected>$minute</option>";
             else $out .= "<option value='$minute'>$minute</option>";
         $out .= "</select>";
 
-        $out .= "<select name='$pid' id='$pid'>";
+       /* $out .= "<select name='$pid' id='$pid'>";
         $out .= "<option value='am'>am</option>";
         if($pval == 'pm') $out .= "<option value='pm' selected>pm</option>";
         else $out .= "<option value='pm'>pm</option>";
         $out .= "</select>";
-
+		*/
         return $out;
     }
 
@@ -290,38 +301,96 @@ global $database;
     // You can set the default date by passing in a timestamp OR a parseable date string.
     // $prefix_ will be appened to the name/id's of each dropdown, allowing for multiple calls in the same form.
     // $output_format lets you specify which dropdowns appear and in what order.
-    function mdy($date = null, $prefix = null, $output_format = 'm d y')
+    function mdy($date = null, $prefix = null, $output_format = 'w m d y',$multiple ='',$class='',$size='"0"',$start=0,$finish=0,$mval = array())
     {
+		//echo '<br>finish = ',$finish.' Start = '.$start.'<br>';
+		//printr($mval,true);
         if(is_null($date)) $date = time();
         if(!ctype_digit($date)) $date = strtotime($date);
         if(!is_null($prefix)) $prefix .= '_';
-        list($yval, $mval, $dval) = explode(' ', date('Y n j', $date));
-
-        $month_dd = "<select name='{$prefix}month' id='{$prefix}month'>";
+        //list($yval, $mval, $dval) = explode(' ', date('Y n j', $date));
+        //$mval = 99;
+		$week_days = [
+			'Sunday',
+			'Monday',
+			'Tuesday',
+			'Wednesday',
+			'Thursday',
+			'Friday',
+			'Saturday'
+	];
+	     //print_r($week_days);
+	     if ($finish ==0){$finish=6;}
+	     $week_dd =  "<select name='{$prefix}weekdays[]' id='{$prefix}weekdays' {$multiple} size = {$size} class={$class}>";
+	     for ($i = 0; $i<=$finish;$i++)
+	     {
+			 //read week days
+			 $week_dd .=  "<option value='$i'$selected>" . $week_days[$i] . "</option>";
+		}	
+		$week_dd .= "</select>"; 
+		
+        $month_dd = "<select name='{$prefix}months[]' id='{$prefix}month' {$multiple} class={$class} size= {$size}>";
         for($i = 1; $i <= 12; $i++)
         {
             $selected = ($mval == $i) ? ' selected="selected"' : '';
             $month_dd .= "<option value='$i'$selected>" . date('F', mktime(0, 0, 0, $i, 1, 2000)) . "</option>";
         }
         $month_dd .= "</select>";
-
-        $day_dd = "<select name='{$prefix}day' id='{$prefix}day'>";
-        for($i = 1; $i <= 31; $i++)
+         if ($finish ==0){$finish = 31;
+			 //echo '$finish set to zero !<br>';
+			 }
+         //if ($start ==0){$start = 1;} 
+        $day_dd = "<select name='{$prefix}days[]' id='{$prefix}day' {$multiple} class={$class} size ={$size}> ";
+        for($i = $start; $i <= $finish; $i++)
         {
-            $selected = ($dval == $i) ? ' selected="selected"' : '';
+            $selected = ($mval == $i) ? ' selected="selected"' : '';
             $day_dd .= "<option value='$i'$selected>$i</option>";
         }
         $day_dd .= "</select>";
 
-        $year_dd = "<select name='{$prefix}year' id='{$prefix}year'>";
+        $year_dd = "<select name='{$prefix}years[]' id='{$prefix}year' {$multiple} class={$class} size = {$size}>";
         for($i = date('Y'); $i < date('Y') + 10; $i++)
         {
             $selected = ($yval == $i) ? ' selected="selected"' : '';
             $year_dd .= "<option value='$i'$selected>$i</option>";
         }
         $year_dd .= "</select>";
+        if ($finish ==0) {
+			//echo '$finish set to zero !<br>';
+			$finish= 23;
+			}
+        //$finish =11;
+        //echo '$finish set to '.$finish;
+        $hour_dd = "<select name='{$prefix}hours[]' id='{$prefix}hour' {$multiple} class={$class} size = {$size}>";
+        for ($i = $start; $i<=$finish;$i++)
+		{
+			$hours[] = $i;
+		}
+        
+        
+        foreach($hours as $hour)
+            if(in_array($hour,$mval)) $hour_dd .= "<option value='$hour' selected>$hour</option>";
+            else $hour_dd .= "<option value='$hour'>$hour</option>";
+        $hour_dd .= "</select>";
+        
+        if ($finish ==0) {$finish=59;}
+        //echo $start.'<br>'; 
+        for ($i = $start; $i<=$finish;$i++)
+		{
+			$minutes[] = $i;
+		}
+        //printr($mval,true);
+         $min_dd = "<select name='{$prefix}mins[]' id='{$prefix}' {$multiple} class={$class} size = {$size}>";
+        foreach($minutes as $minute)
+        
+            if(in_array($minute,$mval))  {
+				$min_dd .= "<option value='$minute' selected>$minute</option>";
+				//echo "Got Irix<br>";
+				}
+            else $min_dd .= "<option value='$minute'>$minute</option>";
+        $min_dd .= "</select>";
 
-        $trans = array('m' => $month_dd, 'd' => $day_dd, 'y' => $year_dd);
+        $trans = array('m' => $month_dd, 'd' => $day_dd, 'y' => $year_dd, 'w' =>$week_dd, 'h' =>$hour_dd, 'mi' => $min_dd );
         return strtr($output_format, $trans);
     }
 
@@ -1014,3 +1083,51 @@ function ban_check ($user)
 		   }
 		   return;
 	   }
+	   
+function check_ip($ip) 
+{
+	$ip = $_GET['ip'];
+ $ch = curl_init();
+	     curl_setopt($ch, CURLOPT_URL, 'https://ipvigilante.com/'.$ip);
+	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		 $xm = curl_exec($ch);
+		 curl_close($ch);
+		 $ipArray = json_decode($xm, true);
+		
+		 if ($ipArray['status'] == 'success') {
+		 $data = $ipArray['data'];
+		 return $data;  
+	 }
+	 else {
+		  return $ipArray['status'];
+	  }
+  }
+ function build_cron_line($data) {
+	 // build cron line from supplied form
+	 
+	 //printr($data,true);
+	 if ($data['active'] == 0) {$cron ='# ';} // disable
+	 if ($data['special_def'] == 1) {
+		 $cron .= '@'.$data['special'].' '; 
+		  goto addcmd;
+		  }
+	 if ($data['all_mins'] == 1 )  {$cron .='* ';}
+	 else {$cron .= implode(',',$data['mins']).' ';}
+	 if 	($data['all_hours'] == 1) {$cron .= '* ';}
+	 else {$cron .= implode(',',$data['hours']).' ';}
+	  if  ($data['all_days'] == 1) {$cron .= '* ';}
+	 else {$cron .= implode(',',$data['days']).' ';}
+	  if  ($data['all_months'] == 1) {$cron .= '* ';}
+	 else {$cron .= implode(',',$data['months']).' ';}
+	  if  ($data['all_weekdays'] == 1) {$cron .= '* ';}
+	 else {$cron .= implode(',',$data['weekdays']).' ';}
+	  
+	 addcmd:
+		$cron .= $data['cmd'].' ';
+		$cron .= '# '.$data['comment'];
+		$cron= trim($cron);
+		cronline: 
+	 #echo 'Cron Line = '. $cron.'<br>';
+	 return $cron;
+	 
+ } 	   

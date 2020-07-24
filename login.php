@@ -12,10 +12,7 @@ if (!isset($_SERVER['HTTP_REFERER']))
 { 
 	redirect("index.php");
 	} 
-//die();
-//print_r($_SERVER);
-//echo 'loaded<br>';
-//die();
+
     if($Auth->id > 0) 
            {
 			   // already logged in default to the main index
@@ -96,9 +93,7 @@ if ($_SERVER['HTTPS'])
 	$page['include'] = $template->load($page['template_path'].'include.tmpl', COMMENT);
 	$page['login'] = $login;
 	//$page['steam'] = '<div>'.steamlogin().'</div>';
-	$page['query'] = $database->total_queries();
-	$page['path'] = $site->settings['url'];
-	//$page['error'] ="";
+		//$page['error'] ="";
 	  
 	$template->load($page['template_path'].'login.html', COMMENT);
 	$template->replace_vars($page);
@@ -109,12 +104,7 @@ if ($_SERVER['HTTPS'])
 	$template->replace("vari",$users);
 	$template->replace("datetime", FORMAT_TIME);
 	//$template->replace("error",$Error);
-		if($site->settings['showphp'] === false)
-			{
-				$template->removephp();
-			}
-			//print_r($page);
- //die();
+		
     $linecount = filelength($_SERVER['SCRIPT_FILENAME']);
     $test =page_stats($linecount,$page['query'],$start);
     $adminstats= "Page generated in ".$test['time']." seconds. &nbsp;
