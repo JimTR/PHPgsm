@@ -1,11 +1,8 @@
-<?PHP
+<?php
     // Application flag
     //namespace UAS;
     error_reporting( 0 );
-    define('SPF', true);
-    global $Auth;
-    global $ret;
-    
+    //echo 'hello';
     if (!defined('DOC_ROOT')) {
     define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
 }
@@ -122,3 +119,4 @@ if($site->settings['siteclosed'] === "1" & $Auth->level <>'admin') {
 	    DBSession::write($id,$$_SESSION);
 	    DBSession::read ($id);
 	}	  
+	?>
