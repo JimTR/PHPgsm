@@ -51,7 +51,7 @@ $players = 	$results[$key]['gq_numplayers'];
 if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<table style="width:100%;"><tr><td style="width:20%;">Name</td><td style="width:20%;">Country</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
+					$disp .= '<table style="width:100%;"><tr><td style="width:30%;">Name</td><td style="width:30%;">Country</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score');
 					foreach ($player_list as $k=>$v) {
