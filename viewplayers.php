@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * simple file to retrieve & format player data 
- * 
+ *  support code for console.php
  */
 
 
@@ -32,6 +32,9 @@ $servers = [
 ];
 //46.32.237.232:27016
 require ('includes/master.inc.php');
+if (empty($_GET['id'])) {
+	redirect('/');
+}
 require_once('GameQ/Autoloader.php');
 require 'includes/Emoji.php';
 $sql = 'select * from players where name="';
@@ -83,22 +86,20 @@ if ($players >0) {
 										
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
-							//echo json_decode('"'.$result['flag'].'"');
-							$result['flag'] = Emoji::Decode($result['flag']);
-							//echo trim($result['flag']).'      '.$playerN.' - '.$pscore.' - '.gmdate("H:i:s", $player_list[$k]['gq_time']).PHP_EOL;
-							$disp .='<tr><td><i style="color:green;">'.$result['flag'].'&nbsp'.$playerN.'</i></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+							$result['flag'] = Emoji::Decode($result['flag']); //get flag
+							$disp .='<tr><td><i style="color:green;">'.$playerN.'</i><span style="margin-left:1%;">'.$result['flag'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 							//print_r($result);
 						}
 						else {
 									$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						}
-						//$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+						
 						
 					}
 					// end of players for each
 					$disp .='</table><br>';
 				}
-//echo $players.'<br>';
+
 echo $disp;
 
 		function orderBy(&$data, $field)
