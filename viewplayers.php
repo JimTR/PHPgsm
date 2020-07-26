@@ -51,7 +51,7 @@ $players = 	$results[$key]['gq_numplayers'];
 if ($players >0) {
 					// we have players
 					// add sub template
-					$disp .= '<table><tr><td style="width:60%;">Name</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
+					$disp .= '<table><tr><td style="width:60%;">Name</td><td>Country</td><td style="width:20%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results[$key]['players']; // get the player array
 					orderBy($player_list,'gq_score');
 					foreach ($player_list as $k=>$v) {
@@ -91,7 +91,7 @@ if ($players >0) {
 							//print_r($result);
 						}
 						else {
-									$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+									$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						}
 						
 						
