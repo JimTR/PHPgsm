@@ -87,7 +87,7 @@ if ($players >0) {
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
 							$result['flag'] = Emoji::Decode($result['flag']); //get flag
-							$disp .='<tr><td><i style="color:green;">'.$playerN.'</i><span style="margin-left:1%;">'.$result['flag'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+							$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td><span style="margin-left:1%;">'.$result['flag'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 							//print_r($result);
 						}
 						else {
