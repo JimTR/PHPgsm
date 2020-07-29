@@ -81,10 +81,11 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 				}
 			}
+			if ($settings['update'] = 1) {
+				echo 'Auto Update Set'.cr;
+			} 
 		}
 			//echo '<br>';
 			}
-			//else {echo $data['location'].'/serverfiles/steamapps'.PHP_EOL;}
-			//}
-print_r($processed);
+			
 ?>
