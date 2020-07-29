@@ -32,6 +32,7 @@ $servers = [
 ];
 //46.32.237.232:27016
 require ('includes/master.inc.php');
+
 if (empty($_GET['id'])) {
 	redirect('/');
 }
@@ -46,7 +47,7 @@ $results = $GameQ->process();
 //echo "good to here<br>";
 //print_r($results);
 $key = $servers['id'];
-$disp .='<div>Current Map : &nbsp;<span>'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp; Players Online&nbsp;'.$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'].' </div>';
+$disp .='<div style= "text-align:center;">Current Map : &nbsp;<span>'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp; Players Online&nbsp;'.$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'].' </div>';
 $players = 	$results[$key]['gq_numplayers'];
 if ($players >0) {
 					// we have players
@@ -58,7 +59,7 @@ if ($players >0) {
 						//loop through player array
 						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 						$playerN = $player_list[$k]['gq_name'];
-						$result = $database->get_results($sql.$playerN.'"');
+						$result = $database->get_results($sql.Emoji::Decode($playerN).'"');
 						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						switch (true) {
