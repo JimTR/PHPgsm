@@ -28,9 +28,10 @@ include 'includes/cli_master.inc.php';
 include 'functions.php';
 define ("cr","\r\n");
 $database = new db();
+echo 'Starting'.cr;
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0';
 	$res = $database->get_results($sql);
-	
+	print_r($res);
 	foreach ($res as $data) {
         $acf_loc = $data['location'].'/serverfiles/steamapps';
 		$find = 'appmanifest_';
@@ -46,13 +47,13 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$result = shell_exec($cmd);
 					$remote = test_remote($result);
 			
-			//print_r($remote);
-			//echo PHP_EOL;
+			print_r($remote);
+			echo PHP_EOL;
 			if (isset($remote['buildid'])) {
 				// slow up db hits 
 				$processed[] = $local['appid']; // done this app
-			        $update['server_id'] = $local['appid'];;
-				//$update['buildid'] = $local['buildid'];
+			    $update['server_id'] = $local['appid'];;
+				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
 				$update['server_update']= $local['update'];
