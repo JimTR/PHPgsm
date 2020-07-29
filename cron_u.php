@@ -33,15 +33,23 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 	$res = $database->get_results($sql);
 	//print_r($res);
 	foreach ($res as $data) {
+		if(empty($data['buildid'])) {
         $acf_loc = $data['location'].'/serverfiles/steamapps';
 		$find = 'appmanifest_';
 		$files = glob($acf_loc."/*" . $find . "*");
-		print_r($files);
 		if (!empty($files)){
+			
 			    $acf_file = file_get_contents($files[0]);
 			    $local =  local_build($acf_file);
 			    echo 'local'.cr;
 			    print_r ($local);
+			}
+		}
+		else {
+			$local['appid'] = $data['appid'];
+			$local['buildid'] = $data['buildid'];
+			$local['update'] = $data['server_update'];
+		}
 			    if (!in_array($local['appid'],$processed)) {
 					//print_r($processed);
 					echo cr.$local['appid'].cr;
@@ -78,6 +86,6 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			//echo '<br>';
 			}
 			//else {echo $data['location'].'/serverfiles/steamapps'.PHP_EOL;}
-			}
+			//}
 print_r($processed);
 ?>
