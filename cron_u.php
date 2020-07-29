@@ -49,14 +49,15 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local['appid'] = $data['appid'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
+			print_r($local);
 		}
 			    if (!in_array($local['appid'],$processed)) {
 					//print_r($processed);
 					echo cr.$local['appid'].cr;
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					echo $cmd;
-					$result = shell_exec($cmd);
-					$remote = test_remote($result);
+					//$result = shell_exec($cmd);
+					//$remote = test_remote($result);
 			//print_r($result);
 			echo 'local'.cr;
 			print_r($local);
