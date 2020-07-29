@@ -46,7 +46,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			}
 		}
 		else {
-			$local['appid'] = $data['appid'];
+			$local['app_id'] = $data['appid'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
 			print_r($local);
