@@ -31,24 +31,31 @@ $database = new db();
 echo 'Starting'.cr;
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0';
 	$res = $database->get_results($sql);
-	print_r($res);
+	//print_r($res);
 	foreach ($res as $data) {
         $acf_loc = $data['location'].'/serverfiles/steamapps';
 		$find = 'appmanifest_';
 		$files = glob($acf_loc."/*" . $find . "*");
+		print_r($files);
 		if (!empty($files)){
 			    $acf_file = file_get_contents($files[0]);
 			    $local =  local_build($acf_file);
+			    echo 'local'.cr;
+			    print_r ($local);
 			    if (!in_array($local['appid'],$processed)) {
-					print_r($processed);
+					//print_r($processed);
 					echo cr.$local['appid'].cr;
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					echo $cmd;
 					$result = shell_exec($cmd);
 					$remote = test_remote($result);
-			
+			//print_r($result);
+			echo 'local'.cr;
+			print_r($local);
+			echo 'remote'.cr;
 			print_r($remote);
 			echo PHP_EOL;
+			exit;
 			if (isset($remote['buildid'])) {
 				// slow up db hits 
 				$processed[] = $local['appid']; // done this app
