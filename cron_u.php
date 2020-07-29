@@ -85,7 +85,6 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				echo 'Auto Update Set'.cr;
 			} 
 		}
-			//echo '<br>';
-			}
+	}
 			
 ?>
