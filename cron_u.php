@@ -79,11 +79,12 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
+					if ($settings['update'] = 1) {
+				    echo 'Auto Update Set'.cr;
+			} 
 				}
 			}
-			if ($settings['update'] = 1) {
-				echo 'Auto Update Set'.cr;
-			} 
+			
 		}
 	}
 			
