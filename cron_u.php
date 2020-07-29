@@ -77,6 +77,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Local Build id '.$local['buildid'].PHP_EOL;
 			    echo 'Remote Build id '.$remote['buildid'].PHP_EOL;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
+                if ($local['buildid'] <> $remote['buildid']) {
+					echo 'Update Required'.cr;
+				}
 			}
 		}
 			//echo '<br>';
