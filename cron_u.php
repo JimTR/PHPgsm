@@ -91,9 +91,11 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 		function local_update($build,$local) {
 			
 			//
-			echo $build['bulidid'].cr;
 			$acf_loc = $build['location'].'/serverfiles/steamapps';
 			echo $acf_loc.cr;
-			
+			$find = 'appmanifest_';
+		    $files = glob($acf_loc."/*" . $find . "*");
+			$acf_file = file_get_contents($files[0]);
+			echo $files[0];
 		}	
 ?>
