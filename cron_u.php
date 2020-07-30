@@ -73,10 +73,10 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					// just update if there is an updated build
 					$database->update('servers',$update,$where);
 				}
-			    echo 'Details for App Id '.$local['appid'].PHP_EOL;
-			    echo 'Local Build id '.$local['buildid'].PHP_EOL;
-			    echo 'Remote Build id '.$remote['buildid'].PHP_EOL;
-                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
+			    echo 'Details for App Id '.$local['appid'].cr;
+			    echo 'Local Build id '.$local['buildid'].cr;
+			    echo 'Remote Build id '.$remote['buildid'].cr;
+                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).cr;
                 $man_check = local_update($data,$local); // check if manual update has been done
 			    echo 'Locally installed version '.$man_check.cr;
                 if ($local['buildid'] <> $remote['buildid']) {
