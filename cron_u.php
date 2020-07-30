@@ -49,6 +49,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local['appid'] = $data['server_id'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
+			local_update($data['build']);
 			
 		}
 			    if (!in_array($local['appid'],$processed)) {
