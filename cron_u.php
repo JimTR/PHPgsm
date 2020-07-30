@@ -66,6 +66,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				$man_check = local_update($data,$local); // check if manual update has been done
 				if($man_check <> $local['buildid']) {
 					$local['buildid'] = $man_check;
+					echo 'Correcting Build'.cr;
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
