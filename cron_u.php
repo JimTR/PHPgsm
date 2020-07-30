@@ -49,8 +49,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local['appid'] = $data['server_id'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
-			$man_check = local_update($data,$local); // check if manual update has been done
-			echo 'Locally installed version '.$man_check.cr;
+			
 		}
 			    if (!in_array($local['appid'],$processed)) {
 					//print_r($processed);
@@ -78,6 +77,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Local Build id '.$local['buildid'].PHP_EOL;
 			    echo 'Remote Build id '.$remote['buildid'].PHP_EOL;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).PHP_EOL;
+                $man_check = local_update($data,$local); // check if manual update has been done
+			    echo 'Locally installed version '.$man_check.cr;
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
