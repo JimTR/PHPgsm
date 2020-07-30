@@ -49,8 +49,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local['appid'] = $data['server_id'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
-			local_update($data,$local);
-			
+			$man_check = local_update($data,$local); // check if manual update has been done
+			echo $man_check.cr;
 		}
 			    if (!in_array($local['appid'],$processed)) {
 					//print_r($processed);
@@ -99,6 +99,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local_data =  local_build($acf_file);
 			//echo $files[0].cr;
 			//print_r($local_data);
-			echo 'will return '.$local_data['buildid'].cr;
+			//echo 'will return '.$local_data['buildid'].cr;
+			return $local_data['buildid'];
 		}	
 ?>
