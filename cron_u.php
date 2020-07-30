@@ -91,8 +91,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 		function local_update($build,$local) {
 			
 			//
-			echo $build['bulidid'].PHP_EOL;
-			print_r($build);
-			print_r($local);
+			echo $build['bulidid'].cr;
+			$acf_loc = $build['location'].'/serverfiles/steamapps';
+			echo $acf_loc.cr;
+			
 		}	
 ?>
