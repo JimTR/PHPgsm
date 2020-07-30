@@ -31,7 +31,8 @@ $database = new db();
 $host= gethostname();
 $ip = gethostbyname($host);
 echo 'Starting '.$ip.cr;
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host ="'.$ip.'"' ;
+echo $sql.cr;
 	$res = $database->get_results($sql);
 	//print_r($res);
 	foreach ($res as $data) {
