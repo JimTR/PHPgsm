@@ -87,5 +87,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			
 		}
 	}
+		function local_update($build) {
 			
+			//
+			echo $build.PHP_EOL;
+		}	
 ?>
