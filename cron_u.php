@@ -49,7 +49,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local['appid'] = $data['server_id'];
 			$local['buildid'] = $data['buildid'];
 			$local['update'] = $data['server_update'];
-			local_update($data['buildid']);
+			local_update($data,$local);
 			
 		}
 			    if (!in_array($local['appid'],$processed)) {
@@ -88,9 +88,11 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			
 		}
 	}
-		function local_update($build) {
+		function local_update($build,$local) {
 			
 			//
-			echo $build.PHP_EOL;
+			echo $build['bulidid'].PHP_EOL;
+			print_r($build);
+			print_r($local);
 		}	
 ?>
