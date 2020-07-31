@@ -74,6 +74,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$local['buildid'] = $man_check;
 					$data['buildid']=0;
 					echo 'Correcting Build'.cr;
+					 echo 'Locally installed version '.$man_check.cr;
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
@@ -91,7 +92,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).cr;
-                echo 'Locally installed version '.$man_check.cr;
+               
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
