@@ -85,7 +85,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
 			    //if ($data['rbuildid'] <> $remote['buildid']) {
 					// just update if there is an updated build
-					echo 'update '.cr;
+					
 					$database->update('servers',$update,$where);
 				//}
 			    echo 'Details for App Id '.$local['appid'].cr;
