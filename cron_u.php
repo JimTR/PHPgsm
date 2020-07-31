@@ -35,7 +35,7 @@ echo 'Starting '.$ip.cr;
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 $ip = $ip1.'.'.$ip2.'.'.$ip3;
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
-echo $sql.cr;
+//echo $sql.cr;
 	$res = $database->get_results($sql);
 	//print_r($res);
 	foreach ($res as $data) {
@@ -80,7 +80,7 @@ echo $sql.cr;
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
 				$update['server_update']= $local['update'];
-				echo 'app id '.$local['update'].cr;
+				//echo 'app id '.$local['update'].cr;
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
 			    //if ($data['rbuildid'] <> $remote['buildid']) {
 					// just update if there is an updated build
