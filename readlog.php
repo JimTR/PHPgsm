@@ -30,7 +30,7 @@ foreach ($data['content'] as $k => $v ) {
     //display the result returned by preg_replace  
     $v = preg_replace($pattern, $replacement, $v,-1,$count);  
     $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
-    $pattern = '/(\d+):(\d+):(\d+)/');
+    $pattern = '/(\d+):(\d+):(\d+)/';
     $v = preg_replace($pattern, $replacement, $v,-1,$count);
     //if (!$count) {continue;}
 	$v = preg_replace('/"/','',$v);
