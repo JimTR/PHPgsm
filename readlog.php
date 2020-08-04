@@ -29,7 +29,6 @@ foreach ($data['content'] as $k => $v ) {
     //if (!$count) {continue;}
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
-	
 	//$v = preg_replace('/<[^0-9]+>/',' ',$v); //remove
 	$v = trim($v);
 	//$v = preg_replace('~^(\S+)\s+(\S+)$~', '<b>$1</b><i>$2</i>', $v);
@@ -37,6 +36,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
 	$v = str_replace(' say ',' <span style="color:magenta;"><b> say </b></span>',$v);
+	$v = str_replace(' killed ',' <span style="color:red;"><b> killed </b></span>',$v);
 	$v = str_replace(' Console ',' <span style="color:#328ba8;"><b> Console </b></span>',$v);
 	$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
