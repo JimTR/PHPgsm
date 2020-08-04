@@ -59,6 +59,7 @@ if ($players >0) {
 						//loop through player array
 						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 						$playerN = $player_list[$k]['gq_name'];
+						echo $playerN.' ';
 						$playerN2 = $database->escape($playerN); 
 						//echo $playerN;
 						$result = $database->get_results($sql.Emoji::Decode($playerN2).'"');
