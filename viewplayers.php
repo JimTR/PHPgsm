@@ -61,13 +61,12 @@ if ($players >0) {
 						$playerN = $player_list[$k]['gq_name'];
 						
 						
-						$playerN2 = $database->escape($playerN); 
-						//echo $playerN2.' ';
-						echo Emoji::Encode($playerN2).'  ';
-						//echo $playerN;
-						$result = $database->get_results($sql.Emoji::Encode($playerN2).'"');
+						$playerN2 = Emoji::Encode($playerN);
+						$playerN2 = $database->escape($playerN2);
+						echo $playerN2;
+						$result = $database->get_results($sql.$playerN2.'"');
 						if (empty($result['name'])) {
-							$result = $database->get_results($sql.Emoji::Encode($playerN).'"');
+							$result = $database->get_results($sql.$playerN.'"');
 						}
 						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
