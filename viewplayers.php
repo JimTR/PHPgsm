@@ -62,7 +62,8 @@ if ($players >0) {
 						
 						
 						$playerN2 = $database->escape($playerN); 
-						echo $playerN2.' ';
+						//echo $playerN2.' ';
+						echo Emoji::Encode($playerN2).'  ';
 						//echo $playerN;
 						$result = $database->get_results($sql.Emoji::Encode($playerN2).'"');
 						if (empty($result['name'])) {
