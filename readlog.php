@@ -12,6 +12,10 @@ $data['content'] = $_GET['time'] < $data['time']
     : false;
 
 foreach ($data['content'] as $k => $v ) {
+	$x = strpos($v,'" connected, address "');
+	if ($x >0 ) {
+		echo 'new  ';
+	}
 	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	$v = preg_replace('/</',' ',$v);
