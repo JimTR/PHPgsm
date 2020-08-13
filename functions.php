@@ -286,6 +286,7 @@ function get_software_info() {
 	// steamcmd = steam
 	// postfix = postfix
 	// dovecot = dovecot-core
+	// gmp = php-gmp
 	 $php_version = explode('.', PHP_VERSION);
 	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
 	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
@@ -826,7 +827,7 @@ function html_display($tm,$results) {
 				// the server is up display title
 				// add sub template ?
 				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
-				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
+				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client'].")</i><br>Started at ".
 				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
 				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
@@ -1018,6 +1019,7 @@ function refactor_local($array) {
 //print_r($nos);
 }
 function test_remote($file) {
+	echo 'starting remote'.PHP_EOL;
 $string = trim(preg_replace('/\t/', '', $file));
 $string = trim(preg_replace('/""/', ',', $string));
 $string = trim(preg_replace('/"/', '', $string));
@@ -1027,6 +1029,7 @@ $ta = explode(PHP_EOL,$string);
 $j = refactor_remote($ta);
 $return['buildid'] = $j['public']['buildid'];
 $return['update'] = $j['public']['timeupdated'];
+print_r ($j);
 return $return;
 }
 function refactor_remote($array) {
