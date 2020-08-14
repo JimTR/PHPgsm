@@ -1029,7 +1029,7 @@ $ta = explode(PHP_EOL,$string);
 $j = refactor_remote($ta);
 $return['buildid'] = $j['public']['buildid'];
 $return['update'] = $j['public']['timeupdated'];
-print_r ($j);
+//print_r ($j);
 return $return;
 }
 function refactor_remote($array) {
