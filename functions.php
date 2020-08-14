@@ -1019,7 +1019,7 @@ function refactor_local($array) {
 //print_r($nos);
 }
 function test_remote($file) {
-	echo 'starting remote'.PHP_EOL;
+	//echo 'starting remote'.PHP_EOL;
 $string = trim(preg_replace('/\t/', '', $file));
 $string = trim(preg_replace('/""/', ',', $string));
 $string = trim(preg_replace('/"/', '', $string));
