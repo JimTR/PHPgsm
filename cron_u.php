@@ -22,7 +22,7 @@
  * This script checks for updates on steam for installed games, 
  * updates the database ready to update.
  * TODO add code to auto update be aware of steamcmd segmentation errors !
- * 
+ *  new
  */
 include 'includes/cli_master.inc.php';
 include 'functions.php';
@@ -31,7 +31,7 @@ $database = new db();
 //$host= gethostname();
 //$ip = gethostbyname($host);
 $ip = file_get_contents("http://ipecho.net/plain");
-echo 'Starting '.$ip.cr;
+echo 'Starting Check For '.$ip.cr;
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 $ip = $ip1.'.'.$ip2.'.'.$ip3;
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
