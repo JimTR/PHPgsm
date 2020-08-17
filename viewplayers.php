@@ -30,6 +30,7 @@ $servers = [
     'host'    => $_GET['host']
     
 ];
+ header('Access-Control-Allow-Origin: *');
 //46.32.237.232:27016
 require ('includes/master.inc.php');
 

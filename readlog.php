@@ -2,7 +2,7 @@
 /*
  * send log file name
  */
- 
+ header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
 $result = array();
 clearstatcache(true, $file);
