@@ -47,8 +47,8 @@ foreach ($data['content'] as $k => $v ) {
 	$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 	$v = str_replace('Server logging enabled',' <span style="color:green;"><b>Server logging enabled</b></span>	',$v);
-	$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:yellow"><b>Writing cfg/banned_user.cfg.</b></span>',$v);
-	$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:red;"></span><b>Writing cfg/banned_user.cfg.</b></span>',$v);
+	$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
+	//$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:red;"></span><b>Writing cfg/banned_user.cfg.</b></span>',$v);
 	$v = str_replace('fof_cripplecreek','<span style="color:#0d1f54;"><b>fof_cripplecreek</b></span>',$v); 
 	$v = str_replace('validated','<span style="color:green;"><b>validated</b></span>',$v); 
 	//$v = str_replace('Console','',$v,2);
