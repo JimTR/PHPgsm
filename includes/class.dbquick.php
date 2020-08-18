@@ -405,8 +405,9 @@ class db
         else
         {
             //$r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
-             $r = mysqli_fetch_array( $row );
-            //mysqli_free_result( $query );
+             //$r = mysqli_fetch_array( $row );
+	  $r = mysqli_fetch_assoc( $row );
+            mysqli_free_result( $query );
              return $r;   
             //die (print_r($r));
         }
@@ -504,7 +505,8 @@ class db
         {
             //return false; 
             $this->log_db_errors( $this->link->error, $sql );
-            return false;
+           
+            return $sql;
         }
         else
         {
