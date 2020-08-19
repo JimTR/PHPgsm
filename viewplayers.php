@@ -48,7 +48,7 @@ $results = $GameQ->process();
 //echo "good to here<br>";
 //print_r($results);
 $key = $servers['id'];
-$disp .='<div style= "text-align:center;" >span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$results[$key]['gq_numplayers'].'</span>/<span class ="maxplayers">'.$results[$key]['gq_maxplayers'].'</span> </div>';
+$disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$results[$key]['gq_numplayers'].'</span>/<span class ="maxplayers">'.$results[$key]['gq_maxplayers'].'</span> </div>';
 $players = 	$results[$key]['gq_numplayers'];
 if ($players >0) {
 					// we have players
