@@ -48,7 +48,7 @@ $results = $GameQ->process();
 //echo "good to here<br>";
 //print_r($results);
 $key = $servers['id'];
-$disp .='<div style= "text-align:center;">Current Map : &nbsp;<span>'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp; Players Online&nbsp;'.$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'].' </div>';
+$disp .='<div style= "text-align:center;" class="c_map">Current Map : &nbsp;<span class="c_map_n">'.$results[$key]['gq_mapname'].'</span>&nbsp;&nbsp; Players Online&nbsp;'.$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers'].' </div>';
 $players = 	$results[$key]['gq_numplayers'];
 if ($players >0) {
 					// we have players
@@ -97,11 +97,11 @@ if ($players >0) {
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
 							$result['flag'] = Emoji::Decode($result['flag']); //get flag
-							$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td>'.$result['flag'].' '.$result['country'].'</td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+							$disp .='<tr><td><i class="player_n">'.$playerN.'</i></td><td>'.$result['flag'].' '.$result['country'].'</td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 							//print_r($result);
 						}
 						else {
-									$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+									$disp .='<tr><td><i class="player_n">'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						}
 						
 						
