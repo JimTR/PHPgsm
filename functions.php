@@ -830,7 +830,7 @@ function html_display($tm,$results) {
 				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
 				.'</i> <br>Started at '.
 				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].
-				 '</span></span><br><i style="color:blue;"><a href="steam://connect/'.$link.'/"><span class="btn btn-primary btn-sm">Join Server</span></a></i></div>';
+				 '</span></span><br><i style="color:blue;"><a href="steam://connect/'.$link.'/"><span class="btn btn-primary btn-sm">Join</span></a></i></div>';
 				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
 				if ($players >0) {
