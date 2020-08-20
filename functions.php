@@ -221,7 +221,10 @@ function get_cpu_info() {
 		foreach ($cpu as &$value) {
 			//read data
 			$i = strpos($value,":",0);
+			//$value = str_replace(' ','_',$value);
+			//echo $value.PHP_EOL;
             $key = trim(substr($value,0,$i));
+            $key  = str_replace(' ','_',$key);
 		 if (strlen($key) === 0) {
 			 // only take the first processor
 			 break;
@@ -557,23 +560,23 @@ function display_cpu ($cpu_info) {
 if (is_cli()) {
 	 echo "\t\e[1m\e[31mHardware\e[97m".CR;
     echo "\t\t\e[38;5;82mUptime         \t\e[97m".$cpu_info['boot_time'].CR;
-    echo "\t\t\e[38;5;82mCpu Model      \t\e[97m".$cpu_info['model name'].CR;
+    echo "\t\t\e[38;5;82mCpu Model      \t\e[97m".$cpu_info['model_name'].CR;
     echo "\t\t\e[38;5;82mCpu Processors \t\e[97m".$cpu_info['processors'].CR;
-    echo "\t\t\e[38;5;82mCpu Cores      \t\e[97m".$cpu_info['cpu cores'].CR;
-    echo "\t\t\e[38;5;82mCpu Speed      \t\e[97m".$cpu_info['cpu MHz']. " MHz".CR;
-    echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache size'].CR;
+    echo "\t\t\e[38;5;82mCpu Cores      \t\e[97m".$cpu_info['cpu_cores'].CR;
+    echo "\t\t\e[38;5;82mCpu Speed      \t\e[97m".$cpu_info['cpu_MHz']. " MHz".CR;
+    echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache_size'].CR;
     echo "\t\t\e[38;5;82mCpu Load       \t\e[97m".$cpu_info['load'].CR;
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
 }
 else {
 	$sname='ickleh';
 	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot'.$sname.'">'.$cpu_info['boot_time'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model_name'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu_MHz'].'Mhz</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load'.$sname.'">'.$cpu_info['load'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache size'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache_size'].'</td></tr>
 	<tr><td style="width:20%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
 }
