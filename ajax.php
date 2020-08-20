@@ -49,7 +49,10 @@ switch (strtolower($cmds['action'])) {
 		  exit;	
 	case "hardware" :
 			$cpu_info = get_cpu_info();
-			echo display_cpu($cpu_info);
+			if (isset($cmds['data'])) {
+			print_r ($cpu_info);
+		}
+			else {echo display_cpu($cpu_info);}
 			exit;
 	case "software" :
 			$software = get_software_info();
