@@ -74,9 +74,8 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "disk":
 			$disk_info = get_disk_info();
-			print_r($disk_info);
+			//print_r($disk_info);
 			if (isset($cmds['data'])) {
-			//print_r ($cpu_info);
 			$json = json_encode($disk_info);
 			echo $json;
 		}
