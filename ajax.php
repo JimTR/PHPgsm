@@ -86,7 +86,9 @@ switch (strtolower($cmds['action'])) {
 	case "memory":
 			$mem_info = get_mem_info();
 			if (isset($cmds['data'])) {
-			print_r ($mem_info);
+			//print_r ($mem_info);
+			$json = json_encode($mem_info);
+			echo $json;
 		}
 		else{
 			echo display_mem($mem_info,True);
