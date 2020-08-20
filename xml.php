@@ -109,21 +109,31 @@ foreach ($res as $data) {
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
-$mem_info = get_mem_info(); //theses need to be the server in question
-$disk_info = get_disk_info();
+//$mem_info = get_mem_info(); //theses need to be the server in question
+//$disk_info = get_disk_info();
 //$up_time = get_boot_time();
 //$cpu_info = get_cpu_info();
 
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
-	$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true');
-	$cpu_info = json_decode($temp);
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true');
-	$software = json_decode($temp);
+	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
+	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true');
+	$cpu_info = json_decode($temp0);
+	//echo 'hardware<br>';
+	//print_r($cpu_info);
+	$temp1 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true');
+	$software = json_decode($temp1);
+	//echo '<br>software<br>';
+	//print_r($software);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true');
-	$disk_info = json_decode($temp);
-    $track = $xml->addChild($xmlserver);
+	//$y = stripslashes($temp);
+	$disk_nfo = json_decode(stripslashes($temp),true);
+	//echo '<br>disk '.$cpu_info->local_ip.'<br>';
+	//echo $temp.'<br>';
+	//print_r ($disk_nfo);
+	//echo '<br>';
+	//echo '<br>??? '.$disk_nfo['boot_mount'];
+	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['name']);
     $track->addChild('fname',$data['fname']);
     $track->addChild('distro',$software->os);
@@ -151,20 +161,17 @@ foreach ($base_servers as $data) {
     $track->addChild('swaptotal',trim($mem_info['SwapTotal']));
     $track->addChild('swapfree',trim($mem_info['SwapFree']));
     $track->addChild('swapcache',trim($mem_info['SwapCached']));
-    $track->addChild('boot_filesystem',$disk_info['boot filesystem']);
-    $track->addChild('boot_mount',$disk_info->boot_mount);
-    $track->addChild('boot_size',$disk_info->boot_size);
-    //$bf = $disk_info->boot_used;
-    //$bf .= " (";
-    //$bf .= $disk_info->boot_pc;
-    //$track->addChild('boot_used',$disk_info->boot_used ." (".$disk_info->boot_pc .")");
-    //$track->addChild('boot_free',$disk_info->boot_free);
+    $track->addChild('boot_filesystem',$disk_nfo['boot_filesystem']);
+    $track->addChild('boot_mount',$disk_nfo['boot_mount']);
+    $track->addChild('boot_size',$disk_nfo['boot_size']);
+    $track->addChild('boot_used',$disk_nfo['boot_used'] ." (".$disk_nfo['boot_pc'] .")");
+    $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
-    if (isset($disk_info['home_filesystem'])) {
+    if (isset($disk_nfo['home_filesystem'])) {
 		// diff
-		$track->addChild('home_filesystyem',$disk_info['home_filesystem']);
-		$track->addChild('home_mount',$disk_info['home_mount']);
-		$track->addChild('home_size',$disk_info['home_size']);
+		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
+		$track->addChild('home_mount',$disk_nfo['home_mount']);
+		$track->addChild('home_size',$disk_nfo['home_size']);
 		
 	}
 }
