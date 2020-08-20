@@ -53,8 +53,8 @@ switch (strtolower($cmds['action'])) {
 			//print_r ($cpu_info);
 			$json = json_encode($cpu_info);
 			echo $json;
-			//$arr = json_decode($json);
-			//print_r($arr);
+			$arr = json_decode($json);
+			print_r($arr);
 		}
 			else {echo display_cpu($cpu_info);}
 			exit;
@@ -74,7 +74,16 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "disk":
 			$disk_info = get_disk_info();
+			if (isset($cmds['data'])) {
+			//print_r ($cpu_info);
+			$json = json_encode($disk_info);
+			echo $json;
+			//$arr = json_decode($json);
+			//print_r($arr);
+		}
+		else {
 			echo display_disk($disk_info);
+		}
 			exit;
 	case "memory":
 			$mem_info = get_mem_info();
