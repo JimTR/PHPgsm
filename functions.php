@@ -352,7 +352,7 @@ function get_disk_info() {
 	$root = shell_exec("df -h /");
 	if ($root === $home) {
 		//echo 'one disk'.CR;
-		$disk_info['disk'] = $root;
+		//$disk_info['disk'] = $root;
 				if(strstr($boot, PHP_EOL)) {
 		// test for line break
 		//echo "line break".CR;
