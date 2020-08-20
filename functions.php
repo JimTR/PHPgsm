@@ -404,7 +404,7 @@ function get_disk_info() {
 		//$disk_info['root'] = $root;
 		//$disk_info['home'] = $home;
 	}
-	print_r($disk_info);
+	//print_r($disk_info);
 	//unset ($disk_info['boot']);
 	return $disk_info;
 }
