@@ -20,6 +20,7 @@ $sql = 'select base_servers.*, software.* from base_servers left join software o
 $base_servers = $database->get_results($sql); 
 $Gq = array();
 $xml = new SimpleXMLElement('<Servers/>');
+
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 foreach ($res as $getgames) {
 	// get game data
@@ -112,6 +113,7 @@ $mem_info = get_mem_info(); //theses need to be the server in question
 $disk_info = get_disk_info();
 //$up_time = get_boot_time();
 //$cpu_info = get_cpu_info();
+
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
 	$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
@@ -150,16 +152,19 @@ foreach ($base_servers as $data) {
     $track->addChild('swapfree',trim($mem_info['SwapFree']));
     $track->addChild('swapcache',trim($mem_info['SwapCached']));
     $track->addChild('boot_filesystem',$disk_info['boot filesystem']);
-    $track->addChild('boot_mount',$disk_info['boot mount']);
-    $track->addChild('boot_size',$disk_info['boot size']);
-    $track->addChild('boot_used',$disk_info['boot used']." (".$disk_info['boot %'].")");
-    $track->addChild('boot_free',$disk_info['boot free']);
+    $track->addChild('boot_mount',$disk_info->boot_mount);
+    $track->addChild('boot_size',$disk_info->boot_size);
+    //$bf = $disk_info->boot_used;
+    //$bf .= " (";
+    //$bf .= $disk_info->boot_pc;
+    //$track->addChild('boot_used',$disk_info->boot_used ." (".$disk_info->boot_pc .")");
+    //$track->addChild('boot_free',$disk_info->boot_free);
     $track->addChild('load',$cpu_info->load);
-    if (isset($disk_info['home filesystem'])) {
+    if (isset($disk_info['home_filesystem'])) {
 		// diff
-		$track->addChild('home_filesystyem',$disk_info['home filesystem']);
-		$track->addChild('home_mount',$disk_info['home mount']);
-		$track->addChild('home_size',$disk_info['home size']);
+		$track->addChild('home_filesystyem',$disk_info['home_filesystem']);
+		$track->addChild('home_mount',$disk_info['home_mount']);
+		$track->addChild('home_size',$disk_info['home_size']);
 		
 	}
 }

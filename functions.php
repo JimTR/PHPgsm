@@ -365,7 +365,7 @@ function get_disk_info() {
 		$disk_info['boot_size'] = format_num($boot[1],2);
 		$disk_info['boot_used'] = format_num($boot[2],2);
 		$disk_info['boot_free'] = format_num($boot[3],2);
-		$disk_info['boot_%'] = $boot[4];
+		$disk_info['boot_pc'] = $boot[4];
 		$disk_info['boot_mount'] = $boot[5];
 		$disk_info['boot_hide'] = "ok";
 		
@@ -383,7 +383,7 @@ function get_disk_info() {
 		$disk_info['boot_size'] = format_num($boot[1]);
 		$disk_info['boot_used'] = format_num($boot[2]);
 		$disk_info['boot_free'] = format_num($boot[3]);
-		$disk_info['boot_%'] = $boot[4];
+		$disk_info['boot_pc'] = $boot[4];
 		$disk_info['boot_mount'] = $boot[5];
 	}	
 	if(strstr($home, PHP_EOL)) {
@@ -396,7 +396,7 @@ function get_disk_info() {
 		$disk_info['home_size'] = format_num($home1[1]);
 		$disk_info['home_used'] = format_num($home1[2]);
 		$disk_info['home_free'] = format_num($home1[3]);
-		$disk_info['home_%'] = $home1[4];
+		$disk_info['home_pc'] = $home1[4];
 		$disk_info['home_mount'] = $home1[5];
 	}
 		// test for line break
