@@ -252,7 +252,7 @@ function get_user_info ($Disk_info) {
 		//echo "Quota Not installed".CR;
 		$user['quota used'] = format_num($du[0]); 
 		$user['quota'] = 'Unlimited';
-		$user['quota free'] = $Disk_info['home free'];
+		$user['quota free'] = $Disk_info['home_free'];
 	}
 	else {
 		// run quota
@@ -269,9 +269,9 @@ function get_user_info ($Disk_info) {
 	    //echo intval($q[15]).CR;
 	    if (intval($q[15]) === 0 ) {
 						
-			$user['quota free'] = $Disk_info['boot free'];
+			$user['quota_free'] = $Disk_info['boot_free'];
 		}
-	    else {$user['quota free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);}
+	    else {$user['quota_free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);}
 	}
 	//print_r($user);
 	return $user;    
@@ -361,13 +361,13 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//print_r($boot).CR;
-		$disk_info['boot filesystem'] = $boot[0];
-		$disk_info['boot size'] = format_num($boot[1],2);
-		$disk_info['boot used'] = format_num($boot[2],2);
-		$disk_info['boot free'] = format_num($boot[3],2);
-		$disk_info['boot %'] = $boot[4];
-		$disk_info['boot mount'] = $boot[5];
-		$disk_info['boot hide'] = "ok";
+		$disk_info['boot_filesystem'] = $boot[0];
+		$disk_info['boot_size'] = format_num($boot[1],2);
+		$disk_info['boot_used'] = format_num($boot[2],2);
+		$disk_info['boot_free'] = format_num($boot[3],2);
+		$disk_info['boot_%'] = $boot[4];
+		$disk_info['boot_mount'] = $boot[5];
+		$disk_info['boot_hide'] = "ok";
 		
 	}
 }
@@ -379,12 +379,12 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//echo 'new str '.$new_str.CR;
-		$disk_info['boot filesystem'] = $boot[0];
-		$disk_info['boot size'] = format_num($boot[1]);
-		$disk_info['boot used'] = format_num($boot[2]);
-		$disk_info['boot free'] = format_num($boot[3]);
-		$disk_info['boot %'] = $boot[4];
-		$disk_info['boot mount'] = $boot[5];
+		$disk_info['boot_filesystem'] = $boot[0];
+		$disk_info['boot_size'] = format_num($boot[1]);
+		$disk_info['boot_used'] = format_num($boot[2]);
+		$disk_info['boot_free'] = format_num($boot[3]);
+		$disk_info['boot_%'] = $boot[4];
+		$disk_info['boot_mount'] = $boot[5];
 	}	
 	if(strstr($home, PHP_EOL)) {
 		$home1 = explode(" ",trim(strstr($home, PHP_EOL)));
@@ -392,12 +392,12 @@ function get_disk_info() {
 		
 		$home1 = array_slice($home1,0);
 		//print_r($home1);
-		$disk_info['home filesystem'] = $home1[0];
-		$disk_info['home size'] = format_num($home1[1]);
-		$disk_info['home used'] = format_num($home1[2]);
-		$disk_info['home free'] = format_num($home1[3]);
-		$disk_info['home %'] = $home1[4];
-		$disk_info['home mount'] = $home1[5];
+		$disk_info['home_filesystem'] = $home1[0];
+		$disk_info['home_size'] = format_num($home1[1]);
+		$disk_info['home_used'] = format_num($home1[2]);
+		$disk_info['home_free'] = format_num($home1[3]);
+		$disk_info['home_%'] = $home1[4];
+		$disk_info['home_mount'] = $home1[5];
 	}
 		// test for line break
 		//$disk_info['boot'] = $boot;
@@ -588,19 +588,19 @@ else {
 function display_disk($disk_info) {
 	if (is_cli()) {
 	echo CR."\e[1m \e[34m Disk Information\e[0m".CR;
-	if (!isset($disk_info['boot hide'])) {echo "\t\e[1m\e[31m Boot\e[0m".CR;}
-	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot filesystem'].CR;
-	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['boot mount'].CR;
-	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['boot size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot used']." (".$disk_info['boot %'].")",CR;
-	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['boot free'].CR;
-	if (isset($disk_info['home filesystem'])) {
+	if (!isset($disk_info['boot_hide'])) {echo "\t\e[1m\e[31m Boot\e[0m".CR;}
+	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot_filesystem'].CR;
+	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['boot_mount'].CR;
+	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['boot_size'].CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot_used']." (".$disk_info['boot %'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['boot_free'].CR;
+	if (isset($disk_info['home_filesystem'])) {
 		echo "\t\e[1m\e[31m Data\e[0m".CR;
-		echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['home filesystem'].CR;
-	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['home mount'].CR;
-	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['home size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home used']." (".$disk_info['home %'].")",CR;
-	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home free']."\e[0m".CR;
+		echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['home_filesystem'].CR;
+	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['home_mount'].CR;
+	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['home_size'].CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home_used']." (".$disk_info['home %'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home_free']."\e[0m".CR;
 	}
 	echo "\e[0m";
 }
@@ -608,11 +608,11 @@ else {
 	// html
 	if (!isset($disk_info['boot hide'])) {$disp .= '<i>Boot</i>'.CR;}
 	$disp .= '<table style ="width:100%;">';
-	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot filesystem'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot mount'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot size'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot used'].' ('.$disk_info['boot %'].')</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot free'].'</td></tr>';
+	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot_filesystem'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot_mount'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot_size'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot_used'].' ('.$disk_info['boot %'].')</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot_free'].'</td></tr>';
 	if (isset($disk_info['home filesystem'])) {
 		// home  file system different to boot file system 
 	}
@@ -634,8 +634,8 @@ function display_user($user_info) {
 	}
 	echo "\t\e[1m\e[31mQuota\e[97m".CR;
 	echo "\t\e[38;5;82m\tQuota\e[97m\t\t".$user_info['quota'].CR;
-	echo "\t\e[38;5;82m\tUsed \e[97m\t\t".$user_info['quota used'].CR;
-	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota free']."\e[0m".CR;
+	echo "\t\e[38;5;82m\tUsed \e[97m\t\t".$user_info['quota_used'].CR;
+	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota_free']."\e[0m".CR;
 }	
 	else {
 		// html
@@ -654,8 +654,8 @@ function display_user($user_info) {
 	$disp = '<table style="width:100%;"><tr><td style="width:24%;color:red;">Name</td><td>'.$user_info['name'].'</td></tr>
 	<tr><td style="color:red;">Level</td><td>'.$user_priv.'</td></tr>
 	<tr><td style="color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>
-	<tr><td style="color:red;">Used</td><td>'.$user_info['quota used'].'</td></tr>
-	<tr><td style="color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>
+	<tr><td style="color:red;">Used</td><td>'.$user_info['quota_used'].'</td></tr>
+	<tr><td style="color:red;">Remaining</td><td>'.$user_info['quota_free'].'</td></tr>
 	
 	</table>';
 	return $disp;
