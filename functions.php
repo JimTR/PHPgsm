@@ -292,6 +292,8 @@ function get_software_info() {
 	// gmp = php-gmp
 	 $php_version = explode('.', PHP_VERSION);
 	 $temp = lsb();
+	 $software['k_ver'] = php_uname('r');
+	 $software['host'] =php_uname('n');
 	 $software['os'] = $temp ['PRETTY_NAME'];  
 	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
 	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
