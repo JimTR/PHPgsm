@@ -53,8 +53,8 @@ switch (strtolower($cmds['action'])) {
 			//print_r ($cpu_info);
 			$json = json_encode($cpu_info);
 			echo $json;
-			$arr = json_decode($json);
-			print_r($arr);
+			//$arr = json_decode($json);
+			//print_r($arr);
 		}
 			else {echo display_cpu($cpu_info);}
 			exit;
