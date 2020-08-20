@@ -60,8 +60,17 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "software" :
 			$software = get_software_info();
+			if (isset($cmds['data'])) {
+			//print_r ($cpu_info);
+			$json = json_encode($software);
+			echo $json;
+			//$arr = json_decode($json);
+			//print_r($arr);
+		}
+		else {
 			$os = lsb();
 			echo display_software($os,$software);
+		}
 			exit;
 	case "disk":
 			$disk_info = get_disk_info();
