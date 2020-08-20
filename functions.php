@@ -235,7 +235,7 @@ function get_cpu_info() {
 		$load = sys_getloadavg();
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['boot_time'] = get_boot_time();
-		$cpu_info['local_ip'] = getHostByName(getHostName());
+		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
 		return $cpu_info;
 }
 function get_user_info ($Disk_info) {
