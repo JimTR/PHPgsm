@@ -85,7 +85,12 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "memory":
 			$mem_info = get_mem_info();
+			if (isset($cmds['data'])) {
+			print_r ($mem_info);
+		}
+		else{
 			echo display_mem($mem_info,True);
+		}
 			exit;
 	case "user":
 			$disk_info = get_disk_info();
