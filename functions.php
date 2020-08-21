@@ -278,6 +278,13 @@ function get_user_info ($Disk_info) {
 	return $user;    
 	
 }
+
+function getMySQLVersion() { 
+  $output = shell_exec('mysql -V'); 
+  preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+  return $version[0]; 
+}
+
 function get_software_info($database) {
 	// return software info as array
 	// apt-show-versions
@@ -304,10 +311,10 @@ function get_software_info($database) {
      
 	 $software['tmux'] = trim(shell_exec("tmux -V | awk -F'[ ,]+' '{print $2}'"));
 	 //$software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
-	 $query ="SELECT VERSION() as mysql_version";
+	 //$query ="SELECT VERSION() as mysql_version";
 	 //$database= new $db();
-			$res = $database->get_row($query);
-			$software['mysql'] = $res['mysql_version'];
+			//$res = $database->get_row($query);
+			$software['mysql'] = getMySQLVersion();
 	 $nginx = shell_exec("/usr/sbin/nginx -v 2> nginx.txt");
 	 $nginx = file_get_contents("nginx.txt");
 	 if(strpos($nginx,"not found")){
