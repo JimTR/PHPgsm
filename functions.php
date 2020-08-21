@@ -1,5 +1,6 @@
 <?php
 //echo 'functions 1.01';
+
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
@@ -277,7 +278,7 @@ function get_user_info ($Disk_info) {
 	return $user;    
 	
 }
-function get_software_info() {
+function get_software_info($database) {
 	// return software info as array
 	// apt-show-versions
 	//glibc = libc-bin ubuntu 
@@ -302,7 +303,11 @@ function get_software_info() {
 	 $software['apache'] = substr($apache,23,6);
      
 	 $software['tmux'] = trim(shell_exec("tmux -V | awk -F'[ ,]+' '{print $2}'"));
-	 $software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
+	 //$software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
+	 $query ="SELECT VERSION() as mysql_version";
+	 //$database= new $db();
+			$res = $database->get_row($query);
+			$software['mysql'] = $res['mysql_version'];
 	 $nginx = shell_exec("/usr/sbin/nginx -v 2> nginx.txt");
 	 $nginx = file_get_contents("nginx.txt");
 	 if(strpos($nginx,"not found")){
@@ -361,12 +366,12 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//print_r($boot).CR;
-		$disk_info['boot_filesystem'] = $boot[0];
-		$disk_info['boot_size'] = format_num($boot[1],2);
-		$disk_info['boot_used'] = format_num($boot[2],2);
-		$disk_info['boot_free'] = format_num($boot[3],2);
-		$disk_info['boot_pc'] = $boot[4];
-		$disk_info['boot_mount'] = $boot[5];
+		$disk_info['boot_filesystem'] = trim($boot[0]);
+		$disk_info['boot_size'] = format_num(trim($boot[1]),2);
+		$disk_info['boot_used'] = format_num(trim($boot[2]),2);
+		$disk_info['boot_free'] = format_num(trim($boot[3]),2);
+		$disk_info['boot_pc'] = trim($boot[4]);
+		$disk_info['boot_mount'] = trim($boot[5]);
 		$disk_info['boot_hide'] = "ok";
 		
 	}
@@ -379,12 +384,12 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//echo 'new str '.$new_str.CR;
-		$disk_info['boot_filesystem'] = $boot[0];
+		$disk_info['boot_filesystem'] = trim($boot[0]);
 		$disk_info['boot_size'] = format_num($boot[1]);
 		$disk_info['boot_used'] = format_num($boot[2]);
 		$disk_info['boot_free'] = format_num($boot[3]);
-		$disk_info['boot_pc'] = $boot[4];
-		$disk_info['boot_mount'] = $boot[5];
+		$disk_info['boot_pc'] = trim($boot[4]);
+		$disk_info['boot_mount'] = trim($boot[5]);
 	}	
 	if(strstr($home, PHP_EOL)) {
 		$home1 = explode(" ",trim(strstr($home, PHP_EOL)));

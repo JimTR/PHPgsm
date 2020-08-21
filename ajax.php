@@ -22,7 +22,7 @@
  * required for ajax requests from html version 
  */
  
- require 'includes/cli_master.inc.php';
+ require_once 'includes/master.inc.php';
  include 'functions.php';
  define ("CR","<br>");
  if (!empty($_POST)) {
@@ -59,7 +59,8 @@ switch (strtolower($cmds['action'])) {
 			else {echo display_cpu($cpu_info);}
 			exit;
 	case "software" :
-			$software = get_software_info();
+			
+			$software = get_software_info($database);
 			if (isset($cmds['data'])) {
 			//print_r ($cpu_info);
 			$json = json_encode($software);
