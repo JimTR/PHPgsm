@@ -2,7 +2,7 @@
 <?php
 define ("CR","\r\n");
 global $argv;
-require 'includes/cli_master.inc.php'; 
+require 'includes/master.inc.php'; 
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
 	//echo "called directly"; 
 	include ("functions.php");
@@ -61,7 +61,7 @@ switch (strtolower($argv[1]))
 		{
 		case "s":
 		case "software";
-			$software = get_software_info();
+			$software = get_software_info($database);
 			$os = lsb();
 			display_software($os,$software);
 			exit;
