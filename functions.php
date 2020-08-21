@@ -361,7 +361,7 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//print_r($boot).CR;
-		//$disk_info['boot_filesystem'] = $boot[0];
+		$disk_info['boot_filesystem'] = $boot[0];
 		$disk_info['boot_size'] = format_num($boot[1],2);
 		$disk_info['boot_used'] = format_num($boot[2],2);
 		$disk_info['boot_free'] = format_num($boot[3],2);
@@ -379,7 +379,7 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//echo 'new str '.$new_str.CR;
-		//$disk_info['boot_filesystem'] = $boot[0];
+		$disk_info['boot_filesystem'] = $boot[0];
 		$disk_info['boot_size'] = format_num($boot[1]);
 		$disk_info['boot_used'] = format_num($boot[2]);
 		$disk_info['boot_free'] = format_num($boot[3]);
