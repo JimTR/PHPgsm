@@ -83,6 +83,7 @@ foreach ($res as $data) {
     $track->addChild('online',$online);
     $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
+    $track->addChild('joinlink',$results[$data['host_name']]['gq_joinlink']);
     $track->addChild('players',$results[$data['host_name']]['gq_numplayers']);
     $track->addChild('maxplayers',$data['max_players']);
     $track->addChild('bots', $results[$data['host_name']]['num_bots']);
