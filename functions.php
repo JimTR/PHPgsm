@@ -279,81 +279,85 @@ function get_user_info ($Disk_info) {
 	
 }
 
-function getMySQLVersion() { 
-  $output = shell_exec('mysql -V'); 
-  preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+
+function getVersion($app, $apt=false) { 
+	// check for apt-show-versions
+	if ($apt == true) {
+		//echo 'apt=true'.PHP_EOL;
+		$app = 'apt-show-versions  '.$app;
+		$output = shell_exec($app. '  2> /dev/null'); 
+		}
+	else {
+		if ($app == 'nginx -v') {
+				// nginx has stdout bug do this
+				 shell_exec($app. '  2> nginx');
+				$output = file_get_contents('nginx');
+				unlink('nginx');
+				}
+			else{
+				$output = shell_exec($app. '  2> /dev/null'); 
+			}
+		} 
+  preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+  if (empty($version[0])) {
+		
+		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
+	}
+  if (empty($version[0])) {
+	   
+	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+   }
+   
+ 
+  if (!empty($version[0])) {
+	
   return $version[0]; 
 }
-
+else {
+	//echo $app.PHP_EOL;
+	//print_r($version);
+	return 'Not Installed';
+}
+}
 function get_software_info($database) {
-	// return software info as array
-	// apt-show-versions
-	//glibc = libc-bin ubuntu 
-	//curl = libcurl
-	//php = fpm/cli/cgi
-	// mysql = mysql-server-core
-	// quota = quota
-	// screen = screen 
-	// steamcmd = steam
-	// postfix = postfix
-	// dovecot = dovecot-core
-	// gmp = php-gmp
+	/* return software info as array
+	 * check for apt-show-versions
+	 * $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
+	 * if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	 */
 	 $php_version = explode('.', PHP_VERSION);
-	 $temp = lsb();
+	 $php  = $php_version[0].'.'.$php_version[1];
+	 $lsb = lsb();
 	 $software['k_ver'] = php_uname('r');
 	 $software['host'] =php_uname('n');
-	 $software['os'] = $temp ['PRETTY_NAME'];  
-	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
-	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
-	 
-	 $apache = shell_exec("/usr/sbin/apache2 -v");
-	 $software['apache'] = substr($apache,23,6);
-     
-	 $software['tmux'] = trim(shell_exec("tmux -V | awk -F'[ ,]+' '{print $2}'"));
-	 //$software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
-	 //$query ="SELECT VERSION() as mysql_version";
-	 //$database= new $db();
-			//$res = $database->get_row($query);
-			$software['mysql'] = getMySQLVersion();
-	 $nginx = shell_exec("/usr/sbin/nginx -v 2> nginx.txt");
-	 $nginx = file_get_contents("nginx.txt");
-	 if(strpos($nginx,"not found")){
-		 $software['nginx'] = 'Not Installed';
-		 //echo "hit here".CR;
-	 }
-	 else {
-		 $nginx = explode(":",$nginx);
-		 $software['nginx'] = trim($nginx[1]);
-	 }
-	  unlink("nginx.txt");
-	  $q = shell_exec("quota -V 2> /dev/null");
-	  if(empty($q)) {
-		  $software['quota'] = "Not Installed";
-	  }
-	  else {
-		  // get quota version
-		  $software['quota'] =  substr($q,24,4);
-	  }
-	  //if (is_cli()) {
-	  $postfix = shell_exec("/usr/sbin/postconf -d mail_version 2> /dev/null");
-	  $postfix = explode("=",$postfix);
-  
-	  if (!empty($postfix[1])) {
-		  $software['postfix'] = trim($postfix[1]);
-	  }
-	  else {
-		  $software['postfix'] = "Not Installed";
-	  }
-	  $screen = shell_exec(" screen -v  2> /dev/null| awk -F'[  ]+' '{print $3}' " ); 
-	  if (!empty($screen)) {
-		  $software['screen'] = $screen;
-	  }
-	  else {
-		  $software['screen'] = "Not Installed";
-	  }
-	  //$curl = shell_exec( " curl -V  2> /dev/null| awk -F'[  ]+' '{print $2}' ");
-	  $curl = curl_version();
-	  $software['curl'] = $curl['version'];
+	 $software['os'] = $lsb ['PRETTY_NAME'];  
+	switch ($apt) {
+		case true:
+		// this is slower ! but cleaner
+		$software['glibc'] = getVersion('libc-bin',$apt);
+		$software['apache'] = getVersion('apache2',$apt);
+		$software['php'] = getVersion('php'.$php,$apt);
+		$software['mysql'] = getVersion('mysql-server',$apt);
+		$software['quota'] = getVersion('quota',$apt);
+		$software['nginx'] = getVersion('nginx-common',$apt);
+		$software['screen'] = getVersion('screen',$apt);
+		$software['postfix'] = getVersion('postfix',$apt);
+		$software['curl'] = getVersion('curl',$apt);
+		$software['tmux'] = getVersion('tmux',$apt);
+		break;
+		default:
+		 $software['glibc'] = getVersion('ldd --version');
+		 $software['apache'] = getVersion('apache2 -v');
+	     $software['php'] = getVersion('php -v');
+	     $software['mysql'] = getVersion('mysql -V');
+	     $software['quota'] = getVersion('quota -V');
+	     $software['nginx'] = getVersion('nginx -v');
+	     $software['screen'] = getVersion('screen -v');
+	     $software['postfix'] = getVersion('postconf -d mail_version');
+	     $software['curl'] = getVersion('curl -V');
+	     $software['tmux'] = getVersion('tmux -V');
+	}
+		 
 	 return $software;
 }
 function get_disk_info() {
@@ -541,7 +545,8 @@ if (is_cli()) {
 	echo "\t   Optional".CR;
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
-    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix']."\e[0m".CR;
+    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
+    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR;
    
 }	
 else {
