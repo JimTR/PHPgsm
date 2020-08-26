@@ -546,7 +546,7 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
-    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR;
+    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
 else {
