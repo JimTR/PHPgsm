@@ -325,6 +325,8 @@ function get_software_info($database) {
 	 * $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	 * if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
 	 */
+	 $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
+	  if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
 	 $php_version = explode('.', PHP_VERSION);
 	 $php  = $php_version[0].'.'.$php_version[1];
 	 $lsb = lsb();
@@ -333,7 +335,7 @@ function get_software_info($database) {
 	 $software['os'] = $lsb ['PRETTY_NAME'];  
 	switch ($apt) {
 		case true:
-		// this is slower ! but cleaner
+		// this is slower ! but cleaner and allows to show if upgrades are available 
 		$software['glibc'] = getVersion('libc-bin',$apt);
 		$software['apache'] = getVersion('apache2',$apt);
 		$software['php'] = getVersion('php'.$php,$apt);
@@ -485,7 +487,7 @@ else {
 }
 }
 else {
-	$disp = '<table style="width100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
+	$disp = '<table style="width:100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
 	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;" id="memtotalickleh">'.$mem_info['MemTotal'].'</td><td id="memfreeickleh">'.$mem_info['MemFree'].'</td><td id="memcachedickleh">'.$mem_info['Cached'].'<td id="memactiveickleh">'.$mem_info['Active'].'</td></tr>
 	<tr><td style="color:red;">Swap</td><td>'.$mem_info['SwapTotal'].'</td><td>'.$mem_info['SwapFree'].'</td><td>'.$mem_info['SwapCached'].'</td></tr></table>';
 	
