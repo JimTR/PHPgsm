@@ -349,13 +349,13 @@ function get_software_info($database) {
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
-		 $software['apache'] = getVersion(trim(shell_exec('which apache2')).' -v');
+		 $software['apache'] = getVersion('/usr/sbin/apache2 -v');
 	     $software['php'] = getVersion('php -v');
 	     $software['mysql'] = getVersion('mysql -V');
 	     $software['quota'] = getVersion('quota -V');
 	     $software['nginx'] = getVersion('nginx -v');
 	     $software['screen'] = getVersion('screen -v');
-	     $software['postfix'] = getVersion(trim(shell_exec('which postconf')).' -d mail_version');
+	     $software['postfix'] = getVersion('/usr/sbin/postconf -d mail_version');
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
 	}
