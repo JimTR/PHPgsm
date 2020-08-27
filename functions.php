@@ -325,8 +325,8 @@ function get_software_info($database) {
 	 * $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	 * if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
 	 */
-	 $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
-	  if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
+	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
 	 $php_version = explode('.', PHP_VERSION);
 	 $php  = $php_version[0].'.'.$php_version[1];
 	 $lsb = lsb();
