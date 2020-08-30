@@ -780,7 +780,7 @@ foreach ($res as $data) {
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
                 $update['running'] = 1;
-				$update['starttime'] = date("y");
+				$update['starttime'] = date("");
 			    $where['host_name'] = $key;
 			    echo $key.CR; 
 			    $database->update('servers',$update,$where);
