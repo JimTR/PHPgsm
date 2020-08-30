@@ -3,6 +3,7 @@
 define ("CR","\r\n");
 global $argv;
 require 'includes/master.inc.php'; 
+ini_set('error_reporting', E_ALL);
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
 	//echo "called directly"; 
 	include ("functions.php");
@@ -90,11 +91,10 @@ switch (strtolower($argv[1]))
 }
 	
 	echo 'Please Wait ';
-	echo '.';
-    $mem_info = get_mem_info();
-	echo '.';
-	$software = get_software_info();
-	echo '.';
+	$mem_info = get_mem_info();
+	echo'.';
+	$software = get_software_info($database);
+	echo'.';
 	$disk_info = get_disk_info();
 	echo '.';
 	$user_info = get_user_info($disk_info);

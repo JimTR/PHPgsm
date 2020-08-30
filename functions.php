@@ -181,12 +181,12 @@ function get_mem_info() {
 	foreach ($free as &$value) {
 		//echo $value.CR;
 		 $i = strpos($value,":",0);
+		 
          $key = substr($value,0,$i);
-		 preg_match_all('!\d+!', $value, $matches);
-		 //echo dataSize(implode(' ', $matches[0])*1024).CR;
-		
-		 $temp = trim(implode(' ', $matches[0])*1024);
-		 $mem_info[$key] = formatBytes($temp);
+         $value=floatval(str_replace ( $key.':' , '' , $value))*1024;
+        
+		     		
+		 $mem_info[$key] = formatBytes($value);
 		 
 	}
 	$maxlen = max(array_map('strlen', $mem_info));
@@ -251,9 +251,9 @@ function get_user_info ($Disk_info) {
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
-		$user['quota used'] = format_num($du[0]); 
+		$user['quota_used'] = format_num($du[0]); 
 		$user['quota'] = 'Unlimited';
-		$user['quota free'] = $Disk_info['home_free'];
+		$user['quota_free'] = $Disk_info['home_free'];
 	}
 	else {
 		// run quota
@@ -327,6 +327,7 @@ function get_software_info($database) {
 	 */
 	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	  $apt=false;
 	 $php_version = explode('.', PHP_VERSION);
 	 $php  = $php_version[0].'.'.$php_version[1];
 	 $lsb = lsb();
@@ -611,14 +612,14 @@ function display_disk($disk_info) {
 	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot_filesystem'].CR;
 	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['boot_mount'].CR;
 	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['boot_size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot_used']." (".$disk_info['boot %'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot_used']." (".$disk_info['boot_pc'].")",CR;
 	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['boot_free'].CR;
 	if (isset($disk_info['home_filesystem'])) {
 		echo "\t\e[1m\e[31m Data\e[0m".CR;
 		echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['home_filesystem'].CR;
 	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['home_mount'].CR;
 	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['home_size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home_used']." (".$disk_info['home %'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home_used']." (".$disk_info['home_pc'].")",CR;
 	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home_free']."\e[0m".CR;
 	}
 	echo "\e[0m";
@@ -630,7 +631,7 @@ else {
 	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot_filesystem'].'</td></tr>';
 	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot_mount'].'</td></tr>';
 	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot_size'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot_used'].' ('.$disk_info['boot %'].')</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot_used'].' ('.$disk_info['boot_pc'].')</td></tr>';
 	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot_free'].'</td></tr>';
 	if (isset($disk_info['home filesystem'])) {
 		// home  file system different to boot file system 
@@ -761,6 +762,7 @@ foreach ($res as $data) {
 		//include ("server-info.php");
     $GameQ->addServers($servers);
     $results = $GameQ->process();
+    //print_r($results);
     // order servers on players
     //orderBy($results,'gq_numplayers',"d");
     if (!is_cli()) {
@@ -776,16 +778,16 @@ foreach ($res as $data) {
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
                 $update['running'] = 1;
-				$update['starttime'] = date();
+				$update['starttime'] = date("y");
 			    $where['host_name'] = $key;
-			    echo $key.'<br>'; 
+			    echo $key.CR; 
 			    $database->update('servers',$update,$where);
 	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
        
     if ($players >0) {
 			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
 			$player_list = $results[$key]['players'];
-			orderBy($player_list,'gq_score',"d"); // order by score
+				orderBy($player_list,'gq_score',"d"); // order by score
 				foreach ($player_list as $k=>$v) {
 					$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 					$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
@@ -864,7 +866,7 @@ function html_display($tm,$results) {
 					// add sub template
 					
 					$player_list = $results[$key]['players']; // get the player array
-					orderBy($player_list,'gq_score','d'); // order by score
+					orderBy($player_list,'gq_score','a'); // order by score
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
 						$playerN = $player_list[$k]['gq_name']; // chop to 20 chrs
@@ -929,14 +931,21 @@ function html_display($tm,$results) {
 }
 function orderBy(&$data, $field,$order)
   {
-    if ($order ="d") {
-		$code = "return strnatcmp(\$b['$field'], \$a['$field']);";
-	}
-	else {
-		$code = "return strnatcmp(\$a['$field'], \$b['$field']);";
-	}	
-    usort($data, create_function('$a,$b', $code));
+  $args['field'] = $field;
+  $args['order'] =$order;
+    
+    usort($data, function($a, $b) use ($args) {
+          if ($args['order'] == "d") {
+				return strcmp($b[$args['field']], $a[$args['field']]);
+			}
+		else {
+				return strcmp($a[$args['field']], $b[$args['field']]);
+			}
+});
+   
   }
+  
+
   function get_sessions() {
 	  /* Recover screen & Tmux sessions
 	   * Feb 2020
@@ -946,6 +955,8 @@ function orderBy(&$data, $field,$order)
 	   $sql = 'select * from base_servers where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
+	   $xm='';
+	    $tm='';
 	   foreach ($res as $data){
 	    
 		 $ch = curl_init();
