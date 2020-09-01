@@ -938,10 +938,10 @@ function orderBy(&$data, $field,$order)
     
     usort($data, function($a, $b) use ($args) {
           if ($args['order'] == "d") {
-				return strcmp($b[$args['field']], $a[$args['field']]);
+				return strnatcmp($b[$args['field']], $a[$args['field']]);
 			}
 		else {
-				return strcmp($a[$args['field']], $b[$args['field']]);
+				return strnatcmp($a[$args['field']], $b[$args['field']]);
 			}
 });
    
