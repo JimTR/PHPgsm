@@ -239,6 +239,12 @@ function get_cpu_info() {
 		$local = shell_exec('hostname -I');
 		//echo $local.CR;		
 		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
+		if (is_file('/var/run/reboot-required') === true) {
+			$cpu_info['reboot'] ='Reboot Required';
+		}
+		else {
+			$cpu_info['reboot'] ='no';
+		}
 		return $cpu_info;
 }
 function get_user_info ($Disk_info) {
@@ -592,7 +598,8 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mCpu Speed      \t\e[97m".$cpu_info['cpu_MHz']. " MHz".CR;
     echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache_size'].CR;
     echo "\t\t\e[38;5;82mCpu Load       \t\e[97m".$cpu_info['load'].CR;
-	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
+	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip'].CR;
+	echo "\t\t\e[38;5;82mReboot Required\e[97m\t".$cpu_info['reboot']."\e[0m".CR;
 }
 else {
 	$sname='ickleh';
