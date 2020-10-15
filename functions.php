@@ -240,7 +240,7 @@ function get_cpu_info() {
 		//echo $local.CR;		
 		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
 		if (is_file('/var/run/reboot-required') === true) {
-			$cpu_info['reboot'] ='Reboot Required';
+			$cpu_info['reboot'] ='yes';
 		}
 		else {
 			$cpu_info['reboot'] ='no';
