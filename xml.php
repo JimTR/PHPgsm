@@ -137,6 +137,7 @@ foreach ($base_servers as $data) {
     $track->addChild('cpu_cores',$cpu_info->cpu_cores);
     $track->addChild('cpu_speed',$cpu_info->cpu_MHz);
     $track->addChild('cpu_cache',$cpu_info->cache_size);
+    $track->addChild('reboot',$cpu_info->reboot);
     $track->addChild('kernel',$software->k_ver);
     $track->addChild('php',$software->php);
     $track->addChild('screen',$software->screen);
