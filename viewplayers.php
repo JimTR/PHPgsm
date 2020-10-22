@@ -101,7 +101,7 @@ if ($players >0) {
 							//print_r($result);
 						}
 						else {
-									$disp .='<tr><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+									$disp .='<tr class="country"><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 						}
 						
 						
