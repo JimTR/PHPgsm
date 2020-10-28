@@ -191,7 +191,8 @@ function XML_array($xml) {
 printr($newArr,true);   
 echo '<br>now doing <br>';
  $new = xml2array($xml, $get_attributes = 3, $priority = 'tag');
- print_r($new);      
+ //print_r($new); 
+ echo $con;     
 }  
 function change_value_case($array,$case = CASE_LOWER){
         $array =array_change_key_case($array, $case);
