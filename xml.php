@@ -186,12 +186,7 @@ function XML_print($xml) {
 function XML_array($xml) {
 	$new = simplexml_load_string($xml->asXML());
 	$con = json_encode($new);  
-	$newArr = json_decode($con, true); 
-  
-printr($newArr,true);   
-echo '<br>now doing <br>';
- $new = xml2array($xml, $get_attributes = 3, $priority = 'tag');
- //print_r($new); 
+	
  echo $con;     
 }  
 function change_value_case($array,$case = CASE_LOWER){
