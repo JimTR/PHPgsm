@@ -180,7 +180,7 @@ else {
 }
 function XML_print($xml) {
 	Header('Content-type: text/xml');
-	header('Access-Control-Allow-Origin: *');
+	//header('Access-Control-Allow-Origin: *');
 	print($xml->asXML());
 }
 function XML_array($xml) {
