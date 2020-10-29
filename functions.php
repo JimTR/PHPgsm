@@ -791,7 +791,7 @@ foreach ($res as $data) {
 			    $where['host_name'] = $key;
 			    echo $key.CR; 
 			    $database->update('servers',$update,$where);
-	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
        
     if ($players >0) {
 			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
