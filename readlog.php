@@ -1,8 +1,9 @@
 <?php
 /*
  * send log file name
+ * need to work on headers 
  */
- header('Access-Control-Allow-Origin: *');
+ //header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
 $result = array();
 clearstatcache(true, $file);

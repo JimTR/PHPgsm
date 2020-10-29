@@ -26,7 +26,7 @@
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
  */
 $key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
-echo 'key loaded'.PHP_EOL;
+echo PHP_EOL;
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
@@ -43,7 +43,7 @@ $file =$argv[1];
 $x = strpos($file,'-');
 $server = substr($file,0,$x);
 $x = strrpos($server,'/');
-$server = substr($server,$x+1);
+$server = substr($server,$x);
 echo $x.PHP_EOL;
 echo 'Processing server '.$server.PHP_EOL;
 $log = file_get_contents($file);
@@ -161,6 +161,7 @@ foreach ($la as $data) {
 		 $records['server'] = $server;
 		 $records = $database->escape($records);
 		 $in = $database->insert('players',$records);
+//print_r($records);
 		 if ($in === true ){
 			 	 $done++;
 			 }
