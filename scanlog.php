@@ -106,7 +106,7 @@ foreach ($la as $data) {
 	//print_r($result);
 	
 	if (!empty($result)){
-		echo 'Updating  '.Emoji::Decode($result['flag'])."\t".$data['tst'].' - '.$data['id'].PHP_EOL;
+		//echo 'Updating  '.Emoji::Decode($result['flag'])."\t".$data['tst'].' - '.$data['id'].PHP_EOL;
 		$where['steam_id'] = $data['id'];
 		
 		unset($result['id']); // take out id
