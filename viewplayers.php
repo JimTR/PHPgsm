@@ -20,6 +20,7 @@
  * MA 02110-1301, USA.
  * simple file to retrieve & format player data 
  *  support code for console.php
+ * remember js
  */
 
 
