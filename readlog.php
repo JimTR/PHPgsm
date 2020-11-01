@@ -1,9 +1,8 @@
 <?php
 /*
  * send log file name
- * need to work on headers 
  */
- //header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
 $result = array();
 clearstatcache(true, $file);
@@ -15,19 +14,17 @@ $data['content'] = $_GET['time'] < $data['time']
 foreach ($data['content'] as $k => $v ) {
 	$x = strpos($v,'" connected, address "');
 	if ($x >0 ) {
-		//echo 'new  ';
+		echo 'new  ';
 		preg_match('/U:[0-9]:\d+/', $v, $t); // get steam id
 		$id = trim($t[0]);
 		file_put_contents('dbug.txt','new '.$id.PHP_EOL);
 	}
-	//$v = preg_replace('/<...>/', '', $v); //user number ?
+	$v = preg_replace('/<...>/', '', $v); //user number ?
+	$v = preg_replace('@\(.*?\)@','',$v); // bracket content
 	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	$v = preg_replace('/</',' ',$v);
-	$v = preg_replace('"',' ',$v);
 	$v = preg_replace('/>/',' ',$v);
-	$v = preg_replace('@\(.*?\)@','',$v); // bracket content
-	$v = preg_replace('/ ... /', ' ', $v); //user number ?
 	//$v = preg_replace('/L .. /', '', $v);
 	$date ='L '. date("m/d/Y");
     $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
