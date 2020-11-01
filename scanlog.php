@@ -107,7 +107,7 @@ foreach ($la as $data) {
 	
 	if (!empty($result)){
 		echo 'Updating  '.Emoji::Decode($result['flag'])."\t".$data['tst'].' - '.$data['id'].PHP_EOL;
-		$where['name'] = $data['tst'];
+		$where['steam_id'] = $data['id'];
 		
 		unset($result['id']); // take out id
 		
@@ -116,7 +116,7 @@ foreach ($la as $data) {
 			$result['log_ons'] =$result['log_ons']+1;
 			
 	}
-		$result['steam_id'] = $data['id'];
+		$result['name'] = $data['tst'];
 		if(strpos($result['server'],$server) === false) {
 			echo $data['tst'].' - '.$data['id']. ' played a different server'.PHP_EOL;
 			$result['server'].=','.$server;
