@@ -24,6 +24,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 	$v = preg_replace('/</',' ',$v);
 	$v = preg_replace('/>/',' ',$v);
+	$v = preg_replace('@\(.*?\)@','',$v); // brackets
 	//$v = preg_replace('/L .. /', '', $v);
 	$date ='L '. date("m/d/Y");
     $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
