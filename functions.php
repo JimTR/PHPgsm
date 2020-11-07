@@ -248,10 +248,12 @@ function get_cpu_info() {
 		return $cpu_info;
 }
 function get_user_info ($Disk_info) {
+	error_reporting(E_ALL);
+
 	// return user info as an array
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
-	$q = shell_exec("quota -vs > /dev/null");
+	$q = shell_exec("quota -vs 2> /dev/null");
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
@@ -275,7 +277,7 @@ function get_user_info ($Disk_info) {
 			$user['quota'] = dataSize(intval($q[15]) * 1000000);
 			}
 	    $user['quota used'] = dataSize(intval($q[14]) * 1000000);
-	    //echo intval($q[15]).CR;
+	    echo intval($q[15]).CR;
 	    if (intval($q[15]) === 0 ) {
 						
 			$user['quota_free'] = $Disk_info['boot_free'];

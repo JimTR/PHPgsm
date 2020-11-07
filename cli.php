@@ -1,7 +1,9 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
+error_reporting(E_ALL);
 define ("CR","\r\n");
 global $argv;
+echo '??';
 require 'includes/master.inc.php'; 
 ini_set('error_reporting', E_ALL);
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
