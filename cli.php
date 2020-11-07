@@ -1,6 +1,6 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
-//error_reporting(E_ALL);
+error_reporting(0);
 define ("CR","\r\n");
 global $argv;
 echo '??';
