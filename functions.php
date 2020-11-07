@@ -268,6 +268,7 @@ function get_user_info ($Disk_info) {
 	else {
 		// run quota
 		$q = explode("  ",$q);
+		print_r($q);
 		if (intval($q[15]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
@@ -276,7 +277,7 @@ function get_user_info ($Disk_info) {
 	    else {
 			$user['quota'] = dataSize(intval($q[15]) * 1000000);
 			}
-	    $user['quota used'] = dataSize(intval($q[14]) * 1000000);
+	    $user['quota_used'] = dataSize(intval($q[14]) * 1000000);
 	    echo intval($q[15]).CR;
 	    if (intval($q[15]) === 0 ) {
 						
