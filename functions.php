@@ -251,7 +251,7 @@ function get_user_info ($Disk_info) {
 	// return user info as an array
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
-	$q = shell_exec("quota -vs 2> /dev/null");
+	$q = shell_exec("quota -vs > /dev/null");
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
