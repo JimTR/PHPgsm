@@ -239,6 +239,7 @@ function get_cpu_info() {
 		$local = shell_exec('hostname -I');
 		//echo $local.CR;		
 		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
+		$cpu_info['process'] = shell_exec("/bin/ps -e | wc -l");
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
 		}
@@ -602,6 +603,7 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache_size'].CR;
     echo "\t\t\e[38;5;82mCpu Load       \t\e[97m".$cpu_info['load'].CR;
 	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip'].CR;
+	echo "\t\t\e[38;5;82mProcesses\e[97m     \t".$cpu_info['process'].CR;
 	echo "\t\t\e[38;5;82mReboot Required\e[97m\t".$cpu_info['reboot']."\e[0m".CR;
 }
 else {
