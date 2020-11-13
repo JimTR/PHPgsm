@@ -239,7 +239,7 @@ function get_cpu_info() {
 		$local = shell_exec('hostname -I');
 		//echo $local.CR;		
 		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
-		$cpu_info['process'] = shell_exec("/bin/ps -e | wc -l");
+		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
 		}
