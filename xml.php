@@ -1,7 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include 'includes/master.inc.php';
 include 'functions.php';
-
+echo 'hello';
 if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
@@ -137,6 +140,7 @@ foreach ($base_servers as $data) {
     $track->addChild('cpu_cores',$cpu_info->cpu_cores);
     $track->addChild('cpu_speed',$cpu_info->cpu_MHz);
     $track->addChild('cpu_cache',$cpu_info->cache_size);
+    $track->addChild('process',$cpu_info->process);
     $track->addChild('reboot',$cpu_info->reboot);
     $track->addChild('kernel',$software->k_ver);
     $track->addChild('php',$software->php);
