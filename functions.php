@@ -98,6 +98,7 @@ function root() {
 function check_sudo($user)
 {
 $user=trim($user);
+// centos = wheel not sudo
 $j= shell_exec('getent group sudo | cut -d: -f4');
 $yes= strpos($j, $user);
 if ($yes ===0 or $yes>1) {
@@ -269,7 +270,7 @@ function get_user_info ($Disk_info) {
 	else {
 		// run quota
 		$q = explode("  ",$q);
-		print_r($q);
+		//print_r($q);
 		if (intval($q[15]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
