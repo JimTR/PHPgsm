@@ -46,6 +46,7 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "get_file" :
 			print_r($cmds);
+			echo file_get_contents($cmds['file']);
 			exit;	
 	case "rgames" :
 		  echo  display_games();
