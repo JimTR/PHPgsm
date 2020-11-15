@@ -45,9 +45,13 @@ switch (strtolower($cmds['action'])) {
 			echo $cpu_info['load'];
 			exit;
 	case "get_file" :
-			//print_r($cmds);
+			//need api key
 			echo file_get_contents($cmds['file']);
 			exit;	
+	case "put_file" :
+			//need api key !!
+			echo file_put_contents($cmds['file']);
+			exit;			
 	case "rgames" :
 		  echo  display_games();
 		  exit;	
