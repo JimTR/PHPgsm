@@ -44,6 +44,9 @@ switch (strtolower($cmds['action'])) {
 			$cpu_info=get_cpu_info();
 			echo $cpu_info['load'];
 			exit;
+	case "get_file" :
+			print_r($cmds);
+			exit;	
 	case "rgames" :
 		  echo  display_games();
 		  exit;	
