@@ -38,9 +38,9 @@ $browser = get_browser(null, true);
  if (strpos($browser['browser_name_pattern'],'Windows')) {
 	 $os ='win';
  } 
- elseif (!isset($browser)) {
+ //elseif (!isset($browser)) {
 	 // no browsercap
- }
+// }
 	 
 if (empty($_GET['id'])) {
 	redirect('/');
@@ -102,12 +102,12 @@ if ($players >0) {
 						// format display here
 						// add sub template
 							if (!empty($result)) {
-							if ($os === 'win') {
-						$map = '<img src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
-						}
-						else {
-							$map =  Emoji::Decode($result['flag']); 
-						}			
+								if (!empty($os)) {
+									$map = '<img src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
+								}
+								else {
+									$map =  Emoji::Decode($result['flag']); 
+							}			
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
 							//$map = Emoji::Decode($result['flag']); //get flag
