@@ -151,6 +151,7 @@ foreach ($la as $data) {
 		 $records['log_ons'] = 1;
 		 $records['last_log_on'] = strtotime($data['time']);
 		 $records['continent'] = $ip_data['continent_name'];
+		 $records['country_code'] = $ip_data['country_code'];
 		 $records['country'] = $ip_data['country_name'];
 		 $records['region'] = $ip_data['region'];
 		 $records['city'] = $ip_data['city'];
@@ -172,7 +173,7 @@ foreach ($la as $data) {
 							}
 			 }
 		 //print_r($records); 
-		 if ($count ==50) {$max = 1;} // stop mysql crying
+		 if ($count ==250) {$max = 1;} // stop mysql crying
 	}
 
 	
