@@ -74,11 +74,11 @@ if ($players >0) {
 						$playerN2 = $database->escape($playerN2);
 						//echo $playerN2.'  ';
 						$result = $database->get_results($sql.$playerN2.'"');
-						if ($os == 'Win') {
+						if ($os == 'win') {
 						$map = '<img src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
 						}
 						else {
-							$map = $result['flag'];
+							$map =  Emoji::Decode($result['flag']); 
 						}
 						//if (empty($result['name'])) {
 							//$result = $database->get_results($sql.$playerN.'"');
