@@ -34,13 +34,20 @@ $servers = [
  //header('Access-Control-Allow-Origin: *');
 //46.32.237.232:27016
 require ('includes/master.inc.php');
-
+$browser = get_browser(null, true);
+ if (strpos($browser['browser_name_pattern'],'Windows')) {
+	 $os ='win';
+ } 
+ elseif (!isset($browser)) {
+	 // no browsercap
+ }
+	 
 if (empty($_GET['id'])) {
 	redirect('/');
 }
 require_once('GameQ/Autoloader.php');
 require 'includes/Emoji.php';
-$sql = 'select * from players where name="';
+$sql = 'select * from players where BINARY name="';
 $GameQ = new \GameQ\GameQ();
 //echo "new gameq<br>";
 $GameQ->addServer($servers);
