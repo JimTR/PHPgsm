@@ -102,16 +102,17 @@ if ($players >0) {
 						// format display here
 						// add sub template
 							if (!empty($result)) {
-								if (!empty($os)) {
+								if ($os==='win') {
 									$map = '<img src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
 								}
 								else {
-									$map =  Emoji::Decode($result['flag']); 
+									$map =  Emoji::Decode($result['flag']);
+									$os ='Lin';	 
 							}			
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
 							$map = Emoji::Decode($result['flag']); //get flag
-							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$os.$map.' <span class="country">'.$result['country'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 							//print_r($result);
 						}
 						else {
