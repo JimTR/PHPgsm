@@ -74,6 +74,12 @@ if ($players >0) {
 						$playerN2 = $database->escape($playerN2);
 						//echo $playerN2.'  ';
 						$result = $database->get_results($sql.$playerN2.'"');
+						if ($os == 'Win') {
+						$map = '<img src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
+						}
+						else {
+							$map = $result['flag'];
+						}
 						//if (empty($result['name'])) {
 							//$result = $database->get_results($sql.$playerN.'"');
 						//}
@@ -105,7 +111,7 @@ if ($players >0) {
 							$result= reset($result);
 							$result['ip']=long2ip ($result['ip']);
 							$result['flag'] = Emoji::Decode($result['flag']); //get flag
-							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$result['flag'].' <span class="country">'.$result['country'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
+							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td>'.$pscore.'</td><td style="padding-left:1%;">'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
 							//print_r($result);
 						}
 						else {
