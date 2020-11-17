@@ -65,7 +65,7 @@ foreach ($res as $data) {
 		
 	}
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
-	$tmp = explode(' ',shell_exec('/bin/ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name']));
+	$tmp = explode(' ',shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name']));
 	//echo 'Tmp = '.print_r($tmp,true).'<br>';
 	//die();
 	//list($pid) = explode(' ', $tmp);
