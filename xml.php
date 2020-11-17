@@ -64,6 +64,16 @@ foreach ($res as $data) {
 		//$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
 		
 	}
+	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
+	$tmp = explode(' ',shell_exec('/usr/bin/ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name']));
+	//echo 'Tmp = '.print_r($tmp,true).'<br>';
+	//die();
+	//list($pid) = explode(' ', $tmp);
+	$pid = $tmp[2];
+	//echo 'pid = '.$pid;
+	//die();
+	// /usr/bin/top -b -n 1 -p $pid | sed 1,6d
+
 	$track = $xml->addChild($xmlserver);
 	$track->addChild('uid',$data['uid']);
     $track->addChild('name',$data['host_name']);
@@ -94,6 +104,7 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
+    $track->addChild('cpu',$pid);
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
