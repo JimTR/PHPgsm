@@ -101,8 +101,8 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',trim($tmp[22]));
-    $track->addChild('mem',trim($tmp[23]));
+    $track->addChild('cpu',trim($tmp[23]));
+    $track->addChild('mem',trim($tmp[24]));
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
