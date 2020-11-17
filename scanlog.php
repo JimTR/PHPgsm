@@ -117,7 +117,7 @@ foreach ($la as $data) {
 			
 	}
 		$result['name'] = $data['tst'];
-		$result['country_code'] = $data['country_code'];
+		//$result['country_code'] = $data['country_code'];
 		if(strpos($result['server'],$server) === false) {
 			echo $data['tst'].' - '.$data['id']. ' played a different server'.PHP_EOL;
 			$result['server'].=','.$server;
