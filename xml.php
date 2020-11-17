@@ -69,7 +69,7 @@ foreach ($res as $data) {
 	//echo 'Tmp = '.print_r($tmp,true).'<br>';
 	//die();
 	//list($pid) = explode(' ', $tmp);
-	$pid = $tmp[2];
+	$pid = $tmp[1];
 	//echo 'pid = '.$pid;
 	//die();
 	// /bin/top -b -n 1 -p $pid | sed 1,6d
