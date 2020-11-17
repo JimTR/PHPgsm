@@ -66,14 +66,11 @@ foreach ($res as $data) {
 	}
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
-	//echo 'Tmp = '.print_r($tmp,true).'<br>';
-	//die();
-	//list($pid) = explode(' ', $tmp);
 	$pid = $tmp[0];
-	//echo 'pid = '.$pid;
-	//die();
-	// /bin/top -b -n 1 -p $pid | sed 1,6d
-
+	
+	$tmp = explode('  ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,6d')));
+     //print_r($tmp);
+     //die();
 	$track = $xml->addChild($xmlserver);
 	$track->addChild('uid',$data['uid']);
     $track->addChild('name',$data['host_name']);
@@ -104,7 +101,8 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',$pid);
+    $track->addChild('cpu',trim($tmp[22]));
+    $track->addChild('mem',trim($tmp[23]));
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
