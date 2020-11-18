@@ -540,8 +540,9 @@ function game_detail() {
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
-		$top = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
-		echo print_r($top,true).'( '.$cmd.' )<br>';
+		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
+		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
+		echo $sql.'<br>';
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
