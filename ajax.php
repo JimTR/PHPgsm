@@ -54,7 +54,8 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "game_detail" :
 			echo 'game detail<br>';
-			game_detail();
+			$gd = game_detail();
+			$json= json_encode($gd);
 			exit;				
 	case "rgames" :
 		  echo  display_games();
@@ -128,7 +129,7 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.1';
+			echo 'Ajax version 1.4';
 			exit;
 	case "allservers":
 			// return servers
@@ -536,7 +537,6 @@ function game_detail() {
 	foreach ($tmp as $server) {
 		
 		$server = str_replace('./srcds_linux','',$server);
-		$server = str_replace(' -insecure','',$server);
 		$server= trim($server);
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
@@ -555,13 +555,7 @@ function game_detail() {
 		$i++;
 		
 	}
-	foreach ($return as $server) {
-		echo print_r($server,true).'<br>';
-	}
-	print_r($return);
-	//echo print_r($tmp_array,true).'<br>';
-	//$pid = $tmp[0];
-	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
-	//$count =  count($tmp);
+		
+	return $return;
 }
 ?>
