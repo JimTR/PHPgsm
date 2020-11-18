@@ -103,8 +103,8 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',trim($tmp[$count-4].'%'));
-    $track->addChild('mem',trim($tmp[$count-3].'%'));
+    $track->addChild('cpu',trim($tmp[$count-4]));
+    $track->addChild('mem',trim($tmp[$count-3]));
     $track->addChild('count',$count);
     $players = $track->addChild('current_players');
     $i=0;
