@@ -529,7 +529,7 @@ function check_update()
 }
 function game_detail() {
 	// get processes
-	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd' )));
+	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
 	//print_r($tmp);
 	foreach ($tmp as $server) {
 		echo $server.'<br>';
