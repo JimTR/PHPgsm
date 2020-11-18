@@ -558,6 +558,7 @@ function game_detail() {
 	foreach ($return as $server) {
 		echo print_r($server,true).'<br>';
 	}
+	print_r($return);
 	//echo print_r($tmp_array,true).'<br>';
 	//$pid = $tmp[0];
 	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
