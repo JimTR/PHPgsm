@@ -566,9 +566,9 @@ function game_detail() {
 	}
 	//echo 'Servers - '.$i.' memory - '.$mem.' cpu - '.$cpu.'<br>'; 
 	$return['general']['live_servers'] = $i;
+	$return['general']['total_servers'] = $server_count['total'];
 	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
-	$return['general']['server_count'] = $server_count['total'];
 	$return['general']['total_size'] = formatBytes($tsize*1024,2);
 	return $return;
 }
