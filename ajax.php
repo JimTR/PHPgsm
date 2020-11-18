@@ -538,6 +538,7 @@ function game_detail() {
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
 		$top = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
+		echo print_r($top,true).'<br>';
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
 		$i++;
