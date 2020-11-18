@@ -56,6 +56,8 @@ switch (strtolower($cmds['action'])) {
 			echo 'game detail<br>';
 			$gd =game_detail();
 			print_r($gd);
+			$json = json_encode($gd);
+			echo $json;
 			exit;				
 	case "rgames" :
 		  echo  display_games();
@@ -556,11 +558,7 @@ function game_detail() {
 		
 	}
 	
-	//print_r($return);
-	//echo print_r($tmp_array,true).'<br>';
-	//$pid = $tmp[0];
-	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
-	//$count =  count($tmp);
+	
 	return $return;
 }
 ?>
