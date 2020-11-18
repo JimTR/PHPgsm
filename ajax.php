@@ -534,8 +534,9 @@ function game_detail() {
 	foreach ($tmp as $server) {
 		$server = str_replace('./srcds_linux','',$server);
 		$tmp_array[] = explode(' ',$server);
-		echo print_r($tmp_array,true).'<br>';
+		
 	}
+	echo print_r($tmp_array,true).'<br>';
 	//$pid = $tmp[0];
 	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
 	//$count =  count($tmp);
