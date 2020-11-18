@@ -54,8 +54,9 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "game_detail" :
 			$gd =game_detail();
+			print_r($gd);
 			$json = json_encode($gd);
-			echo $json;
+			echo '<br>'.$json;
 			exit;				
 	case "rgames" :
 		  echo  display_games();
@@ -556,8 +557,10 @@ function game_detail() {
 		$i++;
 		
 	}
-	echo 'Servers - '.$i.' memory - '.$mem.' cpu - '.$cpu.'<br>'; 
-	
+	//echo 'Servers - '.$i.' memory - '.$mem.' cpu - '.$cpu.'<br>'; 
+	$return['general']['servers'] = $i;
+	$return['general']['mem'] = $mem;
+	$return['general']['cpu'] = $cpu;
 	return $return;
 }
 ?>
