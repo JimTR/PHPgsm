@@ -534,6 +534,7 @@ function game_detail() {
 	$i=0;
 	foreach ($tmp as $server) {
 		$server = str_replace('./srcds_linux','',$server);
+		$server = str_replace(' -insecure','',$server);
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
 		$top = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
