@@ -53,9 +53,7 @@ switch (strtolower($cmds['action'])) {
 			//echo file_put_contents($cmds['file']);
 			exit;
 	case "game_detail" :
-			echo 'game detail<br>';
 			$gd =game_detail();
-			print_r($gd);
 			$json = json_encode($gd);
 			echo $json;
 			exit;				
@@ -131,7 +129,7 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.1';
+			echo 'Ajax version 1.4';
 			exit;
 	case "allservers":
 			// return servers
@@ -534,7 +532,6 @@ function game_detail() {
 	// get processes
 	$db = new db();
 	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
-	//print_r($tmp);
 	$i=0;
 	foreach ($tmp as $server) {
 		
