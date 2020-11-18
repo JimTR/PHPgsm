@@ -544,20 +544,22 @@ function game_detail() {
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
-		$result = $db->get_results($sql); // get data
+		$result = reset($db->get_results($sql)); // get data
 		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"';
-		echo print_r($tmp_array[$i],true).' - '.$sql.'<br>';
 		$server_count= reset($db->get_results($sql));
-		$result= reset($result);
 		$count = count($top);
 		$mem += $top[$count-3];
 		$cpu += $top[$count-4];
+		$du = shell_exec('du -s '.$result['location']);
+		list($size, $location) = explode(" ", $du);
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
+		$result['size'] = $size;
 		$return[$result['host_name']] = $result;
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
 		$tmp_array[$i][]=$result['host_name'];
+		$tsize +=$size;
 		$i++;
 		
 	}
