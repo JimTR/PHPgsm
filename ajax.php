@@ -545,8 +545,8 @@ function game_detail() {
 		$result = $db->get_results($sql); // get data
 		$result= reset($result);
 		$count = count($top);
-		$mem .= $top[$count-3];
-		$cpu .= $top[$count-4];
+		$mem += $top[$count-3];
+		$cpu += $top[$count-4];
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
 		$return[$result['host_name']] = $result;
