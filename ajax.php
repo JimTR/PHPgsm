@@ -533,7 +533,7 @@ function game_detail() {
 	//print_r($tmp);
 	$i=0;
 	foreach ($tmp as $server) {
-		
+		$db = new db();
 		$server = str_replace('./srcds_linux','',$server);
 		$server = str_replace(' -insecure','',$server);
 		$server= trim($server);
@@ -542,7 +542,12 @@ function game_detail() {
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
-		echo $sql.'<br>';
+		//echo $sql.'<br>';
+		$result = $db->get_results($sql);
+		$result= reset($result);
+		echo print_r($result,true).'<br>';
+		//$t[$newkey] = $arr[$oldkey];
+		//unset($arr[$oldkey]);
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
