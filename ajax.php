@@ -543,17 +543,19 @@ function game_detail() {
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
-		//echo $sql.'<br>';
-		$result = $db->get_results($sql);
+		$result = $db->get_results($sql); // get data
 		$result= reset($result);
 		$count = count($top);
+		$result['mem'] = $top[$count-3];
+		$result['cpu'] = $top[$count-4];
+		$return[$result['host_name']] = $result;
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
 		$tmp_array[$i][]=$result['host_name'];
 		$i++;
 		
 	}
-	foreach ($tmp_array as $server) {
+	foreach ($return as $server) {
 		echo print_r($server,true).'<br>';
 	}
 	//echo print_r($tmp_array,true).'<br>';
