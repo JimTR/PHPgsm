@@ -529,11 +529,12 @@ function check_update()
 }
 function game_detail() {
 	// get processes
+	$db = new db();
 	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
 	//print_r($tmp);
 	$i=0;
 	foreach ($tmp as $server) {
-		$db = new db();
+		
 		$server = str_replace('./srcds_linux','',$server);
 		$server = str_replace(' -insecure','',$server);
 		$server= trim($server);
@@ -543,10 +544,8 @@ function game_detail() {
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
 		//echo $sql.'<br>';
-		$result = $db->get_results($sql);
-		$result= reset($result);
-		$tmp_array[$i][$result['host_name']] = $tmp_array[0];
-		//unset($arr[$oldkey]);
+		//$result = $db->get_results($sql);
+		//$result= reset($result);
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
