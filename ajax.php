@@ -545,8 +545,7 @@ function game_detail() {
 		//echo $sql.'<br>';
 		$result = $db->get_results($sql);
 		$result= reset($result);
-		echo print_r($result,true).'<br>';
-		//$t[$newkey] = $arr[$oldkey];
+		$tmp_array[$i][$result['host_name']] = $tmp_array[0];
 		//unset($arr[$oldkey]);
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
