@@ -568,6 +568,7 @@ function game_detail() {
 	$return['general']['mem'] = $mem;
 	$return['general']['cpu'] = $cpu;
 	$return['general']['server_count'] = $server_count['total'];
+	$return['general']['total_size'] = $tsize;
 	return $return;
 }
 ?>
