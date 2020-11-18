@@ -54,9 +54,9 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "game_detail" :
 			$gd =game_detail();
-			print_r($gd);
+			//print_r($gd);
 			$json = json_encode($gd);
-			echo '<br>'.$json;
+			echo $json;
 			exit;				
 	case "rgames" :
 		  echo  display_games();

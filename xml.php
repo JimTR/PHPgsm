@@ -67,7 +67,6 @@ foreach ($res as $data) {
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
 	$pid = $tmp[0];
-	
 	$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
 	$count =  count($tmp);
 	
@@ -143,6 +142,8 @@ foreach ($base_servers as $data) {
 	$disk_nfo = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true');
 	$mem_info = json_decode(stripslashes($temp),true);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
+	$game_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['name']);
     $track->addChild('fname',$data['fname']);
@@ -179,6 +180,7 @@ foreach ($base_servers as $data) {
     $track->addChild('boot_used',$disk_nfo['boot_used'] ." (".$disk_nfo['boot_pc'] .")");
     $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
+    $track->addChild('gamespace',$game_detail['general']['total_size']);
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
