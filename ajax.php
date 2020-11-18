@@ -559,7 +559,8 @@ function game_detail() {
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
 		$tmp_array[$i][]=$result['host_name'];
-		$tsize +=$size;
+		$du = shell_exec('du -s '.dirname($result['location']));
+		list ($tsize,$location) = explode(" ",$du);
 		$i++;
 		
 	}
