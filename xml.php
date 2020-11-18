@@ -68,7 +68,7 @@ foreach ($res as $data) {
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
 	$pid = $tmp[0];
 	
-	$tmp = array_filter(explode('  ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d'))));
+	$tmp = array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d'))));
 	$count =  count($tmp);
      //print_r($tmp);
      //die();
