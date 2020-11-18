@@ -547,6 +547,7 @@ function game_detail() {
 		$result = $db->get_results($sql); // get data
 		$sql = 'select  count(*) as total where servers.host like"'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"';
 		echo print_r($tmp_array[$i],true).' - '.$sql.'<br>';
+		$server_count= reset($db->get_results($sql));
 		$result= reset($result);
 		$count = count($top);
 		$mem += $top[$count-3];
@@ -564,6 +565,7 @@ function game_detail() {
 	$return['general']['servers'] = $i;
 	$return['general']['mem'] = $mem;
 	$return['general']['cpu'] = $cpu;
+	$return['general']['server_count'] = $server_count['total'];
 	return $return;
 }
 ?>
