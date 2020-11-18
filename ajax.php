@@ -544,11 +544,12 @@ function game_detail() {
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
 		//echo $sql.'<br>';
-		//$result = $db->get_results($sql);
-		//$result= reset($result);
+		$result = $db->get_results($sql);
+		$result= reset($result);
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
+		$tmp_array[$i][]=$result['host_name'];
 		$i++;
 		
 	}
