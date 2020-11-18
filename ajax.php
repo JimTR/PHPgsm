@@ -544,6 +544,8 @@ function game_detail() {
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
 		$result = $db->get_results($sql); // get data
+		$sql = 'select  count(*) as total where servers.host like"'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6]-1)).'%"';
+		echo $sql.'<br>';
 		$result= reset($result);
 		$count = count($top);
 		$mem += $top[$count-3];
