@@ -554,7 +554,7 @@ function game_detail() {
 		list($size, $location) = explode(" ", $du);
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
-		$result['size'] = $size;
+		$result['size'] = formatBytes($size*1024);
 		$return[$result['host_name']] = $result;
 		$tmp_array[$i][]=$top[$count-3];
 		$tmp_array[$i][]=$top[$count-4];
