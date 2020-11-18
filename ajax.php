@@ -533,8 +533,10 @@ function game_detail() {
 	//print_r($tmp);
 	$i=0;
 	foreach ($tmp as $server) {
+		
 		$server = str_replace('./srcds_linux','',$server);
 		$server = str_replace(' -insecure','',$server);
+		$server= trim($server);
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
