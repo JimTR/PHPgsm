@@ -532,6 +532,7 @@ function game_detail() {
 	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
 	//print_r($tmp);
 	foreach ($tmp as $server) {
+		$server = str_replace('./srcds_linux','',$server);
 		echo $server.'<br>';
 	}
 	//$pid = $tmp[0];
