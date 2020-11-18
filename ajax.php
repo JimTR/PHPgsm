@@ -54,8 +54,8 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "game_detail" :
 			echo 'game detail<br>';
-			$gd = game_detail();
-			$json= json_encode($gd);
+			$gd =game_detail();
+			print_r($gd);
 			exit;				
 	case "rgames" :
 		  echo  display_games();
@@ -129,7 +129,7 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.4';
+			echo 'Ajax version 1.1';
 			exit;
 	case "allservers":
 			// return servers
@@ -555,7 +555,12 @@ function game_detail() {
 		$i++;
 		
 	}
-		
+	
+	//print_r($return);
+	//echo print_r($tmp_array,true).'<br>';
+	//$pid = $tmp[0];
+	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
+	//$count =  count($tmp);
 	return $return;
 }
 ?>
