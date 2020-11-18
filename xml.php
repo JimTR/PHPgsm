@@ -119,7 +119,8 @@ foreach ($res as $data) {
   
 }
   $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);  
- unset ($update); 
+ unset ($update);
+ unset ($count); 
 }
 }
 
