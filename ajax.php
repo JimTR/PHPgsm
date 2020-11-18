@@ -537,6 +537,7 @@ function game_detail() {
 	foreach ($tmp as $server) {
 		
 		$server = str_replace('./srcds_linux','',$server);
+		$server = str_replace(' -insecure','',$server);
 		$server= trim($server);
 		$tmp_array[$i] = explode(' ',$server);
 		$pid = $tmp_array[$i][0];
