@@ -544,6 +544,7 @@ function game_detail() {
 		echo print_r($top,true).'( '.$cmd.' )<br>';
 		$count = count($top);
 		$tmp_array[$i][]=$top[$count-3];
+		$tmp_array[$i][]=$top[$count-4];
 		$i++;
 		
 	}
