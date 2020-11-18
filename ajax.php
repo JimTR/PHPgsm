@@ -531,12 +531,17 @@ function game_detail() {
 	// get processes
 	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
 	//print_r($tmp);
+	$i=0;
 	foreach ($tmp as $server) {
 		$server = str_replace('./srcds_linux','',$server);
-		$tmp_array[] = explode(' ',$server);
+		$tmp_array[$i] = explode(' ',$server);
+		$pid = $tmp_array[$i][0];
+		$top = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
+		$tmp_array[$i][]=$top[6];
+		$i++;
 		
 	}
-	echo print_r($tmp_array,true).'<br>';
+	//echo print_r($tmp_array,true).'<br>';
 	//$pid = $tmp[0];
 	//$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
 	//$count =  count($tmp);
