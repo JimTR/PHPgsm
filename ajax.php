@@ -533,7 +533,7 @@ function game_detail() {
 	//print_r($tmp);
 	foreach ($tmp as $server) {
 		$server = str_replace('./srcds_linux','',$server);
-		$tmp_array = explode(' ',$server);
+		$tmp_array[] = explode(' ',$server);
 		echo print_r($tmp_array,true).'<br>';
 	}
 	//$pid = $tmp[0];
