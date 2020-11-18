@@ -69,6 +69,7 @@ foreach ($res as $data) {
 	$pid = $tmp[0];
 	
 	$tmp = array_filter(explode('  ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d'))));
+	$count =  count($tmp);
      //print_r($tmp);
      //die();
 	$track = $xml->addChild($xmlserver);
@@ -101,8 +102,8 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',trim($tmp[7]));
-    $track->addChild('mem',trim($tmp[6]));
+    $track->addChild('cpu',trim($tmp[$count-4]));
+    $track->addChild('mem',trim($tmp[$count-3]));
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
