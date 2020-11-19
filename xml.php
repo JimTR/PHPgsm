@@ -144,7 +144,7 @@ foreach ($base_servers as $data) {
 	$disk_nfo = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true');
 	$mem_info = json_decode(stripslashes($temp),true);
-	//header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Origin: *');
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
