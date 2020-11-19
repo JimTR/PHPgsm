@@ -14,18 +14,18 @@
     require DOC_ROOT . '/includes/class.plugins.php'; // plugin class
     require DOC_ROOT. '/includes/config.php'; // get config
 	include DOC_ROOT. '/includes/settings.php';// get settings 
-	
-	$site->config = &$config; // load the config
+	//print_r($config);
+	//$site->config = &$config; // load the config
 	$site->settings = &$settings; // load settings
 	$time_format = "h:i:s A"; // default time settings should get from Auth
 	$tz = $site->settings['server_tz'];
    	date_default_timezone_set($tz); //need to pull this from config    
-    define( 'DB_HOST', $site->config['database']['hostname'] ); // set database host
-	define( 'DB_USER', $site->config['database']['username'] ); // set database user
-	define( 'DB_PASS', $site->config['database']['password'] ); // set database password
-	define( 'DB_NAME', $site->config['database']['database'] ); // set database name
-	define( 'SEND_ERRORS_TO', $site->config['database']['errors'] ); //set email notification email address
-	define( 'DISPLAY_DEBUG', $site->config['database']['display_error'] ); //display db errors?
+    define( 'DB_HOST', $config['database']['hostname'] ); // set database host
+	define( 'DB_USER', $config['database']['username'] ); // set database user
+	define( 'DB_PASS', $config['database']['password'] ); // set database password
+	define( 'DB_NAME', $config['database']['database'] ); // set database name
+	define( 'SEND_ERRORS_TO', $config['database']['errors'] ); //set email notification email address
+	define( 'DISPLAY_DEBUG', $config['database']['display_error'] ); //display db errors?
 	define( 'DB_COMMA',  '`'); // sql comma thingy 
 	define('COMMENT',$settings['templatecomments']); // show template comments or not 
     define('TIME_NOW', time()); //time stamp
@@ -69,7 +69,7 @@ else {$page['address'] ='';}
     $page['device'] = ($isMobile ? ($isTablet ? 'tablet' : 'mobile') : 'desktop');
     //$page['device'] = 'tablet';
     $page['udevice']=$page['device'];
-    $page['template_path'] = $page['theme_path'].'/templates/'.$page['udevice'].'/'; // set the templates for the device later on
+    //$page['template_path'] = $page['theme_path'].'/templates/'.$page['udevice'].'/'; // set the templates for the device later on
     if ($site->settings['show_device'] <> "1"){$page['device'] = "";}
 	 else {$page['device'] = '('.$page['device'].')';}
  
@@ -116,7 +116,7 @@ if($site->settings['siteclosed'] === "1" & $Auth->level <>'admin') {
 	    $_SESSION['userid'] = intval($Auth->id);
 	    $_SESSION['nid'] = $Auth->nid;
 	    $_SESSION['steamid'] = '';
-	    DBSession::write($id,$$_SESSION);
-	    DBSession::read ($id);
+	    //DBSession::write($id,$$_SESSION);
+	    //DBSession::read ($id);
 	}	  
 	?>
