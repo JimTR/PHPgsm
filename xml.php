@@ -182,6 +182,7 @@ foreach ($base_servers as $data) {
     $track->addChild('load',$cpu_info->load);
     $track->addChild('gamespace',$game_detail['general']['total_size']);
     $track->addChild('live_games',$game_detail['general']['live_servers']);
+    $track->addChild('total_games',$game_detail['general']['total_servers']);
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
