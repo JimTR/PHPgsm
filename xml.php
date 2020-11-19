@@ -66,9 +66,9 @@ foreach ($res as $data) {
 	}
      // add game data from running server here
      $temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
-     $$data['host_name'] = json_decode(stripslashes($temp),true);
-     print_r($$data['host_name']);
-     die();	
+     //$$data['host_name'] = json_decode(stripslashes($temp),true);
+     //print_r($$data['host_name']);
+     //die();	
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
 	$pid = $tmp[0];
