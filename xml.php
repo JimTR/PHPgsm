@@ -17,7 +17,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host DESC, servers.running DESC';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
 $res = $database->get_results($sql);
 $sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
@@ -58,30 +58,12 @@ foreach ($res as $data) {
     $rt = $interval->format('%a days %h hours %I mins %S Seconds');
 	if (empty($results[$data['host_name']]['gq_online'])) {
 		$online = 'Offline';
-		
 	}
 	else {
 		$online = 'Online';
 		//$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
-		  $key = dposition($game_data,$data['host_name']);
-     if ($key=== false){
-		  //echo $key.' data - '.$data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true<br>'; 
-          $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true');
-		  $game_data = json_decode(stripslashes($temp),true);
-		  //print_r ($game_data[$data['host_name']]);
-		  //echo '<br>'.$game_data[$data['host_name']]['cpu'];
-		  //die();
-	  }
-	  else {
-	 //echo $key.'<br>'; 
-	  //print_r ($game_data[$data['host_name']]);
-	//echo '<br>'.$game_data[$data['host_name']]['cpu'];
-	//die();
-	  }
+		
 	}
-     // add game data from running server here
-   
-    
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
 	$pid = $tmp[0];
@@ -120,10 +102,9 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    //$track->addChild('cpu',$game_data[$data['host_name']]['cpu']);
     $track->addChild('cpu',trim($tmp[$count-4]));
     $track->addChild('mem',trim($tmp[$count-3]));
-    //$track->addChild('count',$count);
+    $track->addChild('count',$count);
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
@@ -142,8 +123,6 @@ foreach ($res as $data) {
  unset ($update);
  unset ($count); 
 }
- //print_r($game_data);
-   //  die();	
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
@@ -202,10 +181,6 @@ foreach ($base_servers as $data) {
     $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
     $track->addChild('gamespace',$game_detail['general']['total_size']);
-    $track->addChild('live_games',$game_detail['general']['live_servers']);
-    $track->addChild('total_games',$game_detail['general']['total_servers']);
-    $track->addChild('total_mem',$game_detail['general']['mem'].'%');
-    $track->addChild('total_cpu',$game_detail['general']['cpu'].'%');
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
@@ -405,14 +380,4 @@ function xml2array($contents, $get_attributes = 1, $priority = 'tag')
     
     // it will work 100% if not ping me @skype: sapan.mohannty
     
-    function dposition($data, $position) {
-	//echo $position .'<br>';
-	//die();
-    foreach($data as $index => $data) {
-        if($data['host_name'] == $position) return $index;
-        //echo $position.' found - '.$index.'<br>';
-    }
-    //echo 'not found<br>';
-    return false;
-}
 ?>
