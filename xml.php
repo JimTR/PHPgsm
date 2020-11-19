@@ -145,8 +145,8 @@ foreach ($base_servers as $data) {
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true');
 	$mem_info = json_decode(stripslashes($temp),true);
 	//header('Access-Control-Allow-Origin: *');
-	//$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
-	//$game_detail = json_decode(stripslashes($temp),true);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
+	$game_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['name']);
     $track->addChild('fname',$data['fname']);
@@ -184,7 +184,7 @@ foreach ($base_servers as $data) {
     $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
     $track->addChild('gamespace',$game_detail['general']['total_size']);
-    //$track->addChild('total_cpu',$game_detail['general']['cpu']);
+    $track->addChild('total_cpu',$game_detail['general']['cpu']);
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
