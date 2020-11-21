@@ -144,6 +144,8 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
+	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$data['name']);
     $track->addChild('fname',$data['fname']);
@@ -185,6 +187,8 @@ foreach ($base_servers as $data) {
     $track->addChild('total_games',$game_detail['general']['total_servers']);
     $track->addChild('total_mem',$game_detail['general']['mem'].'%');
     $track->addChild('total_cpu',$game_detail['general']['cpu'].'%');
+    $track->addChild('user_name',$user_detail['name']);
+    $track->addChild('quota',$user_detail['quota']);
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
