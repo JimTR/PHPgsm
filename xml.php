@@ -195,7 +195,7 @@ foreach ($base_servers as $data) {
     $track->addChild('total_mem',$game_detail['general']['mem'].'%');
     $track->addChild('total_cpu',$game_detail['general']['cpu'].'%');
     $track->addChild('user_name',$user_detail['name']);
-    $track->addChild('quota',floatval($user_detail['quota']));
+    $track->addChild('quota_a',floatval($user_detail['quota']));
     $track->addChild('quota_used',floatval($user_detail['quota_used']));
     $track->addChild('quota_pc',number_format((floatval($game_detail['general']['total_size']) / floatval($user_detail['quota']))*100,2));
     $track->addChild('quota_free',floatval($user_detail['quota_free']));
