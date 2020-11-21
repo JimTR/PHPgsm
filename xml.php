@@ -68,7 +68,7 @@ foreach ($res as $data) {
 	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
 	$pid = $tmp[0];
 	$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
-	$count =  count($tmp);
+	//$count =  count($tmp);
 	
      //print_r($tmp);
      //die();
@@ -122,7 +122,14 @@ foreach ($res as $data) {
   $track->addChild('host_name',$results[$data['host_name']]['gq_hostname']);  
  unset ($update);
  unset ($count); 
+ $ipdata = $data['host'];
+ $j[$ipdata]['totplayers']+= $results[$data['host_name']]['gq_numplayers']; 
+ if ($online =='Online') {
+ $j[$ipdata]['slots']+= $data['max_players'];
+} 
 }
+//print_r($j);
+//die();
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
@@ -192,6 +199,9 @@ foreach ($base_servers as $data) {
     $track->addChild('quota_used',floatval($user_detail['quota_used']));
     $track->addChild('quota_pc',number_format((floatval($game_detail['general']['total_size']) / floatval($user_detail['quota']))*100,2));
     $track->addChild('quota_free',floatval($user_detail['quota_free']));
+    $track->addChild('total_players',$j[$cpu_info->local_ip]['totplayers']);
+    $track->addChild('total_slots',$j[$cpu_info->local_ip]['slots']);
+    $track->addChild('players_pc',number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0));
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
