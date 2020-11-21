@@ -112,6 +112,7 @@ switch (strtolower($cmds['action'])) {
 	case "user":
 			$disk_info = get_disk_info();
 			$user_info = get_user_info($disk_info);
+			print_r($user_info);
 			echo display_user($user_info);
 			exit;
 	case "all":
@@ -532,39 +533,47 @@ function check_update()
 function game_detail() {
 	// get processes
 	$db = new db();
-	$tmp = explode(PHP_EOL,trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d' )));
+	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d'));
+    $tmp = explode(PHP_EOL,$t);
 	$i=0;
+	if(strlen($t) === 0) {
+                
+                $ip = file_get_contents("http://ipecho.net/plain"); // get ip
+                $sql = 'select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%"';
+                $server_count = reset($db->get_results($sql));
+                $du = shell_exec('du -s '.dirname($server_count['location']));
+                list ($tsize,$location) = explode(" ",$du);
+        }
+        else{
+
 	foreach ($tmp as $server) {
 		
-		$server = str_replace('./srcds_linux','',$server);
-		$server = str_replace(' -insecure','',$server);
-		$server= trim($server);
-		$tmp_array[$i] = explode(' ',$server);
-		$pid = $tmp_array[$i][0];
-		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d';
-		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd)))));
-		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"';
-		$result = reset($db->get_results($sql)); // get data
-		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"';
-		$server_count= reset($db->get_results($sql));
-		$count = count($top);
-		$mem += $top[$count-3];
-		$cpu += $top[$count-4];
-		$du = shell_exec('du -s '.$result['location']);
-		list($size, $location) = explode(" ", $du);
+		$server = str_replace('./srcds_linux','',$server); // we don't need this throw it
+		$server = str_replace(' -insecure','',$server); // we don't need this throw it
+		$server= trim($server); // get rid of spaces & CR's 
+		$tmp_array[$i] = explode(' ',$server); // arrayify
+		$pid = $tmp_array[$i][0]; // git process id
+		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
+		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
+		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
+		$result = reset($db->get_results($sql)); // get data back
+		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
+		$server_count= reset($db->get_results($sql)); // get data back
+		$count = count($top); // how many records  ?
+		$mem += $top[$count-3]; // memory %
+		$cpu += $top[$count-4]; // cpu % 
+		$du = shell_exec('du -s '.$result['location']); // get size of game
+		list($size, $location) = explode(" ", $du); // drop to variables
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
 		$result['size'] = formatBytes($size*1024,2);
 		$return[$result['host_name']] = $result;
-		$tmp_array[$i][]=$top[$count-3];
-		$tmp_array[$i][]=$top[$count-4];
-		$tmp_array[$i][]=$result['host_name'];
 		$du = shell_exec('du -s '.dirname($result['location']));
 		list ($tsize,$location) = explode(" ",$du);
 		$i++;
-		
+	}	
 	}
-	//echo 'Servers - '.$i.' memory - '.$mem.' cpu - '.$cpu.'<br>'; 
+	// add computed items 
 	$return['general']['live_servers'] = $i;
 	$return['general']['total_servers'] = $server_count['total'];
 	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
