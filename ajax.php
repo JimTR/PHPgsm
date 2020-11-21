@@ -112,7 +112,8 @@ switch (strtolower($cmds['action'])) {
 	case "user":
 			$disk_info = get_disk_info();
 			$user_info = get_user_info($disk_info);
-			print_r($user_info);
+			$json = json_encode($user_info);
+			echo $json;
 			echo display_user($user_info);
 			exit;
 	case "all":
