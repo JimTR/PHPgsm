@@ -189,6 +189,8 @@ foreach ($base_servers as $data) {
     $track->addChild('total_cpu',$game_detail['general']['cpu'].'%');
     $track->addChild('user_name',$user_detail['name']);
     $track->addChild('quota',floatval($user_detail['quota']));
+    $track->addChild('quota_used',floatval($user_detail['quota_used']));
+    $track->addChild('quota_free',floatval($user_detail['quota_free']));
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
