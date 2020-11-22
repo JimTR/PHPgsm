@@ -180,7 +180,7 @@ foreach ($base_servers as $data) {
     $track->addChild('memTotal_raw',trim($mem_info['MemTotal_raw']));  
     $track->addChild('memfree',trim($mem_info['MemFree']));
     $track->addChild('memfree_raw',trim($mem_info['MemFree_raw']));
-     $track->addChild('memfree_pc',number_format(($mem_info['MemFree_raw'] / $mem_info['MemTotal_raw'])*100,2));
+    $track->addChild('memfree_pc',number_format(($mem_info['MemFree_raw'] / $mem_info['MemTotal_raw'])*100,2));
     $track->addChild('memcache',trim($mem_info['Cached']));
     $track->addChild('memcache_raw',trim($mem_info['Cached_raw']));
     $track->addChild('memactive',trim($mem_info['Active']));
@@ -189,6 +189,7 @@ foreach ($base_servers as $data) {
     $track->addChild('swaptotal_raw',trim($mem_info['SwapTotal_raw']));
     $track->addChild('swapfree',trim($mem_info['SwapFree']));
     $track->addChild('swapfree_raw',trim($mem_info['SwapFree_raw']));
+    $track->addChild('swapfree_pc',number_format(($mem_info['SwapFree_raw'] / $mem_info['SwapTotal_raw'])*100,2));
     $track->addChild('swapcache',trim($mem_info['SwapCached']));
     $track->addChild('swapcache_raw',trim($mem_info['SwapCached_raw']));
     $track->addChild('boot_filesystem',$disk_nfo['boot_filesystem']);
