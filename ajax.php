@@ -62,7 +62,7 @@ switch (strtolower($cmds['action'])) {
 	case "top" :
 				if (isset($cmds['filter'])) {
 					//do stuff
-					echo shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d');
+					echo shell_exec('top -b -n 1 -p '.$cmds['filter'].' | sed 1,7d');
 				}
 			 	exit;
 	case "game_detail" :
