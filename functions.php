@@ -184,10 +184,10 @@ function get_mem_info() {
 		 $i = strpos($value,":",0);
 		 
          $key = substr($value,0,$i);
-         $value=floatval(str_replace ( $key.':' , '' , $value))*1024;
+         $valuef=floatval(str_replace ( $key.':' , '' , $value))*1024;
         
 		     		
-		 $mem_info[$key] = formatBytes($value,2);
+		 $mem_info[$key] = formatBytes($valuef,2);
 		 $mem_info[$key.'_raw'] = $value;
 		 
 	}
