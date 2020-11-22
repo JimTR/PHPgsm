@@ -65,11 +65,18 @@ foreach ($res as $data) {
 		
 	}
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
-	$tmp = explode(' ',trim(shell_exec('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$data['host_name'])));
+	$new = trim(file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name']));
+	//echo $data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name'].' -'.$new.'<br>';
+	$tmp = explode(' ',$new);
+	//echo 'PID back - '.print_r($tmp,true).'<br>';
+	if (!empty($tmp[0])) {
 	$pid = $tmp[0];
-	$tmp = array_values(array_filter(explode(' ',trim(shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d')))));
-	$count =  count($tmp);
-	
+	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
+	$temp =  trim(file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid));
+	$temp = array_values(array_filter(explode(' ',$temp)));
+	$count =  count($temp);
+	//echo 'Top Back - '.print_r($temp,true).'<br>';
+}
      //print_r($tmp);
      //die();
 	$track = $xml->addChild($xmlserver);
@@ -102,8 +109,8 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',trim($tmp[$count-4]));
-    $track->addChild('mem',trim($tmp[$count-3]));
+    $track->addChild('cpu',trim($temp[$count-4]));
+    $track->addChild('mem',trim($temp[$count-3]));
     $track->addChild('count',$count);
     $players = $track->addChild('current_players');
     $i=0;
