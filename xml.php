@@ -181,10 +181,15 @@ foreach ($base_servers as $data) {
     $track->addChild('memfree',trim($mem_info['MemFree']));
     $track->addChild('memfree_raw',trim($mem_info['MemFree_raw']));
     $track->addChild('memcache',trim($mem_info['Cached']));
+    $track->addChild('memcache_raw',trim($mem_info['Cached_raw']));
     $track->addChild('memactive',trim($mem_info['Active']));
+    $track->addChild('memactive_raw',trim($mem_info['Active_raw']));
     $track->addChild('swaptotal',trim($mem_info['SwapTotal']));
+    $track->addChild('swaptotal_raw',trim($mem_info['SwapTotal_raw']));
     $track->addChild('swapfree',trim($mem_info['SwapFree']));
+    $track->addChild('swapfree_raw',trim($mem_info['SwapFree_raw']));
     $track->addChild('swapcache',trim($mem_info['SwapCached']));
+    $track->addChild('swapcache_raw',trim($mem_info['SwapCached_raw']));
     $track->addChild('boot_filesystem',$disk_nfo['boot_filesystem']);
     $track->addChild('boot_mount',$disk_nfo['boot_mount']);
     $track->addChild('boot_size',$disk_nfo['boot_size']);
