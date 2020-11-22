@@ -51,7 +51,13 @@ switch (strtolower($cmds['action'])) {
 	case "ps_file" :
 			//need api key !!
 			//echo file_put_contents($cmds['file']);
-			echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
+			if (isset($cmds['filter'])) {
+				// add the grep filter
+				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter']);
+			}
+			else {
+				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
+			}
 			exit;
 	case "game_detail" :
 			$gd =game_detail();
