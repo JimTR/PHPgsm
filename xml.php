@@ -180,7 +180,7 @@ foreach ($base_servers as $data) {
     $track->addChild('memTotal_raw',trim($mem_info['MemTotal_raw']));  
     $track->addChild('memfree',trim($mem_info['MemFree']));
     $track->addChild('memfree_raw',trim($mem_info['MemFree_raw']));
-     $track->addChild('memfree_pc',number_format(($mem_info['MemFree_raw'] / $mem_info['MemTotal_raw'])*100),2);
+     $track->addChild('memfree_pc',number_format(($mem_info['MemFree_raw'] / $mem_info['MemTotal_raw'])*100,2));
     $track->addChild('memcache',trim($mem_info['Cached']));
     $track->addChild('memcache_raw',trim($mem_info['Cached_raw']));
     $track->addChild('memactive',trim($mem_info['Active']));
