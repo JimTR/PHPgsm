@@ -177,7 +177,9 @@ foreach ($base_servers as $data) {
     $track->addChild('postfix',$software->postfix);
     $track->addChild('uptime',$cpu_info->boot_time); 
     $track->addChild('memTotal',trim($mem_info['MemTotal']));  
+    $track->addChild('memTotal_raw',trim($mem_info['MemTotal_raw']));  
     $track->addChild('memfree',trim($mem_info['MemFree']));
+    $track->addChild('memfree_raw',trim($mem_info['MemFree_raw']));
     $track->addChild('memcache',trim($mem_info['Cached']));
     $track->addChild('memactive',trim($mem_info['Active']));
     $track->addChild('swaptotal',trim($mem_info['SwapTotal']));
