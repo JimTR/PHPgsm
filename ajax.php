@@ -59,6 +59,12 @@ switch (strtolower($cmds['action'])) {
 				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
 			}
 			exit;
+	case "top" :
+				if (isset($cmds['filter'])) {
+					//do stuff
+					echo shell_exec('top -b -n 1 -p '.$pid.' | sed 1,7d');
+				}
+			 	exit;
 	case "game_detail" :
 			$gd =game_detail();
 			//print_r($gd);
