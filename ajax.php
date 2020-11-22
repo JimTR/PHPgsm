@@ -53,7 +53,7 @@ switch (strtolower($cmds['action'])) {
 			//echo file_put_contents($cmds['file']);
 			if (isset($cmds['filter'])) {
 				// add the grep filter
-				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter']);
+				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
 			}
 			else {
 				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
