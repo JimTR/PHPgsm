@@ -187,11 +187,15 @@ function get_mem_info() {
          $value=floatval(str_replace ( $key.':' , '' , $value))*1024;
         
 		     		
-		 $mem_info[$key] = formatBytes($value);
+		 $mem_info[$key] = formatBytes($value,2);
+		 $mem_info[$key.'_raw'] = $value;
 		 
 	}
+
 	$maxlen = max(array_map('strlen', $mem_info));
 	//echo "max len ".$maxlen.CR;
+	//echo 'meminfo'.CR;
+	//echo print_r( $mem_info,true).CR;
 	$maxlen = 14;
 	foreach ($mem_info as $key=>&$value){
 		//check len
@@ -203,16 +207,7 @@ function get_mem_info() {
              $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
 	}
 }
-foreach ($mem_info as $key=>&$value){
-		//check len
-		 $len = strlen($value);
-		 if ($len = $maxlen) {
-			 //pad
-			 //$pad = $maxlen-$len;
-             //echo " ".$len.CR;
-             $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
-	}
-}
+
 	return $mem_info;
 		
 }
