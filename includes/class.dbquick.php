@@ -61,6 +61,7 @@ class db
      */
     public function log_db_errors( $error, $query )
     {
+		$request ='';
         $message = '<p>Error at '. date('d-m-Y H:i:s').':</p>';
         $message .= '<p>Query: '. htmlentities( $query ).'<br />';
         $message .= 'Error: ' . $error;
