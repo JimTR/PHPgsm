@@ -578,11 +578,10 @@ function game_detail() {
 		$server_data['mem'] = '';
 		
 	}
-                echo 'new - '.$new.'<br>';
+               
                 $tmp = explode(' ',$new);
-	echo 'tmp - '.print_r($tmp,true).'<br>';
-	if (!empty($tmp[0])) {
-		echo 'not empty triggered';
+		if (!empty($tmp[0])) {
+	
 	$pid = $tmp[0];
 	$count = count($tmp);
 	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
@@ -595,9 +594,7 @@ function game_detail() {
 	$server_data['mem'] = $temp[$server_data['count']-3];
 	$server_data['cpu'] = $temp[$server_data['count']-4];
 	$server_data['size'] = formatBytes($size*1024,2);
-	
-	print_r($return);
-	
+			
 	}
 	$return[$server_data['host_name']] = $server_data;
 	return $return;
