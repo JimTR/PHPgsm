@@ -589,8 +589,7 @@ function game_detail() {
 	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid));
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
-	echo 'du - '.$du.'<br>';
-	
+		
 	list($size, $location) = explode(" ", $du); // drop to variables
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
