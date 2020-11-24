@@ -558,7 +558,7 @@ function game_detail() {
 		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 		 
 		 $server_data = reset($db->get_results($sql));
-		           echo $ip.' - '.$server_data['host'].'<br>'; 
+		           
                 if ($ip <> trim($server_data['host'])) {
 					echo 'wrong call guv !<br>';
 					exit;
