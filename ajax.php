@@ -562,7 +562,6 @@ function game_detail() {
 		           echo $ip.' - '.$server_data['host'].'<br>'; 
                 if ($ip <> trim($server_data['host'])) {
 					echo 'wrong call guv !<br>';
-					print_r ($server_data);
 					exit;
 					// kill if wrong
 				}
@@ -570,6 +569,12 @@ function game_detail() {
                 if (empty($new)) {
 		// offline
 		echo 'offline<br>';
+		$du = shell_exec('du -s '.$server_data['location']); // get size of game
+		list($size, $location) = explode(" ", $du); // drop to variables
+		$server_data['cpu'] = '';
+	    $server_data['size'] = formatBytes($size*1024,2);
+		$server_data['mem'] = '';
+		
 	}
                 print_r($server_data);
                 //echo $new;
@@ -583,7 +588,7 @@ function game_detail() {
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 	echo 'du - '.$du.'<br>';
-	//echo 'temp back '.print_r($temp,true).'<br>';
+	
 	list($size, $location) = explode(" ", $du); // drop to variables
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
@@ -591,8 +596,9 @@ function game_detail() {
 	$server_data['size'] = formatBytes($size*1024,2);
 	$return[$server_data['host_name']] = $server_data;
 	print_r($return);
-	return $return;
+	
 	}
+	return $return;
 }
 	else{	
 	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d'));
