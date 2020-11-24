@@ -580,7 +580,7 @@ function game_detail() {
 	}
                 echo 'new - '.$new.'<br>';
                 $tmp = explode(' ',$new);
-	
+	echo 'tmp - '.print_r($tmp,true).'<br>';
 	if (!empty($tmp[0])) {
 		echo 'not empty triggered';
 	$pid = $tmp[0];
