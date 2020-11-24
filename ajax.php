@@ -562,6 +562,7 @@ function game_detail() {
 		           echo $ip.' - '.$server_data['host'].'<br>'; 
                 if ($ip <> trim($server_data['host'])) {
 					echo 'wrong call guv !<br>';
+					print_r ($server_data);
 					exit;
 					// kill if wrong
 				}
