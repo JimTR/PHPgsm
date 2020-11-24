@@ -566,7 +566,7 @@ function game_detail() {
 					exit;
 					// kill if wrong
 				}
-                $new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
+                //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 print_r($server_data);
                 //echo $new;
                 $tmp = explode(' ',$new);
