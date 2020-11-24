@@ -555,9 +555,7 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
-		//echo 'filter set ('.$ip.' - not this server) after debug exit on this<br>';
-		//select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "fofserver2"
-		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "'.$cmds['filter'].'"';
+		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 echo $sql.'<br>';
 		 $server_data = reset($db->get_results($sql));
 		            
