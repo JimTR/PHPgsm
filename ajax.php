@@ -578,11 +578,11 @@ function game_detail() {
 		$server_data['mem'] = '';
 		
 	}
-                
-                //echo $new;
+                echo 'new - '.$new.'<br>';
                 $tmp = explode(' ',$new);
 	
 	if (!empty($tmp[0])) {
+		echo 'not empty triggered';
 	$pid = $tmp[0];
 	$count = count($tmp);
 	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
