@@ -570,6 +570,7 @@ function game_detail() {
 		// offline
 		echo 'offline<br>';
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
+		echo 'du (offline) - '.$du.'<br>';
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes($size*1024,2);
