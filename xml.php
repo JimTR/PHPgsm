@@ -64,27 +64,10 @@ foreach ($res as $data) {
 		//$update = xmlResponse($data['app_id'],$results[$data['host_name']]['version']); // add version ctl
 		
 	}
-	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
-	$new = trim(file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name']));
-	// add new ajax call !
+		// add new ajax call !
 	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name']);
 	 $game_detail = json_decode(stripslashes($temp),true);
-	 //echo print_r($game_detail,true);
-	 //die();
-	/* /echo $data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name'].' -'.$new.'<br>';
-	$tmp = explode(' ',$new);
-	//echo 'PID back - '.print_r($tmp,true).'<br>';
-	if (!empty($tmp[0])) {
-	$pid = $tmp[0];
-	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
-	$temp =  trim(file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid));
-	$temp = array_values(array_filter(explode(' ',$temp)));
-	$count =  count($temp);
-	//echo 'Top Back - '.print_r($temp,true).'<br>';
-}
-     //print_r($tmp);
-     //die();
-     */ 
+	 
 	$track = $xml->addChild($xmlserver);
 	$track->addChild('uid',$data['uid']);
     $track->addChild('name',$data['host_name']);
