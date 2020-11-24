@@ -556,8 +556,7 @@ function game_detail() {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
-		 echo $sql.'<br>';
-		 
+		 		 
 		 $server_data = reset($db->get_results($sql));
 		           echo $ip.' - '.$server_data['host'].'<br>'; 
                 if ($ip <> trim($server_data['host'])) {
@@ -568,16 +567,15 @@ function game_detail() {
                 $new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 if (empty($new)) {
 		// offline
-		echo 'offline<br>';
+		
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
-		echo 'du (offline) - '.$du.'<br>';
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes($size*1024,2);
 		$server_data['mem'] = '';
 		
 	}
-                print_r($server_data);
+                
                 //echo $new;
                 $tmp = explode(' ',$new);
 	
