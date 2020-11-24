@@ -550,7 +550,41 @@ function check_update()
 }
 function game_detail() {
 	// get processes
+	global $cmds; // get options 
 	$db = new db();
+	if(isset($cmds['filter'])) {
+		
+		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+		echo 'filter set ('.$ip.' - not this server) after debug exit on this<br>';
+		//select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "fofserver2"
+		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "'.$cmds['filter'].'"';
+		 echo $sql.'<br>';
+                $server_data = reset($db->get_results($sql));
+                $new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
+                //print_r($server_data);
+                //echo $new;
+                $tmp = explode(' ',$new);
+	
+	if (!empty($tmp[0])) {
+	$pid = $tmp[0];
+	$count = count($tmp);
+	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
+	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid));
+	$temp = array_values(array_filter(explode(' ',$temp)));
+	$du = shell_exec('du -s '.$temp['location']); // get size of game
+	echo 'du - '.$du.'<br>';
+	//echo 'temp back '.print_r($temp,true).'<br>';
+	list($size, $location) = explode(" ", $du); // drop to variables
+	$server_data['count'] =  count($temp);
+	$server_data['mem'] = $temp[$server_data['count']-3];
+	$server_data['cpu'] = $temp[$server_data['count']-4];
+	$serverdata['size'] = formatBytes($size*1024,2);
+	$return[$server_data['host_name']] = $server_data;
+	print_r($return);
+	return $return;
+	}
+}
+	else{	
 	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d'));
     $tmp = explode(PHP_EOL,$t);
 	$i=0;
@@ -598,5 +632,6 @@ function game_detail() {
 	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_size'] = formatBytes($tsize*1024,2);
 	return $return;
+}
 }
 ?>
