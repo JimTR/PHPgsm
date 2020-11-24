@@ -566,7 +566,7 @@ function game_detail() {
 				}
                 //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$server_data['host_name'].'.cfg';
-                $new = shell_exec($cmd);
+                $new = trim(shell_exec($cmd));
                 
                 if (empty($new)) {
 		// offline
