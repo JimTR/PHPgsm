@@ -584,7 +584,7 @@ function game_detail() {
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
 	$server_data['cpu'] = $temp[$server_data['count']-4];
-	$serverdata['size'] = formatBytes($size*1024,2);
+	$server_data['size'] = formatBytes($size*1024,2);
 	$return[$server_data['host_name']] = $server_data;
 	print_r($return);
 	return $return;
