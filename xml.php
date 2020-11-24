@@ -66,7 +66,12 @@ foreach ($res as $data) {
 	}
 	//ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep <cfgfile>
 	$new = trim(file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name']));
-	//echo $data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name'].' -'.$new.'<br>';
+	// add new ajax call !
+	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name']);
+	 $game_detail = json_decode(stripslashes($temp),true);
+	 //echo print_r($game_detail,true);
+	 //die();
+	/* /echo $data['url'].':'.$data['bport'].'/ajax.php?action=ps_file&filter='.$data['host_name'].' -'.$new.'<br>';
 	$tmp = explode(' ',$new);
 	//echo 'PID back - '.print_r($tmp,true).'<br>';
 	if (!empty($tmp[0])) {
@@ -79,6 +84,7 @@ foreach ($res as $data) {
 }
      //print_r($tmp);
      //die();
+     */ 
 	$track = $xml->addChild($xmlserver);
 	$track->addChild('uid',$data['uid']);
     $track->addChild('name',$data['host_name']);
@@ -109,9 +115,10 @@ foreach ($res as $data) {
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
     $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
-    $track->addChild('cpu',trim($temp[$count-4]));
-    $track->addChild('mem',trim($temp[$count-3]));
-    $track->addChild('count',$count);
+    $track->addChild('cpu',trim($game_detail[$data['host_name']]['cpu']));
+    $track->addChild('mem',trim($game_detail[$data['host_name']]['mem']));
+    $track->addChild('size',trim($game_detail[$data['host_name']]['size']));
+    //$track->addChild('count',$count);
     $players = $track->addChild('current_players');
     $i=0;
     $player_list = $results[$data['host_name']]['players']; // get the player array
@@ -158,6 +165,16 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
+	if (empty($game_detail)) {
+		//echo 'empty'.PHP_EOL;
+		$game_detail= file_get_contents('https://warmmail.co.uk/ajax.php?action=game_detail&data=true');
+		//$game_detail = json_decode(stripslashes($game_detail),true);
+		}
+	//echo $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true'.' '.print_r($game_detail,true).'<br>';
+	//$cmd =$data['port'].'/ajax.php?action=game_detail&data=true';
+	 //echo 'readfile '. readfile($cmd).'</br>';
+	//echo shell_exec('curl '.$cmd);
+	//file_put_contents('dbug.txt',$game_detail,FILE_APPEND);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
@@ -226,7 +243,9 @@ foreach ($base_servers as $data) {
 		
 	}
 }
+//die();
 }
+//echo 'try '.file_get_contents('https://warmmail.co.uk/ajax.php?action=game_detail&data=true').'</br>';
 //die();
 if (!(isset($cmds['action']))){ 
 XML_print($xml);
