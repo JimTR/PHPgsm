@@ -577,7 +577,7 @@ function game_detail() {
 	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
 	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid));
 	$temp = array_values(array_filter(explode(' ',$temp)));
-	$du = shell_exec('du -s '.$temp['location']); // get size of game
+	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 	echo 'du - '.$du.'<br>';
 	//echo 'temp back '.print_r($temp,true).'<br>';
 	list($size, $location) = explode(" ", $du); // drop to variables
