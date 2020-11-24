@@ -555,11 +555,17 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
-		echo 'filter set ('.$ip.' - not this server) after debug exit on this<br>';
+		//echo 'filter set ('.$ip.' - not this server) after debug exit on this<br>';
 		//select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "fofserver2"
 		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name like "'.$cmds['filter'].'"';
 		 echo $sql.'<br>';
-                $server_data = reset($db->get_results($sql));
+		 $server_data = reset($db->get_results($sql));
+		            
+                if ($ip <> trim($server_data['host'])) {
+					echo 'wrong call guv !<br>';
+					exit;
+					// kill if wrong
+				}
                 $new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 //print_r($server_data);
                 //echo $new;
