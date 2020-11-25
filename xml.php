@@ -71,7 +71,7 @@ foreach ($res as $data) {
 	$track = $xml->addChild($xmlserver);
 	$track->addChild('uid',$data['uid']);
     $track->addChild('name',$data['host_name']);
-    $track->addChild(fname,$data['fname']);
+    $track->addChild('fname',$data['fname']);
     $track->addChild('app_id',$data['app_id']);
     $track->addChild('game_port',$data['port']);
     $track->addChild('source_port',$data['source_port']);
