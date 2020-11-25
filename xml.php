@@ -23,7 +23,7 @@ $sql = 'select base_servers.*, software.* from base_servers left join software o
 $base_servers = $database->get_results($sql); 
 $Gq = array();
 $xml = new SimpleXMLElement('<Servers/>');
-
+$j=array();
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 foreach ($res as $getgames) {
 	// get game data
