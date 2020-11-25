@@ -51,7 +51,7 @@ foreach ($res as $data) {
 	$now = new Datetime();
 	 
 	$date = new DateTime();
-	$date->setTimestamp($data['starttime']);
+	$date->setTimestamp(intval($data['starttime']));
 	
 	$interval = $now->diff($date);
 
