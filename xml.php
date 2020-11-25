@@ -121,8 +121,8 @@ foreach ($res as $data) {
  unset ($update);
  unset ($count); 
  $ipdata = $data['host'];
- $j[$ipdata]['totplayers']=0;
-$j[$ipdata]['slots']=0;
+ //$j[$ipdata]['totplayers']=0;
+//$j[$ipdata]['slots']=0;
  $j[$ipdata]['totplayers']+= $results[$data['host_name']]['gq_numplayers']; 
  if ($online =='Online') {
  $j[$ipdata]['slots']+= $data['max_players'];
