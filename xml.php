@@ -24,6 +24,8 @@ $base_servers = $database->get_results($sql);
 $Gq = array();
 $xml = new SimpleXMLElement('<Servers/>');
 $j=array();
+$j[$ipdata]['totplayers']=0;
+$j[$ipdata]['slots']=0;
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 foreach ($res as $getgames) {
 	// get game data
