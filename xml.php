@@ -151,11 +151,11 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
-	if (empty($game_detail)) {
+	//if (empty($game_detail)) {
 		//echo 'empty'.PHP_EOL;
 		$game_detail= file_get_contents('https://warmmail.co.uk/ajax.php?action=game_detail&data=true');
 		//$game_detail = json_decode(stripslashes($game_detail),true);
-		}
+		//}
 	//echo $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true'.' '.print_r($game_detail,true).'<br>';
 	//$cmd =$data['port'].'/ajax.php?action=game_detail&data=true';
 	 //echo 'readfile '. readfile($cmd).'</br>';
