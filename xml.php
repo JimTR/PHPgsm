@@ -151,17 +151,14 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
-	//if (empty($game_detail)) {
-		//echo 'empty'.PHP_EOL;
-		//$game_detail= file_get_contents('https://warmmail.co.uk/ajax.php?action=game_detail&data=true');
-		//$game_detail = json_decode(stripslashes($game_detail),true);
-		//}
-	//echo $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true'.' '.print_r($game_detail,true).'<br>';
-	//$cmd =$data['port'].'/ajax.php?action=game_detail&data=true';
-	 //echo 'readfile '. readfile($cmd).'</br>';
-	//echo shell_exec('curl '.$cmd);
-	//file_put_contents('dbug.txt',$game_detail,FILE_APPEND);
-	if (empty($j[$cpu_info->local_ip]['slots'])) { $j[$cpu_info->local_ip]['slots']=0;}
+	$player_pc =number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0));
+	if (empty($j[$cpu_info->local_ip]['slots'])) {
+		// nothing running 
+		$j[$cpu_info->local_ip]['slots']=0;
+		$format_slots =0;
+		$player_pc =0;
+		
+		}
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
@@ -221,7 +218,7 @@ foreach ($base_servers as $data) {
     $track->addChild('quota_free',floatval($user_detail['quota_free']));
     $track->addChild('total_players',$j[$cpu_info->local_ip]['totplayers']);
     $track->addChild('total_slots',$j[$cpu_info->local_ip]['slots']);
-    $track->addChild('players_pc',number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0));
+    $track->addChild('players_pc',$player_pc;
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
