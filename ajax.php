@@ -555,6 +555,7 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 		 
 		 $server_data = reset($db->get_results($sql));
@@ -606,6 +607,7 @@ function game_detail() {
 	if(strlen($t) === 0) {
                 
                 $ip = file_get_contents("http://ipecho.net/plain"); // get ip
+                if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
                 $sql = 'select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%"';
                 $server_count = reset($db->get_results($sql));
                 $du = shell_exec('du -s '.dirname($server_count['location']));
@@ -635,10 +637,10 @@ function game_detail() {
 		$result['cpu'] = $top[$count-4];
 		$result['size'] = formatBytes($size*1024,2);
 		$return[$result['host_name']] = $result;
-		$du = shell_exec('du -s '.dirname($result['location']));
-		list ($tsize,$location) = explode(" ",$du);
 		$i++;
 	}	
+	$du = shell_exec('du -s '.dirname($result['location']));
+		list ($tsize,$location) = explode(" ",$du);
 	}
 	// add computed items 
 	$return['general']['live_servers'] = $i;
