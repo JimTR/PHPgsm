@@ -607,8 +607,10 @@ function game_detail() {
 	if(strlen($t) === 0) {
                 
                 $ip = file_get_contents("http://ipecho.net/plain"); // get ip
-                if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-                $sql = 'SET sql_mode = \'\'; select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%"';
+                if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+                $sql =  'SET sql_mode = \'\'';
+                $a= $db->query( 'SET sql_mode = \'\'');  
+                $sql ='select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%"';
                 $server_count = reset($db->get_results($sql));
                 
                 $du = shell_exec('du -s '.dirname($server_count['location']));
