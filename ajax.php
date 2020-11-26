@@ -608,8 +608,9 @@ function game_detail() {
                 
                 $ip = file_get_contents("http://ipecho.net/plain"); // get ip
                 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-                $sql = 'select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%" GROUP BY servers.id';
+                $sql = 'SET sql_mode = \'\'; select  servers.location,count(*) as total from servers where servers.host like "'.substr($ip,0,strlen($ip)-1).'%"';
                 $server_count = reset($db->get_results($sql));
+                
                 $du = shell_exec('du -s '.dirname($server_count['location']));
                 list ($tsize,$location) = explode(" ",$du);
         }
@@ -640,7 +641,7 @@ function game_detail() {
 		$i++;
 	}	
 	$du = shell_exec('du -s '.dirname($result['location']));
-		list ($tsize,$location) = explode(" ",$du);
+	list ($tsize,$location) = explode(" ",$du);
 	}
 	// add computed items 
 	$return['general']['live_servers'] = $i;
