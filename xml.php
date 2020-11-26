@@ -161,6 +161,7 @@ foreach ($base_servers as $data) {
 	 //echo 'readfile '. readfile($cmd).'</br>';
 	//echo shell_exec('curl '.$cmd);
 	//file_put_contents('dbug.txt',$game_detail,FILE_APPEND);
+	if (empty($j[$cpu_info->local_ip]['slots'])) { $j[$cpu_info->local_ip]['slots']=0;}
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
