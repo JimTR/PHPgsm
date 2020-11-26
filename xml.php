@@ -151,7 +151,7 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
-	$player_pc =number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0));
+	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
 	if (empty($j[$cpu_info->local_ip]['slots'])) {
 		// nothing running 
 		$j[$cpu_info->local_ip]['slots']=0;
@@ -218,7 +218,7 @@ foreach ($base_servers as $data) {
     $track->addChild('quota_free',floatval($user_detail['quota_free']));
     $track->addChild('total_players',$j[$cpu_info->local_ip]['totplayers']);
     $track->addChild('total_slots',$j[$cpu_info->local_ip]['slots']);
-    $track->addChild('players_pc',$player_pc;
+    $track->addChild('players_pc',$player_pc);
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
