@@ -11,7 +11,7 @@ if (!empty($_POST)) {
  else {
 	 $cmds = $_GET;
  }
-
+if (validate($cmds)===false) {die();}
 if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
@@ -88,7 +88,7 @@ foreach ($res as $data) {
     $track->addChild('engine',$data['type']);
     $track->addChild('enabled',$data['enabled']);
     $track->addChild('startcmd',$data['startcmd']);
-    $track->addChild('starttime',date('g:ia \o\n l jS F Y \(e\)', $data['starttime']));
+    $track->addChild('starttime',date('g:ia \o\n l jS F Y \(e\)', floatval($data['starttime'])));
     $track->addChild('online',$online);
     $track->addChild('defaultmap',$data['default_map']);
     $track->addChild('currentmap',$results[$data['host_name']]['gq_mapname']);
