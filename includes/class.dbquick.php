@@ -1,4 +1,4 @@
-_<?php
+<?php
 /*------------------------------------------------------------------------------
 ** File:        class.db.php
 ** Class:       Simply MySQLi
@@ -407,7 +407,7 @@ class db
         {
            // $r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
           // $r = mysqli_fetch_array( $row );
-	 $r = mysqli_fetch_assoc( $row );
+	        $r = mysqli_fetch_assoc( $row );
             mysqli_free_result( $row );
              return $r;   
             //die (print_r($r));
