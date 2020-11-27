@@ -11,7 +11,7 @@ if (!empty($_POST)) {
  else {
 	 $cmds = $_GET;
  }
-if (validate($cmds)===false) {die();}
+//if (validate($cmds)===false) {die();}
 if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
@@ -66,6 +66,14 @@ foreach ($res as $data) {
 		
 	}
 		// add new ajax call !
+		$ipdata = $data['host'];
+ //$j[$ipdata]['totplayers']=0;
+//$j[$ipdata]['slots']=0;
+		if (!isset($j[$ipdata]['totplayers'])) {
+			$j[$ipdata]['totplayers']=0;
+			$j[$ipdata]['slots']=0;
+		}
+			
 	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name']);
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
