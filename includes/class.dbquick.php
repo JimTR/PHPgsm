@@ -1,4 +1,4 @@
-<?php
+_<?php
 /*------------------------------------------------------------------------------
 ** File:        class.db.php
 ** Class:       Simply MySQLi
@@ -66,13 +66,13 @@ class db
         $message .= '<p>Query: '. htmlentities( $query ).'<br />';
         $message .= 'Error: ' . $error;
         $message .= '</p>';
-        $message .='<p> The above error was generated in the script '.$_SERVER['SCRIPT_NAME'].'<br> from IP address '.$_SERVER['REMOTE_ADDR'];
+       // $message .='<p> The above error was generated in the script '.$_SERVER['SCRIPT_NAME'].'<br> from IP address '.$_SERVER['REMOTE_ADDR'];
          foreach($_REQUEST as $key=>$val) 
   { 
 	  // loop the request array
 	  $request .= 'Key = '.$key.' Value  = '.$val.'<br>';
   }
-        $message .= '<br>with a request string of '.$_SERVER['QUERY_STRING'].'</p>';
+        //$message .= '<br>with a request string of '.$_SERVER['QUERY_STRING'].'</p>';
         $message .= $request;
 
         if( defined( 'SEND_ERRORS_TO' ) )
@@ -80,7 +80,7 @@ class db
             $headers  = 'MIME-Version: 1.0' . "\r\n";
             $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
             $headers .= 'To: Admin <'.SEND_ERRORS_TO.'>' . "\r\n";
-            $headers .= 'From: Merlin <system@'.$_SERVER['SERVER_NAME'].'>' . "\r\n";
+           // $headers .= 'From: Merlin <system@'.$_SERVER['SERVER_NAME'].'>' . "\r\n";
 
             //mail( SEND_ERRORS_TO, 'Database Error', $message, $headers );   
         }
@@ -405,10 +405,10 @@ class db
         }
         else
         {
-            //$r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
-             //$r = mysqli_fetch_array( $row );
-	  $r = mysqli_fetch_assoc( $row );
-            mysqli_free_result( $query );
+           // $r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
+          // $r = mysqli_fetch_array( $row );
+	 $r = mysqli_fetch_assoc( $row );
+            mysqli_free_result( $row );
              return $r;   
             //die (print_r($r));
         }
