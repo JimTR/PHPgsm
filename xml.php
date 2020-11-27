@@ -2,6 +2,7 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
+error_reporting( -1 );
 include 'includes/master.inc.php';
 include 'functions.php';
 
@@ -59,6 +60,8 @@ foreach ($res as $data) {
     $rt = $interval->format('%a days %h hours %I mins %S Seconds');
 	if (empty($results[$data['host_name']]['gq_online'])) {
 		$online = 'Offline';
+		$results[$data['host_name']]['secure']=0;
+		$results[$data['host_name']]['num_bots']=0;
 	}
 	else {
 		$online = 'Online';
@@ -106,10 +109,18 @@ foreach ($res as $data) {
     $track->addChild('bots', $results[$data['host_name']]['num_bots']);
     $track->addChild('update_msg',$update);
     $track->addChild('uds',$updatei);
-    $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',$data['server_update']).')');
+    $track->addChild('version',$data['buildid'].' (last updated '.date('l jS F Y \a\t g:ia',floatval($data['server_update'])).')');
+    if (isset($game_detail[$data['host_name']]['cpu'])) {
     $track->addChild('cpu',trim($game_detail[$data['host_name']]['cpu']));
     $track->addChild('mem',trim($game_detail[$data['host_name']]['mem']));
     $track->addChild('size',trim($game_detail[$data['host_name']]['size']));
+}
+else {
+	//
+	$track->addChild('cpu',0);
+    $track->addChild('mem',0);
+    $track->addChild('size',0);
+}
     //$track->addChild('count',$count);
     $players = $track->addChild('current_players');
     $i=0;
@@ -159,7 +170,12 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
+	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
+}
+else {
+	$player_pc;
+}
 	if (empty($j[$cpu_info->local_ip]['slots'])) {
 		// nothing running 
 		$j[$cpu_info->local_ip]['slots']=0;

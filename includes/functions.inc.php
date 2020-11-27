@@ -64,7 +64,7 @@ global $database;
     // Computes the *full* URL of the current page (protocol, server, path, query parameters, etc)
     function full_url()
     {
-        $s = empty($_SERVER['HTTPS']) ? '' : ($_SERVER['HTTPS'] == 'on') ? 's' : '';
+        //$s = empty($_SERVER['HTTPS']) ? '' : ($_SERVER['HTTPS'] == 'on') ? 's' : '';
         $protocol = substr(strtolower($_SERVER['SERVER_PROTOCOL']), 0, strpos(strtolower($_SERVER['SERVER_PROTOCOL']), '/')) . $s;
         $port = ($_SERVER['SERVER_PORT'] == '80') ? '' : (":".$_SERVER['SERVER_PORT']);
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . $port . $_SERVER['REQUEST_URI'];
@@ -431,7 +431,7 @@ global $database;
     function fix_slashes($arr = '')
     {
         if(is_null($arr) || $arr == '') return null;
-        if(!get_magic_quotes_gpc()) return $arr;
+       // if(!get_magic_quotes_gpc()) return $arr;
         return is_array($arr) ? array_map('fix_slashes', $arr) : stripslashes($arr);
     }
 

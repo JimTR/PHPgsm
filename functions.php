@@ -64,7 +64,7 @@ function is_cli()
     {
         return true;
     }
-    if ( php_sapi_name() === 'cli' )
+    if ( php_sapi_name() == 'cli' )
     {
         return true;
     }
@@ -1112,5 +1112,15 @@ function refactor_remote($array) {
 		}
 		return $nos;
 //print_r($nos);
+}
+function validate($valid) {
+	//this will expand over time
+	$ip = $_SERVER['SERVER_ADDR'];
+	$key = md5( ip2long($ip));
+	//echo $key;
+	if ($key == $valid['key']) {
+		return true;
+	}
+	return false;
 }
 ?>
