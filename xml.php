@@ -2,19 +2,24 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
-error_reporting( -1 );
+
 include 'includes/master.inc.php';
 include 'functions.php';
 if(is_cli()) {
 	define ('cr',PHP_EOL);
-	echo 'cli'.cr;
+	
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
+	if (isset($cmds['debug'])) {
+		error_reporting( -1 );
+	}
+	else {error_reporting( 1 );}
 	//print_r($cmds);
 	//die('Finished'.cr);
 	// need to do something here
 }
 else{
+	error_reporting( 0 );
 if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
@@ -28,7 +33,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and servers.running = 1 order by servers.host_name';
 //print_r($cmds);
 
 if (isset($cmds['online']) == 'true') {
