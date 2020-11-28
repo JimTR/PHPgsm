@@ -37,7 +37,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_se
 //print_r($cmds);
 
 if (isset($cmds['online']) == 'true') {
-		$sql .= ' and servers.running = 1 order by servers.host_name';
+		//$sql .= ' and servers.running = 1 order by servers.host_name';
 	}
 
 $res = $database->get_results($sql);
