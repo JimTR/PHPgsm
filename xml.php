@@ -33,7 +33,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" and servers.running = 1 order by servers.host_name';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
 //print_r($cmds);
 
 if (isset($cmds['online']) == 'true') {
