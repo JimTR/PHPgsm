@@ -5,13 +5,23 @@
 error_reporting( -1 );
 include 'includes/master.inc.php';
 include 'functions.php';
-
+if(is_cli()) {
+	define ('cr',PHP_EOL);
+	echo 'cli'.cr;
+	$type= $argv;
+	$cmds =convert_to_argv($type,"",true);
+	//print_r($cmds);
+	//die('Finished'.cr);
+	// need to do something here
+}
+else{
 if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
  else {
 	 $cmds = $_GET;
  }
+}
 //if (validate($cmds)===false) {die();}
 if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 if (empty($cmds['type'])) {$cmds['type']='all';}
@@ -19,9 +29,14 @@ require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"';
+//print_r($cmds);
+
+if (isset($cmds['online']) == 'true') {
+		$sql .= ' and servers.running = 1 order by servers.host_name';
+	}
+
 $res = $database->get_results($sql);
-$sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
-$base_servers = $database->get_results($sql); 
+
 $Gq = array();
 $xml = new SimpleXMLElement('<Servers/>');
 $j=array();
@@ -37,7 +52,6 @@ foreach ($res as $getgames) {
  
           $GameQ->addServers($Gq);
           $results = $GameQ->process();
-
 
 $xmlserver="game_server";
 foreach ($res as $data) {
@@ -152,11 +166,8 @@ else {
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
-//$mem_info = get_mem_info(); //theses need to be the server in question
-//$disk_info = get_disk_info();
-//$up_time = get_boot_time();
-//$cpu_info = get_cpu_info();
-
+$sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
+$base_servers = $database->get_results($sql); 
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
@@ -242,7 +253,9 @@ else {
     $track->addChild('quota_free',floatval($user_detail['quota_free']));
     $track->addChild('total_players',$j[$cpu_info->local_ip]['totplayers']);
     $track->addChild('total_slots',$j[$cpu_info->local_ip]['slots']);
+    if(isset($player_pc)) {
     $track->addChild('players_pc',$player_pc);
+}
     if (isset($disk_nfo['home_filesystem'])) {
 		// diff
 		$track->addChild('home_filesystyem',$disk_nfo['home_filesystem']);
@@ -262,7 +275,9 @@ else {
 	XML_array($xml);
 }
 function XML_print($xml) {
+	if(!is_cli()) {
 	Header('Content-type: text/xml');
+}
 	//header('Access-Control-Allow-Origin: *');
 	print($xml->asXML());
 }
