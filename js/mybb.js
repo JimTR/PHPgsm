@@ -92,11 +92,7 @@ jQuery(document).ready(function(){
     
     updateClock();
     setInterval('updateClock()', 1000);
-    //fetchboot();
-    //fetchload();
-    fetchgames();
-    fetchservers();	
-	setInterval('fetchgames()', 60000);
+   
 });
 
 function updateClock ()
@@ -128,21 +124,8 @@ function updateClock ()
          
  }
 
-function fetchgames(){
- $.ajax({
- url: 'ajax.php?action=rgames',
-  type: 'post',
-  success: function(data){
-   // Perform operation on return value
-   //alert(data);
-   $("#rgames").html(data);
-  },
-  complete:function(data){
-   //setTimeout(fetchgames,13000);
-  }
- });
-}
-function fetchservers(){
+
+function fetchservers(url){
  $.ajax({
  url: 'https://noideersoftware.co.uk:7862/xml.php',
   type: 'post',
@@ -236,7 +219,7 @@ function fetchservers(){
      $("#op_pb"+fname).attr('aria-valuenow',($(this).find('total_players').text()));
      $("#op_pb"+fname).attr('aria-valuemax',($(this).find('total_slots').text()));
      $("#op_pb"+fname).css('width',pc+'%');
-     console.log (fname +' '+$(this).find('total_slots').text());
+     //console.log (fname +' '+$(this).find('total_slots').text());
     }); 
 $("div").removeClass("active");
 $("div").removeClass("progress-striped");
@@ -247,6 +230,7 @@ $("div").removeClass("progress-striped");
     totgames=0;
     activegames=0;   
     players = 0 ;
+   
 $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text(); //element name important
 	 var mplayers = $(this).find('maxplayers').text();
@@ -272,8 +256,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#us"+fname).html($(this).find('update_msg').text());
 	 $("#sv"+fname).html($(this).find('version').text());
 	 $("#lg"+fname).attr("src",$(this).find('logo').text());
-	 $("#gdate"+fname).html($(this).find('starttime').text()); //front page
-	 $("#plogo"+fname).attr("src",$(this).find('logo').text()); //front page
+	
 	 $("#status"+fname).attr("src","img/offline1.png"); // set to not sure
 	 $('#status'+fname).prop('title', 'Update Required');
 	 var rt = $(this).find('rt').text();
@@ -281,7 +264,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var tp = players+"/"+mplayers;
 	 //console.log(fname+' '+players+'/'+mplayers);
 	 //console.log (' tp set to '+tp);
-	 $("#gol"+fname).html(tp);
+	 
 	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
@@ -316,9 +299,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#sn"+fname).html(hn);
 	     $("#cm"+fname).html(cmap);
 	     $("#pol1"+fname).html(tp);
-	     $("#gol"+fname).html(tp);
-	     $("#cmap"+fname).html(cmap); //front page
-	    
+	     
+	        
 	  
 	     var sid = hn+" ("+$(this).find('ip').text()+")";
 	     $("#sid"+fname).html(sid);
@@ -333,10 +315,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 		 //btn-primary
 		 //$('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
 		    //$('#'+fname+'qbutton').;  
-		    $('#op1'+fname).css('cursor','pointer');
-		    $('#op1'+fname).off().on('click',function() 
-		    {$("#ops"+fname).slideToggle("fast");});
-			activegames=parseInt(activegames)+1;
+		   
+		   
 		   
 	        var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
@@ -344,8 +324,7 @@ $(xml).find('Servers').children('game_server').each(function(){
             var score = corpName.split('|');
             var corpName = $(this).find('ponline').text();
             var time = corpName.split('|');
-            var tp = '<span style="color:green;font-weight: bold;">'+players+"/"+mplayers+'</span>';
-            $("#gol"+fname).html(tp);
+           
 			//console.log("cn "+corpName);
 			$.each(result, function (index, value) {
 				if (time[index]===""){
@@ -373,7 +352,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr><td><i style="color:green;">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
@@ -386,13 +365,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
 	 $("#pol1"+fname).html("");
-	 
-	 $("#ops"+fname).slideUp(); //close player panel
-	 //$('#'+fname+'qbutton').removeClass('btn-danger').addClass('btn-primary');
-	 //$('#op1'+fname).click(false);
-	 $('#op1'+fname).off('click');
-	 $('#op1'+fname).css('cursor','default');
-	
+
  }
  
  y=y+1; 
@@ -449,6 +422,8 @@ $(xml).find('Servers').children('game_server').each(function(){
   },
   complete:function(xml){
      setTimeout(fetchservers,4000);
+     $('#loading').hide();
+     $('#games').show();
   }
  });
 }
@@ -472,21 +447,114 @@ if ( $( "#"+id ).length ) {
         switch (true)
 			{
 	   // do add
-	   case rate <=25 :
+	   case rate <=20 :
 	   break;
-	   case rate <=50 :
+	   case rate <=40 :
+	   $('#'+id).addClass('progress-bar-info');
+	   break;
+	   case rate <=60 :
 	   //console.log('less than 33');
 	   $('#'+id).addClass('progress-bar-success');
 	   break;
-	    case rate <=75 :
+	    case rate <=80 :
 	   //console.log('less than 66');
 	   $('#'+id).addClass('progress-bar-warning');
 	    break;
-	    case rate >75 :
+	    case rate >80 :
 	    $('#'+id).addClass('progress-bar-danger');
 	    break;
 		}
 	
 		}
 	} 
+}
+
+function liveGames(timeout,url) {
+	console.log('Welcome to Live Games '+timeout+' '+url);
+	 $.ajax({
+     url: url,
+   type: 'post',
+  dataType: "xml" ,
+  success: function(xml,status){
+	  console.log ('data back');
+	  
+	  $(xml).find('Servers').children('game_server').each(function(){
+	 var fname = $(this).find('name').text();
+	 var online = $(this).find('online').text();
+	 var players = $(this).find('players').text();
+	 var mplayers = $(this).find('maxplayers').text();
+	 var tp = players+"/"+mplayers;
+   	  $("#host"+fname).html($(this).find('host_name').text());
+	  $("#img"+fname).attr("src", $(this).find('logo').text());
+	  $("#gdate"+fname).html($(this).find('starttime').text());
+	  $("#cmap"+fname).html($(this).find('currentmap').text());
+	  $("#pbody"+fname).empty(); 
+	  if(online == 'Online') {
+		  //console.log(fname+' 0nline');
+		  $('#'+fname).show();
+	  }
+	  else {
+		  //console.log(fname+" offline");
+		  $('#'+fname).hide();
+	  }
+	  if (players >0){
+		  console.log(fname+' players online = '+players);
+		  $('#op1'+fname).css('cursor','pointer'); // set pointer
+		   $('#op1'+fname).off().on('click',function() 
+		    {$("#ops"+fname).slideToggle("fast");}); // set function on
+		  var tp = '<span style="color:green;font-weight: bold;">'+players+"/"+mplayers+'</span>'; //turn colour on
+          $("#gol"+fname).html(tp); //change it
+            var Name = $(this).find('pname').text();
+            var result = Name.split('|');
+            var Name = $(this).find('pscore').text();
+            var score = Name.split('|');
+            var Name = $(this).find('ponline').text();
+            var time =   Name.split('|');
+            			$.each(result, function (index, value) {
+				if (time[index]===""){
+					// this can happen .. ignore it
+				}
+				else if ( typeof time[index] === "undefined") {
+					// throw away tat
+						}
+				else {
+
+					var pscore = parseInt(score[index]);
+					//console.log("pscore = "+pscore);
+					if (pscore < 0) { 
+						 pscore= "&nbsp;&nbsp;&nbsp;"+pscore;
+						} 
+					else
+					if (pscore < 10) {
+						 pscore= "&nbsp;&nbsp;&nbsp;&nbsp;"+pscore;
+						 } 
+					else if (pscore < 100) { 
+						pscore= "&nbsp;&nbsp;"+pscore;
+						}
+						
+					newRowContent='<tr style="font-size:14px;"><td><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					$("#pbody"+fname).append(newRowContent);
+					
+					//console.log(newRowContent);
+	}
+    });
+	  }
+	  else {
+		   $("#gol"+fname).html(tp);
+		   $("#ops"+fname).slideUp(); //close player panel
+		   $('#op1'+fname).off('click');
+			$('#op1'+fname).css('cursor','default');
+	   }
+ });
+  },
+  complete:function(data){
+	
+	 console.log('liveGames complete');
+	 console.log('timeout set to '+timeout); 
+	 $('#loading').hide();
+     returnf = setTimeout(liveGames(timeout,url),timeout);
+ 
+     console.log('return = '+returnf);
+  }
+   });
 }
