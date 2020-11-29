@@ -488,6 +488,7 @@ function liveGames(timeout,url) {
 	  $("#img"+fname).attr("src", $(this).find('logo').text());
 	  $("#gdate"+fname).html($(this).find('starttime').text());
 	  $("#cmap"+fname).html($(this).find('currentmap').text());
+	  $("#joinlink"+fname).attr("href",$(this).find('joinlink').text());
 	  $("#pbody"+fname).empty(); 
 	  if(online == 'Online') {
 		  //console.log(fname+' 0nline');
@@ -532,7 +533,7 @@ function liveGames(timeout,url) {
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr style="font-size:14px;"><td><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td style="padding:1%;"><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
