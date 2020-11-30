@@ -24,6 +24,20 @@
  // localhost d41d8cd98f00b204e9800998ecf8427e
  require_once 'includes/master.inc.php';
  include 'functions.php';
+ f(is_cli()) {
+	define ('cr',PHP_EOL);
+	
+	$type= $argv;
+	$cmds =convert_to_argv($type,"",true);
+	if (isset($cmds['debug'])) {
+		error_reporting( -1 );
+	}
+	else {error_reporting( 1 );}
+	//print_r($cmds);
+	//die('Finished'.cr);
+	// need to do something here
+}
+else {
  define ("CR","<br>");
  if (!empty($_POST)) {
 	 $cmds = $_POST;
@@ -31,6 +45,7 @@
  else {
 	 $cmds = $_GET;
  }
+}
  $cmds = change_value_case($cmds,CASE_LOWER);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
@@ -481,7 +496,7 @@ function exe_lgsm($server,$action,$exe)
 			}
 			} 
 			//print_r($screenList);
-			//echo $disp;
+			
 			break;		
 		}
 		return $disp;
