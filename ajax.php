@@ -21,7 +21,7 @@
  * 
  * required for ajax requests from html version 
  */
- 
+ // localhost d41d8cd98f00b204e9800998ecf8427e
  require_once 'includes/master.inc.php';
  include 'functions.php';
  define ("CR","<br>");
@@ -32,7 +32,7 @@
 	 $cmds = $_GET;
  }
  $cmds = change_value_case($cmds,CASE_LOWER);
-  
+//if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
 //check_update();
@@ -149,7 +149,7 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.4';
+			echo 'Ajax version 1.41';
 			exit;
 	case "allservers":
 			// return servers
@@ -558,8 +558,8 @@ function game_detail() {
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 		 
-		 $server_data = reset($db->get_results($sql));
-		           
+		 $server_data = $db->get_results($sql);
+		  $server_data=reset($server_data);         
                 if ($ip <> trim($server_data['host'])) {
 					echo 'wrong call guv !<br>';
 					exit;
@@ -575,7 +575,7 @@ function game_detail() {
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$server_data['cpu'] = '';
-	    $server_data['size'] = formatBytes($size*1024,2);
+	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
 		$server_data['mem'] = '';
 		
 	}
@@ -594,7 +594,7 @@ function game_detail() {
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
 	$server_data['cpu'] = $temp[$server_data['count']-4];
-	$server_data['size'] = formatBytes($size*1024,2);
+	$server_data['size'] = formatBytes(floatval($size)*1024,2);
 			
 	}
 	$return[$server_data['host_name']] = $server_data;
@@ -638,7 +638,7 @@ function game_detail() {
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
-		$result['size'] = formatBytes($size*1024,2);
+		$result['size'] = formatBytes(floatval($size)*1024,2);
 		$return[$result['host_name']] = $result;
 		$i++;
 	}	
@@ -650,7 +650,7 @@ function game_detail() {
 	$return['general']['total_servers'] = $server_count['total'];
 	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
-	$return['general']['total_size'] = formatBytes($tsize*1024,2);
+	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 	return $return;
 }
 }
