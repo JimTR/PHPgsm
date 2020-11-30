@@ -743,7 +743,7 @@ return $version;
 }
 function display_games() {
 	$database = new db(); // connect to database
-	$sql = 'select * from servers where enabled ="1"'; //select all enabled recorded servers
+	$sql = 'select * from servers where enabled ="1" order by servers.host_name'; //select all enabled recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
    
