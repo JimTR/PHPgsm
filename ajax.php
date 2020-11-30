@@ -153,7 +153,7 @@ switch (strtolower($cmds['action'])) {
 			// get all back
 			$cpu_info=get_cpu_info();
 			$data = display_cpu($cpu_info).'\n';
-			$software = get_software_info();
+			$software = get_software_info($database);
 			$os = lsb();
 			$data .= display_software($os,$software).'\n';
 			$disk_info = get_disk_info();
