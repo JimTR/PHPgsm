@@ -26,6 +26,7 @@
  include 'functions.php';
  if(is_cli()) {
 	define ('cr',PHP_EOL);
+	define ('CR',PHP_EOL);
 	
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
