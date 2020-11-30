@@ -24,7 +24,7 @@
  // localhost d41d8cd98f00b204e9800998ecf8427e
  require_once 'includes/master.inc.php';
  include 'functions.php';
- f(is_cli()) {
+ if(is_cli()) {
 	define ('cr',PHP_EOL);
 	
 	$type= $argv;
