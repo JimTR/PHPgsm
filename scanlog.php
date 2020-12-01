@@ -57,10 +57,12 @@ foreach ($data as $value) {
 		$value=trim($value);
 		//preg_match($r, $value, $t); // get ip
 		preg_match('/(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}/', $value, $t);
-		$ip=$t[0];
-		//print_r($t);
+		if( isset($t[0])) {
+			$ip=$t[0];
+				//print_r($t);
 		preg_match('/U:[0-9]:\d+/', $value, $t); // get steam id
 		$id = trim($t[0]);
+	}
 		if (empty($id)) {
 			preg_match('/STEAM_[0-9]:[0-9]:\d+/', $value, $t);
 			$id = $t[0];
@@ -81,8 +83,7 @@ foreach ($data as $value) {
 		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
 		$la[$username]['time']=$timestring;
 		$la[$username]['id'] = $id;
-		
-		$la[$username]['id2']=$id2;
+		if (isset($id2)) {	$la[$username]['id2']=$id2;}
 		//print_r($la);
 	}
 }
