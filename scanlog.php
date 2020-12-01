@@ -26,7 +26,7 @@
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
  */
 $key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
-//echo PHP_EOL;
+echo PHP_EOL;
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
