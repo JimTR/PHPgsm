@@ -45,7 +45,7 @@ $x = strpos($file,'-');
 $server = substr($file,0,$x);
 $x = strrpos($server,'/');
 $server = substr($server,$x);
-echo $x.PHP_EOL;
+//echo $x.PHP_EOL;
 echo 'Processing server '.$server.PHP_EOL;
 $log = file_get_contents($file);
 $data = explode(PHP_EOL,$log);
