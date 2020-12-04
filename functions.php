@@ -193,9 +193,7 @@ function get_mem_info() {
 	}
 
 	$maxlen = max(array_map('strlen', $mem_info));
-	//echo "max len ".$maxlen.CR;
-	//echo 'meminfo'.CR;
-	//echo print_r( $mem_info,true).CR;
+	
 	$maxlen = 14;
 	foreach ($mem_info as $key=>&$value){
 		//check len
@@ -234,7 +232,7 @@ function get_cpu_info() {
 		$cpu_info['boot_time'] = get_boot_time();
 		$local = shell_exec('hostname -I');
 		//echo $local.CR;		
-		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
+		$cpu_info['local_ip'] = shell_exec('hostname I');//file_get_contents("http://ipecho.net/plain");
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
