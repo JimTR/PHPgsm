@@ -21,14 +21,14 @@ if(is_cli()) {
 else{
 	error_reporting( 0 );
 if (!empty($_POST)) {
-	$type = $_POST;
+	$cmds = $_POST;
 	 //$cmds = $_POST;
  }
  else {
-	 //$cmds = $_GET;
-	 $type = $_POST;
+	 $cmds = $_GET;
+	 //$cmds = $_POST;
  }
- $cmds =convert_to_argv($type,"",true);
+
  //if (validate($cmds)===false) {die();}
 }
 
@@ -38,7 +38,6 @@ require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
-//print_r($cmds);
 
 if (isset($cmds['online']) == 'true') {
 		//$sql .= ' and servers.running = 1 order by servers.host_name';
@@ -51,6 +50,7 @@ $xml = new SimpleXMLElement('<Servers/>');
 $j=array();
 
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
+	//echo 'doing '.$cmds['type'];
 foreach ($res as $getgames) {
 	// get game data
 	     $key = $getgames['host_name'];
@@ -175,6 +175,7 @@ else {
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
+	
 $sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
 $xmlserver = "base_server";
