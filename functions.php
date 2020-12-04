@@ -232,7 +232,7 @@ function get_cpu_info() {
 		$cpu_info['boot_time'] = get_boot_time();
 		$local = shell_exec('hostname -I');
 		//echo $local.CR;		
-		$cpu_info['local_ip'] = shell_exec('hostname I');//file_get_contents("http://ipecho.net/plain");
+		$cpu_info['local_ip'] = shell_exec('hostname -I');//file_get_contents("http://ipecho.net/plain");
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
