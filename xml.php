@@ -21,14 +21,18 @@ if(is_cli()) {
 else{
 	error_reporting( 0 );
 if (!empty($_POST)) {
-	 $cmds = $_POST;
+	$type = $_POST;
+	 //$cmds = $_POST;
  }
  else {
-	 $cmds = $_GET;
+	 //$cmds = $_GET;
+	 $type = $_POST;
  }
+ $cmds =convert_to_argv($type,"",true);
+ //if (validate($cmds)===false) {die();}
 }
-//if (validate($cmds)===false) {die();}
-if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
+
+//if(isset($cmds)){$cmds = change_value_case($cmds,CASE_LOWER);}
 if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
@@ -89,7 +93,7 @@ foreach ($res as $data) {
 	}
 		// add new ajax call !
 		$ipdata = $data['host'];
- //$j[$ipdata]['totplayers']=0;
+// $j[$ipdata]['totplayers']=0;
 //$j[$ipdata]['slots']=0;
 		if (!isset($j[$ipdata]['totplayers'])) {
 			$j[$ipdata]['totplayers']=0;
@@ -182,7 +186,11 @@ foreach ($base_servers as $data) {
 	$software = json_decode($temp1);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true');
 	$disk_nfo = json_decode(stripslashes($temp),true);
+	//echo $data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true';
+	
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true');
+	//echo $temp;
+	//die();
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
 	$game_detail = json_decode(stripslashes($temp),true);
@@ -205,7 +213,7 @@ else {
     $track->addChild('name',$data['name']);
     $track->addChild('fname',$data['fname']);
     $track->addChild('distro',$software->os);
-    $track->addChild('ip', $cpu_info->local_ip);
+    $track->addChild('ip', $cpu_info->ips);
     $track->addChild('cpu_model', $cpu_info->model_name);
     $track->addChild('cpu_processors', $cpu_info->processors);
     $track->addChild('cpu_cores',$cpu_info->cpu_cores);
