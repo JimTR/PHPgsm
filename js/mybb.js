@@ -212,12 +212,17 @@ function fetchservers(url){
 		 pc =0;
 		 ts =0 
 		 	 }
+	if (!pc) {
+  // is emtpy
+  pc=0;
+}	 	 
      changeClass('gs_pb'+fname,gs_width);
      changeClass('ud_pb'+fname,($(this).find('quota_pc').text()));
      $("#gs_pb"+fname).css('width',gs_width+'%');
      $("#op_pbs"+fname).html($(this).find('total_players').text()+'/'+ts);
      $("#op_pb"+fname).attr('aria-valuenow',($(this).find('total_players').text()));
      $("#op_pb"+fname).attr('aria-valuemax',($(this).find('total_slots').text()));
+     console.log (fname+' width '+pc);
      $("#op_pb"+fname).css('width',pc+'%');
      //console.log (fname +' '+$(this).find('total_slots').text());
     }); 
@@ -352,7 +357,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr style="font-size:14px;"><td><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td><i>'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
@@ -502,8 +507,9 @@ function liveGames(timeout,url) {
 		  console.log(fname+' players online = '+players);
 		  $('#op1'+fname).css('cursor','pointer'); // set pointer
 		   $('#op1'+fname).off().on('click',function() 
-		    {$("#ops"+fname).slideToggle("fast");}); // set function on
-		  var tp = '<span style="color:green;font-weight: bold;">'+players+"/"+mplayers+'</span>'; //turn colour on
+		  {$("#ops"+fname).slideToggle("fast");}); // set function on
+		  //var tp = '<span class="hw_desc" style="font-weight: bold;">'+players+"/"+mplayers+'</span>'; //turn colour on
+		   $('#gol'+fname).addClass('p_count');
           $("#gol"+fname).html(tp); //change it
             var Name = $(this).find('pname').text();
             var result = Name.split('|');
@@ -533,7 +539,7 @@ function liveGames(timeout,url) {
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr style="font-size:14px;"><td style="padding:1%;"><i style="color:green">'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td style="padding:1%;"><i class="p_name">'+value+'</i></td><td align="left"><span class="p_score">'+pscore+'</span></td><td class="p_time">&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
@@ -541,6 +547,7 @@ function liveGames(timeout,url) {
     });
 	  }
 	  else {
+		  $('#gol'+fname).removeClass('p_count');
 		   $("#gol"+fname).html(tp);
 		   $("#ops"+fname).slideUp(); //close player panel
 		   $('#op1'+fname).off('click');
@@ -553,9 +560,9 @@ function liveGames(timeout,url) {
 	 console.log('liveGames complete');
 	 console.log('timeout set to '+timeout); 
 	 $('#loading').hide();
-     returnf = setTimeout(liveGames(timeout,url),timeout);
+     setTimeout(liveGames(timeout,url),timeout);
  
-     console.log('return = '+returnf);
+     //console.log('return = '+returnf);
   }
    });
 }
