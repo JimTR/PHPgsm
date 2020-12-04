@@ -231,9 +231,9 @@ function get_cpu_info() {
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['boot_time'] = get_boot_time();
 		$local = shell_exec('hostname -I');
-		$local = str_replace(' ', ', ',trim($local));
-		//echo $local.CR;		
-		$cpu_info['local_ip'] = $local;//file_get_contents("http://ipecho.net/plain");
+		//$local = str_replace(' ', ', ',trim($local));
+		//interfaces ! netstat -i  |sed 1,2d
+		$cpu_info['local_ip'] = file_get_contents("http://ipecho.net/plain");
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
