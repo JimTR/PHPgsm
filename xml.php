@@ -211,7 +211,7 @@ else {
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
-    $track->addChild('name',$data['name']);
+    $track->addChild('name',$software->host);
     $track->addChild('fname',$data['fname']);
     $track->addChild('distro',$software->os);
     $track->addChild('ip', $cpu_info->ips);
