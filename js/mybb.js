@@ -92,7 +92,10 @@ jQuery(document).ready(function(){
     
     updateClock();
     setInterval('updateClock()', 1000);
-   
+    jQuery('.tooltips').tooltip();
+
+    //popovers
+    //jQuery('.popovers').popover();
 });
 
 function updateClock ()
@@ -126,17 +129,18 @@ function updateClock ()
 
 
 function fetchservers(url){
+	console.log('Welcome to fetchservers !');
  $.ajax({
  url: 'https://noideersoftware.co.uk:7862/xml.php',
   type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
-   
+   console.log('data back for fetch servers');
     $(xml).find('Servers').children('base_server').each(function(){
 	 var fname = $(this).find('fname').text(); //element name important	
 	
 	 	 var bfname = fname;
-
+	
      $("#boot"+fname).html($(this).find('uptime').text());
      $("#load"+fname).html($(this).find('load').text());
      $("#memtotal"+fname).html($(this).find('memTotal').text());
@@ -189,10 +193,11 @@ function fetchservers(url){
      $("#gs_pbs"+fname).html($(this).find('live_games').text()+'/'+$(this).find('total_games').text());
      $('#gs_pbs'+fname).width($('#gs_pb'+fname).parent().width());
      $('#ud_pbs'+fname).width($('#ud_pb'+fname).parent().width());
-     $("#tmem_pbs"+fname).html('Free ('+($(this).find('memfree').text())+')');
+     console.log('about to do '+fname+' tmem_pbs with '+$(this).find('memfree').text());
      $("#tmem_pb"+fname).css('width',100-parseInt(($(this).find('memfree_pc').text()))+'%');
      $('#tmem_pbs'+fname).width($('#tmem_pb'+fname).parent().width());
-      $("#smem_pbs"+fname).html('Free ('+($(this).find('swapfree').text())+')');
+     $("#tmem_pbs"+fname).html('Free ('+($(this).find('memfree').text())+')');
+     $("#smem_pbs"+fname).html('Free ('+($(this).find('swapfree').text())+')');
      $("#smem_pb"+fname).css('width',100-parseInt(($(this).find('swapfree_pc').text()))+'%');
      $('#smem_pbs'+fname).width($('#smem_pb'+fname).parent().width());
      $('#mem_pbs'+fname).width($('#mem_pb'+fname).parent().width());
@@ -222,6 +227,7 @@ function fetchservers(url){
      $("#op_pbs"+fname).html($(this).find('total_players').text()+'/'+ts);
      $("#op_pb"+fname).attr('aria-valuenow',($(this).find('total_players').text()));
      $("#op_pb"+fname).attr('aria-valuemax',($(this).find('total_slots').text()));
+     changeClass('op_pb'+fname,pc);
      console.log (fname+' width '+pc);
      $("#op_pb"+fname).css('width',pc+'%');
      //console.log (fname +' '+$(this).find('total_slots').text());
@@ -267,8 +273,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var rt = $(this).find('rt').text();
 	 var players = $(this).find('players').text();
 	 var tp = players+"/"+mplayers;
-	 //console.log(fname+' '+players+'/'+mplayers);
-	 //console.log (' tp set to '+tp);
+	 console.log(fname+' '+players+'/'+mplayers);
+	 console.log (' tp set to '+tp);
 	 
 	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
@@ -449,27 +455,9 @@ if ( $( "#"+id ).length ) {
     if (classList[i] !== 'progress-bar') {
           $('#'+id).removeClass(classList[i]);
 	  }
-        switch (true)
-			{
-	   // do add
-	   case rate <=20 :
-	   break;
-	   case rate <=40 :
-	   $('#'+id).addClass('progress-bar-info');
-	   break;
-	   case rate <=60 :
-	   //console.log('less than 33');
-	   $('#'+id).addClass('progress-bar-success');
-	   break;
-	    case rate <=80 :
-	   //console.log('less than 66');
-	   $('#'+id).addClass('progress-bar-warning');
-	    break;
-	    case rate >80 :
-	    $('#'+id).addClass('progress-bar-danger');
-	    break;
-		}
-	
+	 
+	  color = percentToRGB(rate);
+	  $('#'+id).css('background-color',color); 
 		}
 	} 
 }
@@ -504,7 +492,7 @@ function liveGames(timeout,url) {
 		  $('#'+fname).hide();
 	  }
 	  if (players >0){
-		  console.log(fname+' players online = '+players);
+		  //console.log(fname+' players online = '+players);
 		  $('#op1'+fname).css('cursor','pointer'); // set pointer
 		   $('#op1'+fname).off().on('click',function() 
 		  {$("#ops"+fname).slideToggle("fast");}); // set function on
@@ -558,11 +546,32 @@ function liveGames(timeout,url) {
   complete:function(data){
 	
 	 console.log('liveGames complete');
-	 console.log('timeout set to '+timeout); 
+	 //console.log('timeout set to '+timeout); 
 	 $('#loading').hide();
      setTimeout(liveGames(timeout,url),timeout);
  
      //console.log('return = '+returnf);
   }
    });
+}
+
+function percentToRGB(percent) {
+    if (percent === 100) {
+        percent = 99
+    }
+    var r, g, b;
+
+    if (percent < 50) {
+        // green to yellow
+        r = Math.floor(255 * (percent / 50));
+        g = 255;
+
+    } else {
+        // yellow to red
+        r = 255;
+        g = Math.floor(255 * ((50 - percent % 50) / 50));
+    }
+    b = 0;
+
+    return "rgb(" + r + "," + g + "," + b + ")";
 }
