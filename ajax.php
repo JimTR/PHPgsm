@@ -158,17 +158,35 @@ switch (strtolower($cmds['action'])) {
 	case "all":
 			// get all back
 			$cpu_info=get_cpu_info();
-			$data = display_cpu($cpu_info).'\n';
+			
 			$software = get_software_info($database);
 			$os = lsb();
-			$data .= display_software($os,$software).'\n';
+			
 			$disk_info = get_disk_info();
-			$data.= display_disk($disk_info).'\n';
+			
 			$mem_info = get_mem_info();
-			$data .= display_mem($mem_info,True).'\n';
+			
 			$user_info = get_user_info($disk_info);
-			$data .= display_user($user_info);
-			echo $data;
+			$gd =game_detail();
+			
+			if (isset($cmds['data'])) {
+				// json
+				$return['cpu']=$cpu_info;
+				$return['software']=$software;
+				$return['disk_info']=$disk_info;
+				$return['mem_info']=$mem_info;
+				$return['user_info']=$user_info;
+				$return['game_detail']=$gd;
+				print_r($return);
+			}
+			else {
+					$data = display_cpu($cpu_info).'\n';
+					$data .= display_software($os,$software).'\n';
+					$data.= display_disk($disk_info).'\n';
+					$data .= display_mem($mem_info,True).'\n';
+					$data .= display_user($user_info);
+					echo $data;
+				}
 			exit;
 	case "version":
 			echo 'Ajax version 1.43';
