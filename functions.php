@@ -234,6 +234,7 @@ function get_cpu_info() {
 		$local = str_replace(' ', ', ',trim($local));
 		$all_ip =explode(',',$local);
 		//interfaces ! netstat -i  |sed 1,2d
+		// ip addr | grep "^ *inet " checks virtual adaptors
 		$cpu_info['local_ip'] = $all_ip[0];
 		$cpu_info['ips'] = $local;
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
@@ -251,6 +252,7 @@ function get_user_info ($Disk_info) {
 	// return user info as an array
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
+	$user['level'] =check_sudo($user['name']);
 	$q = shell_exec("quota -vs 2> /dev/null");
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
@@ -336,13 +338,24 @@ function get_software_info($database) {
 	 */
 	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	  $hctrl = shell_exec('hostnamectl');
+	  $hctrl = explode(PHP_EOL,trim($hctrl));
+	  foreach ($hctrl as $temp) {
+		  // make new array
+		  $x = strpos($temp,':');
+		  $key = strtolower(str_replace(' ','_',trim(substr($temp,0,$x))));
+		  $value = trim(substr($temp,$x+1));
+		  //echo $key.'=>'.$value.CR;
+		  $newarr[$key]=$value;
+	  }
+	  $hctrl =$newarr; 
 	  $apt=false;
 	 $php_version = explode('.', PHP_VERSION);
 	 $php  = $php_version[0].'.'.$php_version[1];
 	 $lsb = lsb();
 	 $software['k_ver'] = php_uname('r');
 	 $software['host'] =php_uname('n');
-	 $software['os'] = $lsb ['PRETTY_NAME'];  
+	 $software['os'] = $hctrl['operating_system'];  
 	switch ($apt) {
 		case true:
 		// this is slower ! but cleaner and allows to show if upgrades are available 
