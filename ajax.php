@@ -688,6 +688,7 @@ function game_detail() {
 		$cpu += $top[$count-4]; // cpu %
 		$du = shell_exec('du -s '.$result['location']); // get size of game
 		$du_a = explode(" ",$du); 
+		print_r($du_a);
 		list($size, $location) = $du_a; // drop to variables
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
