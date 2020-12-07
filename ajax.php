@@ -27,7 +27,7 @@
  if(is_cli()) {
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	
+	$sec = true;
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
 	if (isset($cmds['debug'])) {
@@ -46,8 +46,11 @@ else {
  else {
 	 $cmds = $_GET;
  }
+ $logline  = date("d-m-Y H:i:s").' '.$_SERVER['REMOTE_ADDR'].' accessed ajax with '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ file_put_contents('ajax.log',$logline,FILE_APPEND);
+  $cmds = change_value_case($cmds,CASE_LOWER);
 }
- $cmds = change_value_case($cmds,CASE_LOWER);
+
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
