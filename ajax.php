@@ -601,6 +601,7 @@ function game_detail() {
 	$db = new db();
 	$mem =0;
 	$cpu = 0;
+	$r=1;
 	if(isset($cmds['filter'])) {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
@@ -687,8 +688,8 @@ function game_detail() {
 		$mem += $top[$count-3]; // memory %
 		$cpu += $top[$count-4]; // cpu %
 		$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
-		//$du = str_replace
-		$du_a = explode(" ",$du); 
+		$du = str_replace(' ',PHP_EOL,$du,$r);
+		$du_a = explode(PHP_EOL,$du); 
 		print_r($du_a);
 		list($size, $location) = $du_a; // drop to variables
 		$result['mem'] = $top[$count-3];
