@@ -599,6 +599,8 @@ function game_detail() {
 	// get processes
 	global $cmds; // get options 
 	$db = new db();
+	$mem =0;
+	$cpu = 0;
 	if(isset($cmds['filter'])) {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
@@ -675,7 +677,7 @@ function game_detail() {
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
-		echo $sql.cr;
+		//echo $sql.cr;
 		$result =$db->get_results($sql); // get data back
 		$result=reset($result);
 		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
