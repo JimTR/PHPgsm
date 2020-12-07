@@ -43,6 +43,7 @@
 else {
  define ("CR","<br>");
  define ('cr',"<br>");
+ error_reporting( -1 );
  if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
@@ -176,7 +177,13 @@ switch (strtolower($cmds['action'])) {
 				$return['disk_info']=$disk_info;
 				$return['mem_info']=$mem_info;
 				$return['user_info']=$user_info;
-				$return['game_detail']=$gd;
+				//$return['game_detail']=$gd;
+				$xml = new SimpleXMLElement('<servers/>');
+				array_to_xml($return,$xml);
+				//print $xml->asXML();
+				//array_walk_recursive($return, array ($xml, 'addChild'));
+				//header('Content-type: text/xml');
+				//print $xml->asXML();
 				print_r($return);
 			}
 			else {
@@ -694,4 +701,19 @@ function game_detail() {
 	return $return;
 }
 }
+function array_to_xml( $data, &$xml_data ) {
+    foreach( $data as $key => $value ) {
+        if( is_array($value) ) {
+            if( is_numeric($key) ){
+                $key = 'item'.$key; //dealing with <0/>..<n/> issues
+            }
+            $subnode = $xml_data->addChild($key);
+            array_to_xml($value, $subnode);
+        } else {
+            $xml_data->addChild("$key",htmlspecialchars("$value"));
+        }
+     }
+}
+
+
 ?>
