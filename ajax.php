@@ -685,7 +685,8 @@ function game_detail() {
 		$server_count=reset($server_count);
 		$count = count($top); // how many records  ?
 		$mem += $top[$count-3]; // memory %
-		$cpu += $top[$count-4]; // cpu % 
+		$cpu += $top[$count-4]; // cpu %
+		echo $result['location'].cr; 
 		$du = shell_exec('du -s '.$result['location']); // get size of game
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$result['mem'] = $top[$count-3];
