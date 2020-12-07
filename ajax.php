@@ -30,6 +30,8 @@
 	$sec = true;
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
+	$logline  = date("d-m-Y H:i:s").' local accessed ajax with '.PHP_EOL;
+	file_put_contents('ajax.log',$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
 	}
