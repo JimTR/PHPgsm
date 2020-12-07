@@ -689,8 +689,6 @@ function game_detail() {
 		$cpu += $top[$count-4]; // cpu %
 		$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 		$size = str_replace($result['location'],'',$du);
-		$du_a = explode(PHP_EOL,$du); 
-		 echo 'the array '.print_r($du_a,true).cr;
 		//list($size, $location) = $du_a; // drop to variables
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
@@ -699,7 +697,8 @@ function game_detail() {
 		$i++;
 	}	
 	$du = shell_exec('du -s '.dirname($result['location']));
-	list ($tsize,$location) = explode(" ",$du);
+	//list ($tsize,$location) = explode(" ",$du);
+	$tsize = str_replace(dirname($result['location']),'',$du);
 	}
 	// add computed items 
 	$return['general']['live_servers'] = $i;
