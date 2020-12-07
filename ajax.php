@@ -688,10 +688,10 @@ function game_detail() {
 		$mem += $top[$count-3]; // memory %
 		$cpu += $top[$count-4]; // cpu %
 		$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
-		$du = str_replace('   ',PHP_EOL,$du,$r);
+		$size = str_replace($result['location'],'',$du);
 		$du_a = explode(PHP_EOL,$du); 
 		 echo 'the array '.print_r($du_a,true).cr;
-		list($size, $location) = $du_a; // drop to variables
+		//list($size, $location) = $du_a; // drop to variables
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
 		$result['size'] = formatBytes(floatval($size)*1024,2);
