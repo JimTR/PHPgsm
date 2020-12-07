@@ -30,7 +30,7 @@
 	$sec = true;
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
-	$logline  = date("d-m-Y H:i:s").' local accessed ajax with '.PHP_EOL;
+	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).PHP_EOL;
 	file_put_contents('ajax.log',$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
@@ -42,13 +42,14 @@
 }
 else {
  define ("CR","<br>");
+ define ('cr',"<br>");
  if (!empty($_POST)) {
 	 $cmds = $_POST;
  }
  else {
 	 $cmds = $_GET;
  }
- $logline  = date("d-m-Y H:i:s").' '.$_SERVER['REMOTE_ADDR'].' accessed ajax with '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ $logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> accessed ajax with '.$_SERVER['QUERY_STRING'].PHP_EOL;
  file_put_contents('ajax.log',$logline,FILE_APPEND);
   $cmds = change_value_case($cmds,CASE_LOWER);
 }
@@ -170,7 +171,7 @@ switch (strtolower($cmds['action'])) {
 			echo $data;
 			exit;
 	case "version":
-			echo 'Ajax version 1.41';
+			echo 'Ajax version 1.43';
 			exit;
 	case "allservers":
 			// return servers
