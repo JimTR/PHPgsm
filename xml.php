@@ -21,12 +21,12 @@ if(is_cli()) {
 else{
 	error_reporting( 0 );
 if (!empty($_POST)) {
-	$cmds = $_POST;
-	 //$cmds = $_POST;
+	$cmds =convert_to_argv($_POST,"",true);
  }
  else {
-	 $cmds = $_GET;
-	 //$cmds = $_POST;
+	 
+	 $cmds =convert_to_argv($_GET,"",true);
+	
  }
 
  //if (validate($cmds)===false) {die();}
@@ -199,7 +199,7 @@ foreach ($base_servers as $data) {
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
 }
 else {
-	$player_pc;
+	$player_pc=0;
 }
 	if (empty($j[$cpu_info->local_ip]['slots'])) {
 		// nothing running 
