@@ -124,14 +124,14 @@ function updateClock ()
      
     $("#clock").html(currentTimeString);
     // $('#clock').css('color','red');
-         
- }
+    console.log(currentTime.getTime());  
+     }
 
 
 function fetchservers(url){
 	console.log('Welcome to fetchservers !');
  $.ajax({
- url: 'https://noideersoftware.co.uk:7862/xml.php',
+ url: url,
   type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
@@ -432,9 +432,10 @@ $(xml).find('Servers').children('game_server').each(function(){
   
   },
   complete:function(xml){
-     setTimeout(fetchservers,4000);
+     setTimeout(fetchservers(url),4000);
      $('#loading').hide();
      $('#games').show();
+     console.log('stamp = '+event.timeStamp);
   }
  });
 }
@@ -496,8 +497,7 @@ function liveGames(timeout,url) {
 		  $('#op1'+fname).css('cursor','pointer'); // set pointer
 		   $('#op1'+fname).off().on('click',function() 
 		  {$("#ops"+fname).slideToggle("fast");}); // set function on
-		  //var tp = '<span class="hw_desc" style="font-weight: bold;">'+players+"/"+mplayers+'</span>'; //turn colour on
-		   $('#gol'+fname).addClass('p_count');
+		  $('#gol'+fname).addClass('p_count');
           $("#gol"+fname).html(tp); //change it
             var Name = $(this).find('pname').text();
             var result = Name.split('|');
@@ -536,10 +536,10 @@ function liveGames(timeout,url) {
 	  }
 	  else {
 		  $('#gol'+fname).removeClass('p_count');
-		   $("#gol"+fname).html(tp);
-		   $("#ops"+fname).slideUp(); //close player panel
-		   $('#op1'+fname).off('click');
-			$('#op1'+fname).css('cursor','default');
+		  $("#gol"+fname).html(tp);
+		  $("#ops"+fname).slideUp(); //close player panel
+		  $('#op1'+fname).off('click');
+		  $('#op1'+fname).css('cursor','default');
 	   }
  });
   },
