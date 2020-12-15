@@ -61,7 +61,7 @@ else {
  * check to see what we have back in normal use
  */
  if (isset($_SERVER['REMOTE_ADDR'])) {
- //$logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
+ $logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
  //$logline .= ' command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
 }
 else {
@@ -73,7 +73,8 @@ else {
 	 $logline .= date("d-m-Y H:i:s").' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
-		  $logline .= ' Key Valid '.PHP_EOL;
+		  //$logline .= ' Key Valid '.PHP_EOL;
+		  // now check for the next level
 	  }
 	  else {
 		  // fail out
@@ -83,6 +84,7 @@ else {
  }
  else {
 	 $logline .= date("d-m-Y H:i:s").' Get Key Not Found failed first check  this should now exit'.PHP_EOL;
+	 exit;
  }
  //line one done
 	 file_put_contents('ajax.log',$logline,FILE_APPEND);
