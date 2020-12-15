@@ -79,12 +79,13 @@ else {
 	  else {
 		  // fail out
 		  $logline .= ' Key Invalid '.PHP_EOL;
+		  file_put_contents('ajax.log',$logline,FILE_APPEND);
 		  exit;
 	  }
  }
  else {
 	 $logline .= date("d-m-Y H:i:s").' Get Key Not Found failed first check  this should now exit'.PHP_EOL;
-	 //exit;
+	 exit;
  }
  //line one done
 	 file_put_contents('ajax.log',$logline,FILE_APPEND);
