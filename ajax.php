@@ -73,7 +73,7 @@ else {
 	 $logline .= ' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
-		  //$logline .= ' Key Valid ('.$cmds['key'].')'.PHP_EOL;
+		  $logline .= ' Key Valid ('.$cmds['key'].')'.PHP_EOL;
 		  // now check for the next level
 	  }
 	  else {
