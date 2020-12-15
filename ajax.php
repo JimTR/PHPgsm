@@ -73,12 +73,12 @@ else {
 	 $logline .= date("d-m-Y H:i:s").' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
-		  $logline .= ' Key Valid '.PHP_EOL;
+		  $logline .= ' Key Valid ('.$cmds['key'].')'.PHP_EOL;
 		  // now check for the next level
 	  }
 	  else {
 		  // fail out
-		  $logline .= ' Key Invalid '.PHP_EOL;
+		  $logline .= ' Key Invalid ('.$cmds['key'].')'.PHP_EOL;
 		  file_put_contents('ajax.log',$logline,FILE_APPEND);
 		  exit;
 	  }
