@@ -666,7 +666,7 @@ function game_detail() {
 	$pid = $tmp[0];
 	$count = count($tmp);
 	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
-	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid));
+	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip))));
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		
