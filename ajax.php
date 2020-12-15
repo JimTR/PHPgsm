@@ -25,6 +25,7 @@
  // localhost d41d8cd98f00b204e9800998ecf8427e
  require_once 'includes/master.inc.php';
  include 'functions.php';
+ $ip =$_SERVER['SERVER_ADDR'];
  if(is_cli()) {
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
@@ -65,15 +66,23 @@ else {
 }
 else {
 	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
+	// fail it out
 }
  $logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
  if (isset($cmds['key'])) {
 	 $logline .= date("d-m-Y H:i:s").' Key Found '.PHP_EOL;
+	 if ($cmds['key'] == md5( ip2long($ip))) {
+		 //we check if it's for us
+		  $logline .= date("d-m-Y H:i:s").' Key Valid '.PHP_EOL;
+	  }
+	  else {
+		  // fail out
+	  }
  }
  else {
-	 $logline .= date("d-m-Y H:i:s").' Get Key not found failed first check  this should now exit'.PHP_EOL;
+	 $logline .= date("d-m-Y H:i:s").' Get Key Not Found failed first check  this should now exit'.PHP_EOL;
  }
-	 //file_put_contents('ajax.log',$logline,FILE_APPEND);
+	 file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
