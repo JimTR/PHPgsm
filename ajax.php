@@ -61,8 +61,8 @@ else {
  * check to see what we have back in normal use
  */
  if (isset($_SERVER['REMOTE_ADDR'])) {
- //$logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
- //$logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ $logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
+ $logline .= ' command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
 }
 else {
 	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
