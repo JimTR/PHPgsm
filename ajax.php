@@ -78,6 +78,7 @@ else {
 	  else {
 		  // fail out
 		  $logline .= ' Key Invalid '.PHP_EOL;
+		  exit;
 	  }
  }
  else {
