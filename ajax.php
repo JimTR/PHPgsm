@@ -70,7 +70,7 @@ else {
 }
  //$logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
  if (isset($cmds['key'])) {
-	 $logline .= date("d-m-Y H:i:s").' Key Found ';
+	 $logline .= ' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
 		  $logline .= ' Key Valid ('.$cmds['key'].')'.PHP_EOL;
