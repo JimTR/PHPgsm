@@ -67,7 +67,7 @@ else {
 	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
 }
  $logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
- if (strpos($_SERVER['QUERY_STRING'],'Key') >0) {
+ if (isset($cmds['key'])) {
 	 $logline .= date("d-m-Y H:i:s").' Key Found '.PHP_EOL;
  }
  else {
