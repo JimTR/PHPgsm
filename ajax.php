@@ -73,7 +73,7 @@ else {
 	 $logline .= date("d-m-Y H:i:s").' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
-		  //$logline .= ' Key Valid '.PHP_EOL;
+		  $logline .= ' Key Valid '.PHP_EOL;
 		  // now check for the next level
 	  }
 	  else {
@@ -84,7 +84,7 @@ else {
  }
  else {
 	 $logline .= date("d-m-Y H:i:s").' Get Key Not Found failed first check  this should now exit'.PHP_EOL;
-	 exit;
+	 //exit;
  }
  //line one done
 	 file_put_contents('ajax.log',$logline,FILE_APPEND);
