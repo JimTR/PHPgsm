@@ -68,9 +68,9 @@ else {
 	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
 	// fail it out
 }
- $logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ //$logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
  if (isset($cmds['key'])) {
-	 $logline .= date("d-m-Y H:i:s").' Key Found '.PHP_EOL;
+	 $logline .= date("d-m-Y H:i:s").' Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
 		  $logline .= date("d-m-Y H:i:s").' Key Valid '.PHP_EOL;
