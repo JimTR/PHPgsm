@@ -73,7 +73,7 @@ else {
  else {
 	 $logline .= date("d-m-Y H:i:s").' Get Key not found failed first check  this should now exit'.PHP_EOL;
  }
-	 file_put_contents('ajax.log',$logline,FILE_APPEND);
+	 //file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
