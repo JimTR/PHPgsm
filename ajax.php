@@ -20,6 +20,7 @@
  * MA 02110-1301, USA.
  * 
  * required for ajax requests from html version 
+ * this file will be impossible to run without intervention from an other local or remote script
  */
  // localhost d41d8cd98f00b204e9800998ecf8427e
  require_once 'includes/master.inc.php';
@@ -54,7 +55,25 @@ else {
  //file_put_contents('ajax.log',$logline,FILE_APPEND);
  // $cmds = change_value_case($cmds,CASE_LOWER);
 }
-
+/*
+ * beta logging code
+ * check to see what we have back in normal use
+ */
+ if (isset($_SERVER['REMOTE_ADDR'])) {
+ $logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
+ $logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+}
+else {
+	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
+}
+ $logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ if (strpos($_SERVER['QUERY_STRING'],'Key')) {
+	 $logline .= date("d-m-Y H:i:s").' Key Found '.PHP_EOL;
+ }
+ else {
+	 $logline .= date("d-m-Y H:i:s").' Get Key not found failed first check  this should now exit'.PHP_EOL;
+ }
+	 file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
@@ -196,7 +215,7 @@ switch (strtolower($cmds['action'])) {
 				}
 			exit;
 	case "version":
-			echo 'Ajax version 1.43';
+			echo 'Ajax version 1.44';
 			exit;
 	case "allservers":
 			// return servers

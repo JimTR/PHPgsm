@@ -100,7 +100,7 @@ foreach ($res as $data) {
 			$j[$ipdata]['slots']=0;
 		}
 			
-	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name']);
+	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$cmds['key']);
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
 	$track = $xml->addChild($xmlserver);
@@ -181,19 +181,19 @@ $base_servers = $database->get_results($sql);
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
-	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true');
+	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$cmds['key']);
 	$cpu_info = json_decode($temp0);
-	$temp1 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true');
+	$temp1 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true&key='.$cmds['key']);
 	$software = json_decode($temp1);
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true');
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true&key='.$cmds['key']);
 	$disk_nfo = json_decode(stripslashes($temp),true);
 	//echo $data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true';
 	
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true');
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true&key='.$cmds['key']);
 	//echo $temp;
 	//die();
 	$mem_info = json_decode(stripslashes($temp),true);
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true');
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$cmds['key']);
 	$game_detail = json_decode(stripslashes($temp),true);
 	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
@@ -208,7 +208,7 @@ else {
 		$player_pc =0;
 		
 		}
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true');
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true&key='.$cmds['key']);
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$software->host);
