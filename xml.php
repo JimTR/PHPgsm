@@ -180,8 +180,8 @@ $sql = 'select base_servers.*, base_servers.ip as ipaddr, software.* from base_s
 $base_servers = $database->get_results($sql); 
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
-	$cmds['key'] =md5( ip2long($data['ip']));	
-	$ipaddr = $data['ip'];
+	$cmds['key'] =md5( ip2long($data['ipaddr']));	
+	$ipaddr = $data['ipaddr'];
 	$logline .= ' Key sending to  '.$data['url'].':'.$data['port'].'('.$cmds['key'].') '.$ipaddr.PHP_EOL;
 	$logline .= print_r($data,true).PHP_EOL;
 		  file_put_contents('xml.log',$logline,FILE_APPEND);
