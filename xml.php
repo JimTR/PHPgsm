@@ -37,7 +37,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,bse_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
 
 if (isset($cmds['online']) == 'true') {
 		//$sql .= ' and servers.running = 1 order by servers.host_name';
@@ -48,9 +48,10 @@ $res = $database->get_results($sql);
 $Gq = array();
 $xml = new SimpleXMLElement('<Servers/>');
 $j=array();
-
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 	//echo 'doing '.$cmds['type'];
+	//print_r($res);
+	//die();
 foreach ($res as $getgames) {
 	// get game data
 	     $ipaddr=md5( ip2long($getgames['ipaddr']));	
