@@ -186,7 +186,7 @@ foreach ($base_servers as $data) {
 	$ipaddr = md5( ip2long($data['ipaddr']));	
 	$logline .= ' Key sending to  '.$data['url'].':'.$data['port'].'('.$cmds['key'].') '.$ipaddr.PHP_EOL;
 	$logline .= print_r($data,true).PHP_EOL;
-		  file_put_contents('xml.log',$logline,FILE_APPEND);
+		  //file_put_contents('xml.log',$logline,FILE_APPEND);
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
 	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$ipaddr);
 	$cpu_info = json_decode($temp0);
