@@ -37,7 +37,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,bse_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
 
 if (isset($cmds['online']) == 'true') {
 		//$sql .= ' and servers.running = 1 order by servers.host_name';
@@ -53,6 +53,7 @@ if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 	//echo 'doing '.$cmds['type'];
 foreach ($res as $getgames) {
 	// get game data
+	     $ipaddr=md5( ip2long($getgames['ipaddr']));	
 	     $key = $getgames['host_name'];
 		 $Gq[$key]['id'] = $getgames['host_name'];
 	     $Gq[$key]['host'] = $getgames['host'].':'.$getgames['port'];
@@ -100,7 +101,7 @@ foreach ($res as $data) {
 			$j[$ipdata]['slots']=0;
 		}
 			
-	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$cmds['key']);
+	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$ipaddr);
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
 	$track = $xml->addChild($xmlserver);
