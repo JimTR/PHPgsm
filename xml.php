@@ -181,7 +181,7 @@ $base_servers = $database->get_results($sql);
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
 	$cmds['key'] =md5( ip2long($data['ip']));	
-	$logline .= ' Key sending to  '.$data['url'].'('.$cmds['key'].') '.$data['ip'].PHP_EOL;
+	$logline .= ' Key sending to  '.$data['url'].':'.$data['port'].'('.$cmds['key'].') '.$data['ip'].PHP_EOL;
 		  file_put_contents('xml.log',$logline,FILE_APPEND);
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
 	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$cmds['key']);
