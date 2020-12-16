@@ -175,11 +175,12 @@ else {
 }
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
-	
+ 
 $sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
+	$cmds['key'] =md5( ip2long($data['ip']));	
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
 	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$cmds['key']);
 	$cpu_info = json_decode($temp0);
