@@ -186,19 +186,19 @@ foreach ($base_servers as $data) {
 	$logline .= print_r($data,true).PHP_EOL;
 		  file_put_contents('xml.log',$logline,FILE_APPEND);
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
-	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$cmds['key']);
+	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$ipaddr);
 	$cpu_info = json_decode($temp0);
-	$temp1 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true&key='.$cmds['key']);
+	$temp1 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=software&data=true&key='.$ipaddr);
 	$software = json_decode($temp1);
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true&key='.$cmds['key']);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=disk&data=true&key='.$ipaddr);
 	$disk_nfo = json_decode(stripslashes($temp),true);
 	//echo $data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true';
 	
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true&key='.$cmds['key']);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=memory&data=true&key='.$ipaddr);
 	//echo $temp;
 	//die();
 	$mem_info = json_decode(stripslashes($temp),true);
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$cmds['key']);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr);
 	$game_detail = json_decode(stripslashes($temp),true);
 	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
@@ -213,7 +213,7 @@ else {
 		$player_pc =0;
 		
 		}
-	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true&key='.$cmds['key']);
+	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=user&data=true&key='.$ipaddr);
 	$user_detail = json_decode(stripslashes($temp),true);
 	$track = $xml->addChild($xmlserver);
     $track->addChild('name',$software->host);
