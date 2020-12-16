@@ -176,7 +176,7 @@ else {
 
 if ($cmds['type'] == 'base' || $cmds['type'] == 'all') {
  
-$sql = 'select base_servers.*, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
+$sql = 'select base_servers.*, base_servers.ip as ipaddr, software.* from base_servers left join software on base_servers.ip = software.ip where extraip="0" and enabled="1"';
 $base_servers = $database->get_results($sql); 
 $xmlserver = "base_server";
 foreach ($base_servers as $data) {
