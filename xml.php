@@ -103,7 +103,7 @@ foreach ($res as $data) {
 		}
 			
 	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$ipaddr);
-	 file_put_contents('xml.log',$data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL,FILE_APPEND);
+	 file_put_contents('xml.log',$data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL,FILE_APPEND);
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
 	$track = $xml->addChild($xmlserver);
