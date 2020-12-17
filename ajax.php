@@ -72,7 +72,7 @@ else {
 }
  $logline .= 'command to execute '.$cmds['action'].' ';
  if (isset($cmds['key'])) {
-	 $logline .= 'Key Found ';
+	 //$logline .= 'Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
 		  $logline .= ' Key Valid'.PHP_EOL;
@@ -90,7 +90,7 @@ else {
 	 exit;
  }
  //line one done
-	file_put_contents('ajax.log',$logline,FILE_APPEND);
+	//file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');

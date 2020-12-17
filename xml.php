@@ -104,7 +104,7 @@ foreach ($res as $data) {
 		}
 			
 	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$ipaddr);
-	 file_put_contents('xml.log',$data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL,FILE_APPEND);
+	 //file_put_contents('xml.log',$data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL,FILE_APPEND);
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
 	$track = $xml->addChild($xmlserver);
@@ -188,7 +188,7 @@ foreach ($base_servers as $data) {
 	$ipaddr = md5( ip2long($data['ipaddr']));	
 	$logline .= ' Key sending to  '.$data['url'].':'.$data['port'].'('.$cmds['key'].') '.$ipaddr.PHP_EOL;
 	//$logline .= print_r($data,true).PHP_EOL;
-		  file_put_contents('xml.log',$logline,FILE_APPEND);
+		//  file_put_contents('xml.log',$logline,FILE_APPEND);
 	//$up_time = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=boottime');
 	$temp0 = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=hardware&data=true&key='.$ipaddr);
 	$cpu_info = json_decode($temp0);
@@ -204,7 +204,7 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr);
 	$logline = $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL;
-	file_put_contents('xml.log',$logline,FILE_APPEND);
+	//file_put_contents('xml.log',$logline,FILE_APPEND);
 	$game_detail = json_decode(stripslashes($temp),true);
 	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
