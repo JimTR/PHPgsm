@@ -52,47 +52,50 @@ else {
  else {
 	 $cmds =convert_to_argv($_GET,"",true);
  }
-// $logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> accessed ajax with '.$_SERVER['QUERY_STRING'].PHP_EOL;
- //file_put_contents('ajax.log',$logline,FILE_APPEND);
+$logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'>';
+//file_put_contents('ajax.log',$logline,FILE_APPEND);
  // $cmds = change_value_case($cmds,CASE_LOWER);
 }
 /*
  * beta logging code
  * check to see what we have back in normal use
  */
+//print_r($_SERVER);
  if (isset($_SERVER['REMOTE_ADDR'])) {
- $logline = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> Connected ';
- //$logline .= ' command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ $logline.=' Connected ';
+ //$logline .= ' command to execute\,'.$_SERVER['QUERY_STRING'].'\''.PHP_EOL;
 }
 else {
-	$logine = date("d-m-Y H:i:s").'No Remote IP connected';
+	$logine = ' No Remote IP connected';
+	//file_put_contents('ajax.log',$logline,FILE_APPEND);
 	// fail it out
 }
- //$logline .= 'command to execute '.$_SERVER['QUERY_STRING'].PHP_EOL;
+ $logline .= 'command to execute '.$cmds['action'].' ';
  if (isset($cmds['key'])) {
-	 $logline .= ' Key Found ';
+	 $logline .= 'Key Found ';
 	 if ($cmds['key'] == md5( ip2long($ip))) {
 		 //we check if it's for us
-		  $logline .= ' Key Valid ('.$cmds['key'].')'.PHP_EOL;
+		  $logline .= ' Key Valid'.PHP_EOL;
 		  // now check for the next level
 	  }
 	  else {
 		  // fail out
-		  $logline .= ' Key Invalid ('.$cmds['key'].')'.PHP_EOL;
+		  $logline .= ' Key Invalid ('.$cmds['key'].') '.md5( ip2long($ip)).' - '.$ip.PHP_EOL;
 		  file_put_contents('ajax.log',$logline,FILE_APPEND);
 		  exit;
 	  }
  }
  else {
-	 $logline .= date("d-m-Y H:i:s").' Get Key Not Found failed first check  this should now exit'.PHP_EOL;
+	 $logline .= date("d-m-Y H:i:s").' Key Not Found'.PHP_EOL;
 	 exit;
  }
  //line one done
-	 //file_put_contents('ajax.log',$logline,FILE_APPEND);
+	file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
 //check_update();
+
 switch (strtolower($cmds['action'])) {
 	case "boottime" :
 			echo get_boot_time();
@@ -671,6 +674,7 @@ function game_detail() {
 	$count = count($tmp);
 	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
 	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip))));
+        //$temp = trim(file_get_contents('top');
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		
