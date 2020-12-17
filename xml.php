@@ -103,6 +103,7 @@ foreach ($res as $data) {
 		}
 			
 	 $temp = file_get_contents($data['url'].':'.$data['bport'].'/ajax.php?action=game_detail&data=true&filter='.$data['host_name'].'&key='.$ipaddr);
+	 
 	 $game_detail = json_decode(stripslashes($temp),true);
 	 
 	$track = $xml->addChild($xmlserver);
@@ -201,6 +202,8 @@ foreach ($base_servers as $data) {
 	//die();
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr);
+	$logline = $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL;
+	file_put_contents('xml.log',$logline,FILE_APPEND);
 	$game_detail = json_decode(stripslashes($temp),true);
 	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
