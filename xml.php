@@ -66,7 +66,7 @@ foreach ($res as $getgames) {
 
 $xmlserver="game_server";
 foreach ($res as $data) {
-	 $ipaddr=md5( ip2long($getgames['ipaddr']));	
+	 $ipaddr=md5( ip2long($data['ipaddr']));	
 	if ($data['buildid'] < $data['rbuildid']) {
 		// needs update
 		$update = 'Requires Update to version '.$data['rbuildid'];
