@@ -73,16 +73,16 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				$processed[] = $local['appid']; // done this app
 				$man_check = local_update($data,$local); // check if manual update has been done
 				if($man_check <> $local['buildid']) {
-					$local['buildid'] = $man_check;
+					$local['buildid'] = $man_check['buildid'];
 					$data['buildid']=0;
 					echo 'Correcting Build'.cr;
-					 echo 'Locally installed version '.$man_check.cr;
+					 echo 'Locally installed version '.$man_check['buildid'].cr;
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
-				$update['server_update']= $local['update'];
+				$update['server_update']= $man_check['LastUpdated'];
 				//echo 'app id '.$local['update'].cr;
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
 			    //if ($data['rbuildid'] <> $remote['buildid']) {
@@ -93,7 +93,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
-                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).cr;
+                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$$man_check['LastUpdated']).cr;
                
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
@@ -113,6 +113,6 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 		    $files = glob($acf_loc."/*" . $find . "*");
 			$acf_file = file_get_contents($files[0]);
 			$local_data =  local_build($acf_file);
-			return $local_data['buildid'];
+			return $local_data;
 		}	
 ?>
