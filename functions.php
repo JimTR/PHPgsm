@@ -1037,9 +1037,11 @@ $string = trim(preg_replace('/}/', '', $string));
 $ta = explode(PHP_EOL,$string);
 $ta = array_filter($ta);
 $j = refactor_local($ta);
+//echo print_r($j,true).PHP_EOL;
 $return['appid'] = $j['AppState']['appid'];
 $return['buildid'] = $j['AppState']['buildid'];
 $return['update'] = $j['AppState']['LastUpdated'];
+//echo print_r($return,true).PHP_EOL;
 return $return;
 }
 

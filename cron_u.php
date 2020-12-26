@@ -72,13 +72,13 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				// slow up db hits 
 				$processed[] = $local['appid']; // done this app
 				$man_check = local_update($data,$local); // check if manual update has been done
-				if($man_check <> $local['buildid']) {
+				if($man_check['buildid'] <> $local['buildid']) {
 					$local['buildid'] = $man_check['buildid'];
 					$data['buildid']=0;
 					echo 'Correcting Build'.cr;
 					 echo 'Locally installed version '.$man_check['buildid'].cr;
 				}
-			    $update['server_id'] = $local['appid'];;
+			        $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
@@ -93,7 +93,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
-                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$$man_check['update']).cr;
+                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$man_check['update']).cr;
                
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
