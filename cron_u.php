@@ -23,6 +23,7 @@
  * updates the database ready to update.
  * TODO add code to auto update be aware of steamcmd segmentation errors !
  *  new
+ * steamcmd +login anonymous +force_install_dir /home/nod/games/gmod/serverfiles +app_update 4020  +quit example cmd line
  */
 include 'includes/cli_master.inc.php';
 include 'functions.php';
@@ -88,7 +89,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					$database->update('servers',$update,$where);
 				//}
-			    echo 'Details for App Id '.$local['appid'].cr;
+			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$local['update']).cr;
