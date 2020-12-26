@@ -82,7 +82,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
-				$update['server_update']= $man_check['LastUpdated'];
+				$update['server_update']= $man_check['update'];
 				//echo 'app id '.$local['update'].cr;
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
 			    //if ($data['rbuildid'] <> $remote['buildid']) {
@@ -93,7 +93,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
-                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$$man_check['LastUpdated']).cr;
+                echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$$man_check['update']).cr;
                
                 if ($local['buildid'] <> $remote['buildid']) {
 					echo 'Update Required'.cr;
