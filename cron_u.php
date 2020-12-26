@@ -24,6 +24,7 @@
  * TODO add code to auto update be aware of steamcmd segmentation errors !
  *  new
  * steamcmd +login anonymous +force_install_dir /home/nod/games/gmod/serverfiles +app_update 4020  +quit example cmd line
+ * this does check update status
  */
 include 'includes/cli_master.inc.php';
 include 'functions.php';
