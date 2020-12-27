@@ -101,6 +101,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				    echo 'Auto Update Set'.cr;
 				    $cmd = '/usr/games/steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
 				    echo $cmd.cr;
+				    $update = shell_exec($cmd);
+				    echo $update.cr;
 			} 
 				}
 			}
