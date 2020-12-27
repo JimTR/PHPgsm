@@ -99,7 +99,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
-				    $cmd = '\usr\games\steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].'+quit';
+				    $cmd = '\usr\games\steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
 				    echo $cmd.cr;
 			} 
 				}
