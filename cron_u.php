@@ -78,7 +78,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Correcting Build'.cr;
 					 echo 'Locally installed version '.$man_check['buildid'].cr;
 				}
-			        $update['server_id'] = $local['appid'];;
+			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['buildid']; 
 				$update['rserver_update']= $remote['update'];
@@ -99,6 +99,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
+				    $cmd = '\usr\games\steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update 4020  +quit';
+				    echo $cmd.cr;
 			} 
 				}
 			}
