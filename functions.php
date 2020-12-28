@@ -976,7 +976,7 @@ function orderBy(&$data, $field,$order)
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers,base_servers.ip as ipaddr where extraip = 0 ' ;
+	   $sql = 'select * from base_servers as ipaddr where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
 	   $xm='';
@@ -985,7 +985,7 @@ function orderBy(&$data, $field,$order)
 	    
 		 $ch = curl_init();
 		 // need to add key here
-		 $ipaddr = md5( ip2long($data['ipaddr']));
+		 $ipaddr = md5( ip2long($data['ip']));
 	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls&key='.$ipaddr);
 	     
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
