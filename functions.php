@@ -778,8 +778,9 @@ foreach ($res as $data) {
 		} // get local servers	
 	
 	$tm = get_sessions();
-	$tm =running_games(explode("*",$tm));
-	//print_r($tm);
+	//echo print_r($tm,true).CR;
+	$tm =running_games($tm);
+    //print_r($tm);
 	if(!empty($tm)) {
 		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
@@ -976,28 +977,46 @@ function orderBy(&$data, $field,$order)
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers as ipaddr where extraip = 0 ' ;
+	   $sql = 'select * from base_servers  where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
+	   $sql = 'select servers.host_name from servers where enabled=1';
+	   $valid = $database->get_results($sql);
+	   //echo print_r($valid,true).CR;
 	   $xm='';
-	    $tm='';
+	   $tm='';
 	   foreach ($res as $data){
 	    
 		 $ch = curl_init();
-		 // need to add key here
+		 // need to add key here & replace curl
 		 $ipaddr = md5( ip2long($data['ip']));
 	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls&key='.$ipaddr);
 	     
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 $xm .= curl_exec($ch);
+		 $xm = curl_exec($ch);
 		 
 		 $xm = trim($xm);
 		 $tm .= $xm;
-		 
+		 //echo $tm.CR;
 		 curl_close($ch);
+		 
 	 }
-	  
-	 return $tm;
+	  $tm = explode("*",$tm);
+	 
+	  foreach ($valid as $server) {
+		  
+		  $search = $server['host_name'];
+		  
+		 foreach ($tm as $k=>$v){
+
+ if(stripos($v, $search) !== false){
+ $xy[$k]=$v;
+ }
+
+	  }
+  }
+  //print_r($xy);
+	 return $xy;
 	
    }
    function html_display_version() {
