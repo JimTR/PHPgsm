@@ -34,6 +34,8 @@ $database = new db();
 //$ip = gethostbyname($host);
 $ip = file_get_contents("http://ipecho.net/plain");
 echo 'Starting Check For '.$ip.cr;
+$steamcmd = shell_exec('which steamcmd');
+echo 'found steamcmd at '.$steamcmd.cr;
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 $ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
@@ -94,8 +96,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					$database->update('servers',$update,$where);
 				//}
-			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
-			    echo 'Branch Detail'.cr;
+			    echo cr.'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
+			    echo cr.'Branch Detail'.cr;
 				//echo print_r($t,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
 				printf($mask,'Branch','    Build ID','Release Date');
@@ -103,7 +105,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					//loop it through
 					printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
 				}
-			    echo 'Local Build id '.$local['buildid'].cr;
+			    echo cr.'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$man_check['update']).cr;
                
