@@ -35,7 +35,7 @@ $database = new db();
 $ip = file_get_contents("http://ipecho.net/plain");
 echo 'Starting Check For '.$ip.cr;
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
-$ip = $ip1.'.'.$ip2.'.'.$ip3;
+$ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
 //echo $sql.cr;
 	$res = $database->get_results($sql);
@@ -65,7 +65,17 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					//echo $cmd;
 					$result = shell_exec($cmd);
-					$remote = test_remote($result);
+					$beta =check_branch($local['appid']);
+					echo 'Branch Detail'.cr;
+//echo print_r($t,true).cr;
+$mask = "%11.11s %14.14s %40s  \n";
+printf($mask,'Branch','    Build ID','Release Date');
+foreach($t as $branch=>$data) {
+	//loop it through
+		
+	printf($mask,$branch, $data['buildid'],date('l jS F Y \a\t g:ia',$data['timeupdated']) );
+}
+					$remote = test_remote($result); // check to be removed 
 			
 			
 			if (isset($remote['buildid'])) {
@@ -102,8 +112,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				    $cmd = '/usr/games/steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
 				    echo $cmd.cr;
 				    $update = shell_exec($cmd);
+				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $update.cr;
-			} 
+					} 
 				}
 			}
 			
@@ -119,4 +130,48 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local_data =  local_build($acf_file);
 			return $local_data;
 		}	
+		function check_branch($appid) {
+/*
+ * Written 28-12-2020
+ * function to check and return steamcmd branches
+ * part of cron_u
+ * $appid is the server/game code to  check
+ */ 	
+$cmd = 'steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
+$data= shell_exec($cmd);
+$data = str_replace('{','',$data);
+$data = str_replace('}','',$data);
+$data= trim($data);
+$arry = explode(cr,$data);
+foreach ($arry as $key=>$value) {
+	// clear blanks
+	if(empty(trim($value))) 
+	{ 
+		unset ($arry[$key]);
+		continue;
+		}
+	else {
+		$arry[$key] = trim($arry[$key]);
+	}	
+	if (preg_match("/\t/", $arry[$key])) {
+    
+    // setting
+   $value= substr(trim($value),1);
+   $z = strpos($value,'"');
+   $nz = substr($value,0,$z);
+   $value =trim(str_replace($nz.'"','',$value));
+   $value=trim(str_replace('"','',$value));
+   $return[$branch][$nz]= trim($value);
+}
+else
+{
+    // heading
+     $y= trim(preg_replace('/\t+/', '', $value));
+     $branch = str_replace('"','',$y);
+     
+}
+}
+return $return;
+
+}
 ?>
