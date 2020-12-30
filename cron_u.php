@@ -62,17 +62,17 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    if (!in_array($local['appid'],$processed)) {
 					//print_r($processed);
 					//echo cr.$local['appid'].cr;
-					/*
-					 * $beta =check_branch($local['appid']);
+					
+					 $beta =check_branch($local['appid']);
 					echo 'Branch Detail'.cr;
 //echo print_r($t,true).cr;
 $mask = "%11.11s %14.14s %40s  \n";
 printf($mask,'Branch','    Build ID','Release Date');
-foreach($t as $branch=>$data) {
+foreach($beta as $branch=>$rdata) {
 	//loop it through
 		
-	printf($mask,$branch, $data['buildid'],date('l jS F Y \a\t g:ia',$data['timeupdated']) );
-}*/
+	printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
+}
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					//echo $cmd;
 					$result = shell_exec($cmd);
