@@ -64,15 +64,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					//echo cr.$local['appid'].cr;
 					
 					 $beta =check_branch($local['appid']);
-					echo 'Branch Detail'.cr;
-//echo print_r($t,true).cr;
-$mask = "%11.11s %14.14s %40s  \n";
-printf($mask,'Branch','    Build ID','Release Date');
-foreach($beta as $branch=>$rdata) {
-	//loop it through
-		
-	printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
-}
+					
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					//echo $cmd;
 					$result = shell_exec($cmd);
@@ -103,6 +95,14 @@ foreach($beta as $branch=>$rdata) {
 					$database->update('servers',$update,$where);
 				//}
 			    echo 'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
+			    echo 'Branch Detail'.cr;
+				//echo print_r($t,true).cr;
+				$mask = "%11.11s %14.14s %40s  \n";
+				printf($mask,'Branch','    Build ID','Release Date');
+				foreach($beta as $branch=>$rdata) {
+					//loop it through
+					printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
+				}
 			    echo 'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['buildid'].cr;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$man_check['update']).cr;
