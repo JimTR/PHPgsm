@@ -139,7 +139,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
  * part of cron_u
  * $appid is the server/game code to  check
  */ 	
-$cmd = 'steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
+$cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
 $data= shell_exec($cmd);
 $data = str_replace('{','',$data);
 $data = str_replace('}','',$data);
