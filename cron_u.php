@@ -100,14 +100,18 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				echo print_r($remote,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
 				$headmask = "%11.11s %14.14s %25s %25s \n";
-				printf($headmask,'Branch','    Build ID','Release Date','Passworded');
+				printf($headmask,'Branch','    Build ID','Release Date','Password');
 				foreach($remote as $branch=>$rdata) {
 					//loop it through
 					if (!isset($rdata['buildid'])){continue;}
 					if (isset($rdata['pwdrequired'])) {
+						echo 'pass'.cr;
 						$pwd ='yes';
 					}	
-					else { $pwd='no';}
+					else {
+						echo 'no pass'.cr; 
+						$pwd='no';
+						}
 						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
