@@ -66,7 +66,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					 $remote =check_branch($local['appid']);
 					
-					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
+					$cmd = $teamcmd.' +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					//echo $cmd;
 					$result = shell_exec($cmd);
 					
@@ -85,8 +85,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
-				$update['rbuildid'] = $remote['buildid']; 
-				$update['rserver_update']= $remote['update'];
+				$update['rbuildid'] = $remote['public']['buildid']; 
+				$update['rserver_update']= $remote['public']['update'];
 				$update['server_update']= $man_check['update'];
 				//echo 'app id '.$local['update'].cr;
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
@@ -95,14 +95,20 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					$database->update('servers',$update,$where);
 				//}
-			    echo cr.'Details for App Id '.$local['appid'].'('.$data['host_name'].')'.cr;
+			    echo cr.'Details for App Id '.$local['appid'].' ('.$data['host_name'].')'.cr;
 			    echo cr.'Branch Detail'.cr;
 				//echo print_r($t,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
-				printf($mask,'Branch','    Build ID','Release Date');
+				$headmask = "%11.11s %14.14s %25s %25s \n";
+				printf($headmask,'Branch','    Build ID','Release Date','Password');
 				foreach($remote as $branch=>$rdata) {
 					//loop it through
-					printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
+					if (!isset($rdata['buildid'])){continue;}
+					if (isset($rdata['pwdrequired'])) {
+						$pwd ='yes';
+					}	
+					else { $pwd='';}
+						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
 			    echo 'Remote Build id '.$remote['public']['buildid'].cr;
