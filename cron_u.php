@@ -97,7 +97,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				//}
 			    echo cr.'Details for App Id '.$local['appid'].' ('.$data['host_name'].')'.cr;
 			    echo cr.'Branch Detail'.cr;
-				//echo print_r($t,true).cr;
+				echo print_r($remote,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
 				$headmask = "%11.11s %14.14s %25s %25s \n";
 				printf($headmask,'Branch','    Build ID','Release Date','Passworded');
