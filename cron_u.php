@@ -72,8 +72,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					//$remote = test_remote($result); // check to be removed 
 			
-			
-			if (isset($remote['buildid'])) {
+			// need to set branch !
+			if (isset($remote['public']['buildid'])) {
 				// slow up db hits 
 				$processed[] = $local['appid']; // done this app
 				$man_check = local_update($data,$local); // check if manual update has been done
