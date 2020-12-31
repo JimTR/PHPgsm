@@ -98,21 +98,19 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo cr.'Details for App Id '.$local['appid'].' ('.$data['host_name'].')'.cr;
 			    echo cr.'Branch Detail'.cr;
 				echo print_r($remote,true).cr;
-				$mask = "%11.11s %14.14s %40s  \n";
+				$mask = "%11.11s %14.14s %40s %8s \n";
 				$headmask = "%11.11s %14.14s %25s %25s \n";
 				printf($headmask,'Branch','    Build ID','Release Date','Password');
 				foreach($remote as $branch=>$rdata) {
 					//loop it through
 					if (!isset($rdata['buildid'])){continue;}
 					if (isset($rdata['pwdrequired'])) {
-						//echo 'pass'.cr;
 						$pwd ='yes';
 					}	
 					else {
-						//echo 'no pass'.cr; 
-						$pwd='no';
+							$pwd='no';
 						}
-						echo $pwd;
+						
 						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
