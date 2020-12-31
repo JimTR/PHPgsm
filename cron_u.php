@@ -34,8 +34,15 @@ $database = new db();
 //$ip = gethostbyname($host);
 $ip = file_get_contents("http://ipecho.net/plain");
 echo 'Starting Check For '.$ip.cr;
-$steamcmd = shell_exec('which steamcmd');
+$steamcmd = trim(shell_exec('which steamcmd'));
+if (!empty($steamcmd)) {
 echo 'found steamcmd at '.$steamcmd.cr;
+}
+else {
+	echo 'steamcmd not found, add steamcmd location to user path'.cr;
+	echo 'terminating'.cr;
+	exit;
+}
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 $ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
