@@ -105,10 +105,10 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
-			    echo 'Remote Build id '.$remote['buildid'].cr;
+			    echo 'Remote Build id '.$remote['public']['buildid'].cr;
                 echo 'Last Local Update '.date('l jS F Y \a\t g:ia',$man_check['update']).cr;
                
-                if ($local['buildid'] <> $remote['buildid']) {
+                if ($local['buildid'] <> $remote['public']['buildid']) {
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
