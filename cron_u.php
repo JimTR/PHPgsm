@@ -67,8 +67,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					 $remote =check_branch($local['appid']);
 					
 					$cmd = $steamcmd.' +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
-					//echo $cmd;
-					$result = shell_exec($cmd);
+					echo $cmd;
+					//$result = shell_exec($cmd);
 					
 					//$remote = test_remote($result); // check to be removed 
 			
