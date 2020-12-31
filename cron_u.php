@@ -51,8 +51,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			
 			    $acf_file = file_get_contents($files[0]);
 			    $local =  local_build($acf_file);
-			    echo 'local'.cr;
-			    print_r ($local);
+			    echo 'local '.print_r ($local,true).cr;
 			}
 		}
 		else {
@@ -65,13 +64,13 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					//print_r($processed);
 					//echo cr.$local['appid'].cr;
 					
-					 $beta =check_branch($local['appid']);
+					 $remote =check_branch($local['appid']);
 					
 					$cmd = '/usr/games/steamcmd  +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					//echo $cmd;
 					$result = shell_exec($cmd);
 					
-					$remote = test_remote($result); // check to be removed 
+					//$remote = test_remote($result); // check to be removed 
 			
 			
 			if (isset($remote['buildid'])) {
@@ -101,7 +100,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				//echo print_r($t,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
 				printf($mask,'Branch','    Build ID','Release Date');
-				foreach($beta as $branch=>$rdata) {
+				foreach($remote as $branch=>$rdata) {
 					//loop it through
 					printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']) );
 				}
@@ -134,6 +133,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			$local_data =  local_build($acf_file);
 			return $local_data;
 		}	
+		
 		function check_branch($appid) {
 /*
  * Written 28-12-2020
