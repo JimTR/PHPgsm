@@ -100,14 +100,14 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				//echo print_r($t,true).cr;
 				$mask = "%11.11s %14.14s %40s  \n";
 				$headmask = "%11.11s %14.14s %25s %25s \n";
-				printf($headmask,'Branch','    Build ID','Release Date','Password');
+				printf($headmask,'Branch','    Build ID','Release Date','Passworded');
 				foreach($remote as $branch=>$rdata) {
 					//loop it through
 					if (!isset($rdata['buildid'])){continue;}
 					if (isset($rdata['pwdrequired'])) {
 						$pwd ='yes';
 					}	
-					else { $pwd='';}
+					else { $pwd='no';}
 						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
@@ -118,7 +118,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
-				    $cmd = '/usr/games/steamcmd +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
+				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
 				    echo $cmd.cr;
 				    $update = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
