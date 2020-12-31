@@ -64,7 +64,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					//print_r($processed);
 					//echo cr.$local['appid'].cr;
 					
-					 $remote =check_branch($local['appid']);
+					 $remote = check_branch($local['appid'],$steamcmd);
 					
 					$cmd = $steamcmd.' +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
 					echo $cmd;
@@ -140,14 +140,17 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			return $local_data;
 		}	
 		
-		function check_branch($appid) {
+		function check_branch($appid,$steamcmd) {
 /*
  * Written 28-12-2020
  * function to check and return steamcmd branches
  * part of cron_u
  * $appid is the server/game code to  check
  */ 	
+ 
 $cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
+echo $cmd.' ('.$steamcmd.')'.cr;
+exit;
 $data= shell_exec($cmd);
 $data = str_replace('{','',$data);
 $data = str_replace('}','',$data);
