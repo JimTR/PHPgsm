@@ -67,7 +67,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					 $remote = check_branch($local['appid'],$steamcmd);
 					
 					$cmd = $steamcmd.' +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
-					echo $cmd;
+					//echo $cmd;
 					//$result = shell_exec($cmd);
 					
 					//$remote = test_remote($result); // check to be removed 
@@ -122,7 +122,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
 				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
-				    echo $cmd.cr;
+				    //echo $cmd.cr;
 				    $update = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $update.cr;
