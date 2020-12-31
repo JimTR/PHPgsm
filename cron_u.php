@@ -105,13 +105,14 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					//loop it through
 					if (!isset($rdata['buildid'])){continue;}
 					if (isset($rdata['pwdrequired'])) {
-						echo 'pass'.cr;
+						//echo 'pass'.cr;
 						$pwd ='yes';
 					}	
 					else {
-						echo 'no pass'.cr; 
+						//echo 'no pass'.cr; 
 						$pwd='no';
 						}
+						echo $pwd;
 						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.'Local Build id '.$local['buildid'].cr;
