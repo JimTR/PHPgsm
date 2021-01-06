@@ -649,8 +649,8 @@ function game_detail() {
 		 $server_data = $db->get_results($sql);
 		  $server_data=reset($server_data);         
                 if ($ip <> trim($server_data['host'])) {
-					echo 'wrong call guv !<br>';
-					exit;
+					//echo 'wrong call guv !<br>';
+					//exit;
 					// kill if wrong
 				}
                 //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
