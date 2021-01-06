@@ -645,7 +645,7 @@ function game_detail() {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
-		 echo $sql.'<br>';		 
+		 //echo $sql.'<br>';		 
 		 $server_data = $db->get_results($sql);
 		  $server_data=reset($server_data);
 		  if (empty($server_data['base_ip'])) {         
@@ -656,7 +656,7 @@ function game_detail() {
 				}
 			}
 			else {
-					echo $sql;
+					//echo $sql;
 				}
                 //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$server_data['host_name'].'.cfg';
@@ -678,7 +678,7 @@ function game_detail() {
 	
 	$pid = $tmp[0];
 	$count = count($tmp);
-	//echo 'using command '.$data['url'].':'.$data['bport'].'/ajax.php?action=top&filter='.$pid.'<br>';
+	echo 'using command '.$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).'<br>';
 	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip))));
         //$temp = trim(file_get_contents('top');
 	$temp = array_values(array_filter(explode(' ',$temp)));
