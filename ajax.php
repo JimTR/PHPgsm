@@ -82,7 +82,7 @@ else {
 		  // fail out
 		  $logline .= ' Key Invalid ('.$cmds['key'].') '.md5( ip2long($ip)).' - '.$ip.PHP_EOL;
 		  file_put_contents('ajax.log',$logline,FILE_APPEND);
-		  exit;
+		 // exit;
 	  }
  }
  else {
@@ -386,7 +386,8 @@ echo $page2;
 			//running
 			$alreadyrunning = 1;
 		}
-		
+		file_put_contents('ajax.log','ready to do exe_screen'.PHP_EOL
+,FILE_APPEND);
 		echo exe_screen($cmd,$exe,$text,$alreadyrunning);
 											  		
 }
@@ -455,7 +456,7 @@ function exe_lgsm($server,$action,$exe)
 				$disp = $exe.' is already running !';
 				break;
 			}
-			chdir($detail['location'].'/serverfiles');
+			chdir($detail['location']);
 			$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
 			$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
 			rename($logFile, $savedLogfile);	
@@ -463,7 +464,7 @@ function exe_lgsm($server,$action,$exe)
 			//$cmd = 'screen -L -Logfile '.$detail['location'].'/log/console/'.$detail['host_name'].'-console.log -dmS '.$detail['host_name'];
 			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name'];
 			exec($cmd); // open session
-			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
+			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'^M"';
 			exec($cmd);
 			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; //start server
 			exec($cmd); // start game
