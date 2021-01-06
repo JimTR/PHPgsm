@@ -37,7 +37,7 @@ if (empty($cmds['type'])) {$cmds['type']='all';}
 require_once('GameQ/Autoloader.php'); //load GameQ
 $GameQ = new \GameQ\GameQ();
 $database = new db(); 
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
+$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1" order by servers.host_name';
 
 if (isset($cmds['online']) == 'true') {
 		//$sql .= ' and servers.running = 1 order by servers.host_name';
@@ -66,7 +66,12 @@ foreach ($res as $getgames) {
 
 $xmlserver="game_server";
 foreach ($res as $data) {
-	 $ipaddr=md5( ip2long($data['ipaddr']));	
+	if (empty($data['base_ip'])) {
+			 $ipaddr=md5( ip2long($data['ipaddr']));
+		 }
+	else {
+			 $ipaddr=md5( ip2long($data['base_ip']));	
+		 }	
 	if ($data['buildid'] < $data['rbuildid']) {
 		// needs update
 		$update = 'Requires Update to version '.$data['rbuildid'];
