@@ -644,14 +644,19 @@ function game_detail() {
 		
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-		 $sql = 'select * , base_servers.port as bport from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
+		 $sql = 'select * , base_servers.port as bport, base_servers.base_ip from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 		 
 		 $server_data = $db->get_results($sql);
-		  $server_data=reset($server_data);         
+		  $server_data=reset($server_data);
+		  if (empty($server_data['base_ip'])) {         
                 if ($ip <> trim($server_data['host'])) {
-					//echo 'wrong call guv !<br>';
-					//exit;
+					echo 'wrong call guv !<br>';
+					exit;
 					// kill if wrong
+				}
+			}
+			else {
+					echo $sql;
 				}
                 //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
                 $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$server_data['host_name'].'.cfg';
