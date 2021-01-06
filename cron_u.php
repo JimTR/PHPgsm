@@ -30,6 +30,10 @@ include 'includes/cli_master.inc.php';
 include 'functions.php';
 define ("cr",PHP_EOL);
 $database = new db();
+if (!isset($argv)) {
+	echo 'Wrong Enviroment';
+	exit;
+}
 //$host= gethostname();
 //$ip = gethostbyname($host);
 $ip = file_get_contents("http://ipecho.net/plain");
@@ -51,15 +55,11 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 	//print_r($res);
 	foreach ($res as $data) {
 		if(empty($data['buildid'])) {
-        $acf_loc = $data['location'].'/serverfiles/steamapps';
-		$find = 'appmanifest_';
-		$files = glob($acf_loc."/*" . $find . "*");
-		if (!empty($files)){
-			
-			    $acf_file = file_get_contents($files[0]);
-			    $local =  local_build($acf_file);
+        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
+					    
+			    $local =  check_local($acf_loc);
 			    echo 'local '.print_r ($local,true).cr;
-			}
+			
 		}
 		else {
 			$local['appid'] = $data['server_id'];
@@ -68,17 +68,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			
 		}
 			    if (!in_array($local['appid'],$processed)) {
-					//print_r($processed);
-					//echo cr.$local['appid'].cr;
-					
+								
 					 $remote = check_branch($local['appid'],$steamcmd);
-					
-					$cmd = $steamcmd.' +app_info_update 1 +app_info_print "'.$local['appid'].'"  +quit';
-					//echo $cmd;
-					//$result = shell_exec($cmd);
-					
-					//$remote = test_remote($result); // check to be removed 
-			
+															
 			// need to set branch !
 			if (isset($remote['public']['buildid'])) {
 				// slow up db hits 
@@ -88,12 +80,12 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$local['buildid'] = $man_check['buildid'];
 					$data['buildid']=0;
 					echo 'Correcting Build'.cr;
-					 echo 'Locally installed version '.$man_check['buildid'].cr;
+				 echo 'Locally installed version '.$man_check['buildid'].cr;
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
 				$update['rbuildid'] = $remote['public']['buildid']; 
-				$update['rserver_update']= $remote['public']['update'];
+				$update['rserver_update']= $remote['public']['timeupdated'];
 				$update['server_update']= $man_check['update'];
 				//echo 'app id '.$local['update'].cr;
 			    $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
@@ -129,10 +121,16 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
 				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
-				    //echo $cmd.cr;
 				    $update = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $update.cr;
+				     $update['server_id'] = $local['appid'];;
+					 $update['buildid'] = $local['buildid'];
+					 $update['rbuildid'] = $remote['public']['buildid']; 
+					 $update['rserver_update']= $remote['public']['timeupdated'];
+					 $update['server_update']= $man_check['update'];
+					 $where['server_id'] = $local['appid']; // update all servers with that app with the current build 
+			         $database->update('servers',$update,$where);
 					} 
 				}
 			}
@@ -142,7 +140,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 		function local_update($build,$local) {
 			
 			//
-			$acf_loc = $build['location'].'/serverfiles/steamapps';
+			$acf_loc = $build['location'].'/steamapps';
 			$find = 'appmanifest_';
 		    $files = glob($acf_loc."/*" . $find . "*");
 			$acf_file = file_get_contents($files[0]);
@@ -197,4 +195,28 @@ else
 return $return;
 
 }
+
+function check_local($file) {
+$data = shell_exec('cat '.$file.' |sed \'3,17!d\'');
+$arry = explode(cr,trim($data));
+foreach ($arry as $key=>$value) {
+	// clear blanks
+	if(empty(trim($value))) 
+	{ 
+		unset ($arry[$key]);
+		continue;
+		}
+	else {
+		$value =substr(trim($value),1);
+		$z = strpos($value,'"');
+		$nz = substr($value,0,$z);
+		$value =trim(str_replace($nz.'"','',$value));
+        $value=trim(str_replace('"','',$value));
+        $arry[$key]=$value;
+        $return[$nz]=$value;
+	}	
+	}
+	return $return;
+}
+
 ?>
