@@ -54,19 +54,13 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 	$res = $database->get_results($sql);
 	//print_r($res);
 	foreach ($res as $data) {
-		if(empty($data['buildid'])) {
-        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
+		        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
 					    
 			    $local =  check_local($acf_loc);
-			    echo 'local '.print_r ($local,true).cr;
+			    //echo 'local '.print_r ($local,true).cr;
 			
-		}
-		else {
-			$local['appid'] = $data['server_id'];
-			$local['buildid'] = $data['buildid'];
-			$local['update'] = $data['server_update'];
-			
-		}
+		
+		
 			    if (!in_array($local['appid'],$processed)) {
 								
 					 $remote = check_branch($local['appid'],$steamcmd);
