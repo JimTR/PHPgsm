@@ -209,8 +209,12 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr);
 	$logline = $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL;
-	//file_put_contents('xml.log',$logline,FILE_APPEND);
+	file_put_contents('xml.log',$logline,FILE_APPEND);
 	$game_detail = json_decode(stripslashes($temp),true);
+	if (strpos($game_detail['general']['total_size'],'MB')) {
+		//file_put_contents('xml.log','below gig'.PHP_EOL,FILE_APPEND);
+		$game_detail['general']['total_size']= intval($game_detail['general']['total_size'])/1024;
+	}
 	if ($j[$cpu_info->local_ip]['totplayers'] >0){
 	$player_pc = number_format((floatval($j[$cpu_info->local_ip]['totplayers']) / floatval($j[$cpu_info->local_ip]['slots']))*100,0);
 }
