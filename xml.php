@@ -209,8 +209,9 @@ foreach ($base_servers as $data) {
 	$mem_info = json_decode(stripslashes($temp),true);
 	$temp = file_get_contents($data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr);
 	$logline = $data['url'].':'.$data['port'].'/ajax.php?action=game_detail&data=true&key='.$ipaddr.PHP_EOL;
-	file_put_contents('xml.log',$logline,FILE_APPEND);
+	//file_put_contents('xml.log',$logline,FILE_APPEND);
 	$game_detail = json_decode(stripslashes($temp),true);
+	$game_size = $game_detail['general']['total_size'];
 	if (strpos($game_detail['general']['total_size'],'MB')) {
 		//file_put_contents('xml.log','below gig'.PHP_EOL,FILE_APPEND);
 		$game_detail['general']['total_size']= intval($game_detail['general']['total_size'])/1024;
@@ -275,7 +276,7 @@ else {
     $track->addChild('boot_used',$disk_nfo['boot_used'] ." (".$disk_nfo['boot_pc'] .")");
     $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
-    $track->addChild('gamespace',$game_detail['general']['total_size']);
+    $track->addChild('gamespace',$game_size);
     $track->addChild('live_games',$game_detail['general']['live_servers']);
     $track->addChild('total_games',$game_detail['general']['total_servers']);
     $track->addChild('total_mem',$game_detail['general']['mem'].'%');
