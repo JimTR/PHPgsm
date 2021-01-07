@@ -503,10 +503,10 @@ function exe_lgsm($server,$action,$exe)
 				$update['starttime'] = '';
 			    $where['host_name'] = $exe; 
 			    $database->update('servers',$update,$where);
-			    chdir($detail['location'].'/serverfiles');
+			    chdir($detail['location']);
 				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name']; 
 				exec($cmd); // open session
-				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'/serverfiles^M"';
+				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'^M"';
 			    exec($cmd); //make sure we are in the right place
 				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; 
 				exec($cmd); // start game
