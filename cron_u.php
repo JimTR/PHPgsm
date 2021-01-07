@@ -120,7 +120,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
-				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].'/serverfiles +app_update '.$data['server_id'].' +quit';
+				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].' +app_update '.$data['server_id'].' +quit';
 				    $update = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $update.cr;
