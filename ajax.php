@@ -645,7 +645,7 @@ function game_detail() {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
-		 //echo $sql.'<br>';		 
+		 echo $sql.'<br>';		 
 		 $server_data = $db->get_results($sql);
 		  $server_data=reset($server_data);
 		  if (empty($server_data['base_ip'])) {         
