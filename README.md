@@ -1,5 +1,5 @@
 Steam Game Server Controller
-Written in PHP
+Written in PHP as a MyBB extension
 <p><h2>PHP Controller for Steam games</h2>Currently <b>stable</b></p>
 <p>if you clone this project you will, most likely, need help installing the project</p>
 <p>Please open an issue and I will guide you through what you need to do.</p>
@@ -12,5 +12,10 @@ Written in PHP
 <li>Team Fortress 2</li>
 <li>Sticky Bots</li>
 <li>Project Cars 3</li>
-<li>Pirates, Vikings & Knights 2</li> 
+<li>Pirates, Vikings & Knights 2</li>
+<li>Double Action Boogaloo</li>
 </ul>
+<br>
+<p>This software will only run on linux servers, if you install to a windows server it, currently, will not work<br>
+The Mybb part of this project has not been added to this repository yet, this will be added in due course when I work out the best way of doing it.
+</p>
