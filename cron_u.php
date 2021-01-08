@@ -88,7 +88,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					
 					$database->update('servers',$update,$where);
 				//}
-			    echo cr.'Details for App Id '.$local['appid'].' ('.$local['name'].')'.cr;
+			    echo cr.'Details for App '.$local['name'].' ('.$local['appid'].')'.cr;
 			    echo cr.'Branch Detail'.cr;
 				//echo print_r($remote,true).cr;
 				$mask = "%11.11s %14.14s %40s %8s \n";
