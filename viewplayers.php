@@ -94,11 +94,11 @@ if ($info['Players'] >0) {
 							}			
 							
 							//$map = Emoji::Decode($result['flag']); //get flag
-							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:5%;">'. $player_list[$k]['TimeF'].'</td></tr>';
+							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:7%;">'. $player_list[$k]['TimeF'].'</td></tr>';
 							//print_r($result);
 						}
 						else {
-									$disp .='<tr class="country"><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:5%;">'. $player_list[$k]['TimeF'].'</td></tr>';
+									$disp .='<tr class="country"><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:7%;">'. $player_list[$k]['TimeF'].'</td></tr>';
 						}
 						
 						
