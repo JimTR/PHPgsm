@@ -19,7 +19,7 @@ foreach ($data['content'] as $k => $v ) {
 		$id = trim($t[0]);
 		file_put_contents('dbug.txt','new '.$id.PHP_EOL);
 	}
-	if (!trim($v)[0] == 'L') {
+	if (!substr($v,0,1) == 'L') {
 			$v ='Remove ->'.$v;
 		continue; 
 		}
