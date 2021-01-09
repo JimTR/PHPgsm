@@ -19,10 +19,6 @@ foreach ($data['content'] as $k => $v ) {
 		$id = trim($t[0]);
 		file_put_contents('dbug.txt','new '.$id.PHP_EOL);
 	}
-	if (!substr($v,0,1) == 'L') {
-			$v ='Remove ->'.$v;
-		continue; 
-		}
 	$v = preg_replace('/<.*?>/', '', $v); //user number ?
 	$v = preg_replace('@\(.*?\)@','',$v); // bracket content
 	$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
@@ -53,6 +49,7 @@ foreach ($data['content'] as $k => $v ) {
 	$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
 	$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 	$v = str_replace('Server logging enabled',' <span style="color:green;"><b>Server logging enabled</b></span>	',$v);
+	$v = str_replace('disconnected',' <span style="color="color:#ffbf00";"><b>dissconnected</b></span> ',$v);
 	$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
 	//$v = str_replace('Writing cfg/banned_user.cfg.','<span style="color:red;"></span><b>Writing cfg/banned_user.cfg.</b></span>',$v);
 	$v = str_replace('fof_cripplecreek','<span style="color:#0d1f54;"><b>fof_cripplecreek</b></span>',$v); 
