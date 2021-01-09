@@ -4,6 +4,7 @@
  */
 // header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
+readlog($file);
 $result = array();
 clearstatcache(true, $file);
 $data['time']    = filemtime($file);
@@ -12,6 +13,7 @@ $data['content'] = $_GET['time'] < $data['time']
     : false;
 
 foreach ($data['content'] as $k => $v ) {
+	if (!$v[0] == 'L') { continue; }
 	$x = strpos($v,'" connected, address "');
 	if ($x >0 ) {
 		echo 'new  ';
@@ -99,5 +101,11 @@ function getLastLines($path, $totalLines) {
   $lines = array_reverse($lines);
 
   return $lines;
+}
+function readlog($file) {
+	//redo function
+	$tmp = file_get_contents($file);
+	$tmp = explode(PHP_EOL,$tmp);
+	echo print_r($tmp,true).PHP_EOL;
 }
 ?>
