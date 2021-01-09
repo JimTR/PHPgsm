@@ -32,6 +32,9 @@ require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
 require_once('GameQ/Autoloader.php');
+if (isset($_GET['path'])){
+$argv[1] = $_GET['path'];
+}
 if(empty($argv[1])) {
 	//print_r($argv);
 	echo 'Please supply a file to scan'.PHP_EOL;
@@ -44,7 +47,7 @@ $file =$argv[1];
 $x = strpos($file,'-');
 $server = substr($file,0,$x);
 $x = strrpos($server,'/');
-$server = substr($server,$x);
+$server = substr($server,$x+1);
 //echo $x.PHP_EOL;
 echo 'Processing server '.$server.PHP_EOL;
 $log = file_get_contents($file);
@@ -52,18 +55,35 @@ $data = explode(PHP_EOL,$log);
 echo 'Rows to process '.count($data).PHP_EOL;
 foreach ($data as $value) {
 	// loop
-	$x = strpos($value,'" connected, address "');
+	//$value = str_replace('"','',$value);
+	$bot = strpos($value,' connected, address "none');
+	if($bot) {continue;}
+	$x = strpos($value,' connected, address ');
 	if ($x >0) {
 		// save output
 		$value=trim($value);
 		//preg_match($r, $value, $t); // get ip
 		preg_match('/(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}/', $value, $t);
+		//echo print_r ($t,true).PHP_EOL;
 		if( isset($t[0])) {
 			$ip=$t[0];
+		}
+			else {unset($ip);
+		     continue;}
 				//print_r($t);
 		preg_match('/U:[0-9]:\d+/', $value, $t); // get steam id
 		$id = trim($t[0]);
-	}
+		//echo $id.PHP_EOL;
+		try
+{
+		$s = new SteamID( '['.$id.']' );
+		}
+catch( InvalidArgumentException $e )
+{
+	echo 'Given SteamID could not be parsed.';
+}
+		$id2 = $s->ConvertToUInt64();
+	
 		if (empty($id)) {
 			preg_match('/STEAM_[0-9]:[0-9]:\d+/', $value, $t);
 			$id = $t[0];
@@ -73,13 +93,15 @@ foreach ($data as $value) {
 			$id2= $t[0];
 		}
 		else {
-			unset ($id2);
+			//unset ($id2);
 		}
+		
 		preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
 		$username = $t[0];
+		//echo 'processing '.$username.' '.$ip.' '.$id2.PHP_EOL;
 		$la[$username]['ip']=$ip;
 		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
 		$la[$username]['time']=$timestring;
@@ -92,10 +114,7 @@ foreach ($data as $value) {
 echo 'Rows found '.count($la).PHP_EOL;
 echo 'Processing'.PHP_EOL;
 $rows = $database->get_results( 'DESCRIBE players' );
- foreach ($rows as $row) {
-    $fields[] = $row['Field'];
-  }
-  
+ 
   unset($fields[0]); // take out id 
 $count=0;
 $done=0;
@@ -103,6 +122,9 @@ foreach ($la as $data) {
 	// second loop
 	$user = trim($data['id']);
 	//$max =1; // debug
+	$username = $data['tst'];
+	$ip = $data['ip'];
+	echo $username.' '.$ip.' '.$data['id2'].PHP_EOL;
     //$user= $database->escape($user);
 	$ql = $sql.$user.'"';
 	$result = $database->get_row($sql.$user.'"');
@@ -122,13 +144,13 @@ foreach ($la as $data) {
 		$result['name'] = $data['tst'];
 		//$result['country_code'] = $data['country_code'];
 		if(strpos($result['server'],$server) === false) {
-			echo $data['tst'].' - '.$data['id']. ' played a different server'.PHP_EOL;
+			echo $data['tst'].' - '.$data['id']. ' played a different server ('.$server.')'.PHP_EOL;
 			$result['server'].=','.$server;
 		}
 		
 		$result = $database->escape($result);
 		$database->update('players',$result,$where);
-		
+		$update_users++;
 		// update
 		
 	}
@@ -190,6 +212,7 @@ if (empty($done)) {
 else {
 echo 'Inserted '.$done.' records'.PHP_EOL;
 }
+echo 'Updated '.$update_users.PHP_EOL;
 echo 'done'.PHP_EOL;
 //print_r($records);
 ?>
