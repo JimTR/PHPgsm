@@ -28,7 +28,7 @@ use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
-define( 'SQ_SERVER_ADDR', $ip );
+	define( 'SQ_SERVER_ADDR', $ip );
 	define( 'SQ_SERVER_PORT', $sport );
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
@@ -51,17 +51,9 @@ $browser = get_browser(null, true);
 if (empty($_GET['id'])) {
 	redirect('/');
 }
-//require_once('GameQ/Autoloader.php');
+
 require 'includes/Emoji.php';
 $sql = 'select * from players where BINARY name="';
-//$GameQ = new \GameQ\GameQ();
-//echo "new gameq<br>";
-//$GameQ->addServer($servers);
-//echo "added server<br>";
-//$results = $GameQ->process();
-//echo "good to here<br>";
-//print_r($info);
-//$key = $servers['id'];
 $disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
 
 if ($info['Players'] >0) {
@@ -86,27 +78,7 @@ if ($info['Players'] >0) {
 						//}
 						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
-						switch (true) {
-							// format score
-							case  ($player_list[$k]['Frags']<0) :
-								// minus
-								$pscore = '&nbsp;&nbsp;&nbsp;'.$player_list[$k]['Frags']; //format score
-								break;
-							case  ($player_list[$k]['Frags']<10) :
-								//
-								$pscore = '&nbsp;&nbsp;&nbsp;&nbsp;'.$player_list[$k]['Frags']; //format score
-								break;
-								case  ($player_list[$k]['Frags']<100) :
-								//
-								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['Frags']; //format score
-								break;
-							case  ($player_list[$k]['Frags']<1000)	:
-								//
-								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['Frags']; //format score
-								break;
-							 default:
-                                                                $pscore = $player_list[$k]['Frags'];
-						}
+						$pscore =  $player_list[$k]['Frags'];
 
 						// format display here
 						// add sub template
@@ -126,7 +98,7 @@ if ($info['Players'] >0) {
 							//print_r($result);
 						}
 						else {
-									$disp .='<tr class="country"><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td>'.$pscore.'</td><td style="padding-left:1%;">'. $player_list[$k]['TimeF'].'</td></tr>';
+									$disp .='<tr class="country"><td><i class="player_n" style="" >'.$playerN.'</i></td><td></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="padding-left:1%;">'. $player_list[$k]['TimeF'].'</td></tr>';
 						}
 						
 						
