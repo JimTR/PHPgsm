@@ -13,7 +13,7 @@ $data['content'] = $_GET['time'] < $data['time']
     : false;
 
 foreach ($data['content'] as $k => $v ) {
-	if (!$v[0] == 'L') { continue; }
+	//if (!$v[0] == 'L') { continue; }
 	$x = strpos($v,'" connected, address "');
 	if ($x >0 ) {
 		echo 'new  ';
