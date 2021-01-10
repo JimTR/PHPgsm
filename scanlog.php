@@ -95,12 +95,14 @@ function do_all($server,$data) {
 		}
 			else {unset($ip);
 		     continue;}
-		     
+		    $id=''; 
 		    preg_match('/U:[0-9]:\d+/', $value, $t); // get steam id
 		    //print_r ($t);
 		    if (isset($t[0])){
 			$id = trim($t[0]);
 		}
+		
+		
 		
 	if(!empty($id)) {	
 		//echo $id.' - ';
@@ -111,6 +113,8 @@ function do_all($server,$data) {
 catch( InvalidArgumentException $e )
 {
 	echo 'Given SteamID could not be parsed. in style 3 '.$id.PHP_EOL;
+	echo 'from '.$value.PHP_EOL;
+	echo 'extracted '.$id.PHP_EOL;
 }
 		$id2 = $s->ConvertToUInt64();
 }
