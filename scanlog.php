@@ -272,7 +272,8 @@ foreach ($la as $user_data) {
 		 echo 'Database Insertion failed with'.cr;
 		 print_r($result);		 
 		//echo cr;
-}			
+}
+echo $rt.cr;			
 	}
 	// print_r($result); //debug code
 	
@@ -282,6 +283,7 @@ echo cr.'Processed '.$server.cr;
 $mask = "%15.15s %4.4s \n";
 printf($mask,'Modified Users',$update_users );
 printf($mask,'New Users',$done );
+echo cr;
 }
 function get_ip_detail($ip) {
 	// return api data
