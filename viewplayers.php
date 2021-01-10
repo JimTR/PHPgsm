@@ -54,7 +54,7 @@ if (empty($_GET['id'])) {
 }
 
 require 'includes/Emoji.php';
-$sql = 'select * from players where BINARY name LIKE "';
+$sql = 'select * from players where BINARY name="';
 $disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
 
 if ($info['Players'] >0) {
@@ -65,7 +65,7 @@ if ($info['Players'] >0) {
 					orderBy($player_list,'Frags');
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
-						
+						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 						$playerN = $player_list[$k]['Name'];
 						
 						
@@ -73,7 +73,11 @@ if ($info['Players'] >0) {
 						$playerN2 = $database->escape($playerN2);
 						//echo $playerN2.'  ';
 						$result = $database->get_results($sql.$playerN2.'"');
-								
+						
+						//if (empty($result['name'])) {
+							//$result = $database->get_results($sql.$playerN.'"');
+						//}
+						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						$pscore =  $player_list[$k]['Frags'];
 
