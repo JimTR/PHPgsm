@@ -26,8 +26,9 @@
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
  */
 $key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
-//echo PHP_EOL;
+//echo cr;
 error_reporting( -1 );
+define('cr',PHP_EOL);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
@@ -35,10 +36,10 @@ if (isset($_GET['path'])){
 $argv[1] = $_GET['path'];
 }
 if(empty($argv[1])) {
-	//print_r($argv);
-	echo 'Please supply a file to scan'.PHP_EOL;
-	echo 'Example :- '.$argv[0].' path/to/file <serverid>'.PHP_EOL;
-	echo 'or - '.$argv[0].' all'.PHP_EOL;
+	
+	echo 'Please supply a file to scan'.cr;
+	echo 'Example :- '.$argv[0].' path/to/file <serverid>'.cr;
+	echo 'or - '.$argv[0].' all'.cr;
 	exit;
 }
 $sql = 'select * from players where steam_id="'; // sql stub for user updates
@@ -54,8 +55,8 @@ if ($file == 'all') {
 		$server_key = md5( ip2long($run['ipaddr'])) ;
 		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 		$tmp = file_get_contents($path);
-		//echo $path.PHP_EOL;
-		//echo $tmp.PHP_EOL;
+		//echo $path.cr;
+		//echo $tmp.cr;
 		//file_put_contents($run['host_name'],$tmp);
 		do_all($run['host_name'],$tmp);
 	}
@@ -65,7 +66,19 @@ if ($file == 'all') {
 }
 else {
 	// do supplied file
-	
+	if (!isset($argv[2])) {
+		echo 'you must supply a server ID !'.cr;
+		exit;
+		}
+	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[2].'"';
+	//echo $allsql.cr;
+	$run = $database->get_row($allsql);
+	$server_key = md5( ip2long($run['ipaddr'])) ;
+	$path = $argv[1];
+	$tmp = file_get_contents($path);
+		echo 'Using file '.$path.cr;
+		//echo $tmp.cr;
+		do_all($argv[2],$tmp);
 }
 function do_all($server,$data) {
 	// cron code
@@ -74,9 +87,9 @@ function do_all($server,$data) {
 	$update_users = 0;
 	global $database, $key;
 	$sql = 'select * from players where steam_id="'; // sql stub for user updates
-	echo 'Processing server '.$server.PHP_EOL;
-	$log = explode(PHP_EOL,$data);
-    // echo 'Rows to process '.count($log).PHP_EOL; //debug code
+	echo 'Processing server '.$server.cr;
+	$log = explode(cr,$data);
+    // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
 		// loop lines
 		$bot = strpos($value,' connected, address "none');
@@ -88,10 +101,10 @@ function do_all($server,$data) {
 	
 		//preg_match($r, $value, $t); // get ip
 		preg_match('/(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}/', $value, $t);
-		//echo print_r ($t,true).PHP_EOL;
+		//echo print_r ($t,true).cr;
 		if( isset($t[0])) {
 			$ip=$t[0];
-			//echo $ip.PHP_EOL;
+			//echo $ip.cr;
 		}
 			else {unset($ip);
 		     continue;}
@@ -112,9 +125,9 @@ function do_all($server,$data) {
 		}
 catch( InvalidArgumentException $e )
 {
-	echo 'Given SteamID could not be parsed. in style 3 '.$id.PHP_EOL;
-	echo 'from '.$value.PHP_EOL;
-	echo 'extracted '.$id.PHP_EOL;
+	echo 'Given SteamID could not be parsed. in style 3 '.$id.cr;
+	echo 'from '.$value.cr;
+	echo 'extracted '.$id.cr;
 }
 		$id2 = $s->ConvertToUInt64();
 }
@@ -134,14 +147,14 @@ if (empty($id)) {
 		}
 
 if(!empty($id2)){
-	//echo $id2.PHP_EOL;
+	//echo $id2.cr;
 	}
 preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
 		$username = $t[0];
-		//echo 'processing '.$username.' '.$ip.' '.$id2.PHP_EOL;
+		//echo 'processing '.$username.' '.$ip.' '.$id2.cr;
 		$la[$username]['ip']=$ip;
 		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
 		$la[$username]['time']=$timestring;
@@ -151,13 +164,13 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
 	}
 		 
 }
-// if (isset($la)) {echo print_r($la,true).PHP_EOL;} //debug code
+// if (isset($la)) {echo print_r($la,true).cr;} //debug code
 if (!isset($la)) { 
 	$pc = 0;
 	} else {$pc = count($la);}
-//echo 'Rows found '.$pc.PHP_EOL;
+//echo 'Rows found '.$pc.cr;
 if ( $pc == 0 ) {
-	echo "\t Nothing to do".PHP_EOL;
+	echo "\t Nothing to do".cr;
 return;
 }
 
@@ -180,7 +193,7 @@ foreach ($la as $user_data) {
 		$result['steam_id64'] = $user_data['id2'];
 		$modify=true;
 		}
-		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].PHP_EOL; // debug code
+		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
 			$rt.= ' new logon ';
 			$result['last_log_on'] = $last_logon;
@@ -220,10 +233,10 @@ foreach ($la as $user_data) {
 		$result = $database->escape($result);
 		$database->update('players',$result,$where);
 		$update_users++;
-		echo $rt.PHP_EOL;
+		echo $rt.cr;
 	}
 	else{
-		echo $rt.' no change'.PHP_EOL;
+		echo $rt.' no change'.cr;
 	}
 	}
 	else {
@@ -256,22 +269,26 @@ foreach ($la as $user_data) {
 			 	 $rt .=' Record added';
 			 }
 	   else {
-		 echo 'Database Insertion failed with'.PHP_EOL;
+		 echo 'Database Insertion failed with'.cr;
 		 print_r($result);		 
-		//echo PHP_EOL;
+		//echo cr;
 }			
 	}
 	// print_r($result); //debug code
 	
 
 }
+echo cr.'Processed '.$server.cr;
+$mask = "%15.15s %4.4s \n";
+printf($mask,'Modified Users',$update_users );
+printf($mask,'New Users',$done );
 }
 function get_ip_detail($ip) {
 	// return api data
 	global $key;
 	
 	$cmd =  'https://api.ipdata.co/'.$ip.'?api-key='.$key;
-	// echo $cmd.PHP_EOL; //debug code
+	 //echo $cmd.cr; //debug code
 	$ip_data = json_decode(file_get_contents($cmd), true); //get the result
 	 if (empty($ip_data['threat']['is_threat'])) {$ip_data['threat']['is_threat']=0;}
 	 //print_r($ip_data); //debug code
