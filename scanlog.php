@@ -95,8 +95,12 @@ function do_all($server,$data) {
 		}
 			else {unset($ip);
 		     continue;}
+		     
 		    preg_match('/U:[0-9]:\d+/', $value, $t); // get steam id
-		$id = trim($t[0]);
+		    //print_r ($t);
+		    if (isset($t[0])){
+			$id = trim($t[0]);
+		}
 		
 	if(!empty($id)) {	
 		//echo $id.' - ';
@@ -106,17 +110,18 @@ function do_all($server,$data) {
 		}
 catch( InvalidArgumentException $e )
 {
-	echo 'Given SteamID could not be parsed. in 3'.$id.PHP_EOL;
+	echo 'Given SteamID could not be parsed. in style 3 '.$id.PHP_EOL;
 }
 		$id2 = $s->ConvertToUInt64();
 }
 if (empty($id)) {
 			preg_match('/STEAM_[0-9]:[0-9]:\d+/', $value, $t);
+			//print_r($t);
 			$id = $t[0];
 			$s = new SteamID( $id );
 			$id = $s->RenderSteam3();
-			preg_match('/U:[0-9]:\d+/', $id2, $t);
-			$id= $t[0];
+			//preg_match('/U:[0-9]:\d+/', $id2, $t);
+			//$id= $t[0];
 			//echo $id.' - ';
 			$id2 = $s->ConvertToUInt64();
 		}
@@ -220,6 +225,7 @@ foreach ($la as $user_data) {
 	else {
 		$rt .=' New user';
 		$count ++;
+		$last_logon = time();
 		$ip_data = get_ip_detail($ip);
 		$result['ip'] = $user_data['ip'];
 		$result['steam_id'] = $user;
@@ -237,6 +243,7 @@ foreach ($la as $user_data) {
 		$result['type'] = $ip_data['asn']['type'];
 		$result['threat'] = $ip_data['threat']['is_threat'];
 		$result['server'] = $server;
+		
 		
 		$result = $database->escape($result);
 	    $in = $database->insert('players',$result);
