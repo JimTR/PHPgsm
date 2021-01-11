@@ -288,7 +288,7 @@ foreach ($la as $user_data) {
 	    $in = $database->insert('players',$result);
 	    if ($in === true ){
 			 	 $done++;
-			 	 $ut .=' Record added';
+			 	 $ut .=' Record added'.cr;
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
@@ -302,7 +302,7 @@ foreach ($la as $user_data) {
 
 	if (isset($ut)) {
 		if ($modify || $added) {		
-			$rt .= $user_stub.' '.$ut.cr;
+			$rt .= $user_stub.' '.$ut;
 		}
 	}
 }
