@@ -24,6 +24,7 @@
  * SELECT * FROM `players` WHERE `server` LIKE 'fofserver2'
  * SELECT country,COUNT(*) as total FROM players GROUP BY country order by total desc limit 10 ;
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
+ * Major re work January 2021 
  */
 $key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
 //echo cr;
@@ -32,8 +33,9 @@ define('cr',PHP_EOL);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
-if (isset($_GET['path'])){
-$argv[1] = $_GET['path'];
+if (!isset($argv)){
+echo 'wrong enviroment';
+exit;
 }
 if(empty($argv[1])) {
 	
