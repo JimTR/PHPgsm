@@ -93,12 +93,13 @@ else {
 }
 function do_all($server,$data) {
 	// cron code
+	
 	$count = 0;
 	$done= 0;
 	$update_users = 0;
 	global $database, $key;
 	$sql = 'select * from players where steam_id="'; // sql stub for user updates
-	echo 'Processing server '.$server.cr;
+	$rt = 'Processing server '.$server.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
@@ -136,9 +137,9 @@ function do_all($server,$data) {
 		}
 catch( InvalidArgumentException $e )
 {
-	echo 'Given SteamID could not be parsed. in style 3 '.$id.cr;
-	echo 'from '.$value.cr;
-	echo 'extracted '.$id.cr;
+	$rt .= 'Given SteamID could not be parsed. in style 3 '.$id.cr;
+	$rt .= 'from '.$value.cr;
+	$rt .= 'extracted '.$id.cr;
 }
 		$id2 = $s->ConvertToUInt64();
 }
@@ -181,39 +182,41 @@ if (!isset($la)) {
 	} else {$pc = count($la);}
 //echo 'Rows found '.$pc.cr;
 if ( $pc == 0 ) {
-	echo "\t Nothing to do".cr;
+	//echo "\t Nothing to do".cr;
 return;
 }
 
 foreach ($la as $user_data) {
-	$rt='';
+	
 	// now do data
 	$user = trim($user_data['id']);
 	$username = $user_data['tst'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
-	$rt ="\t". $user_data['id2'].' '.$username;
+	$added = false;
+	$user_stub ="\t". $user_data['id2'].' '.$username;
+	$ut='';
 	$result = $database->get_row($sql.$user.'"');
 	if (!empty($result)){
 		unset($result['id']); // take out id
 		$where['steam_id'] = $user_data['id'];
 		$last_logon = strtotime($user_data['time']);
 		if (empty($result['steam_id64'])) {
-		$rt .=' no ID64 (correcting)';
+		$ut .=' no ID64 (correcting)';
 		$result['steam_id64'] = $user_data['id2'];
 		$modify=true;
 		}
 		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
-			$rt.= ' new logon ';
+			$ut.= ' new logon ';
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
 			$modify=true;
 		}
 		
 		if ($user_data['ip'] <> $result['ip'] ) {
-			$rt.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
+			$ut.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
 			//check ip on change
 			$ip_data = get_ip_detail($ip);
 			$result['continent'] = $ip_data['continent_name'];
@@ -230,13 +233,13 @@ foreach ($la as $user_data) {
 		}
 		
 		if ($username <> $result['name']) {
-			$rt.= ' User name change from '.$result['name'].' to '.$username;
+			$ut.= ' User name change from '.$result['name'].' to '.$username;
 			$result['name'] = $username;
 			$modify=true;
 		}
 		
 		if(strpos($result['server'],$server) === false) {
-			$rt.= ' played a different server ('.$server.')';
+			$ut.= ' played a different server ('.$server.')';
 			$result['server'].=','.$server;
 			$modify=true;
 			}
@@ -245,14 +248,15 @@ foreach ($la as $user_data) {
 		$result = $database->escape($result);
 		$database->update('players',$result,$where);
 		$update_users++;
-		echo $rt.cr;
+		$ut .= cr;
 	}
 	else{
 		//echo $rt.' no change'.cr;
 	}
 	}
 	else {
-		$rt .=' New user';
+		$added = true;
+		$ut .= $ut.' New user';
 		$count ++;
 		$last_logon = time();
 		$ip_data = get_ip_detail($ip);
@@ -284,24 +288,35 @@ foreach ($la as $user_data) {
 	    $in = $database->insert('players',$result);
 	    if ($in === true ){
 			 	 $done++;
-			 	 $rt .=' Record added';
+			 	 $ut .=' Record added';
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
 		 print_r($result);		 
 		//echo cr;
 }
-echo $rt.cr;			
+
+ //$rt.=cr;			
 	}
 	// print_r($result); //debug code
-	
 
+if (isset($ut)) {
+if ($modify || $added) {		
+$rt .= $user_stub.' '.$ut.cr;
 }
-echo cr;
+}
+}
+
+
 $mask = "%15.15s %4.4s \n";
+if ($done || $update_users ) {
+echo $rt;
 printf($mask,'New Users',$done );
 printf($mask,'Modified Users',$update_users );
+
 echo cr.'Processed '.$server.cr.cr;
+}
+
 }
 function get_ip_detail($ip) {
 	// return api data
