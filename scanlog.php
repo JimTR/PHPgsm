@@ -99,7 +99,7 @@ function do_all($server,$data) {
 	$update_users = 0;
 	global $database, $key;
 	$sql = 'select * from players where steam_id="'; // sql stub for user updates
-	$rt = 'Processing server '.$server.cr;
+	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
@@ -300,11 +300,11 @@ foreach ($la as $user_data) {
 	}
 	// print_r($result); //debug code
 
-if (isset($ut)) {
-if ($modify || $added) {		
-$rt .= $user_stub.' '.$ut.cr;
-}
-}
+	if (isset($ut)) {
+		if ($modify || $added) {		
+			$rt .= $user_stub.' '.$ut.cr;
+		}
+	}
 }
 
 
