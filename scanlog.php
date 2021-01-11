@@ -225,8 +225,9 @@ foreach ($la as $user_data) {
 		}
 		
 		if(strpos($result['server'],$server) === false) {
-			$rt.= ' '.$username.' - '.$user_data['id']. ' played a different server ('.$server.')';
+			$rt.= ' played a different server ('.$server.')';
 			$result['server'].=','.$server;
+			$modify=true;
 			}
 			
 		if ($modify) {
@@ -257,7 +258,12 @@ foreach ($la as $user_data) {
 		$result['city'] = $ip_data['city'];
 		$result['flag'] = Emoji::Encode($ip_data['emoji_flag']);
 		$result['time_zone'] = $ip_data['time_zone']['name'];
+		if (isset($ip_data['asn']['type'])) {
 		$result['type'] = $ip_data['asn']['type'];
+	}
+	else {
+		$result['type'] = 'N/A';
+	}
 		$result['threat'] = $ip_data['threat']['is_threat'];
 		$result['server'] = $server;
 		
