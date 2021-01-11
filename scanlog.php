@@ -37,8 +37,8 @@ $argv[1] = $_GET['path'];
 }
 if(empty($argv[1])) {
 	
-	echo 'Please supply a file to scan'.cr;
-	echo 'Example :- '.$argv[0].' path/to/file <serverid>'.cr;
+	echo 'Please supply a Server to scan'.cr;
+	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
 	exit;
 }
@@ -60,25 +60,36 @@ if ($file == 'all') {
 		//file_put_contents($run['host_name'],$tmp);
 		do_all($run['host_name'],$tmp);
 	}
-	//$mask = "%15.15s %4.4s \n";
-	//printf($mask,'Modified Users', $update_users);
-	exit;
+	
 }
 else {
 	// do supplied file
-	if (!isset($argv[2])) {
-		echo 'you must supply a server ID !'.cr;
+	if (!file_exists($argv[2])) {
+		echo 'could not open '.$argv[2].cr;
 		exit;
-		}
-	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[2].'"';
-	//echo $allsql.cr;
+	}
+	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
+		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
+	if(empty($run)) {
+		echo 'Invalid server id '.$argv[1].' correct & try again'.cr;
+		exit;
+	}
 	$server_key = md5( ip2long($run['ipaddr'])) ;
-	$path = $argv[1];
-	$tmp = file_get_contents($path);
-		echo 'Using file '.$path.cr;
-		//echo $tmp.cr;
-		do_all($argv[2],$tmp);
+	//$path = $argv[1];
+	print_r($run);
+	if (empty($argv[2])) {
+	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
+	}
+	else {
+		// assume run local 
+		$path = $argv[2];
+	}
+		//$tmp = file_get_contents($path);
+		echo 'Scanning '.$argv[1].cr;
+		echo cr.$path.cr;
+		exit;
+		do_all($argv[1],$tmp);
 }
 function do_all($server,$data) {
 	// cron code
@@ -249,6 +260,7 @@ foreach ($la as $user_data) {
 		$result['steam_id'] = $user;
 		$result['steam_id64'] = $user_data['id2'];
 		$result['name'] = $username;
+		$result['first_log_on'] = $last_logon;
 		$result['log_ons'] = 1;
 		$result['last_log_on'] = $last_logon;
 		$result['continent'] = $ip_data['continent_name'];
