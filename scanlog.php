@@ -195,7 +195,7 @@ foreach ($la as $user_data) {
 	$user = trim($user_data['id']);
 	$user_search = $user.'" OR steam_id64 ="'.$user_data['id2'].'"';
 	//echo $sql.$user_search.cr; debug code
-	$username = $user_data['tst'];
+	$username = trim($user_data['tst']);
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
@@ -247,9 +247,9 @@ foreach ($la as $user_data) {
 			$modify=true;
 		}
 		
-		if ($username <> $result['name']) {
+		if (trim($username) <> $result['name']) {
 			$ut.= ' User name change from '.$result['name'].' to '.$username;
-			$result['name'] = $username;
+			$result['name'] = trim($username);
 			$modify=true;
 		}
 		
