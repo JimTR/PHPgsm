@@ -51,6 +51,7 @@ if ($file == 'all') {
 	
 		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
 		$game_results = $database->get_results($allsql);
+		$display='';
 	//print_r ($game_results);
 	foreach ($game_results as $run) {
 		//bulid path
