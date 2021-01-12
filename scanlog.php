@@ -60,9 +60,9 @@ if ($file == 'all') {
 		//echo $path.cr;
 		//echo $tmp.cr;
 		//file_put_contents($run['host_name'],$tmp);
-		do_all($run['host_name'],$tmp);
+		$display .= do_all($run['host_name'],$tmp);
 	}
-	
+	echo $display;
 }
 else {
 	// do supplied file
@@ -253,7 +253,7 @@ foreach ($la as $user_data) {
 		}
 		
 		if(strpos($result['server'],$server) === false) {
-			$ut.= ' played a different server ('.$server.')';
+			$ut.= ' played a new server';
 			$result['server'].=','.$server;
 			$modify=true;
 			}
@@ -329,7 +329,8 @@ $rt .= sprintf($mask,'New Users',$done );
 $rt .= sprintf($mask,'Modified Users',$update_users );
 
 $rt .= cr.'Processed '.$server.cr.cr;
-echo $rt;
+//echo $rt;
+return $rt;
 }
 
 }
