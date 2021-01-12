@@ -204,17 +204,20 @@ foreach ($la as $user_data) {
 		unset($result['id']); // take out id
 		$where['steam_id'] = $user_data['id'];
 		$last_logon = strtotime($user_data['time']);
-		if (empty($result['steam_id64'])) {
-		$ut .=' no ID64 (correcting)';
-		$result['steam_id64'] = $user_data['id2'];
-		$modify=true;
-		}
+		
 		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
 			$ut.= ' new logon ';
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
+			$ut.= ' new logon (total '.$result['log_ons'].')';
 			$modify=true;
+		}
+		
+		if (empty($result['steam_id64'])) {
+		$ut .=' no ID64 (correcting)';
+		$result['steam_id64'] = $user_data['id2'];
+		$modify=true;
 		}
 		
 		if ($user_data['ip'] <> $result['ip'] ) {
