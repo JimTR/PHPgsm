@@ -326,7 +326,7 @@ $mask = "%15.15s %4.4s \n";
 if ($done || $update_users ) {
 //echo $rt;
 $rt .= sprintf($mask,'New Users',$done );
-$rt .= printf($mask,'Modified Users',$update_users );
+$rt .= sprintf($mask,'Modified Users',$update_users );
 
 $rt .= cr.'Processed '.$server.cr.cr;
 echo $rt;
