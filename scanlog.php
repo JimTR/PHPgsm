@@ -209,7 +209,6 @@ foreach ($la as $user_data) {
 		
 		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
-			$ut.= ' new logon ';
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
 			$ut.= ' new logon (total '.$result['log_ons'].')';
