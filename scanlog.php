@@ -38,7 +38,7 @@ echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	
+	echo 'Scanlog V2.0 © 2021'.cr;
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
@@ -206,8 +206,17 @@ foreach ($la as $user_data) {
 		unset($result['id']); // take out id
 		$where['steam_id'] = $user_data['id'];
 		$last_logon = strtotime($user_data['time']);
+		/*if ($last_logon >  $result['last_log_on']) {
+			$yz = ' larger';
+		}
+		elseif  ($last_logon =  $result['last_log_on']){
+			$yz= ' equal';
+		}
+		else {
+			$yz = ' smaller';
+		}*/
+		//echo $user_stub.' last played '.$last_logon.' Database sees '.$result['last_log_on'].$yz.cr; // debug code
 		
-		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
@@ -315,11 +324,12 @@ foreach ($la as $user_data) {
 
 $mask = "%15.15s %4.4s \n";
 if ($done || $update_users ) {
-echo $rt;
-printf($mask,'New Users',$done );
-printf($mask,'Modified Users',$update_users );
+//echo $rt;
+$rt .= sprintf($mask,'New Users',$done );
+$rt .= printf($mask,'Modified Users',$update_users );
 
-echo cr.'Processed '.$server.cr.cr;
+$rt .= cr.'Processed '.$server.cr.cr;
+echo $rt;
 }
 
 }
