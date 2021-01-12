@@ -192,6 +192,8 @@ foreach ($la as $user_data) {
 	
 	// now do data
 	$user = trim($user_data['id']);
+	$user_search = $user.'" OR steam_id64 ="'.$user_data['id2'].'"';
+	//echo $sql.$user_search.cr; debug code
 	$username = $user_data['tst'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
@@ -199,7 +201,7 @@ foreach ($la as $user_data) {
 	$added = false;
 	$user_stub ="\t". $user_data['id2'].' '.$username;
 	$ut='';
-	$result = $database->get_row($sql.$user.'"');
+	$result = $database->get_row($sql.$user_search);
 	if (!empty($result)){
 		unset($result['id']); // take out id
 		$where['steam_id'] = $user_data['id'];
@@ -207,13 +209,12 @@ foreach ($la as $user_data) {
 		
 		//echo 'last played '.$last_logon.' Database sees '.$result['last_log_on'].cr; // debug code
 		if ($last_logon >  $result['last_log_on']) {
-			//$ut.= ' new logon ';
+			$ut.= ' new logon ';
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
 			$ut.= ' new logon (total '.$result['log_ons'].')';
 			$modify=true;
 		}
-		
 		if (empty($result['steam_id64'])) {
 		$ut .=' no ID64 (correcting)';
 		$result['steam_id64'] = $user_data['id2'];
