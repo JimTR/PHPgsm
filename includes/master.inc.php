@@ -101,16 +101,16 @@ else {$page['address'] ='';}
      if($settings['session'] === "1") 
       { 
 		 
-        DBSession::gc (CLEAR); // delete old sessions depends on settings if no sql events do this line 
+        //DBSession::gc (CLEAR); // delete old sessions depends on settings if no sql events do this line 
        
     // Initialize our session
-		DBSession::register(); // register the session
-		session_name('yoursite');
-		session_start();
-	    $id = session_id();
+		//DBSession::register(); // register the session
+		//session_name('yoursite');
+		//session_start();
+	    //$id = session_id();
 	    //$_SESSION['userid'] = intval($Auth->id);
 	    //$_SESSION['nid'] = $Auth->nid;
-	    $_SESSION['steamid'] = '';
+	    //$_SESSION['steamid'] = '';
 	    //DBSession::write($id,$$_SESSION);
 	    //DBSession::read ($id);
 	}	  

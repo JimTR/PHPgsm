@@ -261,7 +261,12 @@ foreach ($la as $user_data) {
 			
 		if ($modify) {
 		$result = $database->escape($result);
-		$database->update('players',$result,$where);
+		$n = $database->update('players',$result,$where);
+		if ($n === false) {
+			//
+			echo 'Database Update failed with'.cr;
+			print_r($result);		 
+		}
 		$update_users++;
 		$ut .= cr;
 	}
