@@ -438,6 +438,8 @@ class db
         //Overwrite the $row var to null
         $row = null;
         //die ($query);
+        $sql ='SET NAMES utf8mb4;';
+        $query1 = $this->link->query( $sql );
         $results = $this->link->query( $query );
         if( $this->link->error )
         {
@@ -680,6 +682,8 @@ class db
         {
             return false;
         }
+        $sql ='SET NAMES utf8mb4;';
+         $query = $this->link->query( $sql );
         $sql = "UPDATE ". $table ." SET ";
         foreach( $variables as $field => $value )
         {

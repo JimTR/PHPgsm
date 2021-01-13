@@ -264,8 +264,13 @@ foreach ($la as $user_data) {
 		$n = $database->update('players',$result,$where);
 		if ($n === false) {
 			//
-			echo 'Database Update failed with'.cr;
-			print_r($result);		 
+			echo cr.'Database Update failed with'.cr;
+			print_r($result);
+			echo 'trying again';
+			$database->query('SET character_set_results = binary;');
+			$result['name'] = $database->filter($result['name']);
+			$n = $database->update('players',$result,$where);
+					 
 		}
 		$update_users++;
 		$ut .= cr;
