@@ -91,13 +91,14 @@ class db
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
         {
-            //echo $error;   
+            echo $error;   
         }
     }
     
     
     public function __construct()
     {
+		//change here ?
         mb_internal_encoding( 'UTF-8' );
         mb_regex_encoding( 'UTF-8' );
         $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
