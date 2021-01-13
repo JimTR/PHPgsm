@@ -91,7 +91,7 @@ class db
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
         {
-            //echo $error;   
+            echo $error;   
         }
     }
     
@@ -139,7 +139,7 @@ class db
          if( !is_array( $data ) )
          {
              $data = $this->link->real_escape_string( $data );
-             $data = trim( htmlentities( $data, ENT_QUOTES, 'UTF-8', false ) );
+             $data = trim( htmlentities( $data, ENT_QUOTES, 'utf-8', false ) );
          }
          else
          {
@@ -487,7 +487,8 @@ class db
         {
             return false;
         }
-        
+        $sql ='SET NAMES utf8mb4;';
+         $query = $this->link->query( $sql );
         $sql = "INSERT INTO ". $table;
         $fields = array();
         $values = array();
