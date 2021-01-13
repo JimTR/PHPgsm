@@ -91,7 +91,7 @@ class db
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
         {
-            echo $error;   
+            //echo $error;   
         }
     }
     

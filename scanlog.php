@@ -195,7 +195,7 @@ foreach ($la as $user_data) {
 	$user = trim($user_data['id']);
 	$user_search = $user.'" OR steam_id64 ="'.$user_data['id2'].'"';
 	//echo $sql.$user_search.cr; debug code
-	$username = $user_data['tst'];
+	$username = $database->filter($user_data['tst']);
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
