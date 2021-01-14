@@ -124,7 +124,7 @@ function updateClock ()
      
     $("#clock").html(currentTimeString);
     // $('#clock').css('color','red');
-    console.log(currentTime.getTime());  
+    //console.log(currentTime.getTime());  
      }
 
 
