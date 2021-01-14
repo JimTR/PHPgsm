@@ -91,7 +91,11 @@ else {
 		//$tmp = file_get_contents($path);
 		echo 'Scanning '.$argv[1].cr;
 		echo cr.$path.cr;
-		exit;
+		$tmp = file_get_contents($path);
+		//echo $tmp;
+		//$tmp = explode(cr,$tmp);
+		//print_r($tmp);
+		//exit;
 		do_all($argv[1],$tmp);
 }
 function do_all($server,$data) {
@@ -168,10 +172,12 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
+		//𝙏𝙃𝙍𝘼𝙎𝙃𝙀
 		$username = $t[0];
 		//echo 'processing '.$username.' '.$ip.' '.$id2.cr;
 		$la[$username]['ip']=$ip;
 		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
+		if (empty($la[$username]['tst'])) {$la[$username]['tst'] =trim($username);}
 		$la[$username]['time']=$timestring;
 		$la[$username]['id'] = $id;
 		if (isset($id2)) {	$la[$username]['id2']=$id2;}
@@ -179,7 +185,7 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
 	}
 		 
 }
-// if (isset($la)) {echo print_r($la,true).cr;} //debug code
+//if (isset($la)) {echo print_r($la,true).cr;return;} //debug code
 if (!isset($la)) { 
 	$pc = 0;
 	} else {$pc = count($la);}
