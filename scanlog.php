@@ -288,7 +288,7 @@ foreach ($la as $user_data) {
 	}
 	}
 	else {
-		echo 'adding '.$username.cr;
+		//echo 'adding '.$username.cr;
 		$added = true;
 		$ut .= $ut.' New user';
 		$count ++;
