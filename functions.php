@@ -756,12 +756,17 @@ return $version;
 }
 }
 function display_games() {
+	 //require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
+	 //use xPaw\SourceQuery\SourceQuery as $jim;
+	 global $Query;
+	 echo 'here'.CR;
 	$database = new db(); // connect to database
-	$sql = 'select * from servers where enabled ="1" order by servers.host_name'; //select all enabled recorded servers
+	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
-   
+  
 foreach ($res as $data) {
+	
 	//add the data array for GameQ
 	//this does allow remote locations
 	// as long as you have the remote software installed
@@ -769,12 +774,23 @@ foreach ($res as $data) {
 	$servers[$key]['id'] = $key;
 	$servers[$key]['host'] = $data['host'].':'.$data['port'] ;
 	$servers[$key]['type'] = $data['type'];
+	define( 'SQ_SERVER_ADDR', $data['host'] );
+	define( 'SQ_SERVER_PORT', $data['port'] );
+	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	
+    $Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
+	$players = $Query->GetPlayers( ) ;
+	$info = $Query->GetInfo();
+	$rules = $Query->GetRules( );
+	$Query->Disconnect( );
+	print_r($info);
+	
 	}
 	require_once('GameQ/Autoloader.php'); //load GameQ
 	if (is_cli()) {
 		
-		echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
-		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
+		
 		} // get local servers	
 	
 	$tm = get_sessions();
