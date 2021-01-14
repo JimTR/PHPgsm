@@ -221,8 +221,8 @@ foreach ($la as $user_data) {
 		}
 		else {
 			$yz = ' smaller';
-		}*/
-		//echo $user_stub.' last played '.$last_logon.' Database sees '.$result['last_log_on'].$yz.cr; // debug code
+		}
+		echo $user_stub.' last played '.$last_logon.' Database sees '.$result['last_log_on'].$yz.cr; // debug code */
 		
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
@@ -267,7 +267,7 @@ foreach ($la as $user_data) {
 			
 		if ($modify) {
 		$result = $database->escape($result);
-		print_r($where);
+		//print_r($where);
 		$n = $database->update('players',$result,$where);
 		if ($n === false) {
 			//
@@ -288,6 +288,7 @@ foreach ($la as $user_data) {
 	}
 	}
 	else {
+		echo 'adding '.$username.cr;
 		$added = true;
 		$ut .= $ut.' New user';
 		$count ++;
