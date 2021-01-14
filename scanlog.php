@@ -44,7 +44,7 @@ if(empty($argv[1])) {
 	echo 'or - '.$argv[0].' all'.cr;
 	exit;
 }
-$sql = 'select * from players where steam_id="'; // sql stub for user updates
+$sql = 'select * from players where steam_id64="'; // sql stub for user updates
 
 $file =$argv[1];
 if ($file == 'all') {
@@ -105,7 +105,7 @@ function do_all($server,$data) {
 	$done= 0;
 	$update_users = 0;
 	global $database, $key;
-	$sql = 'select * from players where steam_id="'; // sql stub for user updates
+	$sql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
@@ -199,8 +199,8 @@ foreach ($la as $user_data) {
 	
 	// now do data
 	$user = trim($user_data['id']);
-	$user_search = $user.'" OR steam_id64 ="'.$user_data['id2'].'"';
-	//echo $sql.$user_search.cr; debug code
+	$user_search = $user_data['id2'].'"';
+	//echo $sql.$user_search.cr; //debug code
 	$username = $user_data['tst'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
@@ -211,7 +211,7 @@ foreach ($la as $user_data) {
 	$result = $database->get_row($sql.$user_search);
 	if (!empty($result)){
 		unset($result['id']); // take out id
-		$where['steam_id'] = $user_data['id'];
+		$where['steam_id64'] = $user_data['id2'];
 		$last_logon = strtotime($user_data['time']);
 		/*if ($last_logon >  $result['last_log_on']) {
 			$yz = ' larger';
@@ -267,6 +267,7 @@ foreach ($la as $user_data) {
 			
 		if ($modify) {
 		$result = $database->escape($result);
+		print_r($where);
 		$n = $database->update('players',$result,$where);
 		if ($n === false) {
 			//
@@ -275,6 +276,7 @@ foreach ($la as $user_data) {
 			echo 'trying again';
 			$database->query('SET character_set_results = binary;');
 			$result['name'] = $database->filter($result['name']);
+			unset($result['steam_id']);
 			$n = $database->update('players',$result,$where);
 					 
 		}
