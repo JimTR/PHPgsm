@@ -53,14 +53,14 @@ else {
 	 $cmds =convert_to_argv($_GET,"",true);
  }
 $logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'>';
-//file_put_contents('ajax.log',$logline,FILE_APPEND);
+//file_put_contents('ajax.log',$logline,FILE_APPEND); // debug code
  // $cmds = change_value_case($cmds,CASE_LOWER);
 }
 /*
  * beta logging code
  * check to see what we have back in normal use
  */
-//print_r($_SERVER);
+//print_r($_SERVER); // debug code
  if (isset($_SERVER['REMOTE_ADDR'])) {
  $logline.=' Connected ';
  //$logline .= ' command to execute\,'.$_SERVER['QUERY_STRING'].'\''.PHP_EOL;
@@ -125,6 +125,44 @@ switch (strtolower($cmds['action'])) {
 					echo shell_exec('top -b -n 1 -p '.$cmds['filter'].' | sed 1,7d');
 				}
 			 	exit;
+	case "lsof" :
+					// get open file
+					if (isset($cmds['lsof_file'])) {
+						// return the open file,  the interface should format this correctly not ajax's job
+						// what ajax needs is the full path to where the file resides
+						// note, this will only return an open file 
+						// this runs only on the local server, must be called on each server
+						$tmp = shell_exec('lsof | grep m1 '.$cmds['lsof_file']);
+						$x = explode(' ',$tmp);
+							foreach ($x as $k=>$v) 
+								if (empty(trim($v))) {
+									unset ($x[$k]);
+								}
+								else {
+									$x[$k]=trim($v);
+								}
+							}
+						$c = count($x); // need this to check file size
+						$x = array_values($x); // re-number array
+						if ($c == 7 ) {
+							// empty file return message
+							echo 'file=0';
+						}
+						else { 
+							$c = $c-1;
+							}
+						// now do stuff return either the path or contents ?
+						// sending back the contents will save a call but maybe wrong 
+						$filename = $x[$c]; //got file name
+						if ($cmds['return'] == 'content') {
+							echo file_get_contents($filename);
+						}
+						else {
+							echo $filename;
+						}
+						
+				exit;
+					
 	case "game_detail" :
 			$gd =game_detail();
 			//print_r($gd);

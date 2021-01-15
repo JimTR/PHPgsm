@@ -42,7 +42,7 @@ if (empty($reaper)) {
 		if ($response === true) {
 				$password = ask_question('Enter Sudo Password ','','',true,true);
 				//echo cr.$password.cr;
-				$d = shell_exec('echo '. $password.' | sudo -S apt update');
+				$d = shell_exec('echo '. $password.' | sudo -S apt -y install tmpreaper');
 				echo $d.cr;
 		}
 	}
