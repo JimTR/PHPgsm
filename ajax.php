@@ -127,7 +127,8 @@ switch (strtolower($cmds['action'])) {
 			 	exit;
 	case "lsof" :
 					// get open file
-					echo 'into function';
+					echo $cmds['lsof_file'].'<br>';
+					
 					if (isset($cmds['lsof_file'])) {
 						// return the open file,  the interface should format this correctly not ajax's job
 						// what ajax needs is the full path to where the file resides
