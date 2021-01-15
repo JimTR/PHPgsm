@@ -500,10 +500,17 @@ function display_mem($mem_info,$colour) {
 	if (is_cli()){
 	if ($colour === true) {
 		//echo "colour".CR;
+		$headmask = "%40.40s %13s %15s %15s  \n";
+		
 		echo "\t\e[1m\e[31m Memory\e[0m".CR;
-		echo "\t\t\t\e[1m \e[34m Total\t\t    Free\t   Cached\t   Active\e[97m".CR;
-		echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
+		printf($headmask, "\t\e[1m \e[34m Total",'Free','Cached',"Active\e[97m");
+		//echo "\t\t\t\e[1m \e[34m Total\t\t    Free\t   Cached\t   Active\e[97m".CR;
+		$headmask = "%40.40s %13.13s %15s %10s  \n";
+		printf($headmask,"\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']);
+		//echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
+		$headmask = "%40s %13s %20s %10s  \n";
+		printf($headmask,"\t\e[38;5;82mSwap  \e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
+		//echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
 }
 else {
 	//bw
