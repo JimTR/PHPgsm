@@ -134,6 +134,8 @@ switch (strtolower($cmds['action'])) {
 						// what ajax needs is the full path to where the file resides
 						// note, this will only return an open file 
 						// this runs only on the local server, must be called on each server
+						$cmd = 'lsof | grep m1 '.$cmds['lsof_file'];
+						echo $cmd.'<br>';
 						$tmp = shell_exec('lsof | grep m1 '.$cmds['lsof_file']);
 						echo $tmp.'<br>';
 						$x = explode(' ',$tmp);
