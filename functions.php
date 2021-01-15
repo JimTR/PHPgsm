@@ -462,14 +462,19 @@ function format_num ($string) {
 	}
 	return $string;
 }
-function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false) {
+function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false,$hidden = false) {
 	//if ($positive = "null") { unset($positive);}
 	run:
 echo $salute; // display question
+if ($hidden === true) {
+	$line = getObscuredText($strMaskChar='*');
+	return $line;
+	
+}	
 $handle = fopen ("php://stdin","r"); //open stdin
 $line = fgets($handle); //record it
 if ($press_any_key === true and empty($positive)) {
-	return true; // return a press any key
+	return $line; // return a press any key
 }
 if ($line === PHP_EOL) {
 	errors:
@@ -1242,4 +1247,54 @@ if (isset($cmds)) {
 	return $cmds;
 }
 }
+function getObscuredText($strMaskChar='*')
+    {
+        if(!is_string($strMaskChar) || $strMaskChar=='')
+        {
+            $strMaskChar='*';
+        }
+        $strMaskChar=substr($strMaskChar,0,1);
+        readline_callback_handler_install('', function(){});
+        $strObscured='';
+        while(true)
+        {
+            $strChar = stream_get_contents(STDIN, 1);
+            $intCount=0;
+// Protect against copy and paste passwords
+// Comment \/\/\/ to remove password injection protection
+            $arrRead = array(STDIN);
+            $arrWrite = NULL;
+            $arrExcept = NULL;
+            while (stream_select($arrRead, $arrWrite, $arrExcept, 0,0) && in_array(STDIN, $arrRead))            
+            {
+                stream_get_contents(STDIN, 1);
+                $intCount++;
+            }
+//        /\/\/\
+// End of protection against copy and paste passwords
+            if($strChar===chr(10))
+            {
+                break;
+            }
+            if ($intCount===0)
+            {
+                if(ord($strChar)===127)
+                {
+                    if(strlen($strObscured)>0)
+                    {
+                        $strObscured=substr($strObscured,0,strlen($strObscured)-1);
+                        echo(chr(27).chr(91)."D"." ".chr(27).chr(91)."D");
+                    }
+                }
+                elseif ($strChar>=' ')
+                {
+                    $strObscured.=$strChar;
+                    echo($strMaskChar);
+                    //echo(ord($strChar));
+                }
+            }
+        }
+        readline_callback_handler_remove();
+        return($strObscured);
+    }
 ?>
