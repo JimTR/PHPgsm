@@ -126,8 +126,7 @@ switch (strtolower($cmds['action'])) {
 				}
 			 	exit;
 	case "lsof" :
-					// get open file
-					
+							
 					
 					if (isset($cmds['lsof_file'])) {
 						// return the open file,  the interface should format this correctly not ajax's job
