@@ -21,6 +21,7 @@
  * 
  * fetch rules  
  */
+header('Access-Control-Allow-Origin: *');
  define('cr','<br>');
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
