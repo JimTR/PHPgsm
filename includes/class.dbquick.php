@@ -61,17 +61,18 @@ class db
      */
     public function log_db_errors( $error, $query )
     {
+		$request ='';
         $message = '<p>Error at '. date('d-m-Y H:i:s').':</p>';
         $message .= '<p>Query: '. htmlentities( $query ).'<br />';
         $message .= 'Error: ' . $error;
         $message .= '</p>';
-        $message .='<p> The above error was generated in the script '.$_SERVER['SCRIPT_NAME'].'<br> from IP address '.$_SERVER['REMOTE_ADDR'];
+       // $message .='<p> The above error was generated in the script '.$_SERVER['SCRIPT_NAME'].'<br> from IP address '.$_SERVER['REMOTE_ADDR'];
          foreach($_REQUEST as $key=>$val) 
   { 
 	  // loop the request array
 	  $request .= 'Key = '.$key.' Value  = '.$val.'<br>';
   }
-        $message .= '<br>with a request string of '.$_SERVER['QUERY_STRING'].'</p>';
+        //$message .= '<br>with a request string of '.$_SERVER['QUERY_STRING'].'</p>';
         $message .= $request;
 
         if( defined( 'SEND_ERRORS_TO' ) )
@@ -79,7 +80,7 @@ class db
             $headers  = 'MIME-Version: 1.0' . "\r\n";
             $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
             $headers .= 'To: Admin <'.SEND_ERRORS_TO.'>' . "\r\n";
-            $headers .= 'From: Merlin <system@'.$_SERVER['SERVER_NAME'].'>' . "\r\n";
+           // $headers .= 'From: Merlin <system@'.$_SERVER['SERVER_NAME'].'>' . "\r\n";
 
             //mail( SEND_ERRORS_TO, 'Database Error', $message, $headers );   
         }
@@ -90,13 +91,14 @@ class db
 
         if( !defined( 'DISPLAY_DEBUG' ) || ( defined( 'DISPLAY_DEBUG' ) && DISPLAY_DEBUG ) )
         {
-            //echo $error;   
+            echo $error;   
         }
     }
     
     
     public function __construct()
     {
+		//change here ?
         mb_internal_encoding( 'UTF-8' );
         mb_regex_encoding( 'UTF-8' );
         $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
@@ -137,7 +139,7 @@ class db
          if( !is_array( $data ) )
          {
              $data = $this->link->real_escape_string( $data );
-             $data = trim( htmlentities( $data, ENT_QUOTES, 'UTF-8', false ) );
+             $data = trim( htmlentities( $data, ENT_QUOTES, 'utf-8', false ) );
          }
          else
          {
@@ -404,9 +406,10 @@ class db
         }
         else
         {
-            //$r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
-             $r = mysqli_fetch_array( $row );
-            //mysqli_free_result( $query );
+           // $r = ( !$object ) ? $row->fetch_row() : $row->fetch_object();
+          // $r = mysqli_fetch_array( $row );
+	        $r = mysqli_fetch_assoc( $row );
+            mysqli_free_result( $row );
              return $r;   
             //die (print_r($r));
         }
@@ -435,6 +438,8 @@ class db
         //Overwrite the $row var to null
         $row = null;
         //die ($query);
+        $sql ='SET NAMES utf8mb4;';
+        $query1 = $this->link->query( $sql );
         $results = $this->link->query( $query );
         if( $this->link->error )
         {
@@ -484,7 +489,8 @@ class db
         {
             return false;
         }
-        
+        $sql ='SET NAMES utf8mb4;';
+         $query = $this->link->query( $sql );
         $sql = "INSERT INTO ". $table;
         $fields = array();
         $values = array();
@@ -504,7 +510,8 @@ class db
         {
             //return false; 
             $this->log_db_errors( $this->link->error, $sql );
-            return false;
+           
+            return $sql;
         }
         else
         {
@@ -675,6 +682,8 @@ class db
         {
             return false;
         }
+        $sql ='SET NAMES utf8mb4;';
+         $query = $this->link->query( $sql );
         $sql = "UPDATE ". $table ." SET ";
         foreach( $variables as $field => $value )
         {

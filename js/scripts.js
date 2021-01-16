@@ -96,7 +96,7 @@ jQuery(document).ready(function(){
     //fetchload();
     fetchgames();
     fetchservers();	
-
+	setInterval('fetchgames()', 60000);
 });
  $( function() {
   var icons = {
@@ -289,6 +289,10 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var sp1 = $(this).find('source_port').text();
 	 var cp = $(this).find('client_port').text();
 	 var st = $(this).find('starttime').text();
+	 var us = $(this).find('update_msg').text();
+	 var sv = $(this).find('version').text();
+	 var udi = $(this).find('uds').text();
+	 //alert (udi);
 	 $("#dm"+fname).html(dm);
 	 $("#sp"+fname).html(sp);
 	 $("#rp"+fname).html(rp);
@@ -298,10 +302,13 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#sp1"+fname).html(sp1);
 	 $("#cp"+fname).html(cp);
 	 $("#sid"+fname).html(sid);
+	 $("#us"+fname).html(us);
+	 $("#sv"+fname).html(sv);
 	 $("#lg"+fname).attr("src",$(this).find('logo').text());
 	 $("#gdate"+fname).html(st); //front page
 	 $("#plogo"+fname).attr("src",$(this).find('logo').text()); //front page
 	 $("#status"+fname).attr("src","img/offline1.png"); // set to not sure
+	 $('#status'+fname).prop('title', 'Update Required');
 	 var rt = $(this).find('rt').text();
 	 var players = 0;
 	 var tp = players+"/"+mplayers;
@@ -309,6 +316,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
 	 if (online === "Online") {
+	  $('#status'+fname).prop('title', 'Online');	 
 	  $("#game"+fname).show(); //show game panel
 	  $('#'+fname+'response').html(fname+' has started') ; 
 	  $('#'+fname+'qbutton').show();
@@ -321,6 +329,11 @@ $(xml).find('Servers').children('game_server').each(function(){
       $('#'+fname+'dbutton').hide();
       $('#'+fname+'response').delay(5000).fadeOut('slow');
 	  $("#status"+fname).attr("src","img/online.png"); // set to online
+	  if (udi ==1) {
+			// update req
+			$("#status"+fname).attr("src","img/offline1.png"); // set to offline
+			$('#status'+fname).prop('title', 'Requires Update');
+			}
 		 var cmap = $(this).find('currentmap').text();
 	     var players = $(this).find('players').text();
 	     var hn = $(this).find('host_name').text();
@@ -332,6 +345,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     $("#pol1"+fname).html(tp);
 	     $("#gol"+fname).html(tp);
 	     $("#cmap"+fname).html(cmap); //front page
+	    
+	  
 	     var sid = hn+" ("+$(this).find('ip').text()+")";
 	     $("#sid"+fname).html(sid);
 	     $("#padd"+fname).html(sid); // front page
@@ -341,10 +356,15 @@ $(xml).find('Servers').children('game_server').each(function(){
 	     var start = $(this).find('starttime').text();
 	     $("#pbody"+fname).empty(); // clear player table rows
 	 if (players >0 ){
-		 //console.log(fname);
-		 activegames=parseInt(activegames)+1;
-		    //$('#op1'+fname).click(true);
-			//var x = xmlDoc.getElementsByTagName("current_players")[y];
+		 console.log(fname);
+		 //btn-primary
+		 $('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
+		    //$('#'+fname+'qbutton').;  
+		    $('#op1'+fname).css('cursor','pointer');
+		    $('#op1'+fname).off().on('click',function() 
+		    {$("#ops"+fname).slideToggle("fast");});
+			activegames=parseInt(activegames)+1;
+		   
 	        var corpName = $(this).find('pname').text();
             var result = corpName.split('|');
             var corpName = $(this).find('pscore').text();
@@ -393,8 +413,13 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
 	 $("#pol1"+fname).html("");
+	 
 	 $("#ops"+fname).slideUp(); //close player panel
+	 $('#'+fname+'qbutton').removeClass('btn-danger').addClass('btn-primary');
 	 //$('#op1'+fname).click(false);
+	 $('#op1'+fname).off('click');
+	 $('#op1'+fname).css('cursor','default');
+	
  }
  
  y=y+1; 
@@ -409,6 +434,13 @@ $(xml).find('Servers').children('game_server').each(function(){
 		$("#game"+fname).hide(); //hide game panel
 		$('#'+fname+'response').html(fname+' has stopped') ; 
 		$("#status"+fname).attr("src","img/offline.png"); // set to offline
+		$('#status'+fname).prop('title', 'Off Line');
+		if (udi ==1) {
+			// update req
+			$("#status"+fname).attr("src","img/offline1.png"); // set to offline
+			$('#status'+fname).prop('title', 'Requires Update');
+			}
+		
 		$('#'+fname+'response').delay(5000).fadeOut('slow');
 		$('#'+fname+'qbutton').hide();
 		$('#'+fname+'sbutton').show();

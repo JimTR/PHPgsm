@@ -1,8 +1,14 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
+error_reporting(-1);
 define ("CR","\r\n");
 global $argv;
-require 'includes/cli_master.inc.php'; 
+//echo '??';
+require 'includes/master.inc.php'; 
+require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
+use xPaw\SourceQuery\SourceQuery ;
+$Query = new SourceQuery( );
+ini_set('error_reporting', E_ALL);
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
 	//echo "called directly"; 
 	include ("functions.php");
@@ -50,8 +56,63 @@ switch (strtolower($argv[1]))
 		exit;
 	case "g":
 	case "games":
+	if(is_cli()) {
 			system('clear');
+	$database = new db(); // connect to database
+	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
+    $res = $database->get_results($sql); // pull results
+    
+  echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
+  echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
+foreach ($res as $data) {
+			
+    $Query->Connect( $data['host'], $data['port'], 1,  SourceQuery::SOURCE  );
+	$players = $Query->GetPlayers( ) ;
+	$info = $Query->GetInfo();
+	$rules = $Query->GetRules( );
+	$Query->Disconnect( );
+	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+	$headmask = "%40.40s %13.13s %25s %25s  \n";
+    printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
+	//echo "\t\t\e[38;5;82m".$info["HostName"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
+	//echo "\t\t Players Online ".$playersd." Map - ".$info["Map"].CR;
+	if ($info['Players'] >0 ) {
+		// players
+		//print_r($players);
+		//echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
+		$headmask = "%40.40s %30.30s %23s  \n";
+		printf($headmask,"\e[1m \e[34m Player",'Score',"Online For\e[97m");
+		orderBy($players,'Frags',"d"); // order by score
+		foreach ($players as $k=>$v) {
+						//echo $k.' '.$v.cr;
+					$playerN = substr($players[$k]['Name'],0,20); // chop to 20 chrs
+					//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
+					$playerN = str_pad($playerN,25); //pad to 25 chrs
+		
+		if ($players[$k]['Frags'] <10) {
+			// switch statement !! rather than if's
+			$pscore ="  ".$players[$k]['Frags']; //format score
+		}
+		elseif ($players[$k]['Frags'] <100)  {
+			$pscore = " ".$players[$k]['Frags']; //format score
+		}
+		else {
+			$pscore = $players[$k]['Frags']; //format score
+		}
+		//echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ". $players[$k]['TimeF'].CR;
+		$headmask = "%55.55s %10.10s %23s  \n";
+		printf($headmask,$playerN,$pscore, $players[$k]['TimeF']);
+		
+	}
+	echo CR;
+	}
+	echo CR;
+	}
+	
+}
+else {
 			display_games();
+		}
 			exit;
 	case "debug":
 	case "d":
@@ -61,7 +122,7 @@ switch (strtolower($argv[1]))
 		{
 		case "s":
 		case "software";
-			$software = get_software_info();
+			$software = get_software_info($database);
 			$os = lsb();
 			display_software($os,$software);
 			exit;
@@ -90,11 +151,10 @@ switch (strtolower($argv[1]))
 }
 	
 	echo 'Please Wait ';
-	echo '.';
-    $mem_info = get_mem_info();
-	echo '.';
-	$software = get_software_info();
-	echo '.';
+	$mem_info = get_mem_info();
+	echo'.';
+	$software = get_software_info($database);
+	echo'.';
 	$disk_info = get_disk_info();
 	echo '.';
 	$user_info = get_user_info($disk_info);
@@ -109,7 +169,7 @@ switch (strtolower($argv[1]))
 	display_disk($disk_info);
 	display_software($os,$software);
 	display_user($user_info);
-	display_games();
+	//display_games();
 	exit;
 	default:
 			echo $argv[1]." is an invalid command. Use one from the list below\r\n";

@@ -2,10 +2,10 @@
 
 //sample ean's
 //$ean = "500043101137"; //will return 3
-$ean = "7622100996206"; //will return 0 
+//$ean = "7622100996206"; //will return 0 
 //$ean = "500043091"; // will return 8
 //$ean = "1"; //will return 7
-//$ean = "501437910982"; // will return 5
+$ean = "501437910982"; // will return 5
 //$ean = "76221009962067977724"; // will return 0
 //$ean= "76561198112017378";
  echo "entry is&nbsp;&nbsp;".$ean."<br>";
@@ -36,7 +36,8 @@ function cdv($pluNo,$result= false ,$type = false)
 ' ToDo          : allow $pluNo to be chrs rather than numbers and either return letters, letter or numeric representations 
 '---------------------------------------------------------------------------------------
 */ 
-	
+$evenPlu='';	
+$oddPlu='';
 $plulen = intval(strlen($pluNo)); //get current length of the input
 
 if ($plulen == 13 || $plulen == 8 ) // test length of input & strip off the cdv, this applies to input of 13 or 8 digit inputs
@@ -86,12 +87,12 @@ for ($i = 1; $i <= $plulen; $i++)
 	     switch ($i) {
 			case $i % 2 == true: // odd digits using mod
 				$pl = intval(substr($pluNo, $i-1, 1)); //turn the odd string value to numeric for processing
-				$oddPlu = $oddPlu + $pl; // add the next odd one
+				$oddPlu = intval($oddPlu) + $pl; // add the next odd one
 				break;
           
 			case $i % 2 == false: // even digits using mod 
 				$pl = intval(substr($pluNo, $i-1, 1));  // turn the even string value to numeric for processing
-				$evenPlu = $evenPlu + $pl; // add the next even one
+				$evenPlu = intval($evenPlu) + $pl; // add the next even one
 				break;
             }
             

@@ -3,8 +3,8 @@
     {
         public static function register()
         {
-            ini_set('session.save_handler', 'user');
-            session_set_save_handler(array('DBSession', 'open'), array('DBSession', 'close'), array('DBSession', 'read'), array('DBSession', 'write'), array('DBSession', 'destroy'), array('DBSession', 'gc'));
+            //ini_set('session.save_handler', 'user');
+            //session_set_save_handler(array('DBSession', 'open'), array('DBSession', 'close'), array('DBSession', 'read'), array('DBSession', 'write'), array('DBSession', 'destroy'), array('DBSession', 'gc'));
 //echo "register end<br>";
         }
 

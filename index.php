@@ -1,7 +1,7 @@
 <?php
 @ob_end_clean();
 require 'includes/master.inc.php'; // do login and stuff
-
+require 'includes/functions_site.php'; //admin functions 
 //include("functions.php");
 define ("CR", "</br>");
 
@@ -64,13 +64,13 @@ foreach ($res as $data) {
 		 // xml finish
 		 $template->replace_vars($subpage);
 		 $page2.= $template->get_template();
+		 $template->load('html/game_detail.html');
+		 $template->replace_vars($subpage);
+		 $fp .= $template->get_template();
 		 // now load front page template 
          //set all to display:none & use js to turn them on/off	via xml data	
 }
-//die();
-  //echo $page2.CR;
-  //echo 'all data loaded'.CR;
-	//$template = new Template;
+
 	$sql = 'select * from game_servers';
 	$opts = $database->get_results($sql);
 	//print_r($opts);
@@ -99,15 +99,62 @@ foreach ($res as $data) {
 	$page['tabs'] = $page1;
 	$page['games'] = $page2;
 	$page['install'] = $template->load('html/install.html');
+	$page['settings'] = $template->load('html/settings.html');
 	$page['version'] = $settings['version'];
 	$page['date'] = date("Y");
-	//$page['options']= "";
+	//$page['options'] = $fp; //beta ;
 	$template->load('html/index.html', COMMENT); // load page
 	$template->replace_vars($page);	
 	$template->replace_vars($test);
 	
 	// lang goes here
 	$template->publish();
-?>	
 	
-
+	function settings() {
+	//get the settings to edit
+	global $page,$site, $database;
+	$template = new Template;
+	$template->load('html/settings.html');
+	$sql = 'select * from settings where display = 1 and setting_type = 0 order by s_order asc ';
+	$results = $database->get_results($sql);
+		$setting_line = new Template; // set up the line html
+		foreach ($results as $value){
+			// loop the settings only settings stored will be displayed
+			$setting_line->load('html/subs/settings_row.html');
+			// need a routine to add missing settings
+			if ($value['type'] == 1) {
+				// here we add the image
+				$temp['image'] = '<span><img style="max-height:50px;float:right;margin-top:1%;" src ="'.$site->settings[$value['area']].'"></span>';
+			}
+			else {$temp['image'] ='';}
+			if ($value['type'] == 2)
+				{
+					$value['value'] = $site->settings[$value['area']];
+					if ($value['area'] === 'year') { $tags ="Roman,Standard";}
+					else {$tags = "Yes,No";}
+					$temp['input'] = yesno_box($value,$tags);
+				}
+				elseif ($value['type'] == 0 || $value['type'] == 1 ) {
+					$value['value'] = $site->settings[$value['area']];
+					//text_box($value);
+					$temp['input'] = text_box($value);}
+				elseif ($value['type'] == 3) { 
+					$value['value'] = $site->settings[$value['area']];
+					$temp['input'] = select_box($value,"");
+					
+					}	
+			$temp['title'] = $value['title'];
+			
+			$temp['value']= $site->settings[$value['area']];
+			$temp['desc'] = $value['s_desc'];
+			
+			$setting_line->replace_vars($temp);
+			$a .= $setting_line->get_template(); 
+		}
+		//print_r ($site->settings);
+		//echo $a;
+		$template->replace( 'settings',$a);
+		return $template->get_template();
+		
+}
+?>

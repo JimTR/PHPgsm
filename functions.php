@@ -1,5 +1,6 @@
 <?php
 //echo 'functions 1.01';
+
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
@@ -63,7 +64,7 @@ function is_cli()
     {
         return true;
     }
-    if ( php_sapi_name() === 'cli' )
+    if ( php_sapi_name() == 'cli' )
     {
         return true;
     }
@@ -97,6 +98,7 @@ function root() {
 function check_sudo($user)
 {
 $user=trim($user);
+// centos = wheel not sudo
 $j= shell_exec('getent group sudo | cut -d: -f4');
 $yes= strpos($j, $user);
 if ($yes ===0 or $yes>1) {
@@ -180,16 +182,18 @@ function get_mem_info() {
 	foreach ($free as &$value) {
 		//echo $value.CR;
 		 $i = strpos($value,":",0);
+		 
          $key = substr($value,0,$i);
-		 preg_match_all('!\d+!', $value, $matches);
-		 //echo dataSize(implode(' ', $matches[0])*1024).CR;
-		
-		 $temp = trim(implode(' ', $matches[0])*1024);
-		 $mem_info[$key] = formatBytes($temp);
+         $valuef=floatval(str_replace ( $key.':' , '' , $value))*1024;
+         $value=floatval(str_replace ( $key.':' , '' , $value));
+		     		
+		 $mem_info[$key] = formatBytes($valuef,2);
+		 $mem_info[$key.'_raw'] = $value;
 		 
 	}
+
 	$maxlen = max(array_map('strlen', $mem_info));
-	//echo "max len ".$maxlen.CR;
+	
 	$maxlen = 14;
 	foreach ($mem_info as $key=>&$value){
 		//check len
@@ -201,16 +205,7 @@ function get_mem_info() {
              $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
 	}
 }
-foreach ($mem_info as $key=>&$value){
-		//check len
-		 $len = strlen($value);
-		 if ($len = $maxlen) {
-			 //pad
-			 //$pad = $maxlen-$len;
-             //echo " ".$len.CR;
-             $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
-	}
-}
+
 	return $mem_info;
 		
 }
@@ -221,7 +216,10 @@ function get_cpu_info() {
 		foreach ($cpu as &$value) {
 			//read data
 			$i = strpos($value,":",0);
+			//$value = str_replace(' ','_',$value);
+			//echo $value.PHP_EOL;
             $key = trim(substr($value,0,$i));
+            $key  = str_replace(' ','_',$key);
 		 if (strlen($key) === 0) {
 			 // only take the first processor
 			 break;
@@ -232,13 +230,29 @@ function get_cpu_info() {
 		$load = sys_getloadavg();
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['boot_time'] = get_boot_time();
-		$cpu_info['local_ip'] = getHostByName(getHostName());
+		$local = shell_exec('hostname -I');
+		$local = str_replace(' ', ', ',trim($local));
+		$all_ip =explode(',',$local);
+		//interfaces ! netstat -i  |sed 1,2d
+		// ip addr | grep "^ *inet " checks virtual adaptors
+		$cpu_info['local_ip'] = $all_ip[0];
+		$cpu_info['ips'] = $local;
+		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
+		if (is_file('/var/run/reboot-required') === true) {
+			$cpu_info['reboot'] ='yes';
+		}
+		else {
+			$cpu_info['reboot'] ='no';
+		}
 		return $cpu_info;
 }
 function get_user_info ($Disk_info) {
+	error_reporting(E_ALL);
+
 	// return user info as an array
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
+	$user['level'] =check_sudo($user['name']);
 	$q = shell_exec("quota -vs 2> /dev/null");
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
@@ -247,13 +261,14 @@ function get_user_info ($Disk_info) {
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
-		$user['quota used'] = format_num($du[0]); 
+		$user['quota_used'] = format_num($du[0]); 
 		$user['quota'] = 'Unlimited';
-		$user['quota free'] = $Disk_info['home free'];
+		$user['quota_free'] = $Disk_info['home_free'];
 	}
 	else {
 		// run quota
 		$q = explode("  ",$q);
+		//print_r($q);
 		if (intval($q[15]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
@@ -262,68 +277,112 @@ function get_user_info ($Disk_info) {
 	    else {
 			$user['quota'] = dataSize(intval($q[15]) * 1000000);
 			}
-	    $user['quota used'] = dataSize(intval($q[14]) * 1000000);
+	    $user['quota_used'] = dataSize(intval($q[14]) * 1000000);
 	    //echo intval($q[15]).CR;
 	    if (intval($q[15]) === 0 ) {
 						
-			$user['quota free'] = $Disk_info['boot free'];
+			$user['quota_free'] = $Disk_info['boot_free'];
 		}
-	    else {$user['quota free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);}
+	    else {$user['quota_free'] = dataSize(intval($q[15]) * 1000000-intval($q[14]) * 1000000);}
 	}
 	//print_r($user);
 	return $user;    
 	
 }
-function get_software_info() {
-	// return software info as array
+
+
+function getVersion($app, $apt=false) { 
+	// check for apt-show-versions
+	if ($apt == true) {
+		//echo 'apt=true'.PHP_EOL;
+		$app = 'apt-show-versions  '.$app;
+		$output = shell_exec($app. '  2> /dev/null'); 
+		}
+	else {
+		if ($app == 'nginx -v') {
+				// nginx has stdout bug do this
+				 shell_exec($app. '  2> nginx');
+				$output = file_get_contents('nginx');
+				unlink('nginx');
+				}
+			else{
+				$output = shell_exec($app. '  2> /dev/null'); 
+			}
+		} 
+  preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+  if (empty($version[0])) {
+		
+		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
+	}
+  if (empty($version[0])) {
+	   
+	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+   }
+   
+ 
+  if (!empty($version[0])) {
+	
+  return $version[0]; 
+}
+else {
+	//echo $app.PHP_EOL;
+	//print_r($version);
+	return 'Not Installed';
+}
+}
+function get_software_info($database) {
+	/* return software info as array
+	 * check for apt-show-versions
+	 * $ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
+	 * if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	 */
+	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
+	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	  $hctrl = shell_exec('hostnamectl');
+	  $hctrl = explode(PHP_EOL,trim($hctrl));
+	  foreach ($hctrl as $temp) {
+		  // make new array
+		  $x = strpos($temp,':');
+		  $key = strtolower(str_replace(' ','_',trim(substr($temp,0,$x))));
+		  $value = trim(substr($temp,$x+1));
+		  //echo $key.'=>'.$value.CR;
+		  $newarr[$key]=$value;
+	  }
+	  $hctrl =$newarr; 
+	  $apt=false;
 	 $php_version = explode('.', PHP_VERSION);
-	 $software['php'] = $php_version[0].'.'.$php_version[1].'.'.intval($php_version[2]);
-	 $software['glibc'] = trim(shell_exec("ldd --version | sed -n '1s/.* //p'"));
-	 
-	 $apache = shell_exec("/usr/sbin/apache2 -v");
-	 $software['apache'] = substr($apache,23,6);
-     
-	 $software['tmux'] = trim(shell_exec("tmux -V | awk -F'[ ,]+' '{print $2}'"));
-	 $software['mysql'] = trim(shell_exec("mysql -V | awk -F'[ ,]+' '{print $5}'"));//getsql();
-	 $nginx = shell_exec("/usr/sbin/nginx -v 2> nginx.txt");
-	 $nginx = file_get_contents("nginx.txt");
-	 if(strpos($nginx,"not found")){
-		 $software['nginx'] = 'Not Installed';
-		 //echo "hit here".CR;
-	 }
-	 else {
-		 $nginx = explode(":",$nginx);
-		 $software['nginx'] = trim($nginx[1]);
-	 }
-	  unlink("nginx.txt");
-	  $q = shell_exec("quota -V 2> /dev/null");
-	  if(empty($q)) {
-		  $software['quota'] = "Not Installed";
-	  }
-	  else {
-		  // get quota version
-		  $software['quota'] =  substr($q,24,4);
-	  }
-	  //if (is_cli()) {
-	  $postfix = shell_exec("/usr/sbin/postconf -d mail_version 2> /dev/null");
-	  $postfix = explode("=",$postfix);
-  
-	  if (!empty($postfix[1])) {
-		  $software['postfix'] = trim($postfix[1]);
-	  }
-	  else {
-		  $software['postfix'] = "Not Installed";
-	  }
-	  $screen = shell_exec(" screen -v  2> /dev/null| awk -F'[  ]+' '{print $3}' " ); 
-	  if (!empty($screen)) {
-		  $software['screen'] = $screen;
-	  }
-	  else {
-		  $software['screen'] = "Not Installed";
-	  }
-	  //$curl = shell_exec( " curl -V  2> /dev/null| awk -F'[  ]+' '{print $2}' ");
-	  $curl = curl_version();
-	  $software['curl'] = $curl['version'];
+	 $php  = $php_version[0].'.'.$php_version[1];
+	 $lsb = lsb();
+	 $software['k_ver'] = php_uname('r');
+	 $software['host'] =php_uname('n');
+	 $software['os'] = $hctrl['operating_system'];  
+	switch ($apt) {
+		case true:
+		// this is slower ! but cleaner and allows to show if upgrades are available 
+		$software['glibc'] = getVersion('libc-bin',$apt);
+		$software['apache'] = getVersion('apache2',$apt);
+		$software['php'] = getVersion('php'.$php,$apt);
+		$software['mysql'] = getVersion('mysql-server',$apt);
+		$software['quota'] = getVersion('quota',$apt);
+		$software['nginx'] = getVersion('nginx-common',$apt);
+		$software['screen'] = getVersion('screen',$apt);
+		$software['postfix'] = getVersion('postfix',$apt);
+		$software['curl'] = getVersion('curl',$apt);
+		$software['tmux'] = getVersion('tmux',$apt);
+		break;
+		default:
+		 $software['glibc'] = getVersion('ldd --version');
+		 $software['apache'] = getVersion('/usr/sbin/apache2 -v');
+	     $software['php'] = getVersion('php -v');
+	     $software['mysql'] = getVersion('mysql -V');
+	     $software['quota'] = getVersion('quota -V');
+	     $software['nginx'] = getVersion('nginx -v');
+	     $software['screen'] = getVersion('screen -v');
+	     $software['postfix'] = getVersion('/usr/sbin/postconf -d mail_version');
+	     $software['curl'] = getVersion('curl -V');
+	     $software['tmux'] = getVersion('tmux -V');
+	}
+		 
 	 return $software;
 }
 function get_disk_info() {
@@ -334,7 +393,7 @@ function get_disk_info() {
 	$root = shell_exec("df -h /");
 	if ($root === $home) {
 		//echo 'one disk'.CR;
-		$disk_info['disk'] = $root;
+		//$disk_info['disk'] = $root;
 				if(strstr($boot, PHP_EOL)) {
 		// test for line break
 		//echo "line break".CR;
@@ -343,13 +402,13 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//print_r($boot).CR;
-		$disk_info['boot filesystem'] = $boot[0];
-		$disk_info['boot size'] = format_num($boot[1],2);
-		$disk_info['boot used'] = format_num($boot[2],2);
-		$disk_info['boot free'] = format_num($boot[3],2);
-		$disk_info['boot %'] = $boot[4];
-		$disk_info['boot mount'] = $boot[5];
-		$disk_info['boot hide'] = "ok";
+		$disk_info['boot_filesystem'] = trim($boot[0]);
+		$disk_info['boot_size'] = format_num(trim($boot[1]),2);
+		$disk_info['boot_used'] = format_num(trim($boot[2]),2);
+		$disk_info['boot_free'] = format_num(trim($boot[3]),2);
+		$disk_info['boot_pc'] = trim($boot[4]);
+		$disk_info['boot_mount'] = trim($boot[5]);
+		$disk_info['boot_hide'] = "ok";
 		
 	}
 }
@@ -361,12 +420,12 @@ function get_disk_info() {
 		$boot=array_filter($boot);
 		$boot = array_slice($boot, 0);
 		//echo 'new str '.$new_str.CR;
-		$disk_info['boot filesystem'] = $boot[0];
-		$disk_info['boot size'] = format_num($boot[1]);
-		$disk_info['boot used'] = format_num($boot[2]);
-		$disk_info['boot free'] = format_num($boot[3]);
-		$disk_info['boot %'] = $boot[4];
-		$disk_info['boot mount'] = $boot[5];
+		$disk_info['boot_filesystem'] = trim($boot[0]);
+		$disk_info['boot_size'] = format_num($boot[1]);
+		$disk_info['boot_used'] = format_num($boot[2]);
+		$disk_info['boot_free'] = format_num($boot[3]);
+		$disk_info['boot_pc'] = trim($boot[4]);
+		$disk_info['boot_mount'] = trim($boot[5]);
 	}	
 	if(strstr($home, PHP_EOL)) {
 		$home1 = explode(" ",trim(strstr($home, PHP_EOL)));
@@ -374,12 +433,12 @@ function get_disk_info() {
 		
 		$home1 = array_slice($home1,0);
 		//print_r($home1);
-		$disk_info['home filesystem'] = $home1[0];
-		$disk_info['home size'] = format_num($home1[1]);
-		$disk_info['home used'] = format_num($home1[2]);
-		$disk_info['home free'] = format_num($home1[3]);
-		$disk_info['home %'] = $home1[4];
-		$disk_info['home mount'] = $home1[5];
+		$disk_info['home_filesystem'] = $home1[0];
+		$disk_info['home_size'] = format_num($home1[1]);
+		$disk_info['home_used'] = format_num($home1[2]);
+		$disk_info['home_free'] = format_num($home1[3]);
+		$disk_info['home_pc'] = $home1[4];
+		$disk_info['home_mount'] = $home1[5];
 	}
 		// test for line break
 		//$disk_info['boot'] = $boot;
@@ -403,14 +462,19 @@ function format_num ($string) {
 	}
 	return $string;
 }
-function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false) {
+function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false,$hidden = false) {
 	//if ($positive = "null") { unset($positive);}
 	run:
 echo $salute; // display question
+if ($hidden === true) {
+	$line = getObscuredText($strMaskChar='*');
+	return $line;
+	
+}	
 $handle = fopen ("php://stdin","r"); //open stdin
 $line = fgets($handle); //record it
 if ($press_any_key === true and empty($positive)) {
-	return true; // return a press any key
+	return $line; // return a press any key
 }
 if ($line === PHP_EOL) {
 	errors:
@@ -436,10 +500,17 @@ function display_mem($mem_info,$colour) {
 	if (is_cli()){
 	if ($colour === true) {
 		//echo "colour".CR;
+		$headmask = "%32.32s %13.13s %13.13s %13.13s  \n";
+		
 		echo "\t\e[1m\e[31m Memory\e[0m".CR;
-		echo "\t\t\t\e[1m \e[34m Total\t\t    Free\t   Cached\t   Active\e[97m".CR;
-		echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
+		printf($headmask, "\e[1m \e[34m Total",'Free','Cached',"Active\e[97m");
+		//echo "\t\t\t\e[1m \e[34m Total\t\t    Free\t   Cached\t   Active\e[97m".CR;
+		$headmask = "%40.40s %13.13s %10.10s %10.10s  \n";
+		printf($headmask,"\e[38;5;82mMem  \e[97m".$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']);
+		//echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
+		$headmask = "%40.40s %13s %20s %10s  \n";
+		printf($headmask,"\e[38;5;82mSwap\e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
+		//echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
 }
 else {
 	//bw
@@ -451,7 +522,7 @@ else {
 }
 }
 else {
-	$disp = '<table style="width100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
+	$disp = '<table style="width:100%;"><td></td><td style="width:22%;">Total</td><td style="width:22%;">Free</td><td style="width:22%;">Cached</td><td style="width:22%;">Active</td>
 	<tr><td style="color:red;width:22%;">Memory</td><td style="width:22%;" id="memtotalickleh">'.$mem_info['MemTotal'].'</td><td id="memfreeickleh">'.$mem_info['MemFree'].'</td><td id="memcachedickleh">'.$mem_info['Cached'].'<td id="memactiveickleh">'.$mem_info['Active'].'</td></tr>
 	<tr><td style="color:red;">Swap</td><td>'.$mem_info['SwapTotal'].'</td><td>'.$mem_info['SwapFree'].'</td><td>'.$mem_info['SwapCached'].'</td></tr></table>';
 	
@@ -511,7 +582,8 @@ if (is_cli()) {
 	echo "\t   Optional".CR;
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
-    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix']."\e[0m".CR;
+    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
+    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
 else {
@@ -546,23 +618,25 @@ function display_cpu ($cpu_info) {
 if (is_cli()) {
 	 echo "\t\e[1m\e[31mHardware\e[97m".CR;
     echo "\t\t\e[38;5;82mUptime         \t\e[97m".$cpu_info['boot_time'].CR;
-    echo "\t\t\e[38;5;82mCpu Model      \t\e[97m".$cpu_info['model name'].CR;
+    echo "\t\t\e[38;5;82mCpu Model      \t\e[97m".$cpu_info['model_name'].CR;
     echo "\t\t\e[38;5;82mCpu Processors \t\e[97m".$cpu_info['processors'].CR;
-    echo "\t\t\e[38;5;82mCpu Cores      \t\e[97m".$cpu_info['cpu cores'].CR;
-    echo "\t\t\e[38;5;82mCpu Speed      \t\e[97m".$cpu_info['cpu MHz']. " MHz".CR;
-    echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache size'].CR;
+    echo "\t\t\e[38;5;82mCpu Cores      \t\e[97m".$cpu_info['cpu_cores'].CR;
+    echo "\t\t\e[38;5;82mCpu Speed      \t\e[97m".$cpu_info['cpu_MHz']. " MHz".CR;
+    echo "\t\t\e[38;5;82mCpu Cache      \t\e[97m",$cpu_info['cache_size'].CR;
     echo "\t\t\e[38;5;82mCpu Load       \t\e[97m".$cpu_info['load'].CR;
-	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip']."\e[0m".CR;
+	echo "\t\t\e[38;5;82mIP Address\e[97m     \t".$cpu_info['local_ip'].CR;
+	echo "\t\t\e[38;5;82mProcesses\e[97m     \t".$cpu_info['process'].CR;
+	echo "\t\t\e[38;5;82mReboot Required\e[97m\t".$cpu_info['reboot']."\e[0m".CR;
 }
 else {
 	$sname='ickleh';
 	$disp = '<table style="width:100%;"><tr><td width="20%" style="color:red;">Uptime</td><td width="70%" id="boot'.$sname.'">'.$cpu_info['boot_time'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model name'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Model</td><td>'.$cpu_info['model_name'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Processors</td><td>'.$cpu_info['processors'].'</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Cores</td><td>'.$cpu_info['cpu cores'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu MHz'].'Mhz</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Speed</td><td>'.$cpu_info['cpu_MHz'].'Mhz</td></tr>
 	<tr><td style="width:20%;color:red;">Cpu Load</td><td id="load'.$sname.'">'.$cpu_info['load'].'</td></tr>
-	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache size'].'</td></tr>
+	<tr><td style="width:20%;color:red;">Cpu Cache</td><td>'.$cpu_info['cache_size'].'</td></tr>
 	<tr><td style="width:20%;color:red;">IP Address</td><td>'.$cpu_info['local_ip'].'</td></tr></table>';
 	return $disp;
 }
@@ -570,19 +644,19 @@ else {
 function display_disk($disk_info) {
 	if (is_cli()) {
 	echo CR."\e[1m \e[34m Disk Information\e[0m".CR;
-	if (!isset($disk_info['boot hide'])) {echo "\t\e[1m\e[31m Boot\e[0m".CR;}
-	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot filesystem'].CR;
-	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['boot mount'].CR;
-	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['boot size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot used']." (".$disk_info['boot %'].")",CR;
-	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['boot free'].CR;
-	if (isset($disk_info['home filesystem'])) {
+	if (!isset($disk_info['boot_hide'])) {echo "\t\e[1m\e[31m Boot\e[0m".CR;}
+	echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['boot_filesystem'].CR;
+	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['boot_mount'].CR;
+	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['boot_size'].CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['boot_used']." (".$disk_info['boot_pc'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['boot_free'].CR;
+	if (isset($disk_info['home_filesystem'])) {
 		echo "\t\e[1m\e[31m Data\e[0m".CR;
-		echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['home filesystem'].CR;
-	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['home mount'].CR;
-	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['home size'].CR;
-	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home used']." (".$disk_info['home %'].")",CR;
-	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home free']."\e[0m".CR;
+		echo "\t\t\e[38;5;82m\e[1mFile System\e[97m     ".$disk_info['home_filesystem'].CR;
+	echo "\t\t\e[38;5;82mMount Point\e[97m     ".$disk_info['home_mount'].CR;
+	echo "\t\t\e[38;5;82mDisk Size\e[97m       ".$disk_info['home_size'].CR;
+	echo "\t\t\e[38;5;82mDisk Used\e[97m       ".$disk_info['home_used']." (".$disk_info['home_pc'].")",CR;
+	echo "\t\t\e[38;5;82mDisk Free\e[97m       ".$disk_info['home_free']."\e[0m".CR;
 	}
 	echo "\e[0m";
 }
@@ -590,11 +664,11 @@ else {
 	// html
 	if (!isset($disk_info['boot hide'])) {$disp .= '<i>Boot</i>'.CR;}
 	$disp .= '<table style ="width:100%;">';
-	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot filesystem'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot mount'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot size'].'</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot used'].' ('.$disk_info['boot %'].')</td></tr>';
-	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot free'].'</td></tr>';
+	$disp .= '<tr><td width="22%"><i style="color:red;">File System</i></td><td>'.$disk_info['boot_filesystem'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Mount Point</i></td><td>'.$disk_info['boot_mount'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Size</i></td><td>'.$disk_info['boot_size'].'</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Used</i></td><td>'.$disk_info['boot_used'].' ('.$disk_info['boot_pc'].')</td></tr>';
+	$disp .= '<tr><td><i style="color:red;">Disk Free</i></td><td>'.$disk_info['boot_free'].'</td></tr>';
 	if (isset($disk_info['home filesystem'])) {
 		// home  file system different to boot file system 
 	}
@@ -616,8 +690,8 @@ function display_user($user_info) {
 	}
 	echo "\t\e[1m\e[31mQuota\e[97m".CR;
 	echo "\t\e[38;5;82m\tQuota\e[97m\t\t".$user_info['quota'].CR;
-	echo "\t\e[38;5;82m\tUsed \e[97m\t\t".$user_info['quota used'].CR;
-	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota free']."\e[0m".CR;
+	echo "\t\e[38;5;82m\tUsed \e[97m\t\t".$user_info['quota_used'].CR;
+	echo "\t\e[38;5;82m\tRemaining\e[97m\t".$user_info['quota_free']."\e[0m".CR;
 }	
 	else {
 		// html
@@ -636,8 +710,8 @@ function display_user($user_info) {
 	$disp = '<table style="width:100%;"><tr><td style="width:24%;color:red;">Name</td><td>'.$user_info['name'].'</td></tr>
 	<tr><td style="color:red;">Level</td><td>'.$user_priv.'</td></tr>
 	<tr><td style="color:red;">Quota</td><td>'.$user_info['quota'].'</td></tr>
-	<tr><td style="color:red;">Used</td><td>'.$user_info['quota used'].'</td></tr>
-	<tr><td style="color:red;">Remaining</td><td>'.$user_info['quota free'].'</td></tr>
+	<tr><td style="color:red;">Used</td><td>'.$user_info['quota_used'].'</td></tr>
+	<tr><td style="color:red;">Remaining</td><td>'.$user_info['quota_free'].'</td></tr>
 	
 	</table>';
 	return $disp;
@@ -694,12 +768,17 @@ return $version;
 }
 }
 function display_games() {
+	 //require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
+	 //use xPaw\SourceQuery\SourceQuery as $jim;
+	 global $Query;
+	 echo 'here'.CR;
 	$database = new db(); // connect to database
-	$sql = 'select * from servers where enabled ="1"'; //select all enabled recorded servers
+	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     $servers = array(); // set GameQ array
-   
+  
 foreach ($res as $data) {
+	
 	//add the data array for GameQ
 	//this does allow remote locations
 	// as long as you have the remote software installed
@@ -707,23 +786,36 @@ foreach ($res as $data) {
 	$servers[$key]['id'] = $key;
 	$servers[$key]['host'] = $data['host'].':'.$data['port'] ;
 	$servers[$key]['type'] = $data['type'];
+	define( 'SQ_SERVER_ADDR', $data['host'] );
+	define( 'SQ_SERVER_PORT', $data['port'] );
+	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	
+    $Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
+	$players = $Query->GetPlayers( ) ;
+	$info = $Query->GetInfo();
+	$rules = $Query->GetRules( );
+	$Query->Disconnect( );
+	print_r($info);
+	
 	}
 	require_once('GameQ/Autoloader.php'); //load GameQ
 	if (is_cli()) {
 		
-		echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
-		echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
+		
 		} // get local servers	
 	
 	$tm = get_sessions();
-	$tm =running_games(explode("*",$tm));
-	//print_r($tm);
+	//echo print_r($tm,true).CR;
+	$tm =running_games($tm);
+    //print_r($tm);
 	if(!empty($tm)) {
 		unset($tm['install']); 
 		$GameQ = new \GameQ\GameQ();
 		//include ("server-info.php");
     $GameQ->addServers($servers);
     $results = $GameQ->process();
+    //print_r($results);
     // order servers on players
     //orderBy($results,'gq_numplayers',"d");
     if (!is_cli()) {
@@ -739,16 +831,16 @@ foreach ($res as $data) {
 	if (!empty($online)) {
     echo "\t\t\e[38;5;82m".$results[$key]["gq_hostname"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $value);
                 $update['running'] = 1;
-				$update['starttime'] = date();
+				$update['starttime'] = $value;
 			    $where['host_name'] = $key;
-			    echo $key.'<br>'; 
+			    echo $key.CR; 
 			    $database->update('servers',$update,$where);
-	echo " Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
        
     if ($players >0) {
 			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
 			$player_list = $results[$key]['players'];
-			orderBy($player_list,'gq_score',"d"); // order by score
+				orderBy($player_list,'gq_score',"d"); // order by score
 				foreach ($player_list as $k=>$v) {
 					$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 					$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
@@ -815,9 +907,11 @@ function html_display($tm,$results) {
 			if (!empty($online)) {
 				// the server is up display title
 				// add sub template ?
-				$disp .= '<div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
-				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span style="cursor:pointer;" id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].'</span></span></div>';
+				$link = $results[$key]['gq_address'].':'. $results[$key]['gq_port_client'];
+				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
+				.'</i> <br>Started at '.
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].
+				 '</span></span><br><i style="color:blue;"><a href="steam://connect/'.$link.'/"><span class="btn btn-primary btn-sm">Join</span></a></i></div>';
 				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
 				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
 				if ($players >0) {
@@ -825,7 +919,7 @@ function html_display($tm,$results) {
 					// add sub template
 					
 					$player_list = $results[$key]['players']; // get the player array
-					orderBy($player_list,'gq_score','d'); // order by score
+					orderBy($player_list,'gq_score','a'); // order by score
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
 						$playerN = $player_list[$k]['gq_name']; // chop to 20 chrs
@@ -860,9 +954,9 @@ function html_display($tm,$results) {
 				}
 				//end of players
 				// close div
-				$disp .='</tbody></table></div><script>
-		$("#op1'.$key.'").click(function(){
-		$("#ops'.$key.'").slideToggle("fast");
+				$disp .='</tbody></table></div><!--End template--><script>
+				$("#op1'.$key.'").click(function(){
+				$("#ops'.$key.'").slideToggle("fast");
   });
  	</script>';
 				$disp .= '<br></div>';
@@ -870,8 +964,15 @@ function html_display($tm,$results) {
 			}
 			else {
 				//server not responding
-				$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
-				<br> or perhaps there is something else wrong</div>';
+				$logo ='img/warning.png';
+				$players = '<i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start';
+				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
+				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
+				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;"><span id="gol'.$key.'">'.$players.'</span><span id="cmap'.$key.'"></span></span></div>';
+				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
+				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
+				//$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
+				//<br> or perhaps there is something else wrong</div>';
 			}
 			//return $disp;
 		}
@@ -883,38 +984,68 @@ function html_display($tm,$results) {
 }
 function orderBy(&$data, $field,$order)
   {
-    if ($order ="d") {
-		$code = "return strnatcmp(\$b['$field'], \$a['$field']);";
-	}
-	else {
-		$code = "return strnatcmp(\$a['$field'], \$b['$field']);";
-	}	
-    usort($data, create_function('$a,$b', $code));
+  $args['field'] = $field;
+  $args['order'] =$order;
+    
+    usort($data, function($a, $b) use ($args) {
+          if ($args['order'] == "d") {
+				return strnatcmp($b[$args['field']], $a[$args['field']]);
+			}
+		else {
+				return strnatcmp($a[$args['field']], $b[$args['field']]);
+			}
+});
+   
   }
+  
+
   function get_sessions() {
 	  /* Recover screen & Tmux sessions
 	   * Feb 2020
 	   * the tmux sessions will be removed as php run via apache can not access them
 	   */
 	   
-	   $sql = 'select * from base_servers where extraip = 0 ' ;
+	   $sql = 'select * from base_servers  where extraip = 0 ' ;
 	   $database = new db(); // connect to database
 	   $res = $database->get_results($sql); // pull results
+	   $sql = 'select servers.host_name from servers where enabled=1';
+	   $valid = $database->get_results($sql);
+	   //echo print_r($valid,true).CR;
+	   $xm='';
+	   $tm='';
 	   foreach ($res as $data){
 	    
 		 $ch = curl_init();
-	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls');
+		 // need to add key here & replace curl
+		 $ipaddr = md5( ip2long($data['ip']));
+	     curl_setopt($ch, CURLOPT_URL, $data['url'].':'.$data['port'].'/ajax.php?action=exescreen&cmd=ls&key='.$ipaddr);
 	     
 	     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		 $xm .= curl_exec($ch);
+		 $xm = curl_exec($ch);
 		 
 		 $xm = trim($xm);
 		 $tm .= $xm;
-		 
+		 //echo $tm.CR;
 		 curl_close($ch);
+		 
 	 }
+	  $tm = explode("*",$tm);
 	 
-	 return $tm;
+	  foreach ($valid as $server) {
+		  
+		  $search = $server['host_name'];
+		  
+		 foreach ($tm as $k=>$v){
+
+ if(stripos($v, $search) !== false){
+ $xy[$k]=$v;
+ }
+
+	  }
+  }
+  //print_r($xy);
+	 return $xy;
+	
    }
    function html_display_version() {
 	   echo 'started version'.CR;
@@ -943,4 +1074,234 @@ POSSIBILITY OF SUCH DAMAGE.'.CR.CR; */
 echo 'ready to return version'.CR;
 //return $version;
 }
+
+function local_build($ldata) {
+	
+$string = trim(preg_replace('/\t/', '', $ldata));
+$string = trim(preg_replace('/""/', ',', $string));
+$string = trim(preg_replace('/"/', '', $string));
+$string = trim(preg_replace('/{/', '', $string));
+$string = trim(preg_replace('/}/', '', $string));
+
+$ta = explode(PHP_EOL,$string);
+$ta = array_filter($ta);
+$j = refactor_local($ta);
+//echo print_r($j,true).PHP_EOL;
+$return['appid'] = $j['AppState']['appid'];
+$return['buildid'] = $j['AppState']['buildid'];
+$return['update'] = $j['AppState']['LastUpdated'];
+//echo print_r($return,true).PHP_EOL;
+return $return;
+}
+
+function refactor_local($array) {
+	// refactor array with keys
+	global $keyset;
+	foreach ($array as &$value) {
+			//read data
+			if(empty($value)) { 
+			//echo 'empty'.PHP_EOL;
+			}
+		else {
+			// make array
+			//if ($keyset = 1) {echo 'keyset'.PHP_EOL;}
+			 $i = strpos($value,",",0);
+			 if ($i == 0) {
+			 $key1 = trim($value);
+			 $nos[$key1] =array();
+			 $keyset=1;
+			 continue;
+		 }
+		   else {
+			   //echo 'hit else'.PHP_EOL;
+			   $i = strpos($value,",",0);
+			if ($i > 0 )
+			{
+            $key = trim(substr($value,0,$i));
+            if (isset($key1)) {
+		    $nos[$key1][$key] = trim(substr($value,$i+1));
+		}
+		else {
+			$nos[$key] = trim(substr($value,$i+1));
+		}
+		}
+		   }
+		}	
+			
+		
+		}
+		return $nos;
+//print_r($nos);
+}
+function test_remote($file) {
+	//echo 'starting remote'.PHP_EOL;
+$string = trim(preg_replace('/\t/', '', $file));
+$string = trim(preg_replace('/""/', ',', $string));
+$string = trim(preg_replace('/"/', '', $string));
+$string = trim(preg_replace('/{/', '', $string));
+$string = trim(preg_replace('/}/', '', $string));
+$ta = explode(PHP_EOL,$string);
+$j = refactor_remote($ta);
+$return['buildid'] = $j['public']['buildid'];
+$return['update'] = $j['public']['timeupdated'];
+//print_r ($j);
+return $return;
+}
+function refactor_remote($array) {
+	// refactor array with keys
+	foreach ($array as &$value) {
+			//read data
+			if(empty($value)) { 
+			//echo 'empty'.PHP_EOL;
+			}
+		else {
+			// make array
+			 $i = strpos($value,",",0);
+			 if ($i == 0) {
+			 $key1 = trim($value);
+			 $nos[$key1] =array();
+		 }
+		}	
+			$i = strpos($value,",",0);
+			if ($i > 0 )
+			{
+            $key = trim(substr($value,0,$i));
+            if (isset($key1)) {
+		    $nos[$key1][$key] = trim(substr($value,$i+1));
+		}
+		else {
+			$nos[$key] = trim(substr($value,$i+1));
+		}
+		}
+		
+		}
+		return $nos;
+//print_r($nos);
+}
+function validate($valid) {
+	//this will expand over time
+	$ip = $_SERVER['SERVER_ADDR'];
+	$key = md5( ip2long($ip));
+	//echo $key;
+	if ($key == $valid['key']) {
+		return true;
+	}
+	return false;
+}
+function convert_to_argv ($type,$arraytype ='',$retain=false) {
+	/* convert $argv, $_GET and $_POST to an array
+	 * this allows the running code to reference command line options in a standard array
+	 * renames $argv[0] to file_name
+	 * option $arraytype turns the array key from string numeric
+	 * if ommited the array key is converted to string
+	 * if set will return $argv converted to lower case
+	 * all array keys converted to lower case
+	 */ 
+	
+	$nums = false;
+	$filename =  pathinfo( __FILE__,PATHINFO_BASENAME);
+	foreach  ($type as $key => $value) {
+		//
+		//if ( $value == $filename ) {continue;} // strip out argv[0]
+		
+		 $value = str_replace("&",' ',$value); 
+		 
+		if (is_int($key)) {
+			// numeric key most likley cli ;)
+			if ( $value == $filename ) {
+				$key = 'file_name';
+				$cmds[$key] = $value;
+				
+				continue;
+				}
+               
+			if (!empty($arraytype)) {$nums = true;} // set numeric array keys
+				
+			
+			else {
+				// convert web style
+                
+				$value = str_replace('&',' ',$value);
+				$x = strpos($value,'=');
+				if (empty($x)) {
+					// not written cmds correct
+					//echo 'value '.$value. ' incorrectly written'.PHP_EOL;
+					//echo 'example :- '.$filename.' <option>=<value>'.PHP_EOL;
+					$key = 'file_name';
+					//goto t1;
+					//die();
+					continue;
+				}
+				
+				$key = substr($value,0,$x);
+				$value =str_replace($key.'=','',$value);
+				$nums = false;
+			}
+			}
+		$key = strtolower($key);
+		 if ($retain == true ) {
+			$cmds[$key] = $value;
+}
+else{
+		$cmds[$key] = strtolower($value);
+	}
+		
+	}
+	if ($nums == true) {
+	$cmds = array_values($cmds);
+}
+if (isset($cmds)) {
+	return $cmds;
+}
+}
+function getObscuredText($strMaskChar='*')
+    {
+        if(!is_string($strMaskChar) || $strMaskChar=='')
+        {
+            $strMaskChar='*';
+        }
+        $strMaskChar=substr($strMaskChar,0,1);
+        readline_callback_handler_install('', function(){});
+        $strObscured='';
+        while(true)
+        {
+            $strChar = stream_get_contents(STDIN, 1);
+            $intCount=0;
+// Protect against copy and paste passwords
+// Comment \/\/\/ to remove password injection protection
+            $arrRead = array(STDIN);
+            $arrWrite = NULL;
+            $arrExcept = NULL;
+            while (stream_select($arrRead, $arrWrite, $arrExcept, 0,0) && in_array(STDIN, $arrRead))            
+            {
+                stream_get_contents(STDIN, 1);
+                $intCount++;
+            }
+//        /\/\/\
+// End of protection against copy and paste passwords
+            if($strChar===chr(10))
+            {
+                break;
+            }
+            if ($intCount===0)
+            {
+                if(ord($strChar)===127)
+                {
+                    if(strlen($strObscured)>0)
+                    {
+                        $strObscured=substr($strObscured,0,strlen($strObscured)-1);
+                        echo(chr(27).chr(91)."D"." ".chr(27).chr(91)."D");
+                    }
+                }
+                elseif ($strChar>=' ')
+                {
+                    $strObscured.=$strChar;
+                    echo($strMaskChar);
+                    //echo(ord($strChar));
+                }
+            }
+        }
+        readline_callback_handler_remove();
+        return($strObscured);
+    }
 ?>
