@@ -73,14 +73,14 @@ foreach ($res as $data) {
 	$Query->Disconnect( );
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	$headmask = "%40.40s %13.13s %25s %25s  \n";
-    printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
+        printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	//echo "\t\t\e[38;5;82m".$info["HostName"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
 	//echo "\t\t Players Online ".$playersd." Map - ".$info["Map"].CR;
 	if ($info['Players'] >0 ) {
 		// players
 		//print_r($players);
 		//echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		$headmask = "%40.40s %30.30s %23s  \n";
+		$headmask = "%50.50s %30.30s %23s  \n";
 		printf($headmask,"\e[1m \e[34m Player",'Score',"Online For\e[97m");
 		orderBy($players,'Frags',"d"); // order by score
 		foreach ($players as $k=>$v) {
