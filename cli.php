@@ -58,7 +58,7 @@ switch (strtolower($argv[1]))
 	case "games":
 	if(is_cli()) {
 			system('clear');
-	$database = new db(); // connect to database
+	//$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     
