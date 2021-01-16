@@ -19,4 +19,4 @@ Written in PHP as a MyBB extension
 <p>This software will only run on linux servers, if you install to a windows server it, currently, will not work<br>
 The Mybb part of this project has not been added to this repository yet, this will be added in due course when I work out the best way of doing it.
 </p>
-<p>Download the master branch for a working copy</p>
+<p>Download the master branch for a working copy.</p>
