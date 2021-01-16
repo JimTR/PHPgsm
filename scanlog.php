@@ -60,8 +60,7 @@ if ($file == 'all') {
 		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
 		$tmp = file_get_contents($path);
 		//echo $path.cr; // debug code
-		
-		//file_put_contents($run['host_name'],$tmp);
+				
 		if (!empty($tmp)) {
 			//echo $tmp.cr;
 		$display .= do_all($run['host_name'],$tmp);
