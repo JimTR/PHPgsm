@@ -123,7 +123,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					 $update['rbuildid'] = $remote['public']['buildid']; 
 					 $update['rserver_update']= $remote['public']['timeupdated'];
 					 $update['server_update']= $man_check['update'];
-					 $where['server_id'] = $local['appid']; // update all servers with that app with the current build need branch check
+					 $where['server_id'] = $local['appid']; // update all servers with that app with the current build need branch check ?
 			         $database->update('servers',$update,$where);
 					} 
 				}
