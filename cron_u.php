@@ -25,7 +25,7 @@
  *  new
  * steamcmd +login anonymous +force_install_dir /home/nod/games/gmod/serverfiles +app_update 4020  +quit example cmd line
  * this does check update status and does the update perhaps this is the way to go ?
- * move this to the utilities folder & make sure it's pathed ?
+ * move this to the utilities folder & make sure it's pathed. ?
  */
 include 'includes/cli_master.inc.php';
 include 'functions.php';
