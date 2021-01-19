@@ -37,9 +37,9 @@ $Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
 $rules = $Query->GetRules( );
 $Query->Disconnect( );
 //print_r($rules);
-echo '<table style="width:95%;"><tr><th style="width:20%;">Rule</th><th>Value</th></tr>';
+echo '<table style="width:95%;table-layout: fixed;"><tr><th style="width:20%;">Rule</th><th>Value</th></tr>';
 foreach ($rules as $k=>$v) {
-	echo '<tr><td style="width:20%;">'.$k.'</td><td style="text-align:left;">'.$v.'</td></tr>';
+	echo '<tr><td style="width:20%;word-wrap:break-word;">'.$k.'</td><td style="text-align:left;">'.$v.'</td></tr>';
 }
 echo '</table>';
 ?>
