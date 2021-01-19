@@ -1,6 +1,6 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
-error_reporting(-1);
+error_reporting( 0 );
 define ("CR","\r\n");
 global $argv;
 //echo '??';
@@ -80,16 +80,19 @@ foreach ($res as $data) {
 		// players
 		//print_r($players);
 		//echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		$headmask = "%50.50s %30.30s %23s  \n";
+		$headmask = "%' 50s %30.30s %23s  \n";
 		printf($headmask,"\e[1m \e[34m Player",'Score',"Online For\e[97m");
 		orderBy($players,'Frags',"d"); // order by score
 		foreach ($players as $k=>$v) {
 						//echo $k.' '.$v.cr;
-					$playerN = substr($players[$k]['Name'],0,20); // chop to 20 chrs
-					//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
-					$playerN = str_pad($playerN,25); //pad to 25 chrs
+					//$playerN = substr($players[$k]['Name'],0,20); // chop to 20 chrs
+					setlocale(LC_CTYPE, 'en_AU.utf8');
+					$playerN = trim($players[$k]['Name']);
+//iconv("UTF8", "CP1251//TRANSLIT//IGNORE", $text);	
+					$playerN = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $playerN); //remove high asci
+					$playerN = str_pad($playerN,25,' ' ,STR_PAD_LEFT); //pad to 25 chrs
 		
-		if ($players[$k]['Frags'] <10) {
+	/*	if ($players[$k]['Frags'] <10) {
 			// switch statement !! rather than if's
 			$pscore ="  ".$players[$k]['Frags']; //format score
 		}
@@ -98,10 +101,10 @@ foreach ($res as $data) {
 		}
 		else {
 			$pscore = $players[$k]['Frags']; //format score
-		}
+		} */
 		//echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ". $players[$k]['TimeF'].CR;
-		$headmask = "%55.55s %10.10s %23s  \n";
-		printf($headmask,$playerN,$pscore, $players[$k]['TimeF']);
+		$headmask = "%20s %25s %15s %' 8s %17s  \n";
+		printf($headmask,' ',$playerN,' ',$players[$k]['Frags'], $players[$k]['TimeF']);
 		
 	}
 	echo CR;
