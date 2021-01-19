@@ -38,7 +38,7 @@ $results = $Query->GetPlayers( ) ;
 $info = $Query->GetInfo();
 $rules = $Query->GetRules( );
 $Query->Disconnect( );
- header('Access-Control-Allow-Origin: *');
+ //header('Access-Control-Allow-Origin: *');
 //46.32.237.232:27016
 require ('includes/master.inc.php');
 $browser = get_browser(null, true);
