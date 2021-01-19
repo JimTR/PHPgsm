@@ -39,7 +39,7 @@ $Query->Disconnect( );
 //print_r($rules);
 echo '<table style="width:95%;table-layout: fixed;"><tr><th style="width:65%;">Rule</th><th>Value</th></tr>';
 foreach ($rules as $k=>$v) {
-	echo '<tr><td style="word-wrap:break-word;">'.$k.'</td><td style="text-align:left;">'.$v.'</td></tr>';
+	echo '<tr><td style="word-wrap:break-word;">'.$k.'</td><td style="text-align:left;padding-left:1%;">'.$v.'</td></tr>';
 }
 echo '</table>';
 ?>
