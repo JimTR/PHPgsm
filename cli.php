@@ -1,6 +1,7 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
-error_reporting( 0 );
+//error_reporting( 0 );
+error_reporting ( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED);
 define ("CR","\r\n");
 global $argv;
 //echo '??';
@@ -103,7 +104,7 @@ foreach ($res as $data) {
 			$pscore = $players[$k]['Frags']; //format score
 		} */
 		//echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ". $players[$k]['TimeF'].CR;
-		$headmask = "%20s %25s %15s %' 8s %17s  \n";
+		$headmask = "%20s %-25s %15s %' 8s %17s  \n";
 		printf($headmask,' ',$playerN,' ',$players[$k]['Frags'], $players[$k]['TimeF']);
 		
 	}
