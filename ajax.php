@@ -33,7 +33,7 @@
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).PHP_EOL;
-	file_put_contents('ajax.log',$logline,FILE_APPEND);
+	//file_put_contents('ajax.log',$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
 	}
@@ -427,8 +427,7 @@ echo $page2;
 			//running
 			$alreadyrunning = 1;
 		}
-		file_put_contents('ajax.log','ready to do exe_screen'.PHP_EOL
-,FILE_APPEND);
+		//file_put_contents('ajax.log','ready to do exe_screen'.PHP_EOL,FILE_APPEND);
 		echo exe_screen($cmd,$exe,$text,$alreadyrunning);
 											  		
 }
@@ -706,7 +705,7 @@ function game_detail() {
                 
                 if (empty($new)) {
 		// offline
-		if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
+		//if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		$du = str_replace('<br>','',$du);
 		//file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
@@ -730,11 +729,11 @@ function game_detail() {
         //$temp = trim(file_get_contents('top');
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	//fix remotes
-	file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
+	//file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 	//$du = str_replace('<br>','',$du);	
 	//list($size, $location) = explode(" ", trim($du)); // drop to variables
-	file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
+	//file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
 	$x = strpos(trim($du),'/');
 	$size = trim(substr($du,0,$x-1));
 	$server_data['count'] =  count($temp);
