@@ -710,7 +710,9 @@ function game_detail() {
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		$du = str_replace('<br>','',$du);
 		file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
-		list($size, $location) = explode(" ", trim($du)); // drop to variables
+		//list($size, $location) = explode(" ", trim($du)); // drop to variables
+		$x = strpos(trim($du),' ');
+		$size = substr($du,0,$x);
 		file_put_contents ('duout.txt',$size.PHP_EOL,FILE_APPEND);
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
