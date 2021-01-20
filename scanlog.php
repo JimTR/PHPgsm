@@ -250,7 +250,12 @@ foreach ($la as $user_data) {
 			$result['city'] = $ip_data['city'];
 			$result['flag'] = Emoji::Encode($ip_data['emoji_flag']);
 			$result['time_zone'] = $ip_data['time_zone']['name'];
-			$result['type'] = $ip_data['asn']['type'];
+			if (isset($ip_data['asn'])) {
+				$result['type'] = $ip_data['asn']['type'];
+		}
+		else {
+			$result['type'] ='n/a';
+		}
 			$result['threat'] = $ip_data['threat']['is_threat'];
 			$result['ip'] = $user_data['ip'];
 			$modify=true;
