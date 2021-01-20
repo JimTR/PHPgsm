@@ -709,11 +709,11 @@ function game_detail() {
 		if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		$du = str_replace('<br>','',$du);
-		file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
+		//file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
 		//list($size, $location) = explode(" ", trim($du)); // drop to variables
 		$x = strpos(trim($du),'/');
 		$size = trim(substr($du,0,$x-1));
-		file_put_contents ('duout.txt','Size = '.$size.PHP_EOL,FILE_APPEND);
+		//file_put_contents ('duout.txt','Size = '.$size.PHP_EOL,FILE_APPEND);
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
 		$server_data['mem'] = '';
@@ -732,8 +732,9 @@ function game_detail() {
 	//fix remotes
 	file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
-	$du = str_replace('<br>','',$du);	
+	//$du = str_replace('<br>','',$du);	
 	//list($size, $location) = explode(" ", trim($du)); // drop to variables
+	file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
 	$x = strpos(trim($du),'/');
 	$size = trim(substr($du,0,$x-1));
 	$server_data['count'] =  count($temp);
