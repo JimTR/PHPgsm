@@ -709,9 +709,9 @@ function game_detail() {
 		if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		$du = str_replace('<br>','',$du);
-		file_put_contents ('duout.txt',$du.cr,FILE_APPEND);
+		file_put_contents ('duout.txt',$du.'/n',FILE_APPEND);
 		list($size, $location) = explode(" ", trim($du)); // drop to variables
-		file_put_contents ('duout.txt',$size.cr,FILE_APPEND);
+		file_put_contents ('duout.txt',$size.'/n',FILE_APPEND);
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
 		$server_data['mem'] = '';
