@@ -733,7 +733,9 @@ function game_detail() {
 	file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 	$du = str_replace('<br>','',$du);	
-	list($size, $location) = explode(" ", trim($du)); // drop to variables
+	//list($size, $location) = explode(" ", trim($du)); // drop to variables
+	$x = strpos(trim($du),'/');
+	$size = trim(substr($du,0,$x-1));
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
 	$server_data['cpu'] = $temp[$server_data['count']-4];
