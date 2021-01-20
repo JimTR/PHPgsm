@@ -711,6 +711,7 @@ function game_detail() {
 		$du = str_replace('<br>','',$du);
 		file_put_contents ('duout.txt',$du.cr,FILE_APPEND);
 		list($size, $location) = explode(" ", trim($du)); // drop to variables
+		file_put_contents ('duout.txt',$size.cr,FILE_APPEND);
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
 		$server_data['mem'] = '';
