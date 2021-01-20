@@ -709,7 +709,7 @@ function game_detail() {
 		if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		file_put_contents ('duout.txt',$du.cr,FILE_APPEND);
-		list($size, $location) = explode(" ", $du); // drop to variables
+		list($size, $location) = explode(" ", trim($du)); // drop to variables
 		$server_data['cpu'] = '';
 	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
 		$server_data['mem'] = '';
@@ -729,7 +729,7 @@ function game_detail() {
 	file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		
-	list($size, $location) = explode(" ", $du); // drop to variables
+	list($size, $location) = explode(" ", trim($du)); // drop to variables
 	$server_data['count'] =  count($temp);
 	$server_data['mem'] = $temp[$server_data['count']-3];
 	$server_data['cpu'] = $temp[$server_data['count']-4];
