@@ -725,6 +725,7 @@ function game_detail() {
         //$temp = trim(file_get_contents('top');
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	//fix remotes
+	file_put_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,'cmd.txt',FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		
 	list($size, $location) = explode(" ", $du); // drop to variables
