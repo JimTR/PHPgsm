@@ -706,7 +706,7 @@ function game_detail() {
                 
                 if (empty($new)) {
 		// offline
-		if (!empty($server_data['location'])) { file_put_contents($server_data['location'].cr,'loc.txt',FILE_APPEND);}
+		if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
 		$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		list($size, $location) = explode(" ", $du); // drop to variables
 		$server_data['cpu'] = '';
@@ -725,7 +725,7 @@ function game_detail() {
         //$temp = trim(file_get_contents('top');
 	$temp = array_values(array_filter(explode(' ',$temp)));
 	//fix remotes
-	file_put_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,'cmd.txt',FILE_APPEND);
+	file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
 	$du = shell_exec('du -s '.$server_data['location']); // get size of game
 		
 	list($size, $location) = explode(" ", $du); // drop to variables
