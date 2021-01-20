@@ -134,7 +134,7 @@ switch (strtolower($cmds['action'])) {
 						// note, this will only return an open file 
 						// this runs only on the local server, must be called on each server
 						
-						$tmp = shell_exec('lsof | grep -m1 '.$cmds['lsof_file']);
+						$tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$cmds['lsof_file']);
 						// echo $tmp.'<br>'; // debug code
 						$x = explode(' ',$tmp);
 							foreach ($x as $k=>$v) 
