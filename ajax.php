@@ -114,7 +114,9 @@ switch (strtolower($cmds['action'])) {
 			//need api key
 			
 			echo file_get_contents($cmds['file']);
-			
+			if (isset($cmds['post'])) {
+				echo 'got post';
+			}
 			file_put_contents('gf.txt',print_r($_POST,true),FILE_APPEND);
 			
 		
