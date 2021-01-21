@@ -90,7 +90,7 @@ else {
 	 exit;
  }
  //line one done
-	//file_put_contents('ajax.log',$logline,FILE_APPEND);
+	file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
@@ -107,6 +107,7 @@ switch (strtolower($cmds['action'])) {
 	case "get_file" :
 			//need api key
 			echo file_get_contents($cmds['file']);
+			
 			exit;	
 	case "ps_file" :
 			//need api key !!
