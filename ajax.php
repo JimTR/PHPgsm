@@ -51,9 +51,9 @@ else {
  if (!empty($_POST)) {
 	 $post =convert_to_argv($_POST,"",true);
  }
- 
-	 $cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
- 
+ else {
+	 $cmds =convert_to_argv($_GET,"",true);
+ }
 $logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> ('.$valid.')';
 //file_put_contents('ajax.log',$logline,FILE_APPEND); // debug code
  // $cmds = change_value_case($cmds,CASE_LOWER);
