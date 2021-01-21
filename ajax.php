@@ -114,7 +114,8 @@ switch (strtolower($cmds['action'])) {
 			//need api key
 			
 			echo file_get_contents($cmds['file']);
-			file_put_contents('gf.txt',$cmds['data']);
+			
+			file_put_contents('gf.txt',print_r($cmds,true));
 			
 		
 			
