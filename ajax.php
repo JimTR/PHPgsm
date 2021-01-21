@@ -92,7 +92,7 @@ else {
 	 exit;
  }
  //line one done
-	//file_put_contents('ajax.log',$logline,FILE_APPEND);
+	file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
 if(!$valid) { 
 	echo 'invalid request';
@@ -115,7 +115,7 @@ switch (strtolower($cmds['action'])) {
 			
 			echo file_get_contents($cmds['file']);
 			
-			file_put_contents('gf.txt',print_r($cmds,true));
+			file_put_contents('gf.txt',print_r($_POST,true),FILE_APPEND);
 			
 		
 			
