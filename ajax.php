@@ -112,7 +112,7 @@ switch (strtolower($cmds['action'])) {
 			exit;
 	case "get_file" :
 			//need api key
-			if(!isset($cmds['post'])){
+			if(!isset($cmds['data'])){
 			echo file_get_contents($cmds['file']);
 		}
 		else {
