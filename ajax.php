@@ -92,8 +92,12 @@ else {
 	 exit;
  }
  //line one done
-	file_put_contents('ajax.log',$logline,FILE_APPEND);
+	//file_put_contents('ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
+if(!$valid) { 
+	echo 'invalid request';
+	die();
+}
  if(isset($cmds['action'])) {
 //header('Access-Control-Allow-Origin: *');
 //check_update();
