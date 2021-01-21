@@ -26,6 +26,8 @@
  require_once 'includes/master.inc.php';
  include 'functions.php';
  $ip =$_SERVER['SERVER_ADDR'];
+ $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"';
+ $valid = $database->num_rows($sql);
  if(is_cli()) {
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
@@ -52,7 +54,7 @@ else {
  else {
 	 $cmds =convert_to_argv($_GET,"",true);
  }
-$logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'>';
+$logline  = date("d-m-Y H:i:s").' <'.$_SERVER['REMOTE_ADDR'].'> ('.$valid.')';
 //file_put_contents('ajax.log',$logline,FILE_APPEND); // debug code
  // $cmds = change_value_case($cmds,CASE_LOWER);
 }
