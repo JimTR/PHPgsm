@@ -117,11 +117,11 @@ switch (strtolower($cmds['action'])) {
 			if (isset($cmds['post'])) {
 				print_r($cmds);
 				file_put_contents('gf.txt',print_r($cmds,true),FILE_APPEND);
-				//file_put_contents($cmds['file'],$cmds['data']);
+				file_put_contents($cmds['file'],$cmds['data']);
 			}
 			
 			else { 
-					echo 'get file';
+					//echo 'get file';
 					echo file_get_contents($cmds['file']);
 				}
 		
