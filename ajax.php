@@ -437,6 +437,7 @@ echo $page2;
 			$cmd = $cmds['cmd'];
 			$exe = trim($cmds['exe']);
 			$text= trim($cmds['text']);
+			file_put_contents('exescreen.txt',PHP_EOL.$exe.' '.$text.' '.$status.PHP_EOL,FILE_APPEND);
 		    $s= exe_screen('ls',$exe,$text,$status);
 		    $x=strpos($s,',');
 		
@@ -583,6 +584,7 @@ function exe_lgsm($server,$action,$exe)
 		 	  }
 		  $cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.$text.'^M"';
 		  exec($cmd);
+		  file_put_contents('exescreen.txt','doing - '.$cmd,FILE_APPEND);
 		  $disp = 'Command Sent';
 			// send console command
 			break;
