@@ -116,8 +116,10 @@ switch (strtolower($cmds['action'])) {
 			echo file_get_contents($cmds['file']);
 			if (isset($cmds['post'])) {
 				echo 'got post';
+				file_put_contents('gf.txt',print_r($cmds,true),FILE_APPEND);
+				file_put_contents($cmds['file'],$cmds['data']);
 			}
-			file_put_contents('gf.txt',print_r($cmds,true),FILE_APPEND);
+			
 			
 		
 			
