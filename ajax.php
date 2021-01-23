@@ -795,7 +795,7 @@ function game_detail() {
 		$return[$server['host_name']] = $server;
 		
 		if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
-		$rec = array_find($server['host_name'],$tmp);
+		$rec = array_find($server['host_name'].'.cfg',$tmp);
 		$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 		$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
 		$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
