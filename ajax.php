@@ -789,17 +789,14 @@ function game_detail() {
 // here we have the runners in $tmp
 	$sql = 'select  * from servers where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 	$servers = $db->get_results($sql);
-	//echo print_r($servers,true),cr;
+	
 	foreach ($servers as $server) {
-		//echo $server['host_name'];
+		
 		$return[$server['host_name']] = $server;
-		//echo print_r($tmp,true).'<br>';
-		//echo ' looking ('.array_find($server['host_name'], $tmp).')';
+		
 		if (array_find($server['host_name'],$tmp) >= 0) {
 			$rec = array_find($server['host_name'],$tmp);
-			//echo ' found '.$server['host_name'].'<br>'; 
-		
-		$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
+			$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 		$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
 		$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
 		$tmp_array[$i] = explode(' ',$server1); // arrayify
@@ -807,11 +804,9 @@ function game_detail() {
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 		$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
-		//echo $sql.cr;
 		$result =$db->get_results($sql); // get data back
 		$result=reset($result);
 		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
-		//echo $sql.cr;
 		$server_count= $db->get_results($sql); // get data back
 		$server_count=reset($server_count);
 		$count = count($top); // how many records  ?
@@ -829,12 +824,10 @@ function game_detail() {
 	}
 	else {
 		$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
-		//echo 'du = '.$du.cr;
 		$size = str_replace($server['location'],'',$du);
 		$server['mem'] = 0;
 		$server['cpu'] = 0;
 		$server['size'] = formatBytes(floatval($size)*1024,2);
-		//echo cr.'detail for '.$return[$result['host_name']]['host_name'] .cr.print_r($result,true).cr;
 		$return[$server['host_name']] = $server;
 		
 		
