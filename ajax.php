@@ -265,16 +265,16 @@ switch (strtolower($cmds['action'])) {
 			$mem_info = get_mem_info();
 			
 			$user_info = get_user_info($disk_info);
-			$gd =game_detail();
+			//$gd =game_detail();
 			
 			if (isset($cmds['data'])) {
 				// json
 				$return=$cpu_info;
 				$return= array_merge($return,$software);
-				$return['disk_info']=$disk_info;
-				$return['mem_info']=$mem_info;
-				$return['user_info']=$user_info;
-				$return['game_detail']=$gd;
+				$return=array_merge($return,$disk_info);
+				$return=array_merge($return,$mem_info);
+				$return=array_merge($return,$user_info);
+				//$return['game_detail']=$gd;
 				$json = json_encode($return);
 				echo $json;
 			}
