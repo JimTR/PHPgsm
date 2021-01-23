@@ -49,7 +49,7 @@ else {
  define ('cr',"<br>");
  error_reporting( -1 );
  if (!empty($_POST)) {
-	 $post =convert_to_argv($_POST,"",true);
+	 $cmds =convert_to_argv($_POST,"",true);
  }
  else {
 	 $cmds =convert_to_argv($_GET,"",true);
@@ -437,7 +437,7 @@ echo $page2;
 			$cmd = $cmds['cmd'];
 			$exe = trim($cmds['exe']);
 			$text= trim($cmds['text']);
-			file_put_contents('exescreen.txt',PHP_EOL.$exe.' '.$text.' '.$status.PHP_EOL,FILE_APPEND);
+			//file_put_contents('exescreen.txt',PHP_EOL.$exe.' '.$text.' '.$status.PHP_EOL,FILE_APPEND);
 		    $s= exe_screen('ls',$exe,$text,$status);
 		    $x=strpos($s,',');
 		
@@ -584,7 +584,7 @@ function exe_lgsm($server,$action,$exe)
 		 	  }
 		  $cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.$text.'^M"';
 		  exec($cmd);
-		  file_put_contents('exescreen.txt','doing - '.$cmd,FILE_APPEND);
+		  //file_put_contents('exescreen.txt','doing - '.$cmd,FILE_APPEND);
 		  $disp = 'Command Sent';
 			// send console command
 			break;
@@ -766,17 +766,19 @@ function game_detail() {
 	$return[$server_data['host_name']] = $server_data;
 	return $return;
 }
-	else{	
-	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d'));
-    $tmp = explode(PHP_EOL,$t);
+// no filter start
+	else{
+	$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+    if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+    $checkip = substr($ip,0,strlen($ip)-1); 		
+	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
+	 $tmp = explode(PHP_EOL,$t);
+   
 	$i=0;
 	if(strlen($t) === 0) {
-                
-                $ip = file_get_contents("http://ipecho.net/plain"); // get ip
-                if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+				// nothing running
                 $sql =  'SET sql_mode = \'\'';
                 $a= $db->query( 'SET sql_mode = \'\''); 
-                $checkip = substr($ip,0,strlen($ip)-1); 
                 $sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
                 $server_count = reset($db->get_results($sql));
                 
@@ -784,13 +786,23 @@ function game_detail() {
                 list ($tsize,$location) = explode(" ",$du);
         }
         else{
-
-	foreach ($tmp as $server) {
+// here we have the runners in $tmp
+	$sql = 'select  * from servers where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+	$servers = $db->get_results($sql);
+	//echo print_r($servers,true),cr;
+	foreach ($servers as $server) {
+		//echo $server['host_name'];
+		$return[$server['host_name']] = $server;
+		//echo print_r($tmp,true).'<br>';
+		//echo ' looking ('.array_find($server['host_name'], $tmp).')';
+		if (array_find($server['host_name'],$tmp) >= 0) {
+			$rec = array_find($server['host_name'],$tmp);
+			//echo ' found '.$server['host_name'].'<br>'; 
 		
-		$server = str_replace('./srcds_linux','',$server); // we don't need this throw it
-		$server = str_replace(' -insecure','',$server); // we don't need this throw it
-		$server= trim($server); // get rid of spaces & CR's 
-		$tmp_array[$i] = explode(' ',$server); // arrayify
+		$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
+		$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
+		$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
+		$tmp_array[$i] = explode(' ',$server1); // arrayify
 		$pid = $tmp_array[$i][0]; // git process id
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
@@ -799,6 +811,7 @@ function game_detail() {
 		$result =$db->get_results($sql); // get data back
 		$result=reset($result);
 		$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
+		//echo $sql.cr;
 		$server_count= $db->get_results($sql); // get data back
 		$server_count=reset($server_count);
 		$count = count($top); // how many records  ?
@@ -812,7 +825,22 @@ function game_detail() {
 		$result['size'] = formatBytes(floatval($size)*1024,2);
 		$return[$result['host_name']] = $result;
 		$i++;
+		
+	}
+	else {
+		$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
+		//echo 'du = '.$du.cr;
+		$size = str_replace($server['location'],'',$du);
+		$server['mem'] = 0;
+		$server['cpu'] = 0;
+		$server['size'] = formatBytes(floatval($size)*1024,2);
+		//echo cr.'detail for '.$return[$result['host_name']]['host_name'] .cr.print_r($result,true).cr;
+		$return[$server['host_name']] = $server;
+		
+		
+	} 
 	}	
+	
 	$du = shell_exec('du -s '.dirname($result['location']));
 	//list ($tsize,$location) = explode(" ",$du);
 	$tsize = str_replace(dirname($result['location']),'',$du);
@@ -823,6 +851,7 @@ function game_detail() {
 	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
+	//echo print_r($return,true).'<br>';
 	return $return;
 }
 }
@@ -840,5 +869,13 @@ function array_to_xml( $data, &$xml_data ) {
      }
 }
 
-
+function array_find($needle, array $haystack)
+{
+    foreach ($haystack as $key => $value) {
+        if (false !== stripos($value, $needle)) {
+            return $key;
+        }
+    }
+    return -1;
+}
 ?>
