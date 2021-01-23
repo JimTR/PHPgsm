@@ -275,13 +275,15 @@ switch (strtolower($cmds['action'])) {
 				$return['mem_info']=$mem_info;
 				$return['user_info']=$user_info;
 				$return['game_detail']=$gd;
-				$xml = new SimpleXMLElement('<servers/>');
-				array_to_xml($return,$xml);
+				//$xml = new SimpleXMLElement('<servers/>');
+				//array_to_xml($return,$xml);
 				//print $xml->asXML();
 				//array_walk_recursive($return, array ($xml, 'addChild'));
 				//header('Content-type: text/xml');
 				//print $xml->asXML();
-				print_r($return);
+				//print_r($return);
+				$json = json_encode($return);
+				echo $json;
 			}
 			else {
 					$data = display_cpu($cpu_info).'\n';
