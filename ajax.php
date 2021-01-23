@@ -795,8 +795,8 @@ function game_detail() {
 		$return[$server['host_name']] = $server;
 		
 		if (array_find($server['host_name'],$tmp) >= 0) {
-			$rec = array_find($server['host_name'],$tmp);
-			$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
+		$rec = array_find($server['host_name'],$tmp);
+		$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 		$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
 		$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
 		$tmp_array[$i] = explode(' ',$server1); // arrayify
@@ -815,6 +815,7 @@ function game_detail() {
 		$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 		$size = str_replace($result['location'],'',$du);
 		//list($size, $location) = $du_a; // drop to variables
+		$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
 		$result['mem'] = $top[$count-3];
 		$result['cpu'] = $top[$count-4];
 		$result['size'] = formatBytes(floatval($size)*1024,2);
