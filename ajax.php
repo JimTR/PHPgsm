@@ -274,7 +274,7 @@ switch (strtolower($cmds['action'])) {
 				$return=array_merge($return,$disk_info);
 				$return=array_merge($return,$mem_info);
 				$return=array_merge($return,$user_info);
-				//$return['game_detail']=$gd;
+				$return=array_merge($return,$gd);
 				$json = json_encode($return);
 				echo $json;
 			}
