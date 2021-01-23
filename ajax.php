@@ -269,19 +269,12 @@ switch (strtolower($cmds['action'])) {
 			
 			if (isset($cmds['data'])) {
 				// json
-				$return['cpu']=$cpu_info;
-				$return['software']=$software;
+				$return=$cpu_info;
+				$return= array_merge($return,$software);
 				$return['disk_info']=$disk_info;
 				$return['mem_info']=$mem_info;
 				$return['user_info']=$user_info;
 				$return['game_detail']=$gd;
-				//$xml = new SimpleXMLElement('<servers/>');
-				//array_to_xml($return,$xml);
-				//print $xml->asXML();
-				//array_walk_recursive($return, array ($xml, 'addChild'));
-				//header('Content-type: text/xml');
-				//print $xml->asXML();
-				//print_r($return);
 				$json = json_encode($return);
 				echo $json;
 			}
