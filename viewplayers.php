@@ -22,25 +22,23 @@
  *  support code for console.php
  * remember js
  */
-
+require ('includes/master.inc.php'); 
+require 'includes/Emoji.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
-	define( 'SQ_SERVER_ADDR', $ip );
-	define( 'SQ_SERVER_PORT', $sport );
-	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
-$Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
+$Query->Connect( $ip, $port, 1, SQ_ENGINE );
 $results = $Query->GetPlayers( ) ;
 $info = $Query->GetInfo();
 $rules = $Query->GetRules( );
 $Query->Disconnect( );
  //header('Access-Control-Allow-Origin: *');
 //46.32.237.232:27016
-require ('includes/master.inc.php');
+
 $browser = get_browser(null, true);
  if (strpos($browser['browser_name_pattern'],'Windows')) {
 	 $os ='win';
@@ -53,7 +51,7 @@ if (empty($_GET['id'])) {
 	redirect('/');
 }
 
-require 'includes/Emoji.php';
+
 $sql = 'select * from players where BINARY name="';
 $disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
 
@@ -110,9 +108,4 @@ if ($info['Players'] >0) {
 
 echo $disp;
 
-		function orderBy(&$data, $field)
-  {
-    $code = "return strnatcmp(\$b['$field'], \$a['$field']);";
-    usort($data, create_function('$a,$b', $code));
-  }
 ?>
