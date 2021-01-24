@@ -1066,15 +1066,6 @@ function return_tz($tz1)
 		return $tzitem;
 }
 
-function build_address ($settings)
-{
-	
-	$address_block = $settings['address_street'].'<br>';
-	$address_block .= $settings['address_city'].'<br>';
-	$address_block .= $settings['address_postcode'].'<br>';
-	$address_block .= 'Tel '.$settings['address_phone'];
-	return $address_block;
-}
 
 function ban_check ($user)
 {
@@ -1130,4 +1121,28 @@ function check_ip($ip)
 	 #echo 'Cron Line = '. $cron.'<br>';
 	 return $cron;
 	 
- } 	   
+ }
+  	   
+function is_cli()
+{
+    if ( defined('STDIN') )
+    {
+        return true;
+    }
+    if ( php_sapi_name() == 'cli' )
+    {
+        return true;
+    }
+    if ( array_key_exists('SHELL', $_ENV) ) {
+        return true;
+    }
+    if ( empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) 
+    {
+        return true;
+    } 
+    if ( !array_key_exists('REQUEST_METHOD', $_SERVER) )
+    {
+        return true;
+    }
+    return false;
+}
