@@ -60,7 +60,7 @@ if ($info['Players'] >0) {
 					// add sub template
 					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results; // get the player array
-					orderBy($player_list,'Frags');
+					orderBy($player_list,'Frags','d');
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
 						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
