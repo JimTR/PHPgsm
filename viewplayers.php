@@ -31,7 +31,7 @@ $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
-$Query->Connect( $ip, $port, 1, SQ_ENGINE );
+$Query->Connect( $ip, $sport, 1, SQ_ENGINE );
 $results = $Query->GetPlayers( ) ;
 $info = $Query->GetInfo();
 $rules = $Query->GetRules( );
