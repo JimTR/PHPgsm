@@ -59,33 +59,8 @@ return  $days.$return_days.$hrs.$return_hours.$mins.$return_mins.$sec." seconds"
     //return ;
 }
 
-function root() {
-	/*
-	 * checks for root user not sudo user
-	 * see check_sudo for priv user
-	 */ 
- if (posix_getuid() === 0){
-	 // root user
-        return true;
-   } 
-   else {
-       // non root user use check_sudo !
-         return false;
-}
-}
-function check_sudo($user)
-{
-$user=trim($user);
-// centos = wheel not sudo
-$j= shell_exec('getent group sudo | cut -d: -f4');
-$yes= strpos($j, $user);
-if ($yes ===0 or $yes>1) {
-return true;
-}
-else {   
-return false;
-}
-}
+
+
 function lsb() {
 $os = trim(shell_exec ("cat /etc/os-release"));
 $os = str_replace('"',"",$os);
@@ -961,21 +936,7 @@ function html_display($tm,$results) {
 		}
 			return $disp;
 }
-function orderBy(&$data, $field,$order)
-  {
-  $args['field'] = $field;
-  $args['order'] =$order;
-    
-    usort($data, function($a, $b) use ($args) {
-          if ($args['order'] == "d") {
-				return strnatcmp($b[$args['field']], $a[$args['field']]);
-			}
-		else {
-				return strnatcmp($a[$args['field']], $b[$args['field']]);
-			}
-});
-   
-  }
+
   
 
   function get_sessions() {
