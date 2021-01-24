@@ -265,7 +265,7 @@ else {
     $track->addChild('memactive_raw',trim($mem_info['Active_raw']));
     $track->addChild('swaptotal',trim($mem_info['SwapTotal']));
     $track->addChild('swaptotal_raw',trim($mem_info['SwapTotal_raw']));
-    $track->addChild('swapfree',trim($mem_info['SwapFree']));
+    $track->addChild('swapfree',trim($mem_info['SwapFree'])); 
     $track->addChild('swapfree_raw',trim($mem_info['SwapFree_raw']));
     $track->addChild('swapfree_pc',number_format(($mem_info['SwapFree_raw'] / $mem_info['SwapTotal_raw'])*100,2));
     $track->addChild('swapcache',trim($mem_info['SwapCached']));
@@ -276,7 +276,7 @@ else {
     $track->addChild('boot_used',$disk_nfo['boot_used'] ." (".$disk_nfo['boot_pc'] .")");
     $track->addChild('boot_free',$disk_nfo['boot_free']);
     $track->addChild('load',$cpu_info->load);
-    $track->addChild('gamespace',$game_size);
+    $track->addChild('gamespace',$game_size); //next
     $track->addChild('live_games',$game_detail['general']['live_servers']);
     $track->addChild('total_games',$game_detail['general']['total_servers']);
     $track->addChild('total_mem',$game_detail['general']['mem'].'%');
