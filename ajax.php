@@ -841,7 +841,7 @@ function game_detail() {
 	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
-	$return['general']['total_size_raw'] = $tsize;
+	$return['general']['total_size_raw'] = floatval($tsize);
 	//echo print_r($return,true).'<br>';
 	return $return;
 }
