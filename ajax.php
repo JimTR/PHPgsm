@@ -549,7 +549,7 @@ function exe_lgsm($server,$action,$exe)
 			
 			break;
 		  case "r":
-				$cmd = 'screen -X -S '.$detail['host_name'] .' quit';
+				$cmd = 'screen -X -S '.$detail['host_name'] .' quit^M';
 				exec($cmd); //kill session
 				$logFile = $detail['location'].'/log/console/'.$detail['host_name'].'-console.log' ;
 				$savedLogfile = $detail['location'].'/log/console/'.$detail['host_name'].'-'.date("d-m-Y").'-console.log' ;
