@@ -4,11 +4,34 @@
  */
  //header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
+$tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$file);
+						// echo $tmp.'<br>'; // debug code
+						$x = explode(' ',$tmp);
+							foreach ($x as $k=>$v) 
+								if (empty(trim($v))) {
+									unset ($x[$k]);
+								}
+								else {
+									$x[$k]=trim($v);
+								}
+							
+						$c = count($x); // need this to check file size
+						$x = array_values($x); // re-number array
+						if ($c == 7 ) {
+							// empty file return message
+							echo 'file=0';
+						}
+						else { 
+							$c = $c-1;
+							}
+						// now do stuff return either the path or contents ?
+						// sending back the contents will save a call but maybe wrong 
+						$filename = $x[$c]; //got file name
 $result = array();
-clearstatcache(true, $file);
+clearstatcache(true, $filename);
 $data['time']    = filemtime($file);
 $data['content'] = $_GET['time'] < $data['time']
-    ? getLastLines($file,$_GET['lines'])
+    ? getLastLines($filename,$_GET['lines'])
     : false;
 
 foreach ($data['content'] as $k => $v ) {
