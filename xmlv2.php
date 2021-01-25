@@ -102,7 +102,7 @@ foreach ($info as $k => $test) {
 }
 //echo print_r($info,true).cr;
 //die();
-
+if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 $xmlserver="game_server"; // set tag
 foreach ($info as $k =>$game) {
 	//print_r($game);
@@ -174,6 +174,12 @@ foreach ($info as $k =>$game) {
 }
 		
 		
+}
+		if ($cmds['type'] == 'games' ) {
+			//
+			print($xml->asXML());
+			exit;
+		}
 }
 //end games
 //echo 'start base'.cr;
