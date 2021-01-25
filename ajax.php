@@ -450,42 +450,7 @@ echo $page2;
 else {
 	echo "you cocked up";
 }
-function exe_lgsm($server,$action,$exe)
-  {
-	  /* this will run lgsm functions
-	   * Requires $server to workout which game to exec
-	   * Requires $action to do whatever with the server , in shorthand notation
-	   * returns the lgsm display as a string
-	   * note lgsm c/console  & h/help will not be supported via this function
-	   * will be used in ajax.php 
-	   */
-	   //echo $server.' '.$action.' '.$exe;
-	   switch($action) 
-	   {
-		   // choose action
-		   case "dt" :
-			$command = $server.' '.$action;	
-			echo $command.'<br>';			
-			break 1;
-		  case "sp" :
-			//$command = 'tmux kill-session -t '.$handle;
-			exit;
-		  case "st":
-				$command = $server.' '.$action;	
-				echo $command;
-				$disp = shell_exec($command);
-				exit;
-		   default:
-		   		   echo $command;
-		   $disp = shell_exec($command);
-		   return $disp;
-	   }
-	   $disp = shell_exec($command);
-	   //echo 'disp ?<br>';
-	   //echo $disp;
-	   return $disp;
-	   
-  }
+
   function exe_screen($action,$exe="",$text="",$status="")
   {
 	  /* run screen commands
