@@ -129,13 +129,13 @@ function updateClock ()
 
 
 function fetchservers(url){
-	console.log('Welcome to fetchservers !');
+	//console.log('Welcome to fetchservers !');
  $.ajax({
  url: url,
   type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
-   console.log('data back for fetch servers');
+   //console.log('data back for fetch servers');
     $(xml).find('Servers').children('base_server').each(function(){
 	 var fname = $(this).find('fname').text(); //element name important	
 	
@@ -193,7 +193,7 @@ function fetchservers(url){
      $("#gs_pbs"+fname).html($(this).find('live_games').text()+'/'+$(this).find('total_games').text());
      $('#gs_pbs'+fname).width($('#gs_pb'+fname).parent().width());
      $('#ud_pbs'+fname).width($('#ud_pb'+fname).parent().width());
-     console.log('about to do '+fname+' tmem_pbs with '+$(this).find('memfree').text());
+     //console.log('about to do '+fname+' tmem_pbs with '+$(this).find('memfree').text());
      $("#tmem_pb"+fname).css('width',100-parseInt(($(this).find('memfree_pc').text()))+'%');
      $('#tmem_pbs'+fname).width($('#tmem_pb'+fname).parent().width());
      $("#tmem_pbs"+fname).html('Free ('+($(this).find('memfree').text())+')');
@@ -273,8 +273,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 var rt = $(this).find('rt').text();
 	 var players = $(this).find('players').text();
 	 var tp = players+"/"+mplayers;
-	 console.log(fname+' '+players+'/'+mplayers);
-	 console.log (' tp set to '+tp);
+	 //console.log(fname+' '+players+'/'+mplayers);
+	 //console.log (' tp set to '+tp);
 	 
 	 $("#pol1"+fname).html(tp);
 	 var online = $(this).find('online').text();
@@ -290,9 +290,10 @@ $(xml).find('Servers').children('game_server').each(function(){
       $('#'+fname+'ubutton').hide();
       $('#'+fname+'bbutton').hide();
       $('#'+fname+'dbutton').hide();
+      $('#'+fname+'ebutton').show();
       $('#'+fname+'response').delay(5000).fadeOut('slow');
 	  $("#status"+fname).attr("src","img/online.png"); // set to online
-	  //$('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
+	  $('#'+fname+'ebutton').removeClass('btn-primary').addClass('btn-warning');
 	  if (udi ==1) {
 			// update req
 			$("#status"+fname).attr("src","img/offline1.png"); // set to offline
@@ -324,7 +325,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 if (players >0 ){
 		 //console.log(fname);
 		 //btn-primary
-		 //$('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
+		 $('#'+fname+'qbutton').removeClass('btn-primary').addClass('btn-danger');
+		  $('#'+fname+'rbutton').removeClass('btn-primary').addClass('btn-danger');
 		    //$('#'+fname+'qbutton').;  
 		   
 		   
@@ -376,6 +378,8 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 //console.log("no one is playing on "+fname+" Current Map "+cmap+ " started at "+start);
 	 //here make sure playerlist is empty & update times etc
 	 $("#pol1"+fname).html("");
+	 $('#'+fname+'qbutton').removeClass('btn-danger').addClass('btn-primary');
+	 $('#'+fname+'rbutton').removeClass('btn-danger').addClass('btn-primary');
 
  }
  
@@ -389,7 +393,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 	 st = "";
 	 if (st === "" ) {
 		$("#game"+fname).hide(); //hide game panel
-		$('#'+fname+'response').html(fname+' has stopped') ; 
+		//$('#'+fname+'response').html(fname+' has stopped') ; 
 		$("#status"+fname).attr("src","img/offline.png"); // set to offline
 		$('#status'+fname).prop('title', 'Off Line');
 		if (udi ==1) {
@@ -408,6 +412,10 @@ $(xml).find('Servers').children('game_server').each(function(){
 		$('#'+fname+'bbutton').show();
 		$('#'+fname+'dbutton').show();
 		$('#'+fname+'ebutton').show();
+		$('#'+fname+'qbutton').removeClass('btn-danger').addClass('btn-primary');
+		$('#'+fname+'rbutton').removeClass('btn-danger').addClass('btn-primary');
+	    $('#'+fname+'ebutton').removeClass('btn-warning').addClass('btn-primary');
+	 		
 	}
 	else {
 		// mid state screen open but no response
@@ -435,7 +443,7 @@ $(xml).find('Servers').children('game_server').each(function(){
      setTimeout(fetchservers(url),4000);
      $('#loading').hide();
      $('#games').show();
-     console.log('stamp = '+event.timeStamp);
+     //console.log('stamp = '+event.timeStamp);
   }
  });
 }
@@ -464,7 +472,7 @@ if ( $( "#"+id ).length ) {
 }
 
 function liveGames(timeout,url) {
-	console.log('Welcome to Live Games '+timeout+' '+url);
+	//console.log('Welcome to Live Games '+timeout+' '+url);
 	 $.ajax({
      url: url,
    type: 'post',
