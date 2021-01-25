@@ -40,6 +40,7 @@ if (!isset($argv)) {
 $ip = file_get_contents("http://ipecho.net/plain");
 echo 'Starting Check For '.$ip.cr;
 $steamcmd = trim(shell_exec('which steamcmd'));
+$install_path = dirname($steamcmd);
 if (!empty($steamcmd)) {
 echo 'found steamcmd at '.$steamcmd.cr;
 }
@@ -59,7 +60,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					    
 			    $local =  check_local($acf_loc);
 			    //echo 'local '.print_r ($local,true).cr;
-			
+			    
 		
 		
 			    if (!in_array($local['appid'],$processed)) {
@@ -90,6 +91,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$database->update('servers',$update,$where);
 				//}
 			    echo cr.'Details for '.$local['name'].' ('.$local['appid'].')'.cr;
+			    echo 'Installed at '.$install_path.'/'.$data['game'].cr; 
 			    echo cr.'Branch Detail'.cr;
 				//echo print_r($remote,true).cr;
 				$mask = "%11.11s %14.14s %40s %8s \n";
@@ -115,7 +117,8 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					echo 'Update Required'.cr;
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
-				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$data['location'].' +app_update '.$data['server_id'].' +quit';
+				    // use $install_path + game
+				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$install_path.'/'.$data['game'].' +app_update '.$data['server_id'].' +quit';
 				    $update = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $update.cr;
