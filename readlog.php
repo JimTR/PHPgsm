@@ -4,7 +4,7 @@
  */
  //header('Access-Control-Allow-Origin: *');
 $file = $_GET['path'];
-$tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$file);
+/*$tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$file);
 						// echo $tmp.'<br>'; // debug code
 						$x = explode(' ',$tmp);
 							foreach ($x as $k=>$v) 
@@ -26,7 +26,9 @@ $tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$file);
 							}
 						// now do stuff return either the path or contents ?
 						// sending back the contents will save a call but maybe wrong 
-						$filename = $x[$c]; //got file name
+						$filename = $x[$c]; //got file name */
+$filename = $file.'/log/console/'.$_GET['id'].'-console.log';
+//die ($filename);						
 $result = array();
 clearstatcache(true, $filename);
 $data['time']    = filemtime($file);
