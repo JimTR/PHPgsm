@@ -221,7 +221,7 @@ foreach ($bases as $data) {
 		$track->addChild('apache',$sdata['apache']); 
 		$track->addChild('curl',$sdata['curl']);
 		$track->addChild('nginx',$sdata['nginx']);  
-		$track->addChild('quota',$sdata['quota']);
+		$track->addChild('quota',$sdata['quotav']);
 		$track->addChild('postfix',$sdata['postfix']);
 		$track->addChild('uptime',$sdata['boot_time']); 
 		$track->addChild('memTotal',trim($sdata['MemTotal']));  
@@ -271,7 +271,9 @@ foreach ($bases as $data) {
 			$track->addChild('home_mount',$sdata['home_mount']);
 			$track->addChild('home_size',$sdata['home_size']);
 		}
+		
+		//print_r($sdata);
 }
-//print_r($sdata);
+
 print($xml->asXML());
 ?>
