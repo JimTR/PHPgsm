@@ -762,6 +762,9 @@ function game_detail() {
 		$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
 		$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
 		$tmp_array[$i] = explode(' ',$server1); // arrayify
+		// temp log
+		$logline =date("d/m/Y h:i:sa").'looking at '. $tmp_array[$i][6].'  '.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).cr;
+		file_put_contents('ajax.log',$logline,FILE_APPEND);
 		$pid = $tmp_array[$i][0]; // git process id
 		$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 		$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
