@@ -1,3 +1,4 @@
+#!/usr/bin/php -d memory_limit=2048M
 <?php
 /*
  * cron_r.php
@@ -23,9 +24,9 @@
  *  
  */
  define('cr',PHP_EOL); 
-require_once 'includes/master.inc.php';
-include 'functions.php';
-require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
+require_once '../includes/master.inc.php';
+include  '../functions.php';
+require  '../xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 		$Query = new SourceQuery( ); 
@@ -82,4 +83,5 @@ foreach ($games as $game) {
 		echo  $restart['server_name'].cr;
 	}
 }
+
 ?>
