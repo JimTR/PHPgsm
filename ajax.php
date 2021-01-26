@@ -684,7 +684,9 @@ function game_detail() {
                 $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
                 //echo $cmd.'<br>';
                 $new = trim(shell_exec($cmd));
-                
+                // temp log
+				$logline =date("d/m/Y h:i:sa").'looking at '.$new.cr;
+				file_put_contents('ajax.log',$logline,FILE_APPEND);
                 if (empty($new)) {
 		// offline
 		//if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
