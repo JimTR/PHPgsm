@@ -32,6 +32,7 @@ if (is_cli()) {
 }
 else {
 	exit;
+	echo 'Wrong Enviroment';
 }
 $reaper = shell_exec('which tmpreaper');
 if (empty($reaper)) {
