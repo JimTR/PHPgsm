@@ -231,7 +231,7 @@ function get_user_info ($Disk_info) {
 			
 		}
 	    else {
-			$user['quota'] = dataSize(intval($l2[9]) * 1000000);
+			$user['quota'] = dataSize(intval($l2[9]) * 100000);
 			$user['quota_raw'] = intval($l2[9]) ;
 			}
 	    $user['quota_used'] = dataSize(intval($q[14]) * 1000000);
