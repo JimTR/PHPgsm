@@ -336,7 +336,7 @@ function get_software_info($database) {
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
 	}
-		 
+	print_r($software);	 
 	 return $software;
 }
 function get_disk_info() {
