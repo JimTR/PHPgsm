@@ -26,7 +26,7 @@ include 'includes/master.inc.php';
 include 'functions.php';
  
 //run from cli
-error_reporting (0);
+//error_reporting (0);
 if(is_cli()) {
 	Header('Content-type: text/xml');
 	define ('cr',PHP_EOL);
@@ -74,16 +74,18 @@ foreach ($info as $k => $test) {
 		}
 				
 				if ($game['running']) {
-				 $gameq->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
-				 $info1 = $gameq->GetInfo();
-				 $ptot[$k]['slots'] += $info1['MaxPlayers'];
-				 $info[$k][$k1]  = array_merge($info[$k][$k1] ,$info1);
-				 $info[$k][$k1]['online'] = 'Online';
-				 if ($info1['Players'] > 0) {
-					$ptot[$k]['players'] += $info1['Players'];
-					$info[$k][$k1] ['players']  = $gameq->GetPlayers( ) ;
-		         }
-				$gameq->Disconnect( );
+				if (ping(	$game['host'],$game['port'],SQ_TIMEOUT)) {
+					$gameq->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
+					$info1 = $gameq->GetInfo();
+					$ptot[$k]['slots'] += $info1['MaxPlayers'];
+					$info[$k][$k1]  = array_merge($info[$k][$k1] ,$info1);
+					$info[$k][$k1]['online'] = 'Online';
+					if ($info1['Players'] > 0) {
+						$ptot[$k]['players'] += $info1['Players'];
+						$info[$k][$k1] ['players']  = $gameq->GetPlayers( ) ;
+					}
+					$gameq->Disconnect( );
+				}
 			}	
 			else {
 					$info[$k][$k1]	['Bots'] =0;
