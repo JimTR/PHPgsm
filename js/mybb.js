@@ -228,7 +228,7 @@ function fetchservers(url){
      $("#op_pb"+fname).attr('aria-valuenow',($(this).find('total_players').text()));
      $("#op_pb"+fname).attr('aria-valuemax',($(this).find('total_slots').text()));
      changeClass('op_pb'+fname,pc);
-     console.log (fname+' width '+pc);
+     //console.log (fname+' width '+pc);
      $("#op_pb"+fname).css('width',pc+'%');
      //console.log (fname +' '+$(this).find('total_slots').text());
     }); 
