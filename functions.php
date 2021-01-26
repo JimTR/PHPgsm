@@ -236,11 +236,14 @@ function get_user_info ($Disk_info) {
 			}
 	    $user['quota_used'] = dataSize(intval($l2[9]) * 1000000);
 	    //echo intval($q[15]).CR;
-	    if (intval($l2[10]) === 0 ) {
+	    if (intval($l2[12]) === 0 ) {
 						
 			$user['quota_free'] = $Disk_info['boot_free'];
 		}
-	    else {$user['quota_free'] = dataSize(intval($user['quota']) -intval($user['quota_used']));}
+	    else 
+	    {
+			$user['quota_free'] = dataSize(intval($user['quota']) -intval($user['quota_used']));
+			}
 	}
 	//print_r($user);
 	return $user;    
