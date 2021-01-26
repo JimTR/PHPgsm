@@ -220,8 +220,9 @@ function get_user_info ($Disk_info) {
 	}
 	else {
 		// run quota
-		$q = explode("  ",$q);
-		//print_r($q);
+		$q = explode(PHP_EOL,$q);
+		print_r($q);
+		
 		if (intval($q[15]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
@@ -535,7 +536,7 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
 	echo "\t   Optional".CR;
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
-    echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quota'].CR;
+    echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quotav'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
     echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
    
