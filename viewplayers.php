@@ -31,11 +31,25 @@ $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
+try 
+	{
 $Query->Connect( $ip, $sport, 1, SQ_ENGINE );
 $results = $Query->GetPlayers( ) ;
 $info = $Query->GetInfo();
 $rules = $Query->GetRules( );
+	}
+	catch( Exception $e )
+					{
+						$Exception = $e;
+						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.' viewplayers) '.$Exception;
+						file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+					}
 $Query->Disconnect( );
+
+if (isset($Exception)) {
+	exit;
+}
+
  //header('Access-Control-Allow-Origin: *');
 //46.32.237.232:27016
 
