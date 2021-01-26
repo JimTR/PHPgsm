@@ -224,7 +224,7 @@ function get_user_info ($Disk_info) {
 		$q = explode(PHP_EOL,$q);
 		//print_r($q);
 		$l2 = explode(' ',$q[2]);
-		print_r($l2);
+		//print_r($l2);
 		if (intval($l2[12]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
