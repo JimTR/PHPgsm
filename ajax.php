@@ -83,7 +83,7 @@ else {
 	  else {
 		  // fail out
 		  $logline .= ' Key Invalid ('.$cmds['key'].') '.md5( ip2long($ip)).' - '.$ip.PHP_EOL;
-		  file_put_contents('ajax.log',$logline,FILE_APPEND);
+		  file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 		 // exit;
 	  }
  }
