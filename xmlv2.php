@@ -251,7 +251,7 @@ foreach ($bases as $data) {
 		$track->addChild('total_mem',$info[$fn]['general']['mem'].'%');
 		$track->addChild('total_cpu',$info[$fn]['general']['cpu'].'%');
 		$track->addChild('user_name',$sdata['name']);
-		$track->addChild('quota_a',floatval($sdata['quota']));
+		$track->addChild('quota_a',floatval($sdata['quotav']));
 		$track->addChild('quota_used',floatval($sdata['quota_used']));
 		$track->addChild('beta',floatval($info[$fn]['general']['total_size']));
 		$track->addChild('quota_pc',number_format((floatval($sdata['quota'])) /floatval($info[$fn]['general']['total_size']) *100,2));

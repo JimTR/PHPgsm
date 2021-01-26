@@ -329,7 +329,7 @@ function get_software_info($database) {
 		 $software['apache'] = getVersion('/usr/sbin/apache2 -v');
 	     $software['php'] = getVersion('php -v');
 	     $software['mysql'] = getVersion('mysql -V');
-	     $software['quota'] = getVersion('quota -V');
+	     $software['quotav'] = getVersion('quota -V');
 	     $software['nginx'] = getVersion('nginx -v');
 	     $software['screen'] = getVersion('screen -v');
 	     $software['postfix'] = getVersion('/usr/sbin/postconf -d mail_version');
