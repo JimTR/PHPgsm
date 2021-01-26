@@ -23,6 +23,8 @@
  */
 //header('Access-Control-Allow-Origin: *');
  define('cr','<br>');
+error_reporting (0);
+include 'functions.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
