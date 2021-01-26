@@ -225,22 +225,22 @@ function get_user_info ($Disk_info) {
 		//print_r($q);
 		$l2 = explode(' ',$q[2]);
 		print_r($l2);
-		if (intval($l2[9]) === 0) {
+		if (intval($l2[12]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
 			
 		}
 	    else {
-			$user['quota'] = dataSize(intval($l2[9]) * 1000);
-			$user['quota_raw'] = intval($l2[9]) ;
+			$user['quota'] = dataSize(intval($l2[12]) * 1000);
+			$user['quota_raw'] = intval($l2[12]) ;
 			}
-	    $user['quota_used'] = dataSize(intval($l2[21]) * 1000);
+	    $user['quota_used'] = dataSize(intval($l2[9]) * 1000);
 	    //echo intval($q[15]).CR;
 	    if (intval($l2[10]) === 0 ) {
 						
 			$user['quota_free'] = $Disk_info['boot_free'];
 		}
-	    else {$user['quota_free'] = dataSize(intval($l2[10]) * 10000-intval($l2[7]) * 10000);}
+	    else {$user['quota_free'] = dataSize(intval($l2[12]) * 10000-intval($l2[9]) * 10000);}
 	}
 	//print_r($user);
 	return $user;    
