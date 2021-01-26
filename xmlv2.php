@@ -24,12 +24,12 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
- 
+ define ('cr',PHP_EOL);
 //run from cli
 //error_reporting (0);
 if(is_cli()) {
 	Header('Content-type: text/xml');
-	define ('cr',PHP_EOL);
+	
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
 	if (isset($cmds['debug'])) {
@@ -82,6 +82,8 @@ foreach ($info as $k => $test) {
 				catch( Exception $e )
 					{
 						$Exception = $e;
+						$error = date("d/m/Y").' '.$Exception.' ('.$game['server_name'].')';
+						file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
 					}
 					$ptot[$k]['slots'] += $info1['MaxPlayers'];
 					$info[$k][$k1]  = array_merge($info[$k][$k1] ,$info1);
