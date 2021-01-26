@@ -31,8 +31,9 @@ if (is_cli()) {
 	echo 'log prune live'.cr;
 }
 else {
-	exit;
+	
 	echo 'Wrong Enviroment';
+	exit;
 }
 $reaper = shell_exec('which tmpreaper');
 if (empty($reaper)) {
