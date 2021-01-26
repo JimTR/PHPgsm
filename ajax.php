@@ -270,11 +270,12 @@ switch (strtolower($cmds['action'])) {
 			if (isset($cmds['data'])) {
 				// json
 				$return=$cpu_info;
-				$return= array_merge($return,$software);
+				//$return= array_merge($return,$software);
 				$return=array_merge($return,$disk_info);
 				$return=array_merge($return,$mem_info);
 				$return=array_merge($return,$user_info);
 				//$return=array_merge($return,$gd);
+				$return= array_merge($return,$software);
 				$json = json_encode($return);
 				echo $json;
 			}
