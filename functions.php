@@ -1,5 +1,5 @@
 <?php
-//echo 'functions 1.01';
+//echo 'functions 1.04';
 
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
