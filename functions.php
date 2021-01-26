@@ -242,7 +242,7 @@ function get_user_info ($Disk_info) {
 		}
 	    else 
 	    {
-			$user['quota_free'] = dataSize(intval($user['quota'])*10000000 -intval($user['quota_used'])*10000000);
+			$user['quota_free'] = dataSize(intval($user['quota'])*100000000 -intval($user['quota_used'])*100000000);
 			}
 	}
 	//print_r($user);
