@@ -74,9 +74,15 @@ foreach ($info as $k => $test) {
 		}
 				
 				if ($game['running']) {
-				if (ping(	$game['host'],$game['port'],SQ_TIMEOUT)) {
+				try
+					{
 					$gameq->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
 					$info1 = $gameq->GetInfo();
+					}
+				catch( Exception $e )
+					{
+						$Exception = $e;
+					}
 					$ptot[$k]['slots'] += $info1['MaxPlayers'];
 					$info[$k][$k1]  = array_merge($info[$k][$k1] ,$info1);
 					$info[$k][$k1]['online'] = 'Online';
@@ -86,7 +92,7 @@ foreach ($info as $k => $test) {
 					}
 					$gameq->Disconnect( );
 				}
-			}	
+				
 			else {
 					$info[$k][$k1]	['Bots'] =0;
 					$info[$k][$k1]['Players'] = 0;
