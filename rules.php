@@ -23,6 +23,7 @@
  */
 //header('Access-Control-Allow-Origin: *');
  define('cr','<br>');
+ define ('CR',PHP_EOL);
 error_reporting (0);
 include 'functions.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
@@ -30,20 +31,32 @@ use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
-if (ping($ip,$sport,1)) {
+
 	define( 'SQ_SERVER_ADDR', $ip );
 	define( 'SQ_SERVER_PORT', $sport );
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
-$Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
-$rules = $Query->GetRules( );
+try 
+	{
+		$Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
+		$rules = $Query->GetRules( );
+	}
+	catch( Exception $e )
+					{
+						$Exception = $e;
+						$error = date("d/m/Y h:i:sa").' '.$Exception.' ('.$ip.':'.$sport.')';
+						file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+					}
 $Query->Disconnect( );
-//print_r($rules);
+if (isset($Exception)) {
+	exit;
+}
+
 echo '<table style="width:95%;table-layout: fixed;">';
 foreach ($rules as $k=>$v) {
 	echo '<tr><td style="width:70%;word-wrap:break-word;">'.$k.'</td><td style="text-align:left;padding-left:3%;">'.$v.'</td></tr>';
 }
 echo '</table>';
-}
+
 ?>

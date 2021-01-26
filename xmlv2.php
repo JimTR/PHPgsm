@@ -82,7 +82,7 @@ foreach ($info as $k => $test) {
 				catch( Exception $e )
 					{
 						$Exception = $e;
-						$error = date("d/m/Y").' '.$Exception.' ('.$game['server_name'].')';
+						$error = date("d/m/Y h:i:sa").' '.$Exception.' ('.$game['server_name'].')';
 						file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
 					}
 					$ptot[$k]['slots'] += $info1['MaxPlayers'];
