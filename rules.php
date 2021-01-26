@@ -28,6 +28,7 @@ use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);
 $ip = substr($_GET['host'],0,$x);
+if (ping($ip,$sport,1)) {
 	define( 'SQ_SERVER_ADDR', $ip );
 	define( 'SQ_SERVER_PORT', $sport );
 	define( 'SQ_TIMEOUT',     1 );
@@ -42,4 +43,5 @@ foreach ($rules as $k=>$v) {
 	echo '<tr><td style="width:70%;word-wrap:break-word;">'.$k.'</td><td style="text-align:left;padding-left:3%;">'.$v.'</td></tr>';
 }
 echo '</table>';
+}
 ?>

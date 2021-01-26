@@ -1244,4 +1244,19 @@ function getObscuredText($strMaskChar='*')
         readline_callback_handler_remove();
         return($strObscured);
     }
+    
+    function ping($addr,$port,$timeout) {
+		// ping port
+		if($fp = fsockopen($addr,$port,$errCode,$errStr,$timeout)){   
+   //echo ' It worked'.cr;
+       // echo $errStr.cr; 
+        return true;
+} else {
+   echo 'It didn\'t work'.cr;
+        echo $errStr.cr;
+        return false; 
+} 
+fclose($fp);
+
+	}
 ?>
