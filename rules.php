@@ -45,7 +45,7 @@ try
 	catch( Exception $e )
 					{
 						$Exception = $e;
-						$error = date("d/m/Y h:i:sa").' '.$Exception.' ('.$ip.':'.$sport.')';
+						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
 						file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
 					}
 $Query->Disconnect( );
