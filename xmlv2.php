@@ -26,7 +26,7 @@ include 'includes/master.inc.php';
 include 'functions.php';
  
 //run from cli
-//error_reporting (0);
+error_reporting (0);
 if(is_cli()) {
 	Header('Content-type: text/xml');
 	define ('cr',PHP_EOL);
