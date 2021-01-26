@@ -317,7 +317,7 @@ function get_software_info($database) {
 		$software['apache'] = getVersion('apache2',$apt);
 		$software['php'] = getVersion('php'.$php,$apt);
 		$software['mysql'] = getVersion('mysql-server',$apt);
-		$software['quota'] = getVersion('quota',$apt);
+		$software['quotav'] = getVersion('quota',$apt);
 		$software['nginx'] = getVersion('nginx-common',$apt);
 		$software['screen'] = getVersion('screen',$apt);
 		$software['postfix'] = getVersion('postfix',$apt);
