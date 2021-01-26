@@ -478,7 +478,7 @@ function liveGames(timeout,url) {
    type: 'post',
   dataType: "xml" ,
   success: function(xml,status){
-	  console.log ('data back');
+	  //console.log ('data back');
 	  
 	  $(xml).find('Servers').children('game_server').each(function(){
 	 var fname = $(this).find('name').text();
@@ -553,7 +553,7 @@ function liveGames(timeout,url) {
   },
   complete:function(data){
 	
-	 console.log('liveGames complete');
+	 //console.log('liveGames complete');
 	 //console.log('timeout set to '+timeout); 
 	 $('#loading').hide();
      setTimeout(liveGames(timeout,url),timeout);
