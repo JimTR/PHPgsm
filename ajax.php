@@ -92,7 +92,7 @@ else {
 	 exit;
  }
  //line one done
-	file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+	//file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 //if (validate($cmds)===false) {die();}  
 if(!$valid) { 
 	echo 'invalid request';
