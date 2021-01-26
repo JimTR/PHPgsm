@@ -240,7 +240,7 @@ function get_user_info ($Disk_info) {
 						
 			$user['quota_free'] = $Disk_info['boot_free'];
 		}
-	    else {$user['quota_free'] = dataSize(intval($user['quota']) * 1000-intval($user['quota_used']) * 1000);}
+	    else {$user['quota_free'] = dataSize(intval($user['quota']) -intval($user['quota_used']));}
 	}
 	//print_r($user);
 	return $user;    
