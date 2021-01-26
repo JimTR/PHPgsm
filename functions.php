@@ -225,14 +225,14 @@ function get_user_info ($Disk_info) {
 		//print_r($q);
 		$l2 = explode(' ',$q[2]);
 		print_r($l2);
-		if (intval($q[15]) === 0) {
+		if (intval($l2[9]) === 0) {
 			// unlimited
 			$user['quota'] = 'Unlimited';
 			
 		}
 	    else {
-			$user['quota'] = dataSize(intval($q[15]) * 1000000);
-			$user['quota_raw'] = intval($q[15]) ;
+			$user['quota'] = dataSize(intval($l2[9]) * 1000000);
+			$user['quota_raw'] = intval($l2[9]) ;
 			}
 	    $user['quota_used'] = dataSize(intval($q[14]) * 1000000);
 	    //echo intval($q[15]).CR;
