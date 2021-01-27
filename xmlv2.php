@@ -82,6 +82,10 @@ foreach ($info as $k => $test) {
 				catch( Exception $e )
 					{
 						$Exception = $e;
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = 'Failed to read any data from socket';
+						}
+						
 						$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;
 						file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
 					}
