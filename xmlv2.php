@@ -253,8 +253,8 @@ foreach ($bases as $data) {
 		$track->addChild('user_name',$sdata['name']);
 		$track->addChild('quota_a',floatval($sdata['quotav']));
 		$track->addChild('quota_used',floatval($sdata['quota_used']));
-		$track->addChild('beta',floatval($info[$fn]['general']['total_size']));
-		$track->addChild('quota_pc',number_format((floatval($sdata['quota'])) /floatval($info[$fn]['general']['total_size']) *100,2));
+		$track->addChild('beta',floatval($info[$fn]['general']['total_size'])/1000);
+		$track->addChild('quota_pc',number_format(floatval($sdata['quota']) /floatval($info[$fn]['general']['total_size']) *1000,2));
 		$track->addChild('total_size_raw',$info[$fn]['general']['total_size_raw']);
 		$track->addChild('quota_free',floatval($sdata['quota_free']));
 		$track->addChild('quota_raw',floatval($sdata['quota_raw']));
