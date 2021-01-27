@@ -765,10 +765,11 @@ function game_detail() {
 			$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
 			$tmp_array[$i] = explode(' ',$server1); // arrayify
 			// temp log
-			$logline =date("d/m/Y h:i:sa").'looking at '. $tmp_array[$i][6].'  '.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).PHP_EOL;
-			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+			
 			$pid = $tmp_array[$i][0]; // git process id
 			$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
+			$logline =date("d/m/Y h:i:sa").' looking at '. $cmd.PHP_EOL;
+			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 			$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 			$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
 			$result =$db->get_results($sql); // get data back
