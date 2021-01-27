@@ -787,8 +787,9 @@ function game_detail() {
 			$result['mem'] = $top[$count-3];
 			$result['cpu'] = $top[$count-4];
 			$result['size'] = formatBytes(floatval($size)*1024,2);
-			
-			$return[$result['host_name']] = $result;
+			if (!empty($result['host_name'])) {
+					$return[$result['host_name']] = $result;
+				}
 			$i++;
 			}
 	
