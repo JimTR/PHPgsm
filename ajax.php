@@ -768,8 +768,7 @@ function game_detail() {
 			
 			$pid = $tmp_array[$i][0]; // git process id
 			$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
-			$logline =date("d/m/Y h:i:sa").' looking at '. $cmd.' - '.$server['host_name'].PHP_EOL;
-			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+			
 			$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 			$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
 			$result =$db->get_results($sql); // get data back
@@ -780,6 +779,8 @@ function game_detail() {
 			$count = count($top); // how many records  ?
 			$mem += $top[$count-3]; // memory %
 			$cpu += $top[$count-4]; // cpu %
+			$logline =date("d/m/Y h:i:sa").' looking at '. $mem.' - '.$cpu.' from '.$server['host_name'].PHP_EOL;
+			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 			$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 			$size = str_replace($result['location'],'',$du);
 			//list($size, $location) = $du_a; // drop to variables
