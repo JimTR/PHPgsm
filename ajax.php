@@ -737,8 +737,8 @@ function game_detail() {
     $checkip = substr($ip,0,strlen($ip)-1); 		
 	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
 	$tmp = explode(PHP_EOL,$t);
-	$du = shell_exec('du -s '.dirname($server_count['location']));
-                list ($tsize,$location) = explode(" ",$du);
+	//$du = shell_exec('du -s '.dirname($server_count['location']));
+      //          list ($tsize,$location) = explode(" ",$du);
 	$i=0;
 	if(strlen($t) === 0) {
 				// nothing running
