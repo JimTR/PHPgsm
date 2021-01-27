@@ -45,6 +45,10 @@ try
 	catch( Exception $e )
 					{
 						$Exception = $e;
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = 'Failed to read any data from socket';
+						}
+						
 						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
 						  //sprintf("[%14.14s]",$str2)
 						  $mask = "%17.17s %-30.30s \n";
