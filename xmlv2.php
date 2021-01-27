@@ -87,6 +87,8 @@ foreach ($info as $k => $test) {
 						}
 						
 						$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;
+						  //sprintf("[%14.14s]",$str2)
+						  $mask = "%17.17s %-30.30s \n";
 						file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
 					}
 					$ptot[$k]['slots'] += $info1['MaxPlayers'];
