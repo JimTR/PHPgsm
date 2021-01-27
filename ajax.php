@@ -821,7 +821,7 @@ function game_detail() {
 	$return['general']['total_size_raw'] = floatval($tsize);
 	//echo print_r($return,true).'<br>';
 	$logline =date("d/m/Y h:i:sa").' looking at '.print_r($return['dabserver'],true).PHP_EOL;
-			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+			//file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 	return $return;
 }
 }
