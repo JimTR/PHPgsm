@@ -252,7 +252,13 @@ foreach ($bases as $data) {
 		$track->addChild('total_cpu',$info[$fn]['general']['cpu'].'%');
 		$track->addChild('user_name',$sdata['name']);
 		$track->addChild('quota_a',floatval($sdata['quota']));
-		$x = floatval($info[$fn]['general']['total_size'])/1000;
+		if (strpos($info[$fn]['general']['total_size'],'MB') >0) {
+			$x = floatval($info[$fn]['general']['total_size'])/1000;
+		}
+		else {
+			$x =  floatval($info[$fn]['general']['total_size']);
+		}
+		
 		$track->addChild('quota_used',floatval($sdata['quota_used']));
 		$track->addChild('beta',floatval($info[$fn]['general']['total_size'])/1000);
 		$track->addChild('quota_pc',number_format( $x* (100/floatval($sdata['quota'])) ,2));
