@@ -789,7 +789,7 @@ function game_detail() {
 			$result['size'] = formatBytes(floatval($size)*1024,2);
 			if (empty($result['host_name'])) {
 				$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$sql.PHP_EOL;
-				//file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+				file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 				continue;
 				
 			}
