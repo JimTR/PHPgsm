@@ -83,7 +83,7 @@ foreach ($info as $k => $test) {
 					{
 						$Exception = $e;
 						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = 'Failed to read any data from socket';
+							$Exception = 'Failed to read any data from socket Module (xmlv2)';
 						}
 						
 						$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;

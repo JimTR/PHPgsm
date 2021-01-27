@@ -46,7 +46,7 @@ try
 					{
 						$Exception = $e;
 						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = 'Failed to read any data from socket';
+							$Exception = 'Failed to read any data from socket (module rules)';
 						}
 						
 						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
