@@ -779,8 +779,7 @@ function game_detail() {
 			$count = count($top); // how many records  ?
 			$mem += $top[$count-3]; // memory %
 			$cpu += $top[$count-4]; // cpu %
-			$logline =date("d/m/Y h:i:sa").' looking at '. $mem.' - '.$cpu.' from '.$server['host_name'].PHP_EOL;
-			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+			
 			$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 			$size = str_replace($result['location'],'',$du);
 			//list($size, $location) = $du_a; // drop to variables
@@ -788,6 +787,8 @@ function game_detail() {
 			$result['mem'] = $top[$count-3];
 			$result['cpu'] = $top[$count-4];
 			$result['size'] = formatBytes(floatval($size)*1024,2);
+			$logline =date("d/m/Y h:i:sa").' looking at '.print_r($result,true).' from '.$server['host_name'].PHP_EOL;
+			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 			$return[$result['host_name']] = $result;
 			$i++;
 			}
