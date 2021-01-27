@@ -788,8 +788,8 @@ function game_detail() {
 			$result['cpu'] = $top[$count-4];
 			$result['size'] = formatBytes(floatval($size)*1024,2);
 			if (empty($result['host_name'])) {
-				$logline =date("d/m/Y h:i:sa").' No Host_name !! '.print_r($result,true).PHP_EOL;
-				file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+				$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$sql.PHP_EOL;
+				//file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 				continue;
 				
 			}
