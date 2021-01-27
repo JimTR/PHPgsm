@@ -760,8 +760,8 @@ function game_detail() {
 		
 		if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 			$rec = array_find($server['host_name'].'.cfg',$tmp);
-			$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
-			$server1 = str_replace(' -insecure','',$temp[$rec]); // we don't need this throw it
+			$server1 = str_replace('./srcds_linux','',$server1); // we don't need this throw it
+			$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
 			$server1= trim($tmp[$rec]); // get rid of spaces & CR's 
 			$tmp_array[$i] = explode(' ',$server1); // arrayify
 			// temp log
