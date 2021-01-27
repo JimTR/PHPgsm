@@ -790,6 +790,7 @@ function game_detail() {
 			if (empty($result['host_name'])) {
 				$logline =date("d/m/Y h:i:sa").' No Host_name !! '.print_r($result,true).PHP_EOL;
 				file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+				continue;
 				
 			}
 					$return[$result['host_name']] = $result;
