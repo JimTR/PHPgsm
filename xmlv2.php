@@ -254,7 +254,7 @@ foreach ($bases as $data) {
 		$track->addChild('quota_a',floatval($sdata['quota']));
 		$x = floatval($info[$fn]['general']['total_size']);
 		$track->addChild('quota_used',floatval($sdata['quota_used']));
-		$track->addChild('beta',$sdata['total_size']);
+		$track->addChild('beta',floatval($info[$fn]['general']['total_size'])/1000);
 		$track->addChild('quota_pc',number_format( $x/floatval($sdata['quota']) ,2));
 		$track->addChild('total_size_raw',$info[$fn]['general']['total_size_raw']);
 		$track->addChild('quota_free',floatval($sdata['quota_free']));
