@@ -768,7 +768,7 @@ function game_detail() {
 			
 			$pid = $tmp_array[$i][0]; // git process id
 			$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
-			$logline =date("d/m/Y h:i:sa").' looking at '. $cmd.PHP_EOL;
+			$logline =date("d/m/Y h:i:sa").' looking at '. $cmd.' - '.$server['host_name'].PHP_EOL;
 			file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 			$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 			$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
