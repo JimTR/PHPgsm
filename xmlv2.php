@@ -252,7 +252,7 @@ foreach ($bases as $data) {
 		$track->addChild('total_cpu',$info[$fn]['general']['cpu'].'%');
 		$track->addChild('user_name',$sdata['name']);
 		$track->addChild('quota_a',floatval($sdata['quota']));
-		$x = floatval($info[$fn]['general']['total_size'])/1000;
+		$x = floatval($info[$fn]['general']['total_size']);
 		$track->addChild('quota_used',floatval($sdata['quota_used']));
 		$track->addChild('beta',number_format( floatval($sdata['quota'])/$x ,2));
 		$track->addChild('quota_pc',number_format( $x/floatval($sdata['quota']) ,2));
