@@ -840,13 +840,5 @@ function array_to_xml( $data, &$xml_data ) {
      }
 }
 
-function array_find($needle, array $haystack)
-{
-    foreach ($haystack as $key => $value) {
-        if (false !== stripos($value, $needle)) {
-            return $key;
-        }
-    }
-    return -1;
-}
+
 ?>
