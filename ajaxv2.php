@@ -99,9 +99,8 @@ if(!$valid) {
 					exit;
 					
 			case "game_detail" :
-			echo here.cr;
-			$gd =game_detail();
-			$json = json_encode($gd);
+			//$gd =game_detail();
+			$json = json_encode(game_detail());
 			echo $json;
 			exit;				
 }
