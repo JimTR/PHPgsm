@@ -25,6 +25,7 @@
 require ('includes/master.inc.php'); 
 require 'includes/Emoji.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
+define('CR',PHP_EOL);
 use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);
@@ -41,8 +42,14 @@ $rules = $Query->GetRules( );
 	catch( Exception $e )
 					{
 						$Exception = $e;
-						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.' viewplayers) '.$Exception;
-						file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = 'Failed to read any data from socket (module viewplayers)';
+						}
+						
+						  $error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
+						  //sprintf("[%14.14s]",$str2)
+						  $mask = "%17.17s %-30.30s \n";
+						 file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
 					}
 $Query->Disconnect( );
 
