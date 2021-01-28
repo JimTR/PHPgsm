@@ -49,10 +49,10 @@ try
 							$Exception = 'Failed to read any data from socket (module rules)';
 						}
 						
-						$error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
+						  $error = date("d/m/Y h:i:sa").' ('.$ip.':'.$sport.') '.$Exception;
 						  //sprintf("[%14.14s]",$str2)
 						  $mask = "%17.17s %-30.30s \n";
-						 file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
+						 file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
 					}
 $Query->Disconnect( );
 if (isset($Exception)) {
