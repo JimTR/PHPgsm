@@ -126,13 +126,13 @@ function lsof($cmds) {
 							}
 						$c = count($x); // need this to check file size
 						$x = array_values($x); // re-number array
-						print_r($x);
+						//print_r($x);
 						
 						// now do stuff return either the path or contents ?
 						// sending back the contents will save a call but maybe wrong 
 						$filename = $x[10]; //got file name
 						if (!empty($cmds['return'])) {
-							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
+							echo 'get contents of '.$filename.'    '.filesize($filename).cr;
 							echo file_get_contents($filename);
 						}
 						else {
