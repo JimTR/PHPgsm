@@ -100,8 +100,8 @@ if(!$valid) {
 					
 			case "game_detail" :
 			//$gd =game_detail();
-			$json = json_encode(game_detail());
-			echo $json;
+			echo json_encode(game_detail());
+			//echo $json;
 			exit;				
 }
 
