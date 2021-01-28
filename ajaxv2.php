@@ -100,14 +100,12 @@ print_r($cmds);
 }
 
 function lsof($cmds) {
-						if (isset($cmds['lsof_file'])) {
+						//if (isset($cmds['lsof_file'])) {
 						// return the open file,  the interface should format this correctly not ajax's job
 						// what ajax needs is the full path to where the file resides
 						// note, this will only return an open file 
 						// this runs only on the local server, must be called on each server
 						//ls -l /proc/pid/fd
-						$x =strpos($cmds['lsof_file'],'-con');
-						$v = substr($cmds['lsof_file'],0,$x);
 						$tpid = shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
 						//echo $tpid;
 						$get_pid = explode(' ',trim($tpid));
@@ -123,7 +121,7 @@ function lsof($cmds) {
 								else {
 									$x[$k]=trim($v);
 								}
-							}
+							//}
 						$c = count($x); // need this to check file size
 						$x = array_values($x); // re-number array
 						//print_r($x);
