@@ -41,7 +41,8 @@ if(is_cli()) {
 		error_reporting( -1 );
 	}
 	else {error_reporting( 0 );}
-	
+	echo 'Ajax v2'.cr;
+	print_r($cmds);
 }
 else {
 	define ('CR',"<br>");
@@ -58,8 +59,7 @@ if(!$valid) {
 	echo 'invalid request'.cr;
 	die();
 }
-echo 'Ajax v2'.cr;
-print_r($cmds);
+
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "boottime" :
@@ -100,21 +100,12 @@ print_r($cmds);
 }
 
 function lsof($cmds) {
-						//if (isset($cmds['lsof_file'])) {
-						// return the open file,  the interface should format this correctly not ajax's job
-						// what ajax needs is the full path to where the file resides
-						// note, this will only return an open file 
-						// this runs only on the local server, must be called on each server
-						//ls -l /proc/pid/fd
-						//$x =strpos($cmds['lsof_file'],'-con');
-						//$v = substr($cmds['lsof_file'],0,$x);
+						
 						$tpid = shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
-						//echo $tpid;
 						$get_pid = explode(' ',trim($tpid));
 						$pid= $get_pid[0];
-						//echo $pid.cr;
 						$tmp = shell_exec('ls -l /proc/'.$pid.'/fd |grep '.$cmds['loc'].'/logs');
-						echo $tmp.cr; // debug code
+						//echo $tmp.cr; // debug code
 						$x = explode(' ',$tmp);
 							foreach ($x as $k=>$v) 
 								if (empty(trim($v))) {
