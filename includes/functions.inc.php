@@ -1190,3 +1190,69 @@ function orderBy(&$data, $field,$order)
 });
    
   }
+  
+  function getObscuredText($strMaskChar='*')
+    {
+        if(!is_string($strMaskChar) || $strMaskChar=='')
+        {
+            $strMaskChar='*';
+        }
+        $strMaskChar=substr($strMaskChar,0,1);
+        readline_callback_handler_install('', function(){});
+        $strObscured='';
+        while(true)
+        {
+            $strChar = stream_get_contents(STDIN, 1);
+            $intCount=0;
+// Protect against copy and paste passwords
+// Comment \/\/\/ to remove password injection protection
+            $arrRead = array(STDIN);
+            $arrWrite = NULL;
+            $arrExcept = NULL;
+            while (stream_select($arrRead, $arrWrite, $arrExcept, 0,0) && in_array(STDIN, $arrRead))            
+            {
+                stream_get_contents(STDIN, 1);
+                $intCount++;
+            }
+//        /\/\/\
+// End of protection against copy and paste passwords
+            if($strChar===chr(10))
+            {
+                break;
+            }
+            if ($intCount===0)
+            {
+                if(ord($strChar)===127)
+                {
+                    if(strlen($strObscured)>0)
+                    {
+                        $strObscured=substr($strObscured,0,strlen($strObscured)-1);
+                        echo(chr(27).chr(91)."D"." ".chr(27).chr(91)."D");
+                    }
+                }
+                elseif ($strChar>=' ')
+                {
+                    $strObscured.=$strChar;
+                    echo($strMaskChar);
+                    //echo(ord($strChar));
+                }
+            }
+        }
+        readline_callback_handler_remove();
+        return($strObscured);
+    }
+    
+    function ping($addr,$port,$timeout) {
+		// ping port
+		if($fp = fsockopen($addr,$port,$errCode,$errStr,$timeout)){   
+   //echo ' It worked'.cr;
+       // echo $errStr.cr; 
+        return true;
+} else {
+   echo 'It didn\'t work'.cr;
+        echo $errStr.cr;
+        return false; 
+} 
+fclose($fp);
+
+	}
