@@ -97,6 +97,13 @@ if(!$valid) {
 			case "lsof" : 
 					lsof($cmds);
 					exit;
+					
+			case "game_detail" :
+			echo here.cr;
+			$gd =game_detail();
+			$json = json_encode($gd);
+			echo $json;
+			exit;				
 }
 
 function lsof($cmds) {
@@ -123,7 +130,7 @@ function lsof($cmds) {
 						// sending back the contents will save a call but maybe wrong 
 						$filename = $x[10]; //got file name
 						if (!empty($cmds['return'])) {
-							echo 'get contents of '.$filename.'    '.filesize($filename).cr;
+							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
 							echo file_get_contents($filename);
 						}
 						else {
@@ -133,4 +140,174 @@ function lsof($cmds) {
 						if (is_cli()) {echo cr;}
 				exit;
 			}
+			
+function game_detail() {
+	// get processes
+	global $cmds; // get options 
+	$db = new db();
+	$mem =0;
+	$cpu = 0;
+	$r=1;
+	if(isset($cmds['filter'])) {
+		
+		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
+		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
+		 //echo $sql.'<br>';		 
+		 $server_data = $db->get_results($sql);
+		  $server_data=reset($server_data);
+		  if (empty($server_data['base_ip'])) {         
+                if ($ip <> trim($server_data['host'])) {
+					echo 'wrong call guv !<br>';
+					exit;
+					// kill if wrong
+				}
+			}
+			else {
+					//echo $sql;
+				}
+                //$new = trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=ps_file&filter='.$server_data['host_name']));
+                $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
+                //echo $cmd.'<br>';
+                $new = trim(shell_exec($cmd));
+                // temp log
+				$logline =date("d/m/Y h:i:sa").'looking at '.$new.cr;
+				file_put_contents('ajax.log',$logline,FILE_APPEND);
+                if (empty($new)) {
+		// offline
+		//if (!empty($server_data['location'])) { file_put_contents('loc.txt',$server_data['location'].cr,FILE_APPEND);}
+		$du = shell_exec('du -s '.$server_data['location']); // get size of game
+		$du = str_replace('<br>','',$du);
+		//file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
+		//list($size, $location) = explode(" ", trim($du)); // drop to variables
+		$x = strpos(trim($du),'/');
+		$size = trim(substr($du,0,$x-1));
+		//file_put_contents ('duout.txt','Size = '.$size.PHP_EOL,FILE_APPEND);
+		$server_data['cpu'] = '';
+	    $server_data['size'] = formatBytes(floatval($size)*1024,2);
+		$server_data['mem'] = '';
+		
+	}
+               
+                $tmp = explode(' ',$new);
+		if (!empty($tmp[0])) {
+	
+	$pid = $tmp[0];
+	$count = count($tmp);
+	//echo 'using command '.$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).'<br>';
+	$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip))));
+        //$temp = trim(file_get_contents('top');
+	$temp = array_values(array_filter(explode(' ',$temp)));
+	//fix remotes
+	//file_put_contents('cmd.txt',$server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)).cr,FILE_APPEND);
+	$du = shell_exec('du -s '.$server_data['location']); // get size of game
+	//$du = str_replace('<br>','',$du);	
+	//list($size, $location) = explode(" ", trim($du)); // drop to variables
+	//file_put_contents ('duout.txt',$du.PHP_EOL,FILE_APPEND);
+	$x = strpos(trim($du),'/');
+	$size = trim(substr($du,0,$x-1));
+	$server_data['count'] =  count($temp);
+	$server_data['mem'] = $temp[$server_data['count']-3];
+	$server_data['cpu'] = $temp[$server_data['count']-4];
+	$server_data['size'] = formatBytes(floatval($size)*1024,2);
+			
+	}
+	$return[$server_data['host_name']] = $server_data;
+	return $return;
+}
+// no filter start
+	else{
+	$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+    if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+    $checkip = substr($ip,0,strlen($ip)-1); 		
+	$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
+	$tmp = explode(PHP_EOL,$t);
+	//$du = shell_exec('du -s '.dirname($server_count['location']));
+      //          list ($tsize,$location) = explode(" ",$du);
+	$i=0;
+	if(strlen($t) === 0) {
+				// nothing running
+                $sql =  'SET sql_mode = \'\'';
+                $a= $db->query( 'SET sql_mode = \'\''); 
+                $sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
+                $server_count = reset($db->get_results($sql));
+                $du = shell_exec('du -s '.dirname($server_count['location']));
+                list ($tsize,$location) = explode(" ",$du);
+        }
+        else{
+// here we have the runners in $tmp array
+	$sql = 'select  * from servers where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+	$servers = $db->get_results($sql);
+	
+	foreach ($servers as $server) {
+		$server['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+		$return[$server['host_name']] = $server;
+		
+		if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
+			$rec = array_find($server['host_name'].'.cfg',$tmp);
+			$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
+			$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
+			$server1= trim($server1); // get rid of spaces & CR's 
+			$tmp_array[$i] = explode(' ',$server1); // arrayify
+			// temp log
+			
+			$pid = $tmp_array[$i][0]; // git process id
+			$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
+			
+			$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
+			$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
+			$result =$db->get_results($sql); // get data back
+			$result=reset($result);
+			$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
+			$server_count= $db->get_results($sql); // get data back
+			$server_count=reset($server_count);
+			$count = count($top); // how many records  ?
+			$mem += $top[$count-3]; // memory %
+			$cpu += $top[$count-4]; // cpu %
+			
+			$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
+			$size = str_replace($result['location'],'',$du);
+			//list($size, $location) = $du_a; // drop to variables
+			$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+			$result['mem'] = $top[$count-3];
+			$result['cpu'] = $top[$count-4];
+			$result['size'] = formatBytes(floatval($size)*1024,2);
+			if (empty($result['host_name'])) {
+				$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
+				file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+				continue;
+				
+			}
+					$return[$result['host_name']] = $result;
+				
+			$i++;
+			}
+	
+	else {
+		$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
+		$size = str_replace($server['location'],'',$du);
+		$server['mem'] = 0;
+		$server['cpu'] = 0;
+		$server['size'] = formatBytes(floatval($size)*1024,2);
+		$return[$server['host_name']] = $server;
+		} 
+	}	
+	
+	$du = shell_exec('du -s '.dirname($result['location']));
+	//list ($tsize,$location) = explode(" ",$du);
+	$tsize = str_replace(dirname($result['location']),'',$du);
+	}
+	// add computed items 
+	$return['general']['live_servers'] = $i;
+	$return['general']['total_servers'] = $server_count['total'];
+	$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
+	$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
+	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
+	$return['general']['total_size_raw'] = floatval($tsize);
+	//echo print_r($return,true).'<br>';
+	$logline =date("d/m/Y h:i:sa").' looking at '.print_r($return['dabserver'],true).PHP_EOL;
+			//file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+	return $return;
+}
+}			
 ?>
