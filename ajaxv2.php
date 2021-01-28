@@ -100,7 +100,7 @@ print_r($cmds);
 }
 
 function lsof($cmds) {
-						if (isset($cmds['lsof_file'])) {
+						//if (isset($cmds['lsof_file'])) {
 						// return the open file,  the interface should format this correctly not ajax's job
 						// what ajax needs is the full path to where the file resides
 						// note, this will only return an open file 
@@ -123,7 +123,7 @@ function lsof($cmds) {
 								else {
 									$x[$k]=trim($v);
 								}
-							}
+							//}
 						$c = count($x); // need this to check file size
 						$x = array_values($x); // re-number array
 						//print_r($x);
