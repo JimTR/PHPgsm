@@ -106,6 +106,8 @@ function lsof($cmds) {
 						// note, this will only return an open file 
 						// this runs only on the local server, must be called on each server
 						//ls -l /proc/pid/fd
+						$x =strpos($cmds['lsof_file'],'-con');
+						$v = substr($cmds['lsof_file'],0,$x);
 						$tpid = shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
 						//echo $tpid;
 						$get_pid = explode(' ',trim($tpid));
@@ -124,6 +126,7 @@ function lsof($cmds) {
 							}
 						$c = count($x); // need this to check file size
 						$x = array_values($x); // re-number array
+						print_r($x);
 						if ($c == 7 ) {
 							// empty file return message
 							echo 'file=0';
@@ -134,16 +137,15 @@ function lsof($cmds) {
 						// now do stuff return either the path or contents ?
 						// sending back the contents will save a call but maybe wrong 
 						$filename = $x[$c]; //got file name
-						echo $cmds['return'].cr;
 						if (!empty($cmds['return'])) {
-							echo 'get contents of '.$filename.'    '.filesize($filename).cr;
+							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
 							echo file_get_contents($filename);
 						}
 						else {
 							echo $filename;
-							if (is_cli()) {echo cr;}
+							
 						}
-						
+						if (is_cli()) {echo cr;}
 				exit;
 			}
 ?>
