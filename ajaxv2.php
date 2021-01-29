@@ -100,6 +100,7 @@ if(!$valid) {
 					
 			case "game_detail" :
 					echo json_encode(game_detail());
+					if($cmds['debug'] =='true' ) {print_r(game_detail());}
 					exit;				
 }
 
