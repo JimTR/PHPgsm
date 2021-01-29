@@ -525,11 +525,13 @@ else {
 			    $where['host_name'] = $exe; 
 			    $database->update('servers',$update,$where);
 			    chdir($detail['location']);
+			    sleep (1);
 				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name']; 
 				exec($cmd); // open session
 				//$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'^M"';
-				chdir ($detail['location']);
+				//chdir ($detail['location']);
 			    	//exec($cmd); //make sure we are in the right place
+			    	
 				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; 
 				exec($cmd); // start game
 				$disp = 'Restarting Server '.$detail['host_name'];
