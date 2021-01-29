@@ -23,10 +23,15 @@
  * restart servers at a given time
  *  
  */
+if (!defined('DOC_ROOT')) {
+    	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
+    }
+echo DOC_ROOT;
  define('cr',PHP_EOL); 
-require_once '../includes/master.inc.php';
-include  '../functions.php';
-require  '../xpaw/SourceQuery/bootstrap.php';
+
+require_once DOC_ROOT.'/includes/master.inc.php';
+include  DOC_ROOT.'/functions.php';
+require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 		$Query = new SourceQuery( ); 
@@ -70,9 +75,9 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 		echo 'restarting '.$game['server_name'].' - ';
 		//print_r($game);
-		echo file_get_contents($game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr'])).cr;
+		//echo file_get_contents($game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr'])).cr;
 		sleep(1);
-		//echo 'restarted '.cr;
+		echo 'restarted '.cr;
 	}
 	
 	
