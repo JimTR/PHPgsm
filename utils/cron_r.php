@@ -75,9 +75,9 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 		echo 'restarting '.$game['server_name'].' - ';
 		//print_r($game);
-		//echo file_get_contents($game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr'])).cr;
+		echo file_get_contents($game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr'])).cr;
 		sleep(1);
-		echo 'restarted '.cr;
+		//echo 'restarted '.cr;
 	}
 	
 	
