@@ -200,6 +200,30 @@ function game_detail() {
 					$server_data['cpu'] = $temp[$server_data['count']-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
 					$server_data['beta'] = 'running';
+					$server['online'] = 'Online';
+													try
+														{
+															$gameq->Connect( $server_data['host'], $server_data['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$info1 = $gameq->GetInfo();
+															//echo print_r($info1,true).cr;
+															$server_data  = array_merge($server_data ,$info1);
+															if ($info1['Players'] > 0) {
+																$total_players += $info1['Players'];
+																$server_data['players']  = $gameq->GetPlayers( ) ;
+																}
+														}
+													catch( Exception $e )
+														{
+															$Exception = $e;
+															if (strpos($Exception,'Failed to read any data from socket')) {
+																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail)';
+														}
+						
+														$error = date("d/m/Y h:i:sa").' ('.$sever_data['host'].':'.$server_data['port'].') '.$Exception;
+														//sprintf("[%14.14s]",$str2)
+														$mask = "%17.17s %-30.30s \n";
+														file_put_contents(LOG,$error.cr,FILE_APPEND);
+														}
 					}
 		$return[$server_data['host_name']] = $server_data;
 		return $return;
