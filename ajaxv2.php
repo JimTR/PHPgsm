@@ -213,7 +213,7 @@ function game_detail() {
 				}
 			else{
 						// here we have the runners in $tmp array
-						$sql = 'select  * from servers where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
 						foreach ($servers as $server) {
 								//$server['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
