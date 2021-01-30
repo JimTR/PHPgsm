@@ -260,8 +260,8 @@ function game_detail() {
 												$return[$server['host_name']] = $server;
 										} 
 						}	
-						$du = shell_exec('du -s '.dirname($result['location']));
-						$tsize = str_replace(dirname($result['location']),'',$du);
+						$du = shell_exec('du -s '.dirname($server['location']));
+						$tsize = str_replace(dirname($server['location']),'',$du);
 			}
 	// add computed items 
 				$return['general']['live_servers'] = $i;
