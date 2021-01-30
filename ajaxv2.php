@@ -228,11 +228,12 @@ function game_detail() {
 																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 												// running server add live data
-												if ($game['running']) {
+												if ($server['running']) {
 													try
 														{
 															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$info1 = $gameq->GetInfo();
+															echo print_r($info1,true).cr;
 														}
 													catch( Exception $e )
 														{
