@@ -152,6 +152,7 @@ function game_detail() {
 	$db = new db();
 	$mem =0;
 	$cpu = 0;
+	$total_players = 0;
 	$r=1;
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
@@ -293,6 +294,7 @@ function game_detail() {
 			}
 	// add computed items 
 				$return['general']['live_servers'] = $i;
+				$return['general']['total_players'] = $total_players;
 				$return['general']['total_servers'] = $server_count;
 				$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
