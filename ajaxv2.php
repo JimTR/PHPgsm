@@ -105,8 +105,13 @@ if(!$valid) {
 					exit;
 					
 			case "game_detail" :
-					echo json_encode(game_detail());
-					if($cmds['debug'] =='true' ) {echo cr.print_r(game_detail(),true).cr;}
+					
+					if($cmds['debug'] =='true' ) {
+						echo cr.print_r(game_detail(),true).cr;
+						}
+					else {
+							echo json_encode(game_detail());
+						}
 					exit;				
 }
 
