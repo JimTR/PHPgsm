@@ -285,6 +285,7 @@ function game_detail() {
 												$size = str_replace($server['location'],'',$du);
 												$server['mem'] = 0;
 												$server['cpu'] = 0;
+												$server['online'] = 'Offline';
 												$server['size'] = formatBytes(floatval($size)*1024,2);
 												$return[$server['host_name']] = $server;
 										} 
