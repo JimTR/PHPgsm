@@ -262,8 +262,9 @@ function game_detail() {
 						$server_count = $db->num_rows($sql);
 						
 						foreach ($servers as $server) {
-									$total_slots  += $server['max_players'];							
+															
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
+											$total_slots  += $server['max_players'];	
 												// running server add live data
 												if ($server['running']) {
 													$server['online'] = 'Online';
