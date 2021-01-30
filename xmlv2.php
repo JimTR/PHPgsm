@@ -171,7 +171,7 @@ foreach ($info as $k =>$game) {
 			$track->addChild('players',$record['Players']);
 			$track->addChild('maxplayers',$record['max_players']);
 			$track->addChild('bots', $record['Bots']);
-			$track->addChild('update_msg','Last updated '.date('l jS F Y \a\t g:ia',floatval($record['server_update'])));
+			$track->addChild('update_msg',date('l jS F Y \a\t g:ia',floatval($record['server_update'])));
 			$track->addChild('uds',$updatei);
 			$track->addChild('version',$record['buildid']);
 			$track->addChild('cpu',$record['cpu']);
