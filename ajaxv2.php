@@ -271,7 +271,8 @@ function game_detail() {
 															//echo print_r($info1,true).cr;
 															$server  = array_merge($server ,$info1);
 															if ($info1['Players'] > 0) {
-																$total_players += $info1['Players'];
+																$total_players += ($info1['Players']-$info1['Bots']);
+																$total_bots += $info1['Bots'];
 																$server['players']  = $gameq->GetPlayers( ) ;
 																}
 														}
@@ -329,9 +330,10 @@ function game_detail() {
 	// add computed items 
 				$return['general']['live_servers'] = $i;
 				$return['general']['total_players'] = $total_players;
+				$return['general']['total_bots'] = $total_bots;
 				$return['general']['total_servers'] = $server_count;
-				$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
-				$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
+				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
+				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 				$return['general']['total_size_raw'] = floatval($tsize);
 				$logline =date("d/m/Y h:i:sa").' looking at '.print_r($return['dabserver'],true).PHP_EOL;
