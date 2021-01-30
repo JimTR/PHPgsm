@@ -44,10 +44,11 @@ if(is_cli()) {
 	//file_put_contents('ajax.log',$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
+		echo 'Ajax v2'.cr;
+	    print_r($cmds);
 	}
 	else {error_reporting( 0 );}
-	echo 'Ajax v2'.cr;
-	print_r($cmds);
+	
 }
 else {
 	define ('CR',"<br>");
