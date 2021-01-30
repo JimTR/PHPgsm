@@ -216,9 +216,7 @@ function game_detail() {
 						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
 						foreach ($servers as $server) {
-								//$server['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
-								print_r($server);
-								$return[$server['host_name']] = $server;
+																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 												$rec = array_find($server['host_name'].'.cfg',$tmp);
 												$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
@@ -232,9 +230,9 @@ function game_detail() {
 												$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
 												$result =$db->get_results($sql); // get data back
 												$result=reset($result);
-												$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
-												$server_count= $db->get_results($sql); // get data back
-												$server_count=reset($server_count);
+												//$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
+												//$server_count= $db->get_results($sql); // get data back
+												//$server_count=reset($server_count);
 												$count = count($top); // how many records  ?
 												$mem += $top[$count-3]; // memory %
 												$cpu += $top[$count-4]; // cpu %
