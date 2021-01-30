@@ -215,6 +215,7 @@ function game_detail() {
 						// here we have the runners in $tmp array
 						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
+						$server_count= count($servers);
 						foreach ($servers as $server) {
 																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
