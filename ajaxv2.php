@@ -237,8 +237,8 @@ function game_detail() {
 												$count = count($top); // how many records  ?
 												$mem += $top[$count-3]; // memory %
 												$cpu += $top[$count-4]; // cpu %
-												$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
-												$size = str_replace($result['location'],'',$du);
+												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
+												$size = str_replace($server['location'],'',$du);
 												//$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
 												$server['mem'] = $top[$count-3];
 												$server['cpu'] = $top[$count-4];
