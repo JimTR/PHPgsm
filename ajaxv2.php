@@ -217,7 +217,7 @@ function game_detail() {
 						$servers = $db->get_results($sql);
 						foreach ($servers as $server) {
 								//$server['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
-								
+								print_r($server);
 								$return[$server['host_name']] = $server;
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 												$rec = array_find($server['host_name'].'.cfg',$tmp);
