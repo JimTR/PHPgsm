@@ -251,7 +251,7 @@ function game_detail() {
 															continue;
 													}
 													echo 'should now push to array'.PHP_EOL;
-													$return[$result['host_name']] = $server;
+													$return[$server['host_name']] = $server;
 													$i++;
 										}
 										else {
