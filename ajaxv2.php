@@ -160,6 +160,7 @@ function game_detail() {
 	$mem =0;
 	$cpu = 0;
 	$total_players = 0;
+	$total_bots = 0;
 	$r=1;
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
