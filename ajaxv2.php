@@ -27,6 +27,7 @@ require __DIR__ . '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	define( 'LOG',	'logs/ajax.log');
 error_reporting (0);
 $ip =$_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -173,7 +174,7 @@ function game_detail() {
                 $new = trim(shell_exec($cmd));
                 // temp log
 				$logline =date("d/m/Y h:i:sa").'looking at '.$new.cr;
-				file_put_contents('ajax.log',$logline,FILE_APPEND);
+				file_put_contents(LOG,$logline,FILE_APPEND);
                 if (empty($new)) {
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
 					$du = str_replace('<br>','',$du);
@@ -182,6 +183,7 @@ function game_detail() {
 					$server_data['cpu'] = '0';
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
 					$server_data['mem'] = '0';
+					$server_data['beta'] = 'not running';
 				}
                
                 $tmp = explode(' ',$new);
@@ -197,6 +199,7 @@ function game_detail() {
 					$server_data['mem'] = $temp[$server_data['count']-3];
 					$server_data['cpu'] = $temp[$server_data['count']-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
+					$server_data['beta'] = 'running';
 					}
 		$return[$server_data['host_name']] = $server_data;
 		return $return;
