@@ -229,12 +229,17 @@ function game_detail() {
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 												// running server add live data
 												if ($server['running']) {
+													$server['online'] = 'Online';
 													try
 														{
 															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$info1 = $gameq->GetInfo();
 															//echo print_r($info1,true).cr;
 															$server  = array_merge($server ,$info1);
+															if ($info1['Players'] > 0) {
+																$total_players += $info1['Players'];
+																$server['players']  = $gameq->GetPlayers( ) ;
+																}
 														}
 													catch( Exception $e )
 														{
