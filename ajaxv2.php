@@ -250,8 +250,9 @@ function game_detail() {
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
 													}
-												$return[$result['host_name']] = $server;
-												$i++;
+													echo 'should now push to array'.PHP_EOL;
+													$return[$result['host_name']] = $server;
+													$i++;
 										}
 										else {
 												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
