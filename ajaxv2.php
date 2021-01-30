@@ -333,6 +333,7 @@ function game_detail() {
 				$return['general']['live_servers'] = $i;
 				$return['general']['total_players'] = $total_players;
 				$return['general']['total_bots'] = $total_bots;
+				$return['general']['total_slots'] = $total_players+$total_bots;
 				$return['general']['total_servers'] = $server_count;
 				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
