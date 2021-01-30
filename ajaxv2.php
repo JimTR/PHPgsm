@@ -215,7 +215,7 @@ function game_detail() {
 						// here we have the runners in $tmp array
 						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
-						$server_count= count($servers);
+						$server_count = $db->num_rows($sql);
 						foreach ($servers as $server) {
 																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
@@ -228,9 +228,9 @@ function game_detail() {
 												$pid = $tmp_array[$i][0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
-												$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
-												$result =$db->get_results($sql); // get data back
-												$result=reset($result);
+												//$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
+												//$result =$db->get_results($sql); // get data back
+												//$result=reset($result);
 												//$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
 												//$server_count= $db->get_results($sql); // get data back
 												//$server_count=reset($server_count);
@@ -265,7 +265,7 @@ function game_detail() {
 			}
 	// add computed items 
 				$return['general']['live_servers'] = $i;
-				$return['general']['total_servers'] = $server_count['total'];
+				$return['general']['total_servers'] = $server_count;
 				$return['general']['mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
