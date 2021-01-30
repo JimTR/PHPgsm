@@ -67,6 +67,7 @@ foreach ($bases as $base) {
 	}
 //print_r($info);
 //die();
+// replace ajax2
 foreach ($info as $k => $test) {
 	 foreach ($test as $k1 =>$game){
 		if ($k1 == 'general' ) {
@@ -116,6 +117,8 @@ foreach ($info as $k => $test) {
 		}
 	}
 }
+// end replace
+
 //echo print_r($info,true).cr;
 //die();
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {

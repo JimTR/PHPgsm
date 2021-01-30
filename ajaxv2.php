@@ -164,7 +164,7 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
+		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 //echo $sql.'<br>';		 
 		 $server_data = $db->get_results($sql);
 		  $server_data=reset($server_data);
@@ -179,7 +179,7 @@ function game_detail() {
                
                 $new = trim(shell_exec($cmd));
                 // temp log
-				$logline =date("d/m/Y h:i:sa").'looking at '.$new.cr;
+				$logline =date("d/m/Y h:i:sa").' looking at '.$new.cr;
 				file_put_contents(LOG,$logline,FILE_APPEND);
                 if (empty($new)) {
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
@@ -254,7 +254,7 @@ function game_detail() {
 				}
 			else{
 						// here we have the runners in $tmp array
-						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
 						$server_count = $db->num_rows($sql)+1;
 						
