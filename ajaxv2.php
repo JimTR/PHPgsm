@@ -240,7 +240,7 @@ function game_detail() {
 												$cpu += $top[$count-4]; // cpu %
 												$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 												$size = str_replace($result['location'],'',$du);
-												$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+												//$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
 												$result['mem'] = $top[$count-3];
 												$result['cpu'] = $top[$count-4];
 												$result['size'] = formatBytes(floatval($size)*1024,2);
