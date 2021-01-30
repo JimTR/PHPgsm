@@ -233,7 +233,8 @@ function game_detail() {
 														{
 															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$info1 = $gameq->GetInfo();
-															echo print_r($info1,true).cr;
+															//echo print_r($info1,true).cr;
+															$server  = array_merge($server ,$info1);
 														}
 													catch( Exception $e )
 														{
