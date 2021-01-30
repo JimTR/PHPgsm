@@ -245,7 +245,7 @@ function game_detail() {
 												$server['mem'] = $top[$count-3];
 												$server['cpu'] = $top[$count-4];
 												$server['size'] = formatBytes(floatval($size)*1024,2);
-													if (empty($result['host_name'])) {
+													if (empty($server['host_name'])) {
 															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
