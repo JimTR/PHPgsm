@@ -23,13 +23,13 @@
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
-require __DIR__ . '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
+require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 error_reporting (0);
-$ip =$_SERVER['SERVER_ADDR']; // get calling IP
+$ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
 
@@ -41,10 +41,10 @@ if(is_cli()) {
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).PHP_EOL;
-	//file_put_contents('ajax.log',$logline,FILE_APPEND);
+	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
-		echo 'Ajax v2'.cr;
+		echo 'Ajax v2.01'.cr;
 	    print_r($cmds);
 	}
 	else {error_reporting( 0 );}
@@ -232,6 +232,7 @@ function game_detail() {
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
 														}
 					}
+		$gameq->Disconnect( );			
 		$return[$server_data['host_name']] = $server_data;
 		return $return;
 	}
@@ -287,7 +288,7 @@ function game_detail() {
 														$error = date("d/m/Y h:i:sa").' ('.$sever['host'].':'.$server['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
-														file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
+														file_put_contents(LOG,$error.cr,FILE_APPEND);
 														}
 													}
 												$rec = array_find($server['host_name'].'.cfg',$tmp);
