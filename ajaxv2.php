@@ -161,6 +161,7 @@ function game_detail() {
 	$cpu = 0;
 	$total_players = 0;
 	$total_bots = 0;
+	$total_slots = 0;
 	$r=1;
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
@@ -261,7 +262,7 @@ function game_detail() {
 						$server_count = $db->num_rows($sql);
 						
 						foreach ($servers as $server) {
-																
+									$total_slots  += $server['max_players'];							
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 												// running server add live data
 												if ($server['running']) {
@@ -333,7 +334,8 @@ function game_detail() {
 				$return['general']['live_servers'] = $i;
 				$return['general']['total_players'] = $total_players;
 				$return['general']['total_bots'] = $total_bots;
-				$return['general']['total_slots'] = $total_players+$total_bots;
+				$return['general']['used_slots'] = $total_players+$total_bots;
+				$return['general']['total_slots'] = $total_slots;
 				$return['general']['total_servers'] = $server_count;
 				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
