@@ -220,7 +220,6 @@ function game_detail() {
 						foreach ($servers as $server) {
 																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
-												echo 'hit loop live'.PHP_EOL;
 												$rec = array_find($server['host_name'].'.cfg',$tmp);
 												$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 												$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
@@ -230,18 +229,11 @@ function game_detail() {
 												$pid = $tmp_array[$i][0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
-												//$sql = 'select * from servers where servers.host ="'.$tmp_array[$i][6].'" and servers.port = "'.$tmp_array[$i][8].'"'; //query 1 get the server detail
-												//$result =$db->get_results($sql); // get data back
-												//$result=reset($result);
-												//$sql = 'select  count(*) as total from servers where servers.host like "'.substr($tmp_array[$i][6],0,strlen($tmp_array[$i][6])-1).'%"'; // query 2 count the game servers
-												//$server_count= $db->get_results($sql); // get data back
-												//$server_count=reset($server_count);
 												$count = count($top); // how many records  ?
 												$mem += $top[$count-3]; // memory %
 												$cpu += $top[$count-4]; // cpu %
 												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
 												$size = str_replace($server['location'],'',$du);
-												//$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
 												$server['mem'] = $top[$count-3];
 												$server['cpu'] = $top[$count-4];
 												$server['size'] = formatBytes(floatval($size)*1024,2);
@@ -250,7 +242,6 @@ function game_detail() {
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
 													}
-													echo 'should now push to array'.PHP_EOL;
 													$return[$server['host_name']] = $server;
 													$i++;
 										}
