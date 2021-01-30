@@ -241,15 +241,15 @@ function game_detail() {
 												$du = trim(shell_exec('du -s '.$result['location'])); // get size of game
 												$size = str_replace($result['location'],'',$du);
 												//$result['url'] =  $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
-												$result['mem'] = $top[$count-3];
-												$result['cpu'] = $top[$count-4];
-												$result['size'] = formatBytes(floatval($size)*1024,2);
+												$server['mem'] = $top[$count-3];
+												$server['cpu'] = $top[$count-4];
+												$server['size'] = formatBytes(floatval($size)*1024,2);
 													if (empty($result['host_name'])) {
 															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
 													}
-												$return[$result['host_name']] = $result;
+												$return[$result['host_name']] = $server;
 												$i++;
 										}
 										else {
