@@ -256,7 +256,7 @@ function game_detail() {
 				}
 			else{
 						// here we have the runners in $tmp array
-						$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as b_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+						$sql = 'select servers.* , base_servers.port as bport, base_servers.ip as base_ip, base_servers.base_ip as real_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
 						$server_count = $db->num_rows($sql)+1;
 						
