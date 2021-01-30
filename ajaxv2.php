@@ -25,6 +25,8 @@ require_once 'includes/master.inc.php';
 include 'functions.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
+	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 error_reporting (0);
 $ip =$_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -145,8 +147,7 @@ function game_detail() {
 	// get processes
 	
 	$gameq  = new SourceQuery( );
-	define( 'SQ_TIMEOUT',     1 );
-	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	
 	global $cmds; // get options 
 	$db = new db();
 	$mem =0;
