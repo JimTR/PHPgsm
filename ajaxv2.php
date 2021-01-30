@@ -23,6 +23,8 @@
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
+require __DIR__ . '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
+	use xPaw\SourceQuery\SourceQuery;
 error_reporting (0);
 $ip =$_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -141,6 +143,10 @@ function lsof($cmds) {
 			
 function game_detail() {
 	// get processes
+	
+	$gameq  = new SourceQuery( );
+	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	global $cmds; // get options 
 	$db = new db();
 	$mem =0;
@@ -171,9 +177,9 @@ function game_detail() {
 					$du = str_replace('<br>','',$du);
 					$x = strpos(trim($du),'/');
 					$size = trim(substr($du,0,$x-1));
-					$server_data['cpu'] = '';
+					$server_data['cpu'] = '0';
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
-					$server_data['mem'] = '';
+					$server_data['mem'] = '0';
 				}
                
                 $tmp = explode(' ',$new);
@@ -220,6 +226,26 @@ function game_detail() {
 						foreach ($servers as $server) {
 																
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
+												// running server add live data
+												if ($game['running']) {
+													try
+														{
+															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$info1 = $gameq->GetInfo();
+														}
+													catch( Exception $e )
+														{
+															$Exception = $e;
+															if (strpos($Exception,'Failed to read any data from socket')) {
+																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail)';
+														}
+						
+														$error = date("d/m/Y h:i:sa").' ('.$sever['host'].':'.$server['port'].') '.$Exception;
+														//sprintf("[%14.14s]",$str2)
+														$mask = "%17.17s %-30.30s \n";
+														file_put_contents('logs/xpaw.log',$error.cr,FILE_APPEND);
+														}
+													}
 												$rec = array_find($server['host_name'].'.cfg',$tmp);
 												$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 												$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
