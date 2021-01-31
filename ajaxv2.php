@@ -465,6 +465,9 @@ function exescreen ($cmds) {
 				break;
 			}
 			echo 'issue commands'.cr;
+			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.$cmds['text'].'^M"';
+			exec($cmd);
+		  	$return = 'Command Sent'; // send console command
 			break;
 		}
 	return $return;	
