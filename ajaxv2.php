@@ -363,16 +363,12 @@ function game_detail() {
 function all($cmds) {
 	//get the lot
 			global $database;
-			$cpu_info=get_cpu_info();
-			print_r($cpu_info);
-			$software = get_software_info($database);
-			print_r($software);
+			$return=get_cpu_info();
+			$return = array_merge($return,get_software_info($database));
 			$os = lsb();
-			$disk_info = get_disk_info();
-			print_r($disk_info);
-			$mem_info = get_mem_info();
-			print_r($mem_info);
-			$user_info = get_user_info($disk_info);
-			print_r($user_info);
+			$return = array_merge($return,get_disk_info());
+			$return = array_merge($return,get_mem_info());
+			$return = array_merge($return,get_user_info($return));
+			print_r($return);
 		}	
 ?>
