@@ -234,11 +234,11 @@ function get_user_info ($Disk_info) {
 		for($i = 0; $i<=40; $i++) {
 			unset($tmp[$i]);
 			}
-			echo 'in loop'.cr;
-			echo print_r($tmp,true).cr;
+			//echo 'in loop'.cr;
+			//echo print_r($tmp,true).cr;
 	}
 		
-		print_r($tmp);
+		//print_r($tmp);
 		
 		foreach ($tmp as $k => $v) {
 			if (empty(trim($v))) {
@@ -270,7 +270,7 @@ function get_user_info ($Disk_info) {
 			$user['quota_free'] = $free;
 			}
 	}
-	print_r($user);
+	//print_r($user);
 	//die();
 	return $user;    
 	
