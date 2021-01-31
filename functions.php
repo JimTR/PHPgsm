@@ -226,17 +226,20 @@ function get_user_info ($Disk_info) {
 		// run quota
 		if(is_cli()) {
 		$tmp = explode(cr,$q);
+		$tmp =trim($tmp[2]);
+		$tmp = explode(' ',$tmp);
 	}
 	else {
 		$tmp = explode(' ',$q);
 		for($i = 1; $i<=40; $i++) {
 			unset($tmp[$i]);
 			}
+			echo 'in loop'.cr;
+			echo print_r($tmp,true).cr;
 	}
 		
 		print_r($tmp);
-		$tmp =trim($tmp[2]);
-		$tmp = explode(' ',$tmp);
+		
 		foreach ($tmp as $k => $v) {
 			if (empty(trim($v))) {
 				unset($tmp[$k]);
