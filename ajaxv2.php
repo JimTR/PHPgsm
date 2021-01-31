@@ -384,6 +384,7 @@ function all($cmds) {
 function exescreen ($cmds) {
 	// start & stop etc
 	global $database;
+	
 	$exe =$cmds['server'];
 	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 	$is_running = shell_exec ($cmd); // are we running ?
@@ -466,6 +467,7 @@ function exescreen ($cmds) {
 			}
 			echo 'issue commands'.cr;
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.$cmds['text'].'^M"';
+			$return = $cmd;
 			exec($cmd);
 		  	$return = 'Command Sent'; // send console command
 			break;
