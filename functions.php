@@ -214,6 +214,7 @@ function get_user_info ($Disk_info) {
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
 	//print_r ($du).CR;
+	echo '$q = '.$q.cr;
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
@@ -256,7 +257,7 @@ function get_user_info ($Disk_info) {
 			$user['quota_free'] = $free;
 			}
 	}
-	//print_r($user);
+	print_r($user);
 	//die();
 	return $user;    
 	
