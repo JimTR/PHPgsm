@@ -236,15 +236,15 @@ function get_user_info ($Disk_info) {
 	$used = dataSize($tmp[1]*1024);
 	$total = dataSize($tmp[2]*1024);
 	$free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
-				if (intval($tmp[1]) === 0) {
+				//if (intval($tmp[1]) === 0) {
 			// unlimited
-			$user['quota'] = 'Unlimited';
+			//$user['quota'] = 'Unlimited';
 			
-		}
-	    else {
+		//}
+	    //else {
 			$user['quota'] = $total;
 			$user['quota_raw'] = $tmp[1] ;
-			}
+			//}
 	    $user['quota_used'] = $used;
 	    //echo intval($q[15]).CR;
 	    if ($tmp[1] === 0 ) {
