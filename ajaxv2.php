@@ -397,7 +397,7 @@ function exescreen ($cmds) {
 				$return = $exe.' is already running';
 				break;
 			}
-			echo 'start'.cr;
+			
 			chdir($server['location']);
 			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
 			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
@@ -415,7 +415,21 @@ function exescreen ($cmds) {
 			break;
 			
 		case 'q':
+			if (!$is_running) {
+				$return = $exe.' is not running';
+				break;
+			}
+			
 			echo 'quit'.cr;
+			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			exec($cmd);
+			$return = 'Stopping Server '.$server['host_name'];
+			$update['running'] = 0;
+			$update['starttime'] = '';
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
+			
+			
 			break;
 		case 'r':
 			echo 'restart'.cr;
