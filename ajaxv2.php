@@ -389,6 +389,10 @@ function exescreen ($cmds) {
 	$is_running = shell_exec ($cmd); // are we running ?
 	$sql = 'select * from servers where host_name = "'.$exe.'"';
 	$server = $database->get_row($sql); // pull results
+	if (empty($server['host'])) {
+		$return = 'invalid server';
+	   	return $return;
+	}
 	
 	switch ($cmds['cmd']) {
 		case 's' :
