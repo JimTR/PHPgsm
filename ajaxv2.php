@@ -83,7 +83,7 @@ if(!$valid) {
 			exit;
 			
 		case "exescreen" :
-				exescreen($cmds);
+				echo exescreen($cmds).cr;
 				exit;
 				
 		case "get_file" :
@@ -467,6 +467,6 @@ function exescreen ($cmds) {
 			echo 'issue commands'.cr;
 			break;
 		}
-	echo $return.cr;	
+	return $return;	
 }		
 ?>
