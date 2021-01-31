@@ -70,7 +70,12 @@ if(!$valid) {
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "all" :
-			all($cmds);
+		if($cmds['debug'] =='true' ) {
+			echo cr.print_r(all($cmds),true).cr;
+				}
+		else {
+			echo json_encode(all($cmds));
+		}
 			exit;
 		case "boottime" :
 			echo get_boot_time();
@@ -369,6 +374,6 @@ function all($cmds) {
 			$return = array_merge($return,get_disk_info());
 			$return = array_merge($return,get_mem_info());
 			$return = array_merge($return,get_user_info($return));
-			print_r($return);
+			return $return;
 		}	
 ?>
