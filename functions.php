@@ -256,7 +256,8 @@ function get_user_info ($Disk_info) {
 			$user['quota_free'] = $free;
 			}
 	}
-	//print_r($user);
+	print_r($user);
+	die();
 	return $user;    
 	
 }
