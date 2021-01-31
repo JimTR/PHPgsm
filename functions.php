@@ -141,7 +141,7 @@ function get_mem_info() {
          $value=floatval(str_replace ( $key.':' , '' , $value));
 		     		
 		 $mem_info[$key] = formatBytes($valuef,2);
-		 $mem_info[$key.'_raw'] = $value;
+		 $mem_info[$key.'_raw'] = trim($value);
 		 
 	}
 
@@ -155,7 +155,7 @@ function get_mem_info() {
 			 //pad
 			 $pad = $maxlen-$len;
              //echo "pad by ".$pad.CR;
-             $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
+             $mem_info[$key] = $value;		
 	}
 }
 
@@ -219,7 +219,7 @@ function get_user_info ($Disk_info) {
 		
 		//echo "Quota Not installed".CR;
 		$user['quota_used'] = format_num($du[0]); 
-		$user['quota'] = 'Unlimited';
+		$user['quota'] = $Disk_info['home_size'];
 		$user['quota_free'] = $Disk_info['home_free'];
 	}
 	else {
