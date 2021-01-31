@@ -224,7 +224,13 @@ function get_user_info ($Disk_info) {
 	}
 	else {
 		// run quota
+		if(is_cli()) {
 		$tmp = explode(cr,$q);
+	}
+	else {
+		$tmp = explode(' ',$q);
+	}
+		
 		print_r($tmp);
 		$tmp =trim($tmp[2]);
 		$tmp = explode(' ',$tmp);
