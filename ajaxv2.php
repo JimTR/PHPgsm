@@ -404,7 +404,7 @@ function exescreen ($cmds) {
 			rename($logFile, $savedLogfile); // log rotate
 			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
 			exec($cmd); // open session
-			$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
 			exec($cmd);
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
