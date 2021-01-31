@@ -69,6 +69,9 @@ if(!$valid) {
 
 // do what's needed
 	switch (strtolower($cmds['action'])) {
+		case "all" :
+			all($cmds);
+			exit;
 		case "boottime" :
 			echo get_boot_time();
 			exit;
@@ -116,7 +119,7 @@ if(!$valid) {
 					exit;	
 			
 			case "version":
-				echo 'Ajax version '.VERSION;
+				echo 'Ajax version '.VERSION.cr;
 				exit;					
 }
 
@@ -172,16 +175,22 @@ function game_detail() {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
-		 //echo $sql.'<br>';		 
+		 //echo $sql.'<br>';
+		 if ($db->num_rows($sql) >0) {		 
 		 $server_data = $db->get_results($sql);
 		  $server_data=reset($server_data);
 		  if (empty($server_data['base_ip'])) {         
                 if ($ip <> trim($server_data['host'])) {
-					echo 'wrong call guv !<br>';
+					echo 'Invalid enviroment '.cr;
 					exit;
 				}
 			}
-			              
+		}
+		else {
+			      echo 'Invalid enviroment '.cr;
+					exit;
+				}
+				        
                 $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
                
                 $new = trim(shell_exec($cmd));
@@ -350,5 +359,20 @@ function game_detail() {
 				$logline =date("d/m/Y h:i:sa").' looking at '.print_r($return['dabserver'],true).PHP_EOL;
 				return $return;
 		}
-}			
+}		
+function all($cmds) {
+	//get the lot
+			global $database;
+			$cpu_info=get_cpu_info();
+			print_r($cpu_info);
+			$software = get_software_info($database);
+			print_r($software);
+			$os = lsb();
+			$disk_info = get_disk_info();
+			print_r($disk_info);
+			$mem_info = get_mem_info();
+			print_r($mem_info);
+			$user_info = get_user_info($disk_info);
+			print_r($user_info);
+		}	
 ?>
