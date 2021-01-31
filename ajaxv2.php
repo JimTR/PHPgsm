@@ -28,6 +28,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
+	define( 'VERSION', 'V2.01');
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -44,7 +45,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
-		echo 'Ajax v2.01'.cr;
+		echo 'Ajax '.VERSION.cr;
 	    print_r($cmds);
 	}
 	else {error_reporting( 0 );}
@@ -112,7 +113,11 @@ if(!$valid) {
 					else {
 							echo json_encode(game_detail());
 						}
-					exit;				
+					exit;	
+			
+			case "version":
+				echo 'Ajax version '.VERSION;
+				exit;					
 }
 
 function lsof($cmds) {
