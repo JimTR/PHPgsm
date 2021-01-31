@@ -383,14 +383,31 @@ function all($cmds) {
 		}	
 function exescreen ($cmds) {
 	// start & stop etc
-	print_r($cmds);
-	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['server'].'.cfg';
-	$is_running = shell_exec ($cmd);
-	if ($is_running) {
-		echo $cmds['server'].' is running'.cr;
-	}
-	else {
-		echo $cmds['server'].' is not running'.cr;
-	}
+	global $database;
+	$exe =$cmds['server'];
+	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+	$is_running = shell_exec ($cmd); // are we running ?
+	$sql = 'select * from servers where host_name = "'.$exe.'"';
+	$server = $database->get_row($sql); // pull results
+	//print_r($server);
+	echo $server['startcmd'].cr;
+	switch ($cmds['cmd']) {
+		case 's' :
+			if ($is_running) {
+				$return = $exe.' is already running';
+				break;
+			}
+			echo 'start'.cr;
+			break;
+		case 'q':
+			echo 'quit'.cr;
+			break;
+		case 'r':
+			echo 'restart'.cr;
+			break;
+		case 'c':
+			echo 'issue commands'.cr;
+			break;
+		}
 }		
 ?>
