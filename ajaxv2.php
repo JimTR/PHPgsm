@@ -445,8 +445,8 @@ function exescreen ($cmds) {
 			sleep(1); //slow the process up
 			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
 			exec($cmd); // open session
-			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
-			exec($cmd);
+			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; 
+			exec($cmd); // restart the server
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
 			$update['starttime'] = time();
@@ -455,6 +455,11 @@ function exescreen ($cmds) {
 			$return = 'Restarting Server '.$server['host_name'];
 			break;
 		case 'c':
+			if (!$is_running) {
+				$return ='start '.$exe.' before sending commands';
+				// should we just start or quit ??
+				break;
+			}
 			echo 'issue commands'.cr;
 			break;
 		}
