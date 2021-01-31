@@ -389,8 +389,7 @@ function exescreen ($cmds) {
 	$is_running = shell_exec ($cmd); // are we running ?
 	$sql = 'select * from servers where host_name = "'.$exe.'"';
 	$server = $database->get_row($sql); // pull results
-	//print_r($server);
-	echo $server['startcmd'].cr;
+	
 	switch ($cmds['cmd']) {
 		case 's' :
 			if ($is_running) {
@@ -428,11 +427,32 @@ function exescreen ($cmds) {
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
 			$database->update('servers',$update,$where);
-			
-			
 			break;
+			
 		case 'r':
+			if (!$is_running) {
+				$return = $exe.' is not running';
+				// should we just start or quit ??
+				break;
+			}
 			echo 'restart'.cr;
+			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			exec($cmd); // stop the server 
+			chdir($server['location']);
+			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+			rename($logFile, $savedLogfile); // log rotate
+			sleep(1); //slow the process up
+			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+			exec($cmd); // open session
+			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+			exec($cmd);
+			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+			$update['running'] = 1;
+			$update['starttime'] = time();
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
+			$return = 'Restarting Server '.$server['host_name'];
 			break;
 		case 'c':
 			echo 'issue commands'.cr;
