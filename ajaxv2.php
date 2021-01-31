@@ -409,5 +409,6 @@ function exescreen ($cmds) {
 			echo 'issue commands'.cr;
 			break;
 		}
+	echo $return;	
 }		
 ?>
