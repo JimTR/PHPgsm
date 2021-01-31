@@ -385,6 +385,12 @@ function exescreen ($cmds) {
 	// start & stop etc
 	print_r($cmds);
 	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['server'].'.cfg';
-	echo shell_exec ($cmd).cr;
+	$is_running = shell_exec ($cmd);
+	if ($is_running) {
+		echo $cmds['server'].' is running'.cr;
+	}
+	else {
+		echo $cmds['server'].' is not running'.cr;
+	}
 }		
 ?>
