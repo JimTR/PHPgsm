@@ -225,6 +225,7 @@ function get_user_info ($Disk_info) {
 	else {
 		// run quota
 		$tmp = explode(cr,$q);
+		print_r($tmp);
 		$tmp =trim($tmp[2]);
 		$tmp = explode(' ',$tmp);
 		foreach ($tmp as $k => $v) {
