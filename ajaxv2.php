@@ -77,10 +77,15 @@ if(!$valid) {
 			echo json_encode(all($cmds));
 		}
 			exit;
+			
 		case "boottime" :
 			echo get_boot_time();
 			exit;
 			
+		case "exescreen" :
+				exescreen($cmds);
+				exit;
+				
 		case "get_file" :
 			if (isset($cmds['post'])) {
 				file_put_contents('logs/gf.log',print_r($cmds,true),FILE_APPEND);
@@ -376,4 +381,10 @@ function all($cmds) {
 			$return = array_merge($return,get_user_info($return));
 			return $return;
 		}	
+function exescreen ($cmds) {
+	// start & stop etc
+	print_r($cmds);
+	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['server'].'.cfg';
+	echo shell_exec ($cmd).cr;
+}		
 ?>
