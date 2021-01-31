@@ -231,7 +231,7 @@ function get_user_info ($Disk_info) {
 	}
 	else {
 		$tmp = explode(' ',$q);
-		for($i = 1; $i<=40; $i++) {
+		for($i = 0; $i<=40; $i++) {
 			unset($tmp[$i]);
 			}
 			echo 'in loop'.cr;
