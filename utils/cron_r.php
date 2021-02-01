@@ -45,10 +45,10 @@ foreach ($games as $game) {
 		$info = $Query->GetInfo();
 		$Query->Disconnect( );
 		if ($info['Players'] == 0 ) {
-			$game['restart']=  $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
 			$restart[] = $game;
-			 $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr']);
 		}
+
 		elseif ($info['Bots'] == $info['Players']) {
 			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr']);
 			$restart[] = $game;
@@ -62,7 +62,7 @@ foreach ($games as $game) {
 }
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			echo file_get_contents($game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['ipaddr'])).cr;
+			echo file_get_contents($game['restart']).cr;
 			sleep(1);
 			}
 	
