@@ -188,7 +188,8 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-		 $sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
+		 $sql = 'select * from server1 where servers.host_name = "'.$cmds['filter'].'" order by sever_name DESC';
+		 //$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 //echo $sql.'<br>';
 		 if ($db->num_rows($sql) >0) {		 
 		 $server_data = $db->get_results($sql);
@@ -278,14 +279,15 @@ function game_detail() {
 						$sql =  'SET sql_mode = \'\'';
 						$a= $db->query( 'SET sql_mode = \'\''); 
 						$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
-						echo $sql;
+						//echo $sql;
 						$server_count = reset($db->get_results($sql));
 						$du = shell_exec('du -s '.dirname($server_count['location']));
 						list ($tsize,$location) = explode(" ",$du);
 				}
 			else{
 						// here we have the runners in $tmp array
-						$sql = 'select servers.* , base_servers.port as bport, base_servers.ip as base_ip, base_servers.base_ip as real_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+						$sql = 'select * from server1 where servers.host like "'.$checkip.'%" and servers.enabled=1 order by sever_name DESC';
+						//$sql = 'select servers.* , base_servers.port as bport, base_servers.ip as base_ip, base_servers.base_ip as real_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 						$servers = $db->get_results($sql);
 						$server_count = $db->num_rows($sql);
 						
@@ -384,7 +386,7 @@ function all($cmds) {
 			$return = array_merge($return,get_user_info($return));
 			if(isset($cmds['servers'])) {
 				$return['servers'] = game_detail();
-			}
+				}
 			return $return;
 		}	
 function exescreen ($cmds) {
