@@ -39,8 +39,7 @@ if(is_cli()) {
 	define ('CR',PHP_EOL);
 	$valid = 1; // we trust the console
 	$sec = true;
-	$type= $argv;
-	$cmds =convert_to_argv($type,"",true);
+	$cmds =convert_to_argv($argv,"",true);
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).PHP_EOL;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
@@ -56,15 +55,20 @@ else {
 	define ('cr',"<br>");
 	error_reporting( 0 );
 	if (!empty($_POST)) {
-		$cmds =convert_to_argv($_POST,"",true);
+		$cmds = convert_to_argv($_POST,"",true);
 	}
 	else {
-		$cmds =convert_to_argv($_GET,"",true);
+		if (isset($cmds)) {
+			$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
+		}
+		else {
+			$cmds = convert_to_argv($_GET,"",true);
+		}
 	}
 }
+
 if(!$valid) { 
-	echo 'invalid request'.cr;
-	die();
+	die( 'invalid request'.cr );
 }
 
 // do what's needed
@@ -88,7 +92,7 @@ if(!$valid) {
 				
 		case "get_file" :
 			if (isset($cmds['post'])) {
-				file_put_contents('logs/gf.log',print_r($cmds,true),FILE_APPEND);
+				file_put_contents(LOG,print_r($cmds,true),FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
 			}
 			
@@ -366,7 +370,6 @@ function game_detail() {
 				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 				$return['general']['total_size_raw'] = floatval($tsize);
-				$logline =date("d/m/Y h:i:sa").' looking at '.print_r($return['dabserver'],true).PHP_EOL;
 				return $return;
 		}
 }		
@@ -391,7 +394,7 @@ function exescreen ($cmds) {
 	$sql = 'select * from servers where host_name = "'.$exe.'"';
 	$server = $database->get_row($sql); // pull results
 	if (empty($server['host'])) {
-		$return = 'invalid server';
+		$return = 'invalid server'; // don't know this server
 	   	return $return;
 	}
 	
@@ -424,7 +427,6 @@ function exescreen ($cmds) {
 				break;
 			}
 			
-			echo 'quit'.cr;
 			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
 			exec($cmd);
 			$return = 'Stopping Server '.$server['host_name'];
@@ -440,7 +442,7 @@ function exescreen ($cmds) {
 				// should we just start or quit ??
 				break;
 			}
-			echo 'restart'.cr;
+			
 			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
 			exec($cmd); // stop the server 
 			chdir($server['location']);
@@ -459,13 +461,14 @@ function exescreen ($cmds) {
 			$database->update('servers',$update,$where);
 			$return = 'Restarting Server '.$server['host_name'];
 			break;
+			
 		case 'c':
 			if (!$is_running) {
 				$return ='start '.$exe.' before sending commands';
 				// should we just start or quit ??
 				break;
 			}
-			echo 'issue commands'.cr;
+			
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.trim($cmds['text']).'^M"';
 			$return = $cmd;
 			exec($cmd);
