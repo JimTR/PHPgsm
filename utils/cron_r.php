@@ -26,7 +26,7 @@
 if (!defined('DOC_ROOT')) {
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
-echo DOC_ROOT;
+
  define('cr',PHP_EOL); 
 
 require_once DOC_ROOT.'/includes/master.inc.php';
