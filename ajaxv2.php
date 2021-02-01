@@ -232,7 +232,7 @@ function game_detail() {
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
 					$x = strpos(trim($du),'/');
 					$size = trim(substr($du,0,$x-1));
-					$server_data['count'] =  count($temp);
+					//$server_data['count'] =  count($temp);
 					$server_data['mem'] = $temp[$server_data['count']-3];
 					$server_data['cpu'] = $temp[$server_data['count']-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
