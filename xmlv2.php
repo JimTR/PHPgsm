@@ -166,7 +166,7 @@ foreach ($info as $k =>$game) {
 			$track->addChild('engine',$record['type']);
 			$track->addChild('enabled',$record['enabled']);
 			$track->addChild('startcmd',$record['startcmd']);
-			$track->addChild('starttime',date('g:ia \o\n l jS F Y \(e\)', floatval($record['starttime'])));
+			$track->addChild('starttime',date('g:ia \o\n l jS F Y \(T\)', floatval($record['starttime'])));
 			$track->addChild('online',$record['online']);
 			$track->addChild('defaultmap',$record['default_map']);
 			$track->addChild('currentmap',$record['Map']);
