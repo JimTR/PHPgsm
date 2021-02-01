@@ -188,7 +188,7 @@ function game_detail() {
 	if(isset($cmds['filter'])) {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
-		 $sql = 'select * from server1 where servers.host_name = "'.$cmds['filter'].'"';
+		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
 		 //$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
 		 //echo $sql.'<br>';
 		 if ($db->num_rows($sql) >0) {		 
