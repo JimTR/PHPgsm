@@ -382,7 +382,9 @@ function all($cmds) {
 			$return = array_merge($return,get_disk_info());
 			$return = array_merge($return,get_mem_info());
 			$return = array_merge($return,get_user_info($return));
-			$return['servers'] = game_detail();
+			if(isset($cmds['servers'])) {
+				$return['servers'] = game_detail();
+			}
 			return $return;
 		}	
 function exescreen ($cmds) {
