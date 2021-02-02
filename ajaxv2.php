@@ -234,7 +234,7 @@ function game_detail() {
 					$size = trim(substr($du,0,$x-1));
 					//$server_data['count'] =  count($temp);
 					$server_data['mem'] = count ($temp);
-					$server_data['cpu'] = $temp[$server_data['count']-4];
+					$server_data['cpu'] = $temp[count($temp)-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
 					$server_data['beta'] = 'running';
 					$server['online'] = 'Online';
