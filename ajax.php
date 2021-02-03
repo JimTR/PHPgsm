@@ -525,11 +525,13 @@ else {
 			    $where['host_name'] = $exe; 
 			    $database->update('servers',$update,$where);
 			    chdir($detail['location']);
+			    sleep (1);
 				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$detail['host_name']; 
 				exec($cmd); // open session
 				//$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "cd '.$detail['location'].'^M"';
-				chdir ($detail['location']);
+				//chdir ($detail['location']);
 			    	//exec($cmd); //make sure we are in the right place
+			    	
 				$cmd = 'screen -S '.$detail['host_name'].' -p 0  -X stuff "'.$detail['startcmd'].'^M"'; 
 				exec($cmd); // start game
 				$disp = 'Restarting Server '.$detail['host_name'];
@@ -751,7 +753,7 @@ function game_detail() {
         }
         else{
 // here we have the runners in $tmp array
-	$sql = 'select  * from servers where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
+	$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip  where servers.host like "'.$checkip.'%" and servers.enabled=1'; // get them all
 	$servers = $db->get_results($sql);
 	
 	foreach ($servers as $server) {
@@ -840,13 +842,5 @@ function array_to_xml( $data, &$xml_data ) {
      }
 }
 
-function array_find($needle, array $haystack)
-{
-    foreach ($haystack as $key => $value) {
-        if (false !== stripos($value, $needle)) {
-            return $key;
-        }
-    }
-    return -1;
-}
+
 ?>

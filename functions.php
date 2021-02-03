@@ -141,7 +141,7 @@ function get_mem_info() {
          $value=floatval(str_replace ( $key.':' , '' , $value));
 		     		
 		 $mem_info[$key] = formatBytes($valuef,2);
-		 $mem_info[$key.'_raw'] = $value;
+		 $mem_info[$key.'_raw'] = trim($value);
 		 
 	}
 
@@ -155,7 +155,7 @@ function get_mem_info() {
 			 //pad
 			 $pad = $maxlen-$len;
              //echo "pad by ".$pad.CR;
-             $mem_info[$key] = str_pad ( $value , $pad ," ", STR_PAD_LEFT);		
+             $mem_info[$key] = $value;		
 	}
 }
 
@@ -201,51 +201,77 @@ function get_cpu_info() {
 }
 function get_user_info ($Disk_info) {
 	error_reporting(E_ALL);
-
+	if(!defined('cr') ){
+		define('cr',PHP_EOL);
+	}
 	// return user info as an array
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
 	$user['level'] =check_sudo($user['name']);
-	$q = shell_exec("quota -s 2> /dev/null");
-	//$q = shell_exec("quota  2> /dev/null");
+	//$q = shell_exec("quota -s 2> /dev/null");
+	$q = shell_exec("quota  2> /dev/null");
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
 	//print_r ($du).CR;
+	//echo '$q = '.$q.cr;
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
 		$user['quota_used'] = format_num($du[0]); 
-		$user['quota'] = 'Unlimited';
+		$user['quota'] = $Disk_info['home_size'];
 		$user['quota_free'] = $Disk_info['home_free'];
 	}
 	else {
 		// run quota
-		$q = explode(PHP_EOL,$q);
-		//print_r($q);
-		$l2 = explode(' ',$q[2]);
-		//print_r($l2);
-		if (intval($l2[12]) === 0) {
-			// unlimited
-			$user['quota'] = 'Unlimited';
-			
-		}
-	    else {
-			$user['quota'] = dataSize(intval($l2[12]) * 1000000);
-			$user['quota_raw'] = intval($l2[12]) ;
+		if(is_cli()) {
+		$tmp = explode(cr,$q);
+		$tmp =trim($tmp[2]);
+		$tmp = explode(' ',$tmp);
+	}
+	else {
+		$tmp = explode(' ',$q);
+		for($i = 0; $i<=40; $i++) {
+			unset($tmp[$i]);
 			}
-	    $user['quota_used'] = dataSize(intval($l2[9]) * 1000000);
+			//echo 'in loop'.cr;
+			//echo print_r($tmp,true).cr;
+	}
+		
+		//print_r($tmp);
+		
+		foreach ($tmp as $k => $v) {
+			if (empty(trim($v))) {
+				unset($tmp[$k]);
+		}
+	}
+	$tmp = array_values($tmp);
+	// print_r($tmp); // now all renumbered
+	$used = dataSize($tmp[1]*1024);
+	$total = dataSize($tmp[2]*1024);
+	$free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
+				//if (intval($tmp[1]) === 0) {
+			// unlimited
+			//$user['quota'] = 'Unlimited';
+			
+		//}
+	    //else {
+			$user['quota'] = $total;
+			$user['quota_raw'] = $tmp[1] ;
+			//}
+	    $user['quota_used'] = $used;
 	    //echo intval($q[15]).CR;
-	    if (intval($l2[12]) === 0 ) {
+	    if ($tmp[1] === 0 ) {
 						
 			$user['quota_free'] = $Disk_info['boot_free'];
 		}
 	    else 
 	    {
-			$user['quota_free'] = dataSize(intval($user['quota'])*1000000000 - intval($user['quota_used'])*1000000000);
+			$user['quota_free'] = $free;
 			}
 	}
 	//print_r($user);
+	//die();
 	return $user;    
 	
 }

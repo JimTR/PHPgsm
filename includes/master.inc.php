@@ -47,4 +47,3 @@
         $_REQUEST = fix_slashes($_REQUEST);
         $_COOKIE  = fix_slashes($_COOKIE);
 ?>
- 

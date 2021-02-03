@@ -67,6 +67,7 @@ foreach ($bases as $base) {
 	}
 //print_r($info);
 //die();
+// replace ajax2
 foreach ($info as $k => $test) {
 	 foreach ($test as $k1 =>$game){
 		if ($k1 == 'general' ) {
@@ -116,6 +117,8 @@ foreach ($info as $k => $test) {
 		}
 	}
 }
+// end replace
+
 //echo print_r($info,true).cr;
 //die();
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
@@ -163,7 +166,7 @@ foreach ($info as $k =>$game) {
 			$track->addChild('engine',$record['type']);
 			$track->addChild('enabled',$record['enabled']);
 			$track->addChild('startcmd',$record['startcmd']);
-			$track->addChild('starttime',date('g:ia \o\n l jS F Y \(e\)', floatval($record['starttime'])));
+			$track->addChild('starttime',date('g:ia \o\n l jS F Y \(T\)', floatval($record['starttime'])));
 			$track->addChild('online',$record['online']);
 			$track->addChild('defaultmap',$record['default_map']);
 			$track->addChild('currentmap',$record['Map']);
@@ -171,7 +174,7 @@ foreach ($info as $k =>$game) {
 			$track->addChild('players',$record['Players']);
 			$track->addChild('maxplayers',$record['max_players']);
 			$track->addChild('bots', $record['Bots']);
-			$track->addChild('update_msg','Last updated '.date('l jS F Y \a\t g:ia',floatval($record['server_update'])));
+			$track->addChild('update_msg',date('l jS F Y \a\t g:ia',floatval($record['server_update'])));
 			$track->addChild('uds',$updatei);
 			$track->addChild('version',$record['buildid']);
 			$track->addChild('cpu',$record['cpu']);

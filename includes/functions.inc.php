@@ -1256,3 +1256,13 @@ function orderBy(&$data, $field,$order)
 fclose($fp);
 
 	}
+	
+function array_find($needle, array $haystack)
+{
+    foreach ($haystack as $key => $value) {
+        if (false !== stripos($value, $needle)) {
+            return $key;
+        }
+    }
+    return -1;
+}	
