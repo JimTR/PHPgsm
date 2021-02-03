@@ -125,7 +125,7 @@ if(!$valid) {
 			case "game_detail" :
 					
 					if($cmds['debug'] =='true' ) {
-						echo cr.print_r(game_detail(),true).cr;
+						echo print_r(game_detail(),true).cr;
 						}
 					else {
 							echo json_encode(game_detail());
@@ -268,8 +268,13 @@ function game_detail() {
 	}
 // no filter start
 	else{
-			$ip = file_get_contents("http://ipecho.net/plain"); // get ip
-			if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+			if(isset($cmds['ip'])) {
+				$ip = $cmds['ip'];
+			}
+			else {
+					$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+					if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+				}
 				$checkip = substr($ip,0,strlen($ip)-1); 		
 				$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
 				$tmp = explode(PHP_EOL,$t);
@@ -281,6 +286,11 @@ function game_detail() {
 						$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
 						//echo $sql;
 						$server_count = $db->get_row($sql);
+						if (empty($server_count['location'])) {
+							$cmds['debug']='true';
+							$return = 'No Servers found for '.$ip;
+							return $return;
+						}
 						$du = shell_exec('du -s '.dirname($server_count['location']));
 						list ($tsize,$location) = explode(" ",$du);
 				}
