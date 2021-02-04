@@ -84,19 +84,11 @@ if ($info['Players'] >0) {
 					orderBy($player_list,'Frags','d');
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
-						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 						$playerN = $player_list[$k]['Name'];
-						
-						
 						$playerN2 = Emoji::Encode($playerN);
 						$playerN2 = $database->escape($playerN2);
 						//echo $playerN2.'  ';
 						$result = $database->get_results($sql.$playerN2.'"');
-						
-						//if (empty($result['name'])) {
-							//$result = $database->get_results($sql.$playerN.'"');
-						//}
-						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						$pscore =  $player_list[$k]['Frags'];
 
@@ -112,7 +104,7 @@ if ($info['Players'] >0) {
 									$map =  Emoji::Decode($result['flag']);
 									$os ='Lin';	 
 							}			
-							
+							echo json_decode('"' . $result['flag'] . '"');
 							//$map = Emoji::Decode($result['flag']); //get flag
 							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:8%;">'. $player_list[$k]['TimeF'].'</td></tr>';
 							//print_r($result);
