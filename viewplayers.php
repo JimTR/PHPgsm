@@ -99,12 +99,13 @@ if ($info['Players'] >0) {
 							    $result['ip']=long2ip ($result['ip']);
 								if ($os==='win') {
 									$map = '<img style="width:13%;" src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
+									echo json_decode('"' . $result['flag'] . '"');
 								}
 								else {
 									$map =  Emoji::Decode($result['flag']);
 									$os ='Lin';	 
 							}			
-							echo json_decode('"' . $result['flag'] . '"');
+							
 							//$map = Emoji::Decode($result['flag']); //get flag
 							$disp .='<tr class="country"><td><i class="player_n" style="">'.$playerN.'</i></td><td>'.$map.' <span class="country">'.$result['country'].'</span></td><td style="text-align:right;padding-right:5%;">'.$pscore.'</td><td style="text-align:right;padding-right:8%;">'. $player_list[$k]['TimeF'].'</td></tr>';
 							//print_r($result);
