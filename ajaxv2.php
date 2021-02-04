@@ -411,8 +411,8 @@ function exescreen ($cmds) {
 		$return = 'invalid server'; // don't know this server
 	   	return $return;
 	}
-	if ($server['ip'] <> $localIP) {
-		return 'Wrong IP';
+	if ($server['host'] <> $localIP) {
+		return 'Wrong IP'.cr.' '.$localIP.' '.$server['host'].cr;
 	}
 	
 	switch ($cmds['cmd']) {
