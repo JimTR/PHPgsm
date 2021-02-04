@@ -401,7 +401,7 @@ function all($cmds) {
 function exescreen ($cmds) {
 	// start & stop etc
 	global $database;
-	
+	$localIP = getHostByName(getHostName());
 	$exe =$cmds['server'];
 	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 	$is_running = shell_exec ($cmd); // are we running ?
@@ -410,6 +410,9 @@ function exescreen ($cmds) {
 	if (empty($server['host'])) {
 		$return = 'invalid server'; // don't know this server
 	   	return $return;
+	}
+	if ($server['ip'] <> $localIP) {
+		return 'Wrong IP';
 	}
 	
 	switch ($cmds['cmd']) {
