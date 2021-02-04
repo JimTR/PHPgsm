@@ -401,6 +401,7 @@ function all($cmds) {
 function exescreen ($cmds) {
 	// start & stop etc
 	global $database;
+	$exe =$cmds['server'];
 	$localIP = getHostByName(getHostName()); // carefull if the hostname is set to 127.0.0.1
 	$sql = 'select * from servers where host_name = "'.$exe.'"';
 	$server = $database->get_row($sql); // pull results
@@ -412,7 +413,7 @@ function exescreen ($cmds) {
 		return 'This Server is not hosted here'.cr; // we know this one but it's elsewhere
 	}
 	// valid so do it
-	$exe =$cmds['server'];
+	
 	$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
