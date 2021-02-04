@@ -410,7 +410,7 @@ function exescreen ($cmds) {
 	   	return $return;
 	}
 	if ($server['host'] <> $localIP) {
-		return 'This Server is not hosted here'.cr; // we know this one but it's elsewhere
+		return 'This Server is not hosted here'; // we know this one but it's elsewhere
 	}
 	// valid so do it
 	
