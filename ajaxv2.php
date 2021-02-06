@@ -87,7 +87,7 @@ if(!$valid) {
 			exit;
 			
 		case "exescreen" :
-				echo exescreen($cmds).cr;
+				echo exescreen($cmds);
 				exit;
 				
 		case "get_file" :
@@ -354,7 +354,8 @@ function game_detail() {
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
 													}
-													$return[$server['host_name']] = $server;
+													
+													$return[$server['fname']][$server['host_name']] = $server;
 													$i++;
 										}
 										else {
@@ -364,7 +365,7 @@ function game_detail() {
 												$server['cpu'] = 0;
 												$server['online'] = 'Offline';
 												$server['size'] = formatBytes(floatval($size)*1024,2);
-												$return[$server['host_name']] = $server;
+												$return[$server['fname']][$server['host_name']] = $server;
 										} 
 						}	
 						$du = shell_exec('du -s '.dirname($server['location']));
