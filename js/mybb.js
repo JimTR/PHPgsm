@@ -365,7 +365,7 @@ $(xml).find('Servers').children('game_server').each(function(){
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr style="font-size:14px;"><td><i>'+value+'</i></td><td align="left"><span>'+pscore+'</span></td><td>&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td><i>'+value+'</i></td><td style="text-align:right;padding-right:7%;">'+pscore+'</td><td style="text-align:right;padding-right:3%%;">'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
@@ -535,7 +535,7 @@ function liveGames(timeout,url) {
 						pscore= "&nbsp;&nbsp;"+pscore;
 						}
 						
-					newRowContent='<tr style="font-size:14px;"><td style="padding:1%;"><i class="p_name">'+value+'</i></td><td align="left"><span class="p_score">'+pscore+'</span></td><td class="p_time">&nbsp;&nbsp;&nbsp;'+time[index]+'</td></tr>'; 
+					newRowContent='<tr style="font-size:14px;"><td style="padding:1%;"><i class="p_name">'+value+'</i></td><td style="text-align:right;padding-right:15%;" class="p_score">'+pscore+'</td><td class="p_time" style="text-align:right;padding-right:3%;">'+time[index]+'</td></tr>'; 
 					$("#pbody"+fname).append(newRowContent);
 					
 					//console.log(newRowContent);
