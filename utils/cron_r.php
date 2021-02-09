@@ -67,6 +67,7 @@ foreach ($games as $game) {
 			chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
 			// check updates
+			// scan log
 			sleep(1);
 			 echo file_get_contents($game['restart'].'s').cr; // start server
 			}
