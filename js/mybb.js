@@ -508,6 +508,9 @@ function liveGames(timeout,url) {
 		  $('#gol'+fname).addClass('p_count');
           $("#gol"+fname).html(tp); //change it
             var Name = $(this).find('pname').text();
+            if ( Name === 'undefined') {
+				console.log ('found bug');
+			} 
             var result = Name.split('|');
             var Name = $(this).find('pscore').text();
             var score = Name.split('|');
