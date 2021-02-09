@@ -29,14 +29,14 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 	define( 'VERSION', 'V2.01');
+	define ('cr',PHP_EOL);
+	define ('CR',PHP_EOL);
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
 
 if(is_cli()) {
-	define ('cr',PHP_EOL);
-	define ('CR',PHP_EOL);
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
@@ -51,8 +51,8 @@ if(is_cli()) {
 	
 }
 else {
-	define ('CR',"<br>");
-	define ('cr',"<br>");
+	//define ('CR',"<br>");
+	//define ('cr',"<br>");
 	error_reporting( 0 );
 	if (!empty($_POST)) {
 		$cmds = convert_to_argv($_POST,"",true);
