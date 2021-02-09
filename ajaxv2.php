@@ -493,7 +493,19 @@ function exescreen ($cmds) {
 			exec($cmd);
 		  	$return = 'Command Sent'; // send console command
 			break;
+			
+		case 'u':
+				if($is_running) {
+					$return = 'Stop server before an update';
+					break;
+				}
+				chdir ($server['install_dir']);
+				$steamcmd =shell_exec('which steamcmd');
+				$cmd = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
+				
+				
 		}
+		
 	return $return;	
 }		
 ?>
