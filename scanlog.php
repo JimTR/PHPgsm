@@ -83,7 +83,7 @@ else {
 	}
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
-	print_r($run);
+	//print_r($run);
 	if (empty($argv[2])) {
 	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 	}
