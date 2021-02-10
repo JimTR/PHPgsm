@@ -401,7 +401,9 @@ function all($cmds) {
 			$return = array_merge($return,get_mem_info());
 			$return = array_merge($return,get_user_info($return));
 			if(isset($cmds['servers'])) {
-				$return = array_merge($return,game_detail());
+				$tmp = game_detail();
+				$add = $tmp['general'];
+				$return = array_merge($return,$add);
 				}
 			return $return;
 		}	
