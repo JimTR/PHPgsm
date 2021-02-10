@@ -257,7 +257,7 @@ function game_detail() {
 														{
 															$Exception = $e;
 															if (strpos($Exception,'Failed to read any data from socket')) {
-																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$ub_cmd.')';
+																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
 														}
 						
 														$error = date("d/m/Y h:i:sa").' ('.$sever_data['host'].':'.$server_data['port'].') '.$Exception;
