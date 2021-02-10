@@ -25,12 +25,13 @@ require_once 'includes/master.inc.php';
 include 'functions.php';
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
-	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 	define( 'VERSION', 'V2.02');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
+	
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -327,7 +328,7 @@ function game_detail() {
 																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail)';
 														}
 						
-														$error = date("d/m/Y h:i:sa").'=> '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
+														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
