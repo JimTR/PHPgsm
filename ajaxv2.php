@@ -400,13 +400,18 @@ function all($cmds) {
 			$return = array_merge($return,get_disk_info());
 			$return = array_merge($return,get_mem_info());
 			$return = array_merge($return,get_user_info($return));
-			if(isset($cmds['servers'])) {
+			//if(isset($cmds['servers'])) {
 				$tmp = game_detail();
 				$add = $tmp['general'];
+				$x = floatval($add['total_size'])/1000; // get size
+				$return['quota_pc'] =  number_format( $x* (100/floatval($sdata['quota'])) ,2);
 				$return = array_merge($return,$add);
-				}
+				//}
 			return $return;
 		}	
+		
+		
+		
 function exescreen ($cmds) {
 	// start & stop etc
 	global $database;
