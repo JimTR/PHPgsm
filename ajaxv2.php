@@ -404,7 +404,7 @@ function all($cmds) {
 				$tmp = game_detail();
 				$add = $tmp['general'];
 				$x = floatval($add['total_size'])/1000; // get size
-				$return['quota_pc'] =  number_format( $x* (100/floatval($sdata['quota'])) ,2);
+				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 				$return = array_merge($return,$add);
 				//}
 			return $return;
