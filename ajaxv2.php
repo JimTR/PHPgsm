@@ -243,13 +243,14 @@ function game_detail() {
 													try
 														{
 															$gameq->Connect( $server_data['host'], $server_data['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$sub_cmd = 'GetInfo';
 															$info1 = $gameq->GetInfo();
-															$sub_cmd = 'get_info';
+															
 															//echo print_r($info1,true).cr;
 															$server_data  = array_merge($server_data ,$info1);
 															if ($info1['Players'] > 0) {
 																$total_players += $info1['Players'];
-																$sub_cmd = 'get_players';
+																$sub_cmd = 'GetPlayers';
 																$server_data['players']  = $gameq->GetPlayers( ) ;
 																}
 														}
@@ -314,8 +315,8 @@ function game_detail() {
 													try
 														{
 															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
-															$info1 = $gameq->GetInfo();
 															$sub_cmd = 'GetInfo';
+															$info1 = $gameq->GetInfo();
 															$server  = array_merge($server ,$info1);
 															if ($info1['Players'] > 0) {
 																$sub_cmd = 'GetPlayers';
