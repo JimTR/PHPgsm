@@ -28,7 +28,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     1 );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 'V2.01');
+	define( 'VERSION', 'V2.02');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 error_reporting (0);
@@ -40,7 +40,7 @@ if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
-	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).PHP_EOL;
+	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
@@ -89,6 +89,9 @@ if(!$valid) {
 		case "exescreen" :
 				echo exescreen($cmds);
 				exit;
+		case "exe" :
+				
+				break;	
 				
 		case "get_file" :
 			if (isset($cmds['post'])) {
@@ -189,11 +192,9 @@ function game_detail() {
 		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
 		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
-		 //$sql = 'select servers.* , base_servers.port as bport, base_servers.base_ip as base_ip, base_servers.url from servers left join base_servers on servers.host = base_servers.ip where servers.host_name = "'.$cmds['filter'].'"';
-		 //echo $sql.'<br>';
 		 if ($db->num_rows($sql) >0) {		 
-		 $server_data = $db->get_results($sql);
-		  $server_data=reset($server_data);
+			$server_data = $db->get_results($sql);
+			$server_data=reset($server_data);
 		  if (empty($server_data['base_ip'])) {         
                 if ($ip <> trim($server_data['host'])) {
 					echo 'Invalid enviroment '.cr;
@@ -304,7 +305,7 @@ function game_detail() {
 															
 										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
 											$total_slots  += $server['max_players'];	
-												// running server add live data
+												// running server add live data 
 												if ($server['running']) {
 													$server['online'] = 'Online';
 													try
@@ -326,7 +327,7 @@ function game_detail() {
 																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail)';
 														}
 						
-														$error = date("d/m/Y h:i:sa").' ('.$sever['host'].':'.$server['port'].') '.$Exception;
+														$error = date("d/m/Y h:i:sa").'=> '.$server['host_name'].'('.$sever['host'].':'.$server['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
@@ -390,12 +391,11 @@ function all($cmds) {
 			global $database;
 			$return=get_cpu_info();
 			$return = array_merge($return,get_software_info($database));
-			$os = lsb();
 			$return = array_merge($return,get_disk_info());
 			$return = array_merge($return,get_mem_info());
 			$return = array_merge($return,get_user_info($return));
 			if(isset($cmds['servers'])) {
-				$return['servers'] = game_detail();
+				$return = array_merge($return,game_detail());
 				}
 			return $return;
 		}	
@@ -502,10 +502,15 @@ function exescreen ($cmds) {
 				chdir ($server['install_dir']);
 				$steamcmd =shell_exec('which steamcmd');
 				$cmd = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
-				
+				exec($cmd,$rdata,$retval);
+				break;
 				
 		}
 		
 	return $return;	
 }		
+function exe($cmds) {
+	// run a command
+	$allowed = array('scanlog.php','cron_u.php');
+}
 ?>
