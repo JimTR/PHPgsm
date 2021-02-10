@@ -315,9 +315,10 @@ function game_detail() {
 														{
 															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$info1 = $gameq->GetInfo();
-															//echo print_r($info1,true).cr;
+															$sub_cmd = 'GetInfo';
 															$server  = array_merge($server ,$info1);
 															if ($info1['Players'] > 0) {
+																$sub_cmd = 'GetPlayers';
 																$total_players += ($info1['Players']-$info1['Bots']);
 																$total_bots += $info1['Bots'];
 																$server['players']  = $gameq->GetPlayers( ) ;
@@ -327,7 +328,7 @@ function game_detail() {
 														{
 															$Exception = $e;
 															if (strpos($Exception,'Failed to read any data from socket')) {
-																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail)';
+																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail'.$sub_cmd.')';
 														}
 						
 														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
