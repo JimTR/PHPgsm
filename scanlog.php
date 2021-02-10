@@ -91,15 +91,10 @@ else {
 		// assume run local 
 		$path = $argv[2];
 	}
-		//$tmp = file_get_contents($path);
-		echo 'Scanning '.$argv[1].cr;
-		echo cr.$path.cr;
+		
+		echo 'Scanning '.$argv[1].' '.$path.cr;
 		$tmp = file_get_contents($path);
-		//echo $tmp;
-		//$tmp = explode(cr,$tmp);
-		//print_r($tmp);
-		//exit;
-		do_all($argv[1],$tmp);
+		echo do_all($argv[1],$tmp);
 }
 function do_all($server,$data) {
 	// cron code
