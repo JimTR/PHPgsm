@@ -509,23 +509,25 @@ function exescreen ($cmds) {
 			break;
 			
 		case 'u':
+			// do this to catch if the server is running or not
 				if($is_running) {
 					$return = 'Stop server before an update';
 					break;
 				}
 				chdir ($server['install_dir']);
 				$steamcmd =shell_exec('which steamcmd');
-				$cmd = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
-				exec($cmd,$rdata,$retval);
+				$cmds['cmd'] = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
+				exe($cmds);
 				break;
 				
 		}
 		
 	return $return;	
-}		
+}
+		
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
-	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php');
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','ls');
 	foreach ($allowed as $find) {
     //if (strstr($string, $url)) { // mine version
     if (strpos($cmds['cmd'], $find) !== FALSE) { 
@@ -538,7 +540,10 @@ if(empty($can_do)) {
 $can_do = false;
 }
 if($can_do == true) {
-	echo ' ready to do command'; 
+	echo ' ready to do command<br>'; 
+	exec($cmds['cmd'],$output,$retval);
+	echo $retval.'<br>';
+	print_r($output);
 } 
 }
 ?>
