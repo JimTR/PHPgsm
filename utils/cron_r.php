@@ -62,16 +62,16 @@ foreach ($games as $game) {
 }
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			//echo file_get_contents($game['restart'].'q').cr; // stop server
+			echo file_get_contents($game['restart'].'q').cr; // stop server
 			$steamcmd = shell_exec('which steamcmd');
 			chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
-			$exe = $game['location'].'/utils/cron_r.php '.$game['host_name'].' '.$game['location'].'/logs/console/'.$game['host_name'].'-console.log';
+			$exe = $game['location'].'/utils/scanlog.php '.$game['host_name'].' '.$game['location'].'/logs/console/'.$game['host_name'].'-console.log';
 			echo $exe.cr;
 			// check updates
 			// scan log
 			sleep(1);
-			 //echo file_get_contents($game['restart'].'s').cr; // start server
+			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
 	
 	
