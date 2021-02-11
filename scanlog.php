@@ -72,14 +72,14 @@ else {
 	// do supplied file
 	if (!file_exists($argv[2])) {
 		echo 'could not open '.$argv[2].cr;
-		exit;
+		exit (1);
 	}
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
 	if(empty($run)) {
 		echo 'Invalid server id '.$argv[1].' correct & try again'.cr;
-		exit;
+		exit(2);
 	}
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];

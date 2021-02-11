@@ -90,9 +90,10 @@ if(!$valid) {
 		case "exescreen" :
 				echo exescreen($cmds);
 				exit;
+				
 		case "exe" :
 				exe($cmds);
-				break;	
+				exit;	
 				
 		case "get_file" :
 			if (isset($cmds['post'])) {
@@ -536,5 +537,8 @@ if(empty($can_do)) {
 	echo $cmds['cmd']." Not found!".cr;
 $can_do = false;
 }
+if($can_do == true) {
+	echo ' ready to do command'; 
+} 
 }
 ?>
