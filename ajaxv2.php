@@ -543,7 +543,10 @@ if($can_do == true) {
 	echo ' ready to do command<br>'; 
 	exec($cmds['cmd'],$output,$retval);
 	echo $retval.'<br>';
-	print_r($output);
+	//print_r($output);
+	foreach ($output as $line) {
+		echo $line.'<br>';
+	}
 } 
 }
 ?>
