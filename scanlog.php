@@ -264,7 +264,7 @@ foreach ($la as $user_data) {
 		
 		if(strpos($result['server'],$server) === false) {
 			$ut.= ' played a new server';
-			$result['server'].=','.$server;
+			$result['server'].=$server.'*';
 			$modify=true;
 			}
 			
