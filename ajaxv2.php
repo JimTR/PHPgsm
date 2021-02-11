@@ -528,12 +528,12 @@ function exe($cmds) {
 	foreach ($allowed as $find) {
     //if (strstr($string, $url)) { // mine version
     if (strpos($cmds['cmd'], $find) !== FALSE) { 
-        echo "Match found".cr; 
+        echo $cmds['cmd']." Match found".cr; 
         $can_do = true;
     }
 }
 if(empty($can_do)) {
-	echo "Not found!".cr;
+	echo $cmds['cmd']." Not found!".cr;
 $can_do = false;
 }
 }
