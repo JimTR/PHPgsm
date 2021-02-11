@@ -91,7 +91,7 @@ if(!$valid) {
 				echo exescreen($cmds);
 				exit;
 		case "exe" :
-				
+				exe($cmds);
 				break;	
 				
 		case "get_file" :
@@ -523,7 +523,18 @@ function exescreen ($cmds) {
 	return $return;	
 }		
 function exe($cmds) {
-	// run a command
-	$allowed = array('scanlog.php','cron_u.php');
+	// run a command this array needs to be in a settings file
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php');
+	foreach ($allowed as $find) {
+    //if (strstr($string, $url)) { // mine version
+    if (strpos($cmds['cmd'], $find) !== FALSE) { 
+        echo "Match found".cr; 
+        $can_do = true;
+    }
+}
+if(empty($can_do)) {
+	echo "Not found!".cr;
+$can_do = false;
+}
 }
 ?>
