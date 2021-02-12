@@ -541,13 +541,15 @@ if(empty($can_do)) {
 $can_do = false;
 }
 if($can_do == true) {
-	echo ' ready to do command<br>'; 
+	echo ' ready to do command<br>'.PHP_EOL; 
 	exec($cmds['cmd'],$output,$retval);
 	echo $retval.'<br>';
 	//print_r($output);
+	if (isset($cmds['debug'])) {
 	foreach ($output as $line) {
-		echo $line.'<br>';
+		echo $line.'<br>'.PHP_EOL;
 	}
+}
 } 
 }
 ?>
