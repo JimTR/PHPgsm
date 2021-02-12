@@ -31,7 +31,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 'V2.02');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	
+	define('plus','%2B');
+	define('space','%20');  
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -528,6 +529,7 @@ function exescreen ($cmds) {
 		
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
+	
 	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','ls');
 	foreach ($allowed as $find) {
     //if (strstr($string, $url)) { // mine version
@@ -537,21 +539,26 @@ function exe($cmds) {
     }
 }
 if(empty($can_do)) {
-	echo $cmds['cmd']." Not found!".cr;
+	//echo $cmds['cmd']." Not found!".cr;
+	return 61912;
 $can_do = false;
 }
 if($can_do == true) {
-	$cmds['cmd'] = str_replace('"','',$cmds['cmd']);
-	//$cmds['cmd'] = str_replace('quit'
-	echo ' ready to do command<br>'.PHP_EOL; 
+	/* 
+	 * Exit codes
+	 * 0 = ran correctly
+	 * 127 = file not found
+	 * 139 = segmentation
+	 */ 
+	//echo ' ready to do command<br>'.PHP_EOL; 
 	exec($cmds['cmd'],$output,$retval);
-	echo $retval.'<br>';
-	//print_r($output);
+	//echo $retval.'<br>';
 	if (isset($cmds['debug'])) {
 	foreach ($output as $line) {
-		echo $line.'<br>'.PHP_EOL;
+		echo $line.'<br>'.cr;
 	}
 }
+return $retval;
 } 
 }
 ?>
