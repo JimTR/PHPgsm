@@ -170,7 +170,6 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
-		//𝙏𝙃𝙍𝘼𝙎𝙃𝙀
 		$username = $t[0];
 		//echo 'processing '.$username.' '.$ip.' '.$id2.cr;
 		$la[$username]['ip']=$ip;
@@ -318,7 +317,7 @@ foreach ($la as $user_data) {
 		$result['type'] = 'N/A';
 	}
 		$result['threat'] = $ip_data['threat']['is_threat'];
-		$result['server'] = $server;
+		$result['server'] = $server.'*';
 		
 		
 		$result = $database->escape($result);
