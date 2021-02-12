@@ -388,7 +388,7 @@ for (var i in data1) {
               changeClass('cpu_pb'+server_id,parseInt(data.total_cpu));
              // slots graph
              $('#op_pbs'+server_id).width($('#op_pb'+server_id).parent().width());
-             $("#op_pbs"+server_id).text(data.total_players+'/'+data.total_slots);
+             $("#op_pbs"+server_id).text(data.total_players+'/'+data.total_bots+'/'+data.total_slots);
              var player_pc = data.used_slots/data.total_slots*100; 
              $("#op_pb"+server_id).css('width',player_pc+'%');
              changeClass('op_pb'+server_id,Math.round(player_pc));
