@@ -1,3 +1,4 @@
+#!/usr/bin/php -d memory_limit=2048M
 <?php
 /*
  * ud1.php
