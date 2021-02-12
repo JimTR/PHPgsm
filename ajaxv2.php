@@ -542,6 +542,7 @@ $can_do = false;
 }
 if($can_do == true) {
 	echo ' ready to do command<br>'.PHP_EOL; 
+	$cmds['cmd'] = str_replace('"','',$cmds['cmd']);
 	exec($cmds['cmd'],$output,$retval);
 	echo $retval.'<br>';
 	//print_r($output);
