@@ -64,10 +64,11 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 			echo file_get_contents($game['restart'].'q').cr; // stop server
 			$steamcmd = shell_exec('which steamcmd');
-			chdir(dirname($steamcmd)); // move to install dir
+			//chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
-			$exe = $game['location'].'/utils/scanlog.php '.$game['host_name'].' '.$game['location'].'/logs/console/'.$game['host_name'].'-console.log';
-			echo $exe.cr;
+			$exe = DOC_ROOT.'/utils/scanlog.php '.$game['host_name'].' '.$game['location'].'/logs/console/'.$game['host_name'].'-console.log';
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exes&cmd='.$exe;
+			echo 'will do '.$cmd.cr;
 			// check updates
 			// scan log
 			sleep(1);
