@@ -27,7 +27,9 @@ if (!defined('DOC_ROOT')) {
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
 
- define('cr',PHP_EOL); 
+ define('cr',PHP_EOL);
+ define('plus','%2B');
+ define('space','%20');  
 
 require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';

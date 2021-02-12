@@ -66,7 +66,7 @@ $arry = explode(cr,trim($data));
 $c =count($arry);
 if( $c == 1){
 	echo 'No Data for Server ID '.$appid;
-	echo ' is this server installed ?'.cr;
+	echo ' is this server ID valid ?'.cr;
 	exit;
 }
 foreach ($arry as $key=>$value) {

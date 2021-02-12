@@ -30,7 +30,7 @@
 include 'includes/cli_master.inc.php';
 include 'functions.php';
 define ("cr",PHP_EOL);
-$database = new db();
+//define('plus','%2B');
 if (!isset($argv)) {
 	echo 'Wrong Enviroment';
 	exit;
