@@ -25,14 +25,17 @@
 define ('cr',PHP_EOL);
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
+	help();
 	exit(4);
 } 
 if (!is_numeric($argv[1])) {
 	echo 'Server Id must be numeric'.cr;
+	help();
 	exit(5);
 }
 if(!isset($argv[2])) {
 	echo 'supply sever location'.cr;
+	help();
 	exit(6);
 }
 if(!isset($argv[3])) {
@@ -49,10 +52,13 @@ $local = check_local($file);
 }
 else {
 	 echo 'Data for server id '.$argv[1].' is not present in the location '.$argv[2].cr;
+	 help();
 	 exit(20);
  }
-$remote = check_branch($argv[1]);
 //echo print_r($local,true).cr;
+$remote = check_branch($argv[1]);
+//echo print_r($remote,true).cr;
+//$key = array_search(40489, array_column($userdb, 'uid'));
 if ($remote[$localbranch]['buildid'] <> $local['buildid']) {
 	$last = date('l jS F Y \a\t g:ia',$local['LastUpdated']);
 	echo $local['name'].' needs update to '.$remote[$localbranch]['buildid'].' from '.$local['buildid'].' last update '.$last.cr;
@@ -149,5 +155,12 @@ else
 }
 return $return;
 
+}
+function help() {
+	global $argv;
+	echo 'Usage '.$argv[0].' <serverID> <location> <branch>'.cr;
+	echo cr.'example : ';
+	echo $argv[0].' 4020 '.getcwd().' beta'.cr;
+	echo 'branch is optional, if ommitted the public branch is used to test against'.cr;
 }
 ?>
