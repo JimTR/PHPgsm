@@ -42,7 +42,7 @@ foreach ($data['content'] as $k => $v ) {
 		//echo 'new  ';
 		preg_match('/U:[0-9]:\d+/', $v, $t); // get steam id
 		$id = trim($t[0]);
-		file_put_contents('dbug.txt','new '.$id.PHP_EOL);
+		file_put_contents('logs/dbug.txt','new '.$id.PHP_EOL);
 	}
 	$v = preg_replace('/<.*?>/', '', $v); //user number ?
 	$v = preg_replace('@\(.*?\)@','',$v); // bracket content
@@ -59,7 +59,7 @@ foreach ($data['content'] as $k => $v ) {
     $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
     $pattern = '/(\d+):(\d+):(\d+)/';
     $v = preg_replace($pattern, $replacement, $v,-1,$count);
-    if (empty($count)) {continue;}
+    //if (empty($count)) {continue;}
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	//$v = preg_replace('/<[^0-9]+>/',' ',$v); //remove

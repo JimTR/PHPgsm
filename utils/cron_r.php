@@ -27,7 +27,9 @@ if (!defined('DOC_ROOT')) {
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
 
- define('cr',PHP_EOL); 
+ define('cr',PHP_EOL);
+ define('plus','%2B');
+ define('space','%20');  
 
 require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';
@@ -45,16 +47,16 @@ foreach ($games as $game) {
 		$info = $Query->GetInfo();
 		$Query->Disconnect( );
 		if ($info['Players'] == 0 ) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$restart[] = $game;
 		}
 
 		elseif ($info['Bots'] == $info['Players']) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$restart[] = $game;
 		}
 		else  {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$check[] = $game; 
 		}
 	}
@@ -62,8 +64,17 @@ foreach ($games as $game) {
 }
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			echo file_get_contents($game['restart']).cr;
+			echo file_get_contents($game['restart'].'q').cr; // stop server
+			$steamcmd = shell_exec('which steamcmd');
+			//chdir(dirname($steamcmd)); // move to install dir
+			//print_r($game);
+			$exe = urlencode (DOC_ROOT.'/scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
+			echo file_get_contents($cmd);
+			// check updates
+			// scan log
 			sleep(1);
+			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
 	
 	

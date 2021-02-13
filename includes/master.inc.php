@@ -13,7 +13,7 @@
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
-    	define( 'DB_HOST', $config['database']['hostname'] ); // set database host
+    define( 'DB_HOST', $config['database']['hostname'] ); // set database host
 	define( 'DB_USER', $config['database']['username'] ); // set database user
 	define( 'DB_PASS', $config['database']['password'] ); // set database password
 	define( 'DB_NAME', $config['database']['database'] ); // set database name
@@ -21,8 +21,8 @@
 	define( 'DISPLAY_DEBUG', $config['database']['display_error'] ); //display db errors?
 	define( 'DB_COMMA',  '`'); // back tick 
 	define( 'TIME_NOW', time()); //time stamp
-    	define( 'FORMAT_TIME',  date($time_format)); // format the time
-    	define( 'GIG',1073741824);
+    define( 'FORMAT_TIME',  date($time_format)); // format the time
+    define( 'GIG',1073741824);
       
     if ($settings['year'] === "1")
    {
