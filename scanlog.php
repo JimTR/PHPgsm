@@ -26,13 +26,13 @@
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
  * Major re work January 2021 
  */
-$key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
+$key = $settings['ip_key'] ;
 if (!isset($argv)){
 echo 'wrong enviroment';
 exit;
@@ -42,7 +42,7 @@ if(empty($argv[1])) {
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
-	exit;
+	exit(0);
 }
 $sql = 'select * from players where steam_id64="'; // sql stub for user updates
 
