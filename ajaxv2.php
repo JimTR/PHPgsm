@@ -550,10 +550,12 @@ if($can_do == true) {
 	 * 127 = file not found
 	 * 139 = segmentation
 	 */ 
-	echo ' ready to do command<br>'.PHP_EOL; 
+	
 	exec($cmds['cmd'],$output,$retval);
 	echo $retval.'<br>';
 	if (isset($cmds['debug'])) {
+	echo ' ready to do command<br>'.cr;
+	echo $retval.'<br>'.cr; 	
 	foreach ($output as $line) {
 		echo $line.'<br>'.cr;
 	}
