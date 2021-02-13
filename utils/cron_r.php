@@ -70,7 +70,7 @@ foreach ($games as $game) {
 			//print_r($game);
 			$exe = urlencode (DOC_ROOT.'/scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
-			echo 'will do '.$cmd.cr;
+			echo file_get_contents($cmd);
 			// check updates
 			// scan log
 			sleep(1);
