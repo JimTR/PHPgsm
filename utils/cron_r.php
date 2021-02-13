@@ -68,8 +68,8 @@ foreach ($games as $game) {
 			$steamcmd = shell_exec('which steamcmd');
 			//chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
-			$exe = DOC_ROOT.'/utils/scanlog.php '.$game['host_name'].' '.$game['location'].'/logs/console/'.$game['host_name'].'-console.log';
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exes&cmd='.$exe;
+			$exe = urlencode (DOC_ROOT.'/scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 			echo 'will do '.$cmd.cr;
 			// check updates
 			// scan log
