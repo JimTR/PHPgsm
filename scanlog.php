@@ -26,13 +26,13 @@
  * SELECT name,country,log_ons from players order by log_ons desc limit 0,10
  * Major re work January 2021 
  */
-$key = '14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
+$key = $settings['ip_key'] ;
 if (!isset($argv)){
 echo 'wrong enviroment';
 exit;
@@ -42,7 +42,7 @@ if(empty($argv[1])) {
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
-	exit;
+	exit(0);
 }
 $sql = 'select * from players where steam_id64="'; // sql stub for user updates
 
@@ -72,18 +72,18 @@ else {
 	// do supplied file
 	if (!file_exists($argv[2])) {
 		echo 'could not open '.$argv[2].cr;
-		exit;
+		exit (1);
 	}
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
 	if(empty($run)) {
 		echo 'Invalid server id '.$argv[1].' correct & try again'.cr;
-		exit;
+		exit(2);
 	}
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
-	print_r($run);
+	//print_r($run);
 	if (empty($argv[2])) {
 	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 	}
@@ -91,15 +91,10 @@ else {
 		// assume run local 
 		$path = $argv[2];
 	}
-		//$tmp = file_get_contents($path);
-		echo 'Scanning '.$argv[1].cr;
-		echo cr.$path.cr;
+		
+		echo 'Scanning '.$argv[1].' '.$path.cr;
 		$tmp = file_get_contents($path);
-		//echo $tmp;
-		//$tmp = explode(cr,$tmp);
-		//print_r($tmp);
-		//exit;
-		do_all($argv[1],$tmp);
+		echo do_all($argv[1],$tmp);
 }
 function do_all($server,$data) {
 	// cron code
@@ -175,7 +170,6 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
-		//𝙏𝙃𝙍𝘼𝙎𝙃𝙀
 		$username = $t[0];
 		//echo 'processing '.$username.' '.$ip.' '.$id2.cr;
 		$la[$username]['ip']=$ip;
@@ -269,7 +263,7 @@ foreach ($la as $user_data) {
 		
 		if(strpos($result['server'],$server) === false) {
 			$ut.= ' played a new server';
-			$result['server'].=','.$server;
+			$result['server'].=$server.'*';
 			$modify=true;
 			}
 			
@@ -323,7 +317,7 @@ foreach ($la as $user_data) {
 		$result['type'] = 'N/A';
 	}
 		$result['threat'] = $ip_data['threat']['is_threat'];
-		$result['server'] = $server;
+		$result['server'] = $server.'*';
 		
 		
 		$result = $database->escape($result);

@@ -27,7 +27,9 @@ if (!defined('DOC_ROOT')) {
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
 
- define('cr',PHP_EOL); 
+ define('cr',PHP_EOL);
+ define('plus','%2B');
+ define('space','%20');  
 
 require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';
@@ -38,32 +40,41 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $sql = 'select * from servers where running=1';
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
 $games = $database->get_results($sql);
-
 foreach ($games as $game) {
 		if (ping($game['host'], $game['port'], 1)) {
 		$Query->Connect( $game['host'], $game['port'], 1, SQ_ENGINE );
 		$info = $Query->GetInfo();
 		$Query->Disconnect( );
 		if ($info['Players'] == 0 ) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$restart[] = $game;
 		}
 
 		elseif ($info['Bots'] == $info['Players']) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$restart[] = $game;
 		}
 		else  {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&exe='.$game['host_name'].'&key='.md5($game['host']);
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$check[] = $game; 
 		}
 	}
 	else { continue;}
+	
 }
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			echo file_get_contents($game['restart']).cr;
+			echo file_get_contents($game['restart'].'q').cr; // stop server
+			$steamcmd = shell_exec('which steamcmd');
+			//chdir(dirname($steamcmd)); // move to install dir
+			//print_r($game);
+			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			echo file_get_contents($cmd);
+			// check updates
+			// scan log
 			sleep(1);
+			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
 	
 	

@@ -84,19 +84,11 @@ if ($info['Players'] >0) {
 					orderBy($player_list,'Frags','d');
 					foreach ($player_list as $k=>$v) {
 						//loop through player array
-						//$playerN = substr($player_list[$k]['gq_name'],0,20); // chop to 20 chrs
 						$playerN = $player_list[$k]['Name'];
-						
-						
 						$playerN2 = Emoji::Encode($playerN);
 						$playerN2 = $database->escape($playerN2);
 						//echo $playerN2.'  ';
 						$result = $database->get_results($sql.$playerN2.'"');
-						
-						//if (empty($result['name'])) {
-							//$result = $database->get_results($sql.$playerN.'"');
-						//}
-						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
 						$playerN = str_pad($playerN,25); //pad to 25 chrs
 						$pscore =  $player_list[$k]['Frags'];
 
@@ -107,6 +99,7 @@ if ($info['Players'] >0) {
 							    $result['ip']=long2ip ($result['ip']);
 								if ($os==='win') {
 									$map = '<img style="width:13%;" src="https://ipdata.co/flags/'.trim(strtolower($result['country_code'])).'.png">';
+									echo json_decode('"' . $result['flag'] . '"');
 								}
 								else {
 									$map =  Emoji::Decode($result['flag']);

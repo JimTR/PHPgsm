@@ -1266,3 +1266,70 @@ function array_find($needle, array $haystack)
     }
     return -1;
 }	
+
+function convert_to_argv ($type,$arraytype ='',$retain=false) {
+	/* convert $argv, $_GET and $_POST to an array
+	 * this allows the running code to reference command line options in a standard array
+	 * renames $argv[0] to file_name
+	 * option $arraytype turns the array key from string numeric
+	 * if ommited the array key is converted to string
+	 * if set will return $argv converted to lower case
+	 * all array keys converted to lower case
+	 */ 
+	
+	$nums = false;
+	$filename =  pathinfo( __FILE__,PATHINFO_BASENAME);
+	foreach  ($type as $key => $value) {
+		//
+		//if ( $value == $filename ) {continue;} // strip out argv[0]
+		
+		 $value = str_replace("&",' ',$value); 
+		 
+		if (is_int($key)) {
+			// numeric key most likley cli ;)
+			if ( $value == $filename ) {
+				$key = 'file_name';
+				$cmds[$key] = $value;
+				
+				continue;
+				}
+               
+			if (!empty($arraytype)) {$nums = true;} // set numeric array keys
+				
+			
+			else {
+				// convert web style
+                
+				$value = str_replace('&',' ',$value);
+				$x = strpos($value,'=');
+				if (empty($x)) {
+					// not written cmds correct
+					//echo 'value '.$value. ' incorrectly written'.PHP_EOL;
+					//echo 'example :- '.$filename.' <option>=<value>'.PHP_EOL;
+					$key = 'file_name';
+					//goto t1;
+					//die();
+					continue;
+				}
+				
+				$key = substr($value,0,$x);
+				$value =str_replace($key.'=','',$value);
+				$nums = false;
+			}
+			}
+		$key = strtolower($key);
+		 if ($retain == true ) {
+			$cmds[$key] = $value;
+}
+else{
+		$cmds[$key] = strtolower($value);
+	}
+		
+	}
+	if ($nums == true) {
+	$cmds = array_values($cmds);
+}
+if (isset($cmds)) {
+	return $cmds;
+}
+}
