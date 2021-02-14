@@ -21,4 +21,5 @@ $settings['start_year'] = "2014";
 $settings['time_format'] = "h:i:s";
 $settings['date_format'] = "d-m-Y";
 $settings['login'] = "1";
+$settings['ip_key'] ='14a382cdc7db50e856bd3f181ed45b585a58c858b4785c0dae4fa27f';
 ?>
