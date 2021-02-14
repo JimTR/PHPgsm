@@ -539,9 +539,8 @@ function exe($cmds) {
     }
 }
 if(empty($can_do)) {
-	//echo $cmds['cmd']." Not found!".cr;
-	return 61912;
-$can_do = false;
+		return 61912;
+		$can_do = false;
 }
 if($can_do == true) {
 	/* 
