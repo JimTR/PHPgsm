@@ -93,7 +93,7 @@ if(!$valid) {
 				exit;
 				
 		case "exe" :
-				exe($cmds);
+				echo exe($cmds);
 				exit;	
 				
 		case "get_file" :
@@ -552,12 +552,11 @@ if($can_do == true) {
 	 */ 
 	
 	exec($cmds['cmd'],$output,$retval);
-	echo $retval.'<br>';
 	if (isset($cmds['debug'])) {
-	echo ' ready to do command<br>'.cr;
+	echo ' ready to do command '.$cmds['cmd'].cr;
 	echo $retval.'<br>'.cr; 	
 	foreach ($output as $line) {
-		echo $line.'<br>'.cr;
+		echo $line.cr;
 	}
 }
 return $retval;
