@@ -40,7 +40,6 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $sql = 'select * from servers where running=1';
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
 $games = $database->get_results($sql);
-
 foreach ($games as $game) {
 		if (ping($game['host'], $game['port'], 1)) {
 		$Query->Connect( $game['host'], $game['port'], 1, SQ_ENGINE );
@@ -61,6 +60,7 @@ foreach ($games as $game) {
 		}
 	}
 	else { continue;}
+	
 }
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
@@ -68,8 +68,8 @@ foreach ($games as $game) {
 			$steamcmd = shell_exec('which steamcmd');
 			//chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
-			$exe = urlencode (DOC_ROOT.'/scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
+			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
 			// check updates
 			// scan log
