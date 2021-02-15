@@ -206,6 +206,7 @@ for (var i in data1) {
 	}
 	else if  (server.running == 1 && ud == 1  ) {
 		console.log(server_id+" running - ud");
+		$('#status'+server_id).attr("src","img/offline1.png");
 		var running=1;
 	}
 	else {
@@ -213,6 +214,9 @@ for (var i in data1) {
 		server.Players=0;
 		server.Bots=0;
 		$('#status'+server_id).attr("src","img/offline.png");
+		if (ud == 1) {
+			$('#status'+server_id).attr("src","img/offline1.png");
+		}
 		var today=0;
 		var date =0;
 		var running=0;
