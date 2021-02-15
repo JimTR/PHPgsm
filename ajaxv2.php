@@ -134,7 +134,7 @@ if(!$valid) {
 						echo print_r(game_detail(),true).cr;
 						}
 					else {
-							echo json_encode(game_detail());
+							echo json_encode(utf8ize(game_detail()));
 						}
 					exit;	
 			
@@ -560,5 +560,19 @@ if($can_do == true) {
 }
 return $retval;
 } 
+}
+
+function utf8ize($mixed) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } else if (is_string ($mixed)) {
+        return utf8_encode($mixed);
+    } else if (is_object($mixed)) {
+        $a = (array)$mixed; // from object to array
+        return utf8ize($a);
+    }
+    return $mixed;
 }
 ?>
