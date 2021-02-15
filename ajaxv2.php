@@ -553,7 +553,7 @@ if($can_do == true) {
 	exec($cmds['cmd'],$output,$retval);
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	echo $retval.'<br>'.cr; 	
+	echo $retval.cr; 	
 	foreach ($output as $line) {
 		echo $line.cr;
 	}
