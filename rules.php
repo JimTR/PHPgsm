@@ -22,7 +22,8 @@
  * fetch rules  
  */
 //header('Access-Control-Allow-Origin: *');
-require ('includes/master.inc.php'); 
+require ('includes/master.inc.php');
+echo 'a'; 
 print_r(headers_list());
  define('cr','<br>');
  define ('CR',PHP_EOL);
