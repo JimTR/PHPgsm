@@ -34,7 +34,7 @@ $ip = substr($_GET['host'],0,$x);
 $Query = new SourceQuery( );
 try 
 	{
-$Query->Connect( $ip, $sport, 1, SQ_ENGINE );
+$Query->Connect( $ip, $sport, $settings['SQ_TIMEOUT'], SQ_ENGINE );
 $results = $Query->GetPlayers( ) ;
 $info = $Query->GetInfo();
 $rules = $Query->GetRules( );

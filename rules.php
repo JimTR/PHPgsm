@@ -34,7 +34,7 @@ $ip = substr($_GET['host'],0,$x);
 
 	define( 'SQ_SERVER_ADDR', $ip );
 	define( 'SQ_SERVER_PORT', $sport );
-	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_TIMEOUT',    $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
 try 
