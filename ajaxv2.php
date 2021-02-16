@@ -331,7 +331,7 @@ function game_detail() {
 														{
 															$Exception = $e;
 															if (strpos($Exception,'Failed to read any data from socket')) {
-																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
+																$Exception = 'Failed to read any data from socket Module (Ajax =>Game Detail=>'.$sub_cmd.')';
 														}
 						
 														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
@@ -517,8 +517,8 @@ function exescreen ($cmds) {
 					break;
 				}
 				chdir ($server['install_dir']);
-				$steamcmd =shell_exec('which steamcmd');
-				$cmds['cmd'] = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
+				//$steamcmd =shell_exec('which steamcmd');
+				//$cmds['cmd'] = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
 				exe($cmds);
 				break;
 				
