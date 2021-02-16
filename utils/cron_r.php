@@ -38,7 +38,8 @@ use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 		$Query = new SourceQuery( ); 
 $sql = 'select * from servers where running=1';
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+//$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+$sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
 $games = $database->get_results($sql);
 foreach ($games as $game) {
 		if (ping($game['host'], $game['port'], 1)) {
@@ -65,14 +66,21 @@ foreach ($games as $game) {
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
 			echo file_get_contents($game['restart'].'q').cr; // stop server
-			$steamcmd = shell_exec('which steamcmd');
-			//chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
 			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd);
+			echo file_get_contents($cmd); // scan log
 			// check updates
-			// scan log
+			
+			$steamcmd = shell_exec('which steamcmd'); // is steamcmd in the path ?
+			if(empty($steamcmd)) {
+				$steamcmd = './steamcmd';
+			}
+			chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
+			echo 'moved to '.getcwd ( ).cr;
+			$exe = $steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit';
+			echo 'will execute '.$exe.cr;
+			$done[]=$game['server_id']; // use this to test if update on core files has been done
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}

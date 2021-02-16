@@ -533,8 +533,8 @@ function exe($cmds) {
 	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','ls');
 	foreach ($allowed as $find) {
     //if (strstr($string, $url)) { // mine version
-    if (strpos($cmds['cmd'], $find) !== FALSE) { 
-        echo $cmds['cmd']." Match found".cr; 
+    if (strpos($cmds['cmd'], $find) !== FALSE ) { 
+        //echo $cmds['cmd']." Match found".cr; 
         $can_do = true;
     }
 }
@@ -551,14 +551,15 @@ if($can_do == true) {
 	 */ 
 	
 	exec($cmds['cmd'],$output,$retval);
+	$output[]=$retval; // put the return value in the array
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	echo $retval.cr; 	
+	
 	foreach ($output as $line) {
 		echo $line.cr;
 	}
 }
-return $retval;
+return $output;
 } 
 }
 
