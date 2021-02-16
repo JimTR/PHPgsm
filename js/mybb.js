@@ -39,7 +39,7 @@ function updateClock ()
      }
 
 function online(url,timeout,hide){
-        //console.log('Welcome to beta.js using '+url);
+        //console.log('Welcome to online using '+url);
 	 $.ajax({
      url: url,
    type: 'post',
@@ -187,7 +187,7 @@ for (var i in data1) {
 	var server = data1[i][j]; // got server id
 	
 	var server_id = j;
-	//console.log("Found "+server_id);
+	console.log("Found "+server_id);
 	var today= new Date();
 	var date = new Date(server.starttime*1000);
 	if (server.buildid !== server.rbuildid) {
@@ -199,7 +199,7 @@ for (var i in data1) {
 	} 	
 	if (server.running == 1 && ud == 0  ) {
 		//return;
-		//console.log( server_id+" running");
+		console.log( server_id+" running");
 		$('#status'+server_id).attr("src","img/online.png");
 		var running =1;
 		
@@ -210,7 +210,7 @@ for (var i in data1) {
 		var running=1;
 	}
 	else {
-		//console.log(server_id+' not running');
+		console.log(server_id+' not running');
 		server.Players=0;
 		server.Bots=0;
 		$('#status'+server_id).attr("src","img/offline.png");
