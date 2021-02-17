@@ -46,7 +46,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
-		echo 'Ajax '.VERSION.cr;
+		echo 'Ajax '.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    print_r($cmds);
 	}
 	else {error_reporting( 0 );}
