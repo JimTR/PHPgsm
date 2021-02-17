@@ -540,7 +540,7 @@ function exe($cmds) {
 }
 if(empty($can_do)) {
 		return 61912;
-		$can_do = false;
+		
 }
 if($can_do == true) {
 	/* 
@@ -562,11 +562,12 @@ if($can_do == true) {
 }
 	else {
 		// test if no debug
+		$output[]=$retval;
 	}
 	
 return $output;
 } 
-return false;
+return false; // just in case anything slips through
 }
 
 function utf8ize($mixed) {
