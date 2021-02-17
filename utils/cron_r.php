@@ -72,7 +72,7 @@ foreach ($games as $game) {
 			echo file_get_contents($cmd); // scan log
 			// check updates
 			
-			$steamcmd = shell_exec('which steamcmd'); // is steamcmd in the path ?
+			$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
 			if(empty($steamcmd)) {
 				$steamcmd = './steamcmd';
 			}
@@ -84,7 +84,7 @@ foreach ($games as $game) {
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
-	
+	     echo print_r($done,true),cr; //test array
 	
 	
 	if (isset($check)) { 

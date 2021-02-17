@@ -554,13 +554,19 @@ if($can_do == true) {
 	$output[]=$retval; // put the return value in the array
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	
-	foreach ($output as $line) {
-		echo $line.cr;
+	if (isset($output[0])) { 
+		foreach ($output as $line) {
+			echo $line.cr;
+		}
 	}
 }
+	else {
+		// test if no debug
+	}
+	
 return $output;
 } 
+return false;
 }
 
 function utf8ize($mixed) {
