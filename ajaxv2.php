@@ -31,8 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 'V2.02');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define('plus','%2B');
-	define('space','%20');  
+	
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
