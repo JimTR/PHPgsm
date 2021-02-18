@@ -38,7 +38,7 @@ echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	echo 'Scanlog V2.1 ©  NoIdeer Software '.date('Y').cr;
+	echo 'Scanlog V2.1 © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
