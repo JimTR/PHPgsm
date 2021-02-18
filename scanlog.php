@@ -274,7 +274,7 @@ foreach ($la as $user_data) {
 		$n = $database->update('players',$result,$where);
 		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
 		$ut .= $sql.cr;
-		$database->query($sql);
+		//$database->query($sql);
 		if ($n === false) {
 			//
 			echo cr.'Database Update failed with'.cr;
@@ -331,7 +331,7 @@ foreach ($la as $user_data) {
 			 	 $ut .=' Record added'.cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
 			 	 $ut .= $sql.cr;
-			 	 $database->query($sql);
+			 	 //$database->query($sql);
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
