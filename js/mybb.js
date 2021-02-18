@@ -145,6 +145,7 @@ for (var i in data1) {
 	setTimeout(online(url),timeout);
 	if (hide == 1 ) {
 		$('#loading').hide();
+		$('#game_block').show();
 	}
   }
    });
