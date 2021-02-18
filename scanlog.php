@@ -103,7 +103,7 @@ function do_all($server,$data) {
 	$done= 0;
 	$update_users = 0;
 	global $database, $key;
-	$sql = 'select * from players where steam_id64="'; // sql stub for user updates
+	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
