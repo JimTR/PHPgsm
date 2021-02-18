@@ -38,7 +38,7 @@ echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	echo 'Scanlog V2.0 © 2021'.cr;
+	echo 'Scanlog V2.1 ©  NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Example :- '.$argv[0].' <serverid>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
@@ -56,8 +56,8 @@ if ($file == 'all') {
 	foreach ($game_results as $run) {
 		//bulid path
 		$server_key = md5( ip2long($run['ipaddr'])) ;
-		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
-		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
+		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
 		$tmp = file_get_contents($path);
 		//echo $path.cr; // debug code
 				
