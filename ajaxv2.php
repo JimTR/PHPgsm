@@ -550,13 +550,15 @@ if($can_do == true) {
 	 */ 
 	
 	exec($cmds['cmd'],$output,$retval);
-	$output[]=$retval; // put the return value in the array
+	
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
 	if (isset($output[2])) { 
-		foreach ($output as $line) {
-			echo $line.cr;
-		}
+		//foreach ($output as $line) {
+			//echo $line.cr;
+		//}
+		$output[]=$retval; // put the return value in the array
+		echo (print_r($output,true)).cr;
 	}
 }
 	else {
