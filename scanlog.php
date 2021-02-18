@@ -44,7 +44,7 @@ if(empty($argv[1])) {
 	echo 'or - '.$argv[0].' all'.cr;
 	exit(0);
 }
-$sql = 'select * from players where steam_id64="'; // sql stub for user updates
+$asql = 'select * from players where steam_id64="'; // sql stub for user updates
 
 $file =$argv[1];
 if ($file == 'all') {
@@ -205,7 +205,7 @@ foreach ($la as $user_data) {
 	$added = false;
 	$user_stub ="\t". $user_data['id2'].' '.$username;
 	$ut='';
-	$result = $database->get_row($sql.$user_search);
+	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
 		unset($result['id']); // take out id
 		unset($result['steam_id']);
@@ -274,7 +274,7 @@ foreach ($la as $user_data) {
 		$n = $database->update('players',$result,$where);
 		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
 		$ut .= $sql.cr;
-		//$database->query($sql);
+		$database->query($sql);
 		if ($n === false) {
 			//
 			echo cr.'Database Update failed with'.cr;
@@ -331,7 +331,7 @@ foreach ($la as $user_data) {
 			 	 $ut .=' Record added'.cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
 			 	 $ut .= $sql.cr;
-			 	 //$database->query($sql);
+			 	 $database->query($sql);
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
