@@ -71,16 +71,25 @@ foreach ($games as $game) {
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd); // scan log
 			// check updates
-			
-			$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
-			if(empty($steamcmd)) {
-				$steamcmd = './steamcmd';
+			if (in_array($game['server_id'],$done)) {
+				echo 'update already checked'.cr;
 			}
-			chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-			echo 'moved to '.getcwd ( ).cr;
-			$exe = $steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit';
-			echo 'will execute '.$exe.cr;
-			$done[]=$game['server_id']; // use this to test if update on core files has been done
+			else{
+				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
+				if(empty($steamcmd)) {
+					$steamcmd = './steamcmd';
+				}
+				chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
+				echo 'moved to '.getcwd ( ).cr;
+				$exe = $steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit';
+				echo 'will execute '.$exe.cr;
+				$done[]=$game['server_id']; // use this to test if update on core files has been done
+			}
+			// log prune
+			$exe = 'tmpreaper --mtime 1d '.$game['location'].'/log/console/';
+			echo 'Prune command  '.$exe.cr;
+			$exe = 'tmpreaper --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/';
+			echo 'Prune here also '.$exe.cr;
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}

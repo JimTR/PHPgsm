@@ -530,7 +530,7 @@ function exescreen ($cmds) {
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
 	
-	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','ls');
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','tmpreaper');
 	foreach ($allowed as $find) {
     //if (strstr($string, $url)) { // mine version
     if (strpos($cmds['cmd'], $find) !== FALSE ) { 
@@ -554,7 +554,7 @@ if($can_do == true) {
 	$output[]=$retval; // put the return value in the array
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	if (isset($output[0])) { 
+	if (isset($output[2])) { 
 		foreach ($output as $line) {
 			echo $line.cr;
 		}
