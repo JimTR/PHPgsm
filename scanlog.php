@@ -208,6 +208,7 @@ foreach ($la as $user_data) {
 	$result = $database->get_row($sql.$user_search);
 	if (!empty($result)){
 		unset($result['id']); // take out id
+		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
 		$last_logon = strtotime($user_data['time']);
 		/*if ($last_logon >  $result['last_log_on']) {
@@ -300,7 +301,7 @@ foreach ($la as $user_data) {
 		$last_logon = time();
 		$ip_data = get_ip_detail($ip);
 		$result['ip'] = $user_data['ip'];
-		$result['steam_id'] = $user;
+		//$result['steam_id'] = $user;
 		$result['steam_id64'] = $user_data['id2'];
 		$result['name'] = $username;
 		$result['first_log_on'] = $last_logon;
