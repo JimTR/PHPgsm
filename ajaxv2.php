@@ -531,16 +531,15 @@ function exe($cmds) {
 	
 	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','tmpreaper');
 	foreach ($allowed as $find) {
-    //if (strstr($string, $url)) { // mine version
-    if (strpos($cmds['cmd'], $find) !== FALSE ) { 
+       if (strpos($cmds['cmd'], $find) !== FALSE ) { 
         //echo $cmds['cmd']." Match found".cr; 
         $can_do = true;
-    }
-}
-if(empty($can_do)) {
+		}
+	}
+	if(empty($can_do)) {
 		return 61912;
-		
-}
+	}
+	
 if($can_do == true) {
 	/* 
 	 * Exit codes
@@ -558,7 +557,7 @@ if($can_do == true) {
 			//echo $line.cr;
 		//}
 		$output[]=$retval; // put the return value in the array
-		echo (print_r($output,true)).cr;
+		echo print_r($output,true).cr;
 	}
 }
 	else {

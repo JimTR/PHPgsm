@@ -70,7 +70,7 @@ foreach ($games as $game) {
 			//print_r($game);
 			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd); // scan log
+			echo print_r(file_get_contents($cmd),true).cr; // scan log
 			// check updates
 			if (in_array($game['server_id'],$done)) {
 				echo 'update already checked'.cr;
@@ -87,9 +87,11 @@ foreach ($games as $game) {
 				$done[]=$game['server_id']; // use this to test if update on core files has been done
 			}
 			// log prune
-			$exe = 'tmpreaper --mtime 1d '.$game['location'].'/log/console/';
+			$exe = urlencode('tmpreaper --mtime 1d '.$game['location'].'/log/console/');
 			echo 'Prune command  '.$exe.cr;
-			$exe = 'tmpreaper --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/';
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			$exe = urlencode('tmpreaper --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo 'Prune here also '.$exe.cr;
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
