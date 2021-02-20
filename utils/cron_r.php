@@ -50,7 +50,7 @@ foreach ($games as $game) {
 														{
 															$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$sub_cmd = 'GetInfo';
-															$info = $gameq->GetInfo();
+															$info = $Query->GetInfo();
 															//echo print_r($info1,true).cr;
 															
 															}
