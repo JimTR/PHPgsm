@@ -92,7 +92,7 @@ foreach ($games as $game) {
 			echo print_r(file_get_contents($cmd),true).cr; // scan log
 			// check updates
 			if (in_array($game['server_id'],$done)) {
-				echo 'update already checked'.cr;
+				//echo 'update already checked'.cr;
 			}
 			else{
 				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
@@ -102,8 +102,9 @@ foreach ($games as $game) {
 					echo 'moved to '.getcwd ( ).cr;
 				}
 				
-				$exe = $steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit';
-				echo 'will execute '.$exe.cr;
+				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+				$cmd = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&cmd='.$exe;
+				echo 'will execute '.$cmd.cr; // update full url
 				$done[]=$game['server_id']; // use this to test if update on core files has been done
 			}
 			// log prune
