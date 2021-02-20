@@ -48,12 +48,11 @@ foreach ($games as $game) {
 		
 		try
 														{
-															$gameq->Connect( $server_data['host'], $server_data['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$gameq->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
 															$sub_cmd = 'GetInfo';
 															$info = $gameq->GetInfo();
-															
 															//echo print_r($info1,true).cr;
-															$server_data  = array_merge($server_data ,$info1);
+															
 															}
 													catch( Exception $e )
 														{
@@ -61,7 +60,7 @@ foreach ($games as $game) {
 															if (strpos($Exception,'Failed to read any data from socket')) {
 																$Exception = 'Failed to read any data from socket Module (Cron_r - Game Detail '.$sub_cmd.')';
 														}
-														$error = date("d/m/Y h:i:sa").' ('.$sever_data['host'].':'.$server_data['port'].') '.$Exception;
+														$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
