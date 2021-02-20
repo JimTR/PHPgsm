@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * ajax v2 to go with xml v2 
+ * ajax v2 to go with xml v2 & mybb.js
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
