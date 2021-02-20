@@ -552,13 +552,13 @@ if($can_do == true) {
 	
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	if (isset($output[2])) { 
+	
 		foreach ($output as $line) {
 			$return .= $line.cr;
 		}
 		$return .=$retval.cr; // put the return value in the array
 		
-	}
+	
 }
 	else {
 		// test if no debug
