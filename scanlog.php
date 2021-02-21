@@ -253,7 +253,7 @@ foreach ($la as $user_data) {
 		}
 			$result['threat'] = $ip_data['threat']['is_threat'];
 			$result['ip'] = $user_data['ip'];
-			$modify=true;
+			//$modify=true;
 		}
 		
 		if (trim($username) <> $result['name']) {
