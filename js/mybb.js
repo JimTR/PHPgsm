@@ -86,7 +86,7 @@ for (var i in data1) {
 					   var logo  =server.url+':'+server.bport+'/'+server.logo;
 					  //console.log('server.Players = '+server.Players );
 					   if (typeof server.Players === "undefined") {
-						   console.log('Players not set '+server.server_name);
+						   //console.log('Players not set '+server.server_name);
 						   			return true;
 						   			//server.Players = 0;
 								}   
@@ -188,7 +188,7 @@ for (var i in data1) {
 	var server = data1[i][j]; // got server id
 	
 	var server_id = j;
-	console.log("Found "+server_id);
+	//console.log("Found "+server_id);
 	var today= new Date();
 	var date = new Date(server.starttime*1000);
 	if (server.buildid !== server.rbuildid) {
@@ -211,7 +211,7 @@ for (var i in data1) {
 		var running=1;
 	}
 	else {
-		console.log(server_id+' not running');
+		//console.log(server_id+' not running');
 		server.Players=0;
 		server.Bots=0;
 		$('#status'+server_id).attr("src","img/offline.png");
@@ -425,10 +425,12 @@ function timeConverter(UNIX_timestamp){
   var day =weekday[a.getDay()];
   var date = a.getDate();
   var hour = a.getHours();
+  var timeOfDay = ( hour < 12 ) ? "am" : "pm"; 
   currentHours = ( hour > 12 ) ? hour - 12 : hour;
      // Convert an hours component of "0" to "12"
+    
   hour = ( currentHours == 0 ) ? 12 : currentHours;
-  var timeOfDay = ( hour < 12 ) ? "am" : "pm";
+ 
   var date =dateOrdinal(date);
   var min = a.getMinutes();
   var sec = a.getSeconds();
