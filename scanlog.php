@@ -40,7 +40,7 @@ exit;
 if(empty($argv[1])) {
 	echo 'Scanlog V2.1 © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
-	echo 'Example :- '.$argv[0].' <serverid>'.cr;
+	echo 'Example :- '.$argv[0].' <server id>'.cr;
 	echo 'or - '.$argv[0].' all'.cr;
 	exit(0);
 }
@@ -70,10 +70,12 @@ if ($file == 'all') {
 }
 else {
 	// do supplied file
-	if (!file_exists($argv[2])) {
-		echo 'could not open '.$argv[2].cr;
+	if(isset($argv[3])) {
+	if (!file_exists($argv[3])) {
+		echo 'could not open '.$argv[3].cr;
 		exit (1);
 	}
+}
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
@@ -84,12 +86,12 @@ else {
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
 	//print_r($run);
-	if (empty($argv[2])) {
+	if (empty($argv[3])) {
 	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 	}
 	else {
 		// assume run local 
-		$path = $argv[2];
+		$path = $argv[3];
 	}
 		
 		echo 'Scanning '.$argv[1].' '.$path.cr;
