@@ -40,8 +40,9 @@ exit;
 if(empty($argv[1])) {
 	echo 'Scanlog V2.1 © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
-	echo 'Example :- '.$argv[0].' <server id>'.cr;
-	echo 'or - '.$argv[0].' all'.cr;
+	echo 'Examples :- '.$argv[0].' <server id>'.cr;
+	echo $argv[0].' <server id> <file to scan>'.cr;
+	echo $argv[0].' all this will do all servers with the default log '.cr;
 	exit(0);
 }
 $asql = 'select * from players where steam_id64="'; // sql stub for user updates
@@ -56,8 +57,8 @@ if ($file == 'all') {
 	foreach ($game_results as $run) {
 		//bulid path
 		$server_key = md5( ip2long($run['ipaddr'])) ;
-		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
-		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
+		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
 		$tmp = file_get_contents($path);
 		//echo $path.cr; // debug code
 				
@@ -94,7 +95,7 @@ else {
 		$path = $argv[3];
 	}
 		
-		echo 'Scanning '.$argv[1].' '.$path.cr;
+		echo 'Scanning '.$argv[1].cr;
 		$tmp = file_get_contents($path);
 		echo do_all($argv[1],$tmp);
 }
