@@ -32,6 +32,10 @@ define('cr',PHP_EOL);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
+if (empty( $settings['ip_key'] )) {
+	echo 'Fatal Error - api key missing'.cr;
+	exit(7);
+}
 $key = $settings['ip_key'] ;
 if (!isset($argv)){
 echo 'wrong enviroment';
@@ -40,9 +44,9 @@ exit;
 if(empty($argv[1])) {
 	echo 'Scanlog V2.1 © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
-	echo 'Examples :- '.$argv[0].' <server id>'.cr;
-	echo $argv[0].' <server id> <file to scan>'.cr;
-	echo $argv[0].' all this will do all servers with the default log '.cr;
+	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
+	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
+	echo "\t".$argv[0].' <all> this will scan all servers with the default log '.cr;
 	exit(0);
 }
 $asql = 'select * from players where steam_id64="'; // sql stub for user updates
@@ -214,22 +218,14 @@ foreach ($la as $user_data) {
 		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
 		$last_logon = strtotime($user_data['time']);
-		/*if ($last_logon >  $result['last_log_on']) {
-			$yz = ' larger';
-		}
-		elseif  ($last_logon =  $result['last_log_on']){
-			$yz= ' equal';
-		}
-		else {
-			$yz = ' smaller';
-		}
-		echo $user_stub.' last played '.$last_logon.' Database sees '.$result['last_log_on'].$yz.cr; // debug code */
+		
 		
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
 			$ut.= ' new logon (total '.$result['log_ons'].')';
 			$modify=true;
+			$logon = true;
 		}
 		if (empty($result['steam_id64'])) {
 		$ut .=' no ID64 (correcting)';
@@ -256,7 +252,7 @@ foreach ($la as $user_data) {
 		}
 			$result['threat'] = $ip_data['threat']['is_threat'];
 			$result['ip'] = $user_data['ip'];
-			//$modify=true;
+			$modify=true;
 		}
 		
 		if (trim($username) <> $result['name']) {
@@ -273,11 +269,12 @@ foreach ($la as $user_data) {
 			
 		if ($modify) {
 		$result = $database->escape($result);
-		//print_r($where);
 		$n = $database->update('players',$result,$where);
-		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
-		//$ut .= $sql.cr;
+		if ($logon == true) { 
+		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.','.$result['last_log_on'].')';
 		$database->query($sql);
+		unset($logon);
+		}
 		if ($n === false) {
 			//
 			echo cr.'Database Update failed with'.cr;
@@ -332,7 +329,7 @@ foreach ($la as $user_data) {
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
-			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'")';
+			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.','.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
 			 }
