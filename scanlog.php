@@ -271,7 +271,7 @@ foreach ($la as $user_data) {
 		$result = $database->escape($result);
 		$n = $database->update('players',$result,$where);
 		if ($logon == true) { 
-		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.','.$result['last_log_on'].')';
+		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 		$database->query($sql);
 		unset($logon);
 		}
@@ -329,7 +329,7 @@ foreach ($la as $user_data) {
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
-			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.','.$result['last_log_on'].')';
+			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
 			 }
