@@ -419,7 +419,7 @@ function exescreen ($cmds) {
 	global $database;
 	$exe =$cmds['server'];
 	$localIP = getHostByName(getHostName()); // carefull if the hostname is set to 127.0.0.1
-	$sql = 'select * from servers where host_name = "'.$exe.'"';
+	$sql = 'select * from servers where host_name = "'.trim($exe).'"';
 	$server = $database->get_row($sql); // pull results
 	if (empty($server['host'])) {
 		$return = 'invalid server'; // don't know this server
