@@ -200,7 +200,7 @@ return;
 }
 
 foreach ($la as $user_data) {
-	
+	$logon = false; 
 	// now do data
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
