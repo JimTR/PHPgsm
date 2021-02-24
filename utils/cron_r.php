@@ -89,9 +89,9 @@ foreach ($games as $game) {
 			//print_r($game);
 			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo print_r(file_get_contents($cmd),true).cr; // scan log
+			echo file_get_contents($cmd).cr; // scan log
 			// check updates
-			if (in_array($game['server_id'],$done)) {
+			if (in_array($game['install_dir'],$done)) {
 				//echo 'update already checked'.cr;
 			}
 			else{
@@ -103,10 +103,10 @@ foreach ($games as $game) {
 				}
 				
 				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
-				$cmd = $game['url'].':'.$game['bport'].'/ajax.php?action=exe&cmd='.$exe.'&debug=true';
+				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 				echo 'will execute '.$cmd.cr; // update full url
 				echo file_get_contents($cmd);
-				$done[]=$game['server_id']; // use this to test if update on core files has been done
+				$done[]=$game['install_dir']; // use this to test if update on core files has been done
 			}
 			// log prune
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
