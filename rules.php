@@ -60,7 +60,7 @@ if (isset($Exception)) {
 	exit;
 }
 
-echo '<table style="width:95%;table-layout: fixed;">';
+echo '<table style="width:100%;table-layout: fixed;">';
 foreach ($rules as $k=>$v) {
 	echo '<tr><td style="width:70%;word-wrap:break-word;text-align:left;">'.$k.'</td><td style="text-align:left;padding-left:3%;">'.$v.'</td></tr>';
 }
