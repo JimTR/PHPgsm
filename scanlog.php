@@ -103,19 +103,27 @@ else {
 		$tmp = file_get_contents($path);
 		echo do_all($argv[1],$tmp);
 }
+
+
 function do_all($server,$data) {
 	// cron code
 	
 	$count = 0;
 	$done= 0;
 	$update_users = 0;
+	$uds = false;
 	global $database, $key;
+	$update_req = 'Your server needs to be restarted in order to receive the latest update.';
 	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
-		// loop lines
+		// loop lines, in here check for server needs a restart
+		if (trim($value) == $update_req) {
+			$uds = true;
+			// server needs a restart
+		}
 		$bot = strpos($value,' connected, address "none');
 		if($bot) {continue;} //remove bot lines
 		$x = strpos($value,' connected, address ');
@@ -356,7 +364,9 @@ if ($done || $update_users ) {
 //echo $rt;
 $rt .= sprintf($mask,'New Users',$done );
 $rt .= sprintf($mask,'Modified Users',$update_users );
-
+if ($uds == true) {
+	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
+}
 $rt .= cr.'Processed '.$server.cr.cr;
 //echo $rt;
 return $rt;
@@ -375,4 +385,13 @@ function get_ip_detail($ip) {
 	 return $ip_data;
 }
 
+function update($server){
+	// if found stop the server and update
+	//Your server needs to be restarted in order to receive the latest update.
+	global $database;
+	$sql = 'select * from server1 where host_name="'.$server.'"';
+	$game = $database->get_row($sql);
+	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+}
 ?>
