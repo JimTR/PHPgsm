@@ -205,7 +205,7 @@ if (!isset($la)) {
 //echo 'Rows found '.$pc.cr;
 if ( $pc == 0 ) {
 	//echo "\t Nothing to do".cr;
-	if ($ud == true) {
+	if ($uds == true) {
 		update_server($server);
 	}
 return;
