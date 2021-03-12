@@ -123,7 +123,7 @@ function do_all($server,$data) {
 		if ( strpos($data,$update_req)) {
 			$uds = true;
 			// server needs a restart
-			echo $server.' needs update'.cr;
+			
 		}
 		$bot = strpos($value,' connected, address "none');
 		if($bot) {continue;} //remove bot lines
