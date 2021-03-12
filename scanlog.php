@@ -120,7 +120,7 @@ function do_all($server,$data) {
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
 		// loop lines, in here check for server needs a restart
-		if (trim($value) == $update_req) {
+		if ( strpos($data,$update_req)) {
 			$uds = true;
 			// server needs a restart
 			echo $server.' needs update'.cr;
