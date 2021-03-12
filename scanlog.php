@@ -205,6 +205,9 @@ if (!isset($la)) {
 //echo 'Rows found '.$pc.cr;
 if ( $pc == 0 ) {
 	//echo "\t Nothing to do".cr;
+	if ($ud == true) {
+		update_server($server);
+	}
 return;
 }
 
@@ -367,6 +370,7 @@ $rt .= sprintf($mask,'New Users',$done );
 $rt .= sprintf($mask,'Modified Users',$update_users );
 if ($uds == true) {
 	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
+	update_server($server);
 }
 $rt .= cr.'Processed '.$server.cr.cr;
 //echo $rt;
@@ -386,7 +390,7 @@ function get_ip_detail($ip) {
 	 return $ip_data;
 }
 
-function update($server){
+function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database;
@@ -394,5 +398,7 @@ function update($server){
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	echo 'this is the url '.$stub.cr;
+	echo 'we need this '.$exe.cr;
 }
 ?>
