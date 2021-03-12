@@ -99,7 +99,7 @@ else {
 		$path = $argv[3];
 	}
 		
-		echo 'Scanning '.$argv[1].cr;
+		
 		$tmp = file_get_contents($path);
 		echo do_all($argv[1],$tmp);
 }
@@ -123,6 +123,7 @@ function do_all($server,$data) {
 		if (trim($value) == $update_req) {
 			$uds = true;
 			// server needs a restart
+			echo $server.' needs update'.cr;
 		}
 		$bot = strpos($value,' connected, address "none');
 		if($bot) {continue;} //remove bot lines
