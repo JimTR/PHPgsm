@@ -47,7 +47,7 @@ if(empty($argv[1])) {
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
 	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
-	echo "\t".$argv[0].' <all> this will scan all servers with the default log '.cr;
+	echo "\t".$argv[0].' <all> this will scan all servers using the default log '.cr;
 	exit(0);
 }
 $asql = 'select * from players where steam_id64="'; // sql stub for user updates
