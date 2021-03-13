@@ -59,7 +59,7 @@ foreach ($data['content'] as $k => $v ) {
     $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
     $pattern = '/(\d+):(\d+):(\d+)/';
     $v = preg_replace($pattern, $replacement, $v,-1,$count);
-    //if (empty($count)) {continue;}
+    //if (empty($count)) {continue;} // clears non dated rows
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
 	//$v = preg_replace('/<[^0-9]+>/',' ',$v); //remove
