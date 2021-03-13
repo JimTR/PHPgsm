@@ -29,6 +29,7 @@
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
+define ('VERSION',2.11);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
@@ -42,7 +43,7 @@ echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	echo 'Scanlog V2.1 © NoIdeer Software '.date('Y').cr;
+	echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
 	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
