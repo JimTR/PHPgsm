@@ -50,7 +50,7 @@ if(empty($argv[1])) {
 	exit(0);
 }
 $asql = 'select * from players where steam_id64="'; // sql stub for user updates
-
+$update_done= array();
 $file =$argv[1];
 if ($file == 'all') {
 	
@@ -121,9 +121,8 @@ function do_all($server,$data) {
     foreach ($log as $value) {
 		// loop lines, in here check for server needs a restart
 		if ( strpos($data,$update_req)) {
+			// server needs an update & restart
 			$uds = true;
-			// server needs a restart
-			
 		}
 		$bot = strpos($value,' connected, address "none');
 		if($bot) {continue;} //remove bot lines
@@ -393,12 +392,17 @@ function get_ip_detail($ip) {
 function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
-	global $database;
+	global $database, $update_done;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	$cmd = $stub.'q';
+	echo 'stop server using '.$cmd.cr;
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
-	echo 'this is the url '.$stub.cr;
-	echo 'we need this '.$exe.cr;
+	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+	echo 'update server using '.$cmd.cr;
+	$cmd = $stub.'s';
+	echo 'start server using '.$cmd.cr;
+	$update_done[] = $game['install_dir'];
 }
 ?>
