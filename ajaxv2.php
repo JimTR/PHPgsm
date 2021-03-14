@@ -89,6 +89,9 @@ if(!$valid) {
 			
 		case "exescreen" :
 				echo exescreen($cmds);
+				if (is_cli()) {
+					echo cr;
+				}
 				exit;
 				
 		case "exe" :
