@@ -49,7 +49,7 @@ global $database;
     // Given a string such as "comment_123" or "id_57", it returns the final, numeric id.
     function split_id($str)
     {
-        return match('/[_-]([0-9]+)$/', $str, 1);
+        //return match('/[_-]([0-9]+)$/', $str, 1);
     }
 
     // Creates a friendly URL slug from a string
@@ -560,7 +560,7 @@ global $database;
     }
 
     // Quick wrapper for preg_match
-    function match($regex, $str, $i = 0)
+    function match1($regex, $str, $i = 0)
     {
         if(preg_match($regex, $str, $match) == 1)
             return $match[$i];

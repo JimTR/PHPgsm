@@ -494,8 +494,8 @@ function display_mem($mem_info,$colour) {
 		$headmask = "%40.40s %13.13s %10.10s %10.10s  \n";
 		printf($headmask,"\e[38;5;82mMem  \e[97m".$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']);
 		//echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		$headmask = "%40.40s %13s %20s %10s  \n";
-		printf($headmask,"\e[38;5;82mSwap\e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
+		$headmask = "%40.40s %13.13s %14.14s   \n";
+		printf($headmask,"\e[38;5;82mSwap      \e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
 		//echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
 }
 else {
@@ -504,7 +504,7 @@ else {
 		echo "\t Memory".CR;
 		echo "\t\t\tTotal\t\t Free\t\t Cached\t\tActive".CR;
 		echo "\t\tMem\t".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		echo "\t\tSwap\t".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached'].CR.CR;
+		echo "\t\tSwap bw\t".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached'].CR.CR;
 }
 }
 else {

@@ -3,7 +3,6 @@
 //error_reporting( 0 );
 error_reporting ( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED);
 define ("CR","\r\n");
-global $argv;
 //echo '??';
 require 'includes/master.inc.php'; 
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
