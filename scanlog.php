@@ -66,10 +66,10 @@ if ($file == 'all') {
 		// /ajaxv2.php?action=lsof&filter=fofserver&loc=/home/nod/games/fof/fof&return=content
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
-		echo $run['host_name'].' '.$path.cr; // debug code
+		//echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
-			echo $tmp.cr; //debug code
+			//echo $tmp.cr; //debug code
 		$display .= do_all($run['host_name'],$tmp);
 	}
 	}
