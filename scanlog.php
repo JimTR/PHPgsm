@@ -64,7 +64,7 @@ if ($file == 'all') {
 		$server_key = md5( ip2long($run['ipaddr'])) ;
 		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		// /ajaxv2.php?action=lsof&filter=fofserver&loc=/home/nod/games/fof/fof&return=content
-		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&loc='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&filter='.$run['host_name']; //used for steam log
+		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
 		echo $run['host_name'].' '.$path.cr; // debug code
 				
