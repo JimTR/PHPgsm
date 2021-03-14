@@ -66,7 +66,7 @@ if ($file == 'all') {
 		// /ajaxv2.php?action=lsof&filter=fofserver&loc=/home/nod/games/fof/fof&return=content
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&loc='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&filter='.$run['host_name']; //used for steam log
 		$tmp = file_get_contents($path);
-		//echo $path.cr; // debug code
+		echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
 			//echo $tmp.cr;
