@@ -69,7 +69,7 @@ if ($file == 'all') {
 		echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
-			//echo $tmp.cr;
+			echo $tmp.cr; //debug code
 		$display .= do_all($run['host_name'],$tmp);
 	}
 	}
