@@ -571,18 +571,18 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mKernel Version   \e[97m".php_uname('r').CR;
 	echo "\t\t\e[38;5;82mHost Name        \e[97m".php_uname('n').CR;
 	echo "\t   Required".CR;
-	echo "\t\t\e[38;5;82mPHP Version  \e[97m    " .$software['php'].CR;
-	echo "\t\t\e[38;5;82mScreen Version\e[97m   " .trim($software['screen']).CR;
-	echo "\t\t\e[38;5;82mGlibc Version\e[97m    " .$software['glibc'].CR;
-	echo "\t\t\e[38;5;82mMysql Version\e[97m    " .$software['mysql'].CR;
-	echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
-	echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
+	echo "\t\t\e[38;5;82mPHP Version  \e[97m      " .$software['php'].CR;
+	echo "\t\t\e[38;5;82mScreen Version\e[97m     " .trim($software['screen']).CR;
+	echo "\t\t\e[38;5;82mGlibc Version\e[97m      " .$software['glibc'].CR;
+	echo "\t\t\e[38;5;82mMysql Version\e[97m      " .$software['mysql'].CR;
+	echo "\t\t\e[38;5;82mApache Version\e[97m     " .$software['apache'].CR;
+	echo "\t\t\e[38;5;82mCurl Version\e[97m       " .$software['curl'].CR;
 	echo "\t   Optional".CR;
-    echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
-    echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quotav'].CR;
-    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
+    echo "\t\t\e[38;5;82mNginx Version\e[97m      " .$software['nginx'].CR;
+    echo "\t\t\e[38;5;82mQuota Version\e[97m      " .$software['quotav'].CR;
+    echo "\t\t\e[38;5;82mPostFix Version\e[97m    " .$software['postfix'].CR;
     echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
-    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
+    echo "\t\t\e[38;5;82mTmux Version\e[97m       " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
 else {
