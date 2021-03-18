@@ -279,6 +279,7 @@ function get_user_info ($Disk_info) {
 
 function getVersion($app, $apt=false) { 
 	// check for apt-show-versions
+	$dbtype='';
 	if ($apt == true) {
 		//echo 'apt=true'.PHP_EOL;
 		$app = 'apt-show-versions  '.$app;
@@ -291,6 +292,14 @@ function getVersion($app, $apt=false) {
 				$output = file_get_contents('nginx');
 				unlink('nginx');
 				}
+		else if ($app == 'mysql -V') {
+			// maria test
+			$output = shell_exec($app. '  2> /dev/null'); 
+			$x = strpos($output,'MariaDB');
+			if ($x) {
+				$dbtype = ' (MariaDB)';
+			}
+		}		
 			else{
 				$output = shell_exec($app. '  2> /dev/null'); 
 			}
@@ -308,7 +317,7 @@ function getVersion($app, $apt=false) {
  
   if (!empty($version[0])) {
 	
-  return $version[0]; 
+  return $version[0].$dbtype; 
 }
 else {
 	//echo $app.PHP_EOL;
