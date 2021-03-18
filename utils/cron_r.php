@@ -89,7 +89,11 @@ foreach ($games as $game) {
 			//print_r($game);
 			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd).cr; // scan log
+			$result =file_get_contents($cmd);
+			if (!$result == 0) {
+				echo $result.cr;
+			}
+					 
 			// check updates
 			if (in_array($game['install_dir'],$done)) {
 				//echo 'update already checked'.cr;
@@ -104,7 +108,7 @@ foreach ($games as $game) {
 				
 				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-				echo 'will execute '.$cmd.cr; // update full url
+				//echo 'will execute '.$cmd.cr; // update full url
 				echo file_get_contents($cmd);
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
 			}
