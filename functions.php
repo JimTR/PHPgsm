@@ -333,6 +333,7 @@ function get_software_info($database) {
 	 */
 	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	  ///usr/local/lsws/bin/lshttpd -v
 	  $hctrl = shell_exec('hostnamectl');
 	  $hctrl = explode(PHP_EOL,trim($hctrl));
 	  foreach ($hctrl as $temp) {
@@ -364,6 +365,7 @@ function get_software_info($database) {
 		$software['postfix'] = getVersion('postfix',$apt);
 		$software['curl'] = getVersion('curl',$apt);
 		$software['tmux'] = getVersion('tmux',$apt);
+		$software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v',$apt);
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
@@ -376,6 +378,7 @@ function get_software_info($database) {
 	     $software['postfix'] = getVersion('/usr/sbin/postconf -d mail_version');
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
+	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
 	}
 	//print_r($software);	 
 	 return $software;
@@ -578,6 +581,7 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
     echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quotav'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
+    echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
     echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
