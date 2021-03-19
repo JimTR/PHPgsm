@@ -595,6 +595,9 @@ function utf8ize($mixed) {
 function check_services() {
 	// run service check
 	exec('service --status-all',$services,$retVal);
-	print_r ($services);
+	//print_r ($services);
+	foreach ($services as $service) {
+		echo $service.cr;
+	}
 }
 ?>
