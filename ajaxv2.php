@@ -74,7 +74,7 @@ else {
 }
 
 if(!$valid) { 
-	die( 'invalid request'.cr );
+	die( 'invalid request '.$ip.cr );
 }
 
 // do what's needed
@@ -604,6 +604,7 @@ function utf8ize($mixed) {
 
 function check_services() {
 	// run service check
+	echo "entered check Services<br>";
 	exec('service --status-all',$services,$retVal);
 	//print_r ($services);
 	foreach ($services as $key=>$service) {
