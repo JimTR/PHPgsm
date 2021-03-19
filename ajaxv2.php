@@ -605,7 +605,7 @@ function utf8ize($mixed) {
 function check_services() {
 	// run service check
 	exec('/usr/sbin/service --status-all',$services,$retVal);
-	echo "return $retVal<br>";
+	//echo "return $retVal<br>";
 	//print_r ($services);
 	foreach ($services as $key=>$service) {
 		
