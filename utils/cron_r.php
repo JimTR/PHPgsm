@@ -35,15 +35,36 @@ require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
+define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
-		$Query = new SourceQuery( ); 
+define( 'LOG','logs/cron.log'); 
+$done = array();
+$Query = new SourceQuery( ); 
 $sql = 'select * from servers where running=1';
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+//$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+$sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
 $games = $database->get_results($sql);
 foreach ($games as $game) {
-		if (ping($game['host'], $game['port'], 1)) {
-		$Query->Connect( $game['host'], $game['port'], 1, SQ_ENGINE );
-		$info = $Query->GetInfo();
+		
+		try
+														{
+															$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$sub_cmd = 'GetInfo';
+															$info = $Query->GetInfo();
+															//echo print_r($info1,true).cr;
+															
+															}
+													catch( Exception $e )
+														{
+															$Exception = $e;
+															if (strpos($Exception,'Failed to read any data from socket')) {
+																$Exception = 'Failed to read any data from socket Module (Cron_r - Game Detail '.$sub_cmd.')';
+														}
+														$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;
+														//sprintf("[%14.14s]",$str2)
+														$mask = "%17.17s %-30.30s \n";
+														file_put_contents(LOG,$error.cr,FILE_APPEND);
+														}
 		$Query->Disconnect( );
 		if ($info['Players'] == 0 ) {
 			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
@@ -59,24 +80,51 @@ foreach ($games as $game) {
 			$check[] = $game; 
 		}
 	}
-	else { continue;}
+	//else { continue;}
 	
-}
+
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
 			echo file_get_contents($game['restart'].'q').cr; // stop server
-			$steamcmd = shell_exec('which steamcmd');
-			//chdir(dirname($steamcmd)); // move to install dir
 			//print_r($game);
 			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd);
+			$result =file_get_contents($cmd);
+			if (!$result == 0) {
+				echo $result.cr;
+			}
+					 
 			// check updates
-			// scan log
+			if (in_array($game['install_dir'],$done)) {
+				//echo 'update already checked'.cr;
+			}
+			else{
+				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
+				if(empty($steamcmd)) {
+					$steamcmd = './steamcmd';
+					chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
+					echo 'moved to '.getcwd ( ).cr;
+				}
+				
+				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+				//echo 'will execute '.$cmd.cr; // update full url
+				echo file_get_contents($cmd);
+				$done[]=$game['install_dir']; // use this to test if update on core files has been done
+			}
+			// log prune
+			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
+			echo 'Prune command  '.$exe.cr;
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			echo file_get_contents($cmd);
+			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			echo file_get_contents($cmd);
+			echo 'Prune here also '.$exe.cr;
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
-	
+	     echo print_r($done,true),cr; //test array
 	
 	
 	if (isset($check)) { 

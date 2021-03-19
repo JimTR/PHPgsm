@@ -22,6 +22,7 @@
  * fetch rules  
  */
 //header('Access-Control-Allow-Origin: *');
+require ('includes/master.inc.php');
  define('cr','<br>');
  define ('CR',PHP_EOL);
 error_reporting (0);
@@ -34,7 +35,7 @@ $ip = substr($_GET['host'],0,$x);
 
 	define( 'SQ_SERVER_ADDR', $ip );
 	define( 'SQ_SERVER_PORT', $sport );
-	define( 'SQ_TIMEOUT',     1 );
+	define( 'SQ_TIMEOUT',    $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 $Query = new SourceQuery( );
 try 
@@ -59,9 +60,9 @@ if (isset($Exception)) {
 	exit;
 }
 
-echo '<table style="width:95%;table-layout: fixed;">';
+echo '<table style="width:100%;table-layout: fixed;">';
 foreach ($rules as $k=>$v) {
-	echo '<tr><td style="width:70%;word-wrap:break-word;">'.$k.'</td><td style="text-align:left;padding-left:3%;">'.$v.'</td></tr>';
+	echo '<tr><td style="width:70%;word-wrap:break-word;text-align:left;">'.$k.'</td><td style="text-align:left;padding-left:3%;">'.$v.'</td></tr>';
 }
 echo '</table>';
 
