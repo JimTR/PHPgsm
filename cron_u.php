@@ -52,14 +52,14 @@ else {
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 $ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%"' ;
-//echo $sql.cr;
+
 	$res = $database->get_results($sql);
-	//print_r($res);
+	
 	foreach ($res as $data) {
 		        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
 					    
 			    $local =  check_local($acf_loc);
-			    //echo 'local '.print_r ($local,true).cr;
+			    
 			    
 		
 		
@@ -93,7 +93,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			    echo cr.'Details for '.$local['name'].' ('.$local['appid'].')'.cr;
 			    echo 'Installed at '.$install_path.'/'.$data['game'].cr; 
 			    echo cr.'Branch Detail'.cr;
-				//echo print_r($remote,true).cr;
+				
 				$mask = "%11.11s %14.14s %40s %8s \n";
 				$headmask = "%11.11s %14.14s %25s %25s \n";
 				printf($headmask,'Branch','    Build ID','Release Date','Password');
