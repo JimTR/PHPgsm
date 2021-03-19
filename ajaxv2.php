@@ -596,8 +596,8 @@ function check_services() {
 	// run service check
 	exec('service --status-all',$services,$retVal);
 	//print_r ($services);
-	foreach ($services as $service) {
-		echo $service.cr;
+	foreach ($services as $key=>$service) {
+		echo $key.' '.$service.cr;
 	}
 }
 ?>
