@@ -808,12 +808,12 @@ foreach ($res as $data) {
                 $update['running'] = 1;
 				$update['starttime'] = $value;
 			    $where['host_name'] = $key;
-			    echo $key.CR; 
+			   // echo $key.CR; 
 			    $database->update('servers',$update,$where);
-	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"];//.CR;
        
     if ($players >0) {
-			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
+			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m";//.CR;
 			$player_list = $results[$key]['players'];
 				orderBy($player_list,'gq_score',"d"); // order by score
 				foreach ($player_list as $k=>$v) {
@@ -831,10 +831,10 @@ foreach ($res as $data) {
 		else {
 			$pscore = $player_list[$k]['gq_score']; //format score
 		}
-		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
+		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']);//.CR;
 		
 	}
-		echo CR;
+		//echo CR;
 			}
 }
 else {
@@ -846,7 +846,7 @@ else {
 }
 }
 }
-	if(is_cli()) { echo"\e[0m";}
+	//if(is_cli()) { echo"\e[0m";}
 	
     
 	

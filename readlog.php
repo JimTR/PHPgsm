@@ -1,34 +1,34 @@
 <?php
 /*
- * send log file name
+ * readlog.php
+ * 
+ * Copyright 2021 Jim Richardson <jim@noideersoftware.co.uk>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ *  Requires PHP > 7.4
+ *
+ * utility for console app
  */
  //header('Access-Control-Allow-Origin: *');
+ define ('VERSION', 2.01);
+ define ('cr', PHP_EOL);
+ define ('br','<br/>');
 $file = $_GET['path'];
-/*$tmp = shell_exec('lsof 2> /dev/null | grep -m1 '.$file);
-						// echo $tmp.'<br>'; // debug code
-						$x = explode(' ',$tmp);
-							foreach ($x as $k=>$v) 
-								if (empty(trim($v))) {
-									unset ($x[$k]);
-								}
-								else {
-									$x[$k]=trim($v);
-								}
-							
-						$c = count($x); // need this to check file size
-						$x = array_values($x); // re-number array
-						if ($c == 7 ) {
-							// empty file return message
-							echo 'file=0';
-						}
-						else { 
-							$c = $c-1;
-							}
-						// now do stuff return either the path or contents ?
-						// sending back the contents will save a call but maybe wrong 
-						$filename = $x[$c]; //got file name */
 $filename = $file.'/log/console/'.$_GET['id'].'-console.log';
-//die ($filename);						
 $result = array();
 clearstatcache(true, $filename);
 $data['time']    = filemtime($file);
@@ -62,9 +62,8 @@ foreach ($data['content'] as $k => $v ) {
     //if (empty($count)) {continue;} // clears non dated rows
 	$v = preg_replace('/"/','',$v);
 	$v = preg_replace('/<[0-9]+>/', ' ', $v);
-	//$v = preg_replace('/<[^0-9]+>/',' ',$v); //remove
 	$v = trim($v);
-	//$v = preg_replace('~^(\S+)\s+(\S+)$~', '<b>$1</b><i>$2</i>', $v);
+	// run replace line here 
 	$tuni = strpos($v,'team Unassigned');
 	$v = str_replace('Unassigned','',$v);
 	$v = str_replace('#SDK_Team_','',$v);
@@ -127,5 +126,19 @@ function getLastLines($path, $totalLines) {
   $lines = array_reverse($lines);
 
   return $lines;
+}
+/*
+ * 
+ * name: replace_line
+ * @param 
+ * $data  = line to adjust
+ * $game_id = game this log belongs to , allows different formats per game id
+ * @return
+ *  formatted line
+ * 
+ */
+function replace_line($data,$game_id) {
+	
+	return $line;
 }
 ?>
