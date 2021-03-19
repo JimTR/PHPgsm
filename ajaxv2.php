@@ -29,7 +29,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 'V2.02');
+	define( 'VERSION', 2.03);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
@@ -44,10 +44,14 @@ if(is_cli()) {
 	$cmds =convert_to_argv($argv,"",true);
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
-	if (isset($cmds['debug'])) {
+	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax '.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
-	    print_r($cmds);
+		echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	    foreach ($cmds as $k => $v) {
+			if ($k == 'debug'){continue;}
+			print "[$k] => $v".cr;
+		}
+		if (empty($cmds['action'])) {exit;}
 	}
 	else {error_reporting( 0 );}
 	
