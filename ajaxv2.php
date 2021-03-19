@@ -604,8 +604,6 @@ function utf8ize($mixed) {
 
 function check_services() {
 	// run service check
-	echo "entered check Services<br>";
-	echo shell_exec('which service');
 	exec('/usr/sbin/service --status-all',$services,$retVal);
 	echo "return $retVal<br>";
 	//print_r ($services);
