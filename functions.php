@@ -279,6 +279,7 @@ function get_user_info ($Disk_info) {
 
 function getVersion($app, $apt=false) { 
 	// check for apt-show-versions
+	$dbtype='';
 	if ($apt == true) {
 		//echo 'apt=true'.PHP_EOL;
 		$app = 'apt-show-versions  '.$app;
@@ -291,6 +292,14 @@ function getVersion($app, $apt=false) {
 				$output = file_get_contents('nginx');
 				unlink('nginx');
 				}
+		else if ($app == 'mysql -V') {
+			// maria test
+			$output = shell_exec($app. '  2> /dev/null'); 
+			$x = strpos($output,'MariaDB');
+			if ($x) {
+				$dbtype = ' (MariaDB)';
+			}
+		}		
 			else{
 				$output = shell_exec($app. '  2> /dev/null'); 
 			}
@@ -308,7 +317,7 @@ function getVersion($app, $apt=false) {
  
   if (!empty($version[0])) {
 	
-  return $version[0]; 
+  return $version[0].$dbtype; 
 }
 else {
 	//echo $app.PHP_EOL;
@@ -324,6 +333,7 @@ function get_software_info($database) {
 	 */
 	 //$ver = getversion('apt-show-versions -V'); // is apt-show-versions installed ?
 	  //if ( $ver == 'Not Installed') { $apt= false;}  else {$apt=true;}
+	  ///usr/local/lsws/bin/lshttpd -v
 	  $hctrl = shell_exec('hostnamectl');
 	  $hctrl = explode(PHP_EOL,trim($hctrl));
 	  foreach ($hctrl as $temp) {
@@ -355,6 +365,7 @@ function get_software_info($database) {
 		$software['postfix'] = getVersion('postfix',$apt);
 		$software['curl'] = getVersion('curl',$apt);
 		$software['tmux'] = getVersion('tmux',$apt);
+		$software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v',$apt);
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
@@ -367,6 +378,7 @@ function get_software_info($database) {
 	     $software['postfix'] = getVersion('/usr/sbin/postconf -d mail_version');
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
+	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
 	}
 	//print_r($software);	 
 	 return $software;
@@ -494,8 +506,8 @@ function display_mem($mem_info,$colour) {
 		$headmask = "%40.40s %13.13s %10.10s %10.10s  \n";
 		printf($headmask,"\e[38;5;82mMem  \e[97m".$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']);
 		//echo "\t\t\e[38;5;82mMem\t\e[97m".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		$headmask = "%40.40s %13s %20s %10s  \n";
-		printf($headmask,"\e[38;5;82mSwap\e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
+		$headmask = "%40.40s %13.13s %14.14s   \n";
+		printf($headmask,"\e[38;5;82mSwap      \e[97m".$mem_info['SwapTotal'],$mem_info['SwapFree'],$mem_info['SwapCached']."\e[0m",'');
 		//echo "\t\t\e[38;5;82mSwap\t\e[97m".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached']."\e[0m".CR.CR;
 }
 else {
@@ -504,7 +516,7 @@ else {
 		echo "\t Memory".CR;
 		echo "\t\t\tTotal\t\t Free\t\t Cached\t\tActive".CR;
 		echo "\t\tMem\t".$mem_info['MemTotal']."\t". $mem_info['MemFree']."\t".$mem_info['Cached']."\t".$mem_info['Active'].CR;
-		echo "\t\tSwap\t".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached'].CR.CR;
+		echo "\t\tSwap bw\t".$mem_info['SwapTotal']."\t". $mem_info['SwapFree']."\t".$mem_info['SwapCached'].CR.CR;
 }
 }
 else {
@@ -559,17 +571,18 @@ if (is_cli()) {
 	echo "\t\t\e[38;5;82mKernel Version   \e[97m".php_uname('r').CR;
 	echo "\t\t\e[38;5;82mHost Name        \e[97m".php_uname('n').CR;
 	echo "\t   Required".CR;
-	echo "\t\t\e[38;5;82mPHP Version  \e[97m    " .$software['php'].CR;
-	echo "\t\t\e[38;5;82mScreen Version\e[97m   " .trim($software['screen']).CR;
-	echo "\t\t\e[38;5;82mGlibc Version\e[97m    " .$software['glibc'].CR;
-	echo "\t\t\e[38;5;82mMysql Version\e[97m    " .$software['mysql'].CR;
-	echo "\t\t\e[38;5;82mApache Version\e[97m   " .$software['apache'].CR;
-	echo "\t\t\e[38;5;82mCurl Version\e[97m     " .$software['curl'].CR;
+	echo "\t\t\e[38;5;82mPHP Version  \e[97m      " .$software['php'].CR;
+	echo "\t\t\e[38;5;82mScreen Version\e[97m     " .trim($software['screen']).CR;
+	echo "\t\t\e[38;5;82mGlibc Version\e[97m      " .$software['glibc'].CR;
+	echo "\t\t\e[38;5;82mMysql Version\e[97m      " .$software['mysql'].CR;
+	echo "\t\t\e[38;5;82mApache Version\e[97m     " .$software['apache'].CR;
+	echo "\t\t\e[38;5;82mCurl Version\e[97m       " .$software['curl'].CR;
 	echo "\t   Optional".CR;
-    echo "\t\t\e[38;5;82mNginx Version\e[97m    " .$software['nginx'].CR;
-    echo "\t\t\e[38;5;82mQuota Version\e[97m    " .$software['quotav'].CR;
-    echo "\t\t\e[38;5;82mPostFix Version\e[97m  " .$software['postfix'].CR;
-    echo "\t\t\e[38;5;82mTmux Version\e[97m     " .$software['tmux']."\e[0m".CR; //required ?
+    echo "\t\t\e[38;5;82mNginx Version\e[97m      " .$software['nginx'].CR;
+    echo "\t\t\e[38;5;82mQuota Version\e[97m      " .$software['quotav'].CR;
+    echo "\t\t\e[38;5;82mPostFix Version\e[97m    " .$software['postfix'].CR;
+    echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
+    echo "\t\t\e[38;5;82mTmux Version\e[97m       " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
 else {
@@ -727,32 +740,8 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.'.CR.CR;}
-else {
-	$version ='<br style="clear:both;">'. CR."Software Version 1.0.34.0β".CR.
-	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
-All rights reserved.
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that
-the following conditions are met:
-Redistributions of source code must retain the above copyright notice, this list of conditions and the
-following disclaimer.
-Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-following disclaimer in the documentation and/or other materials provided with the distribution.
-Neither the name of the NoIdeer Software nor the names of its contributors may be used to endorse or
-promote products derived from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.'.CR.CR;
-return $version;
 }
-}
+
 function display_games() {
 	 //require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 	 //use xPaw\SourceQuery\SourceQuery as $jim;
@@ -819,12 +808,12 @@ foreach ($res as $data) {
                 $update['running'] = 1;
 				$update['starttime'] = $value;
 			    $where['host_name'] = $key;
-			    echo $key.CR; 
+			   // echo $key.CR; 
 			    $database->update('servers',$update,$where);
-	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"].CR;
+	echo "\t\t Players Online ".$players." Map - ".$results[$key]["gq_mapname"];//.CR;
        
     if ($players >0) {
-			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
+			echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m";//.CR;
 			$player_list = $results[$key]['players'];
 				orderBy($player_list,'gq_score',"d"); // order by score
 				foreach ($player_list as $k=>$v) {
@@ -842,10 +831,10 @@ foreach ($res as $data) {
 		else {
 			$pscore = $player_list[$k]['gq_score']; //format score
 		}
-		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']).CR;
+		echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ".gmdate("H:i:s", $player_list[$k]['gq_time']);//.CR;
 		
 	}
-		echo CR;
+		//echo CR;
 			}
 }
 else {
@@ -857,7 +846,7 @@ else {
 }
 }
 }
-	if(is_cli()) { echo"\e[0m";}
+	//if(is_cli()) { echo"\e[0m";}
 	
     
 	

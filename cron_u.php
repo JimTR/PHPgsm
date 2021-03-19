@@ -119,9 +119,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 				    echo 'Auto Update Set'.cr;
 				    // use $install_path + game
 				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$install_path.'/'.$data['game'].' +app_update '.$data['server_id'].' +quit';
-				    $update = shell_exec($cmd);
+				    $updatetxt = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
-				    echo $update.cr;
+				    echo $updatetxt.cr;
 				     $update['server_id'] = $local['appid'];;
 					 $update['buildid'] = $local['buildid'];
 					 $update['rbuildid'] = $remote['public']['buildid']; 

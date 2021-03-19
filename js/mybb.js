@@ -39,7 +39,7 @@ function updateClock ()
      }
 
 function online(url,timeout,hide){
-        //console.log('Welcome to beta.js using '+url);
+        //console.log('Welcome to online using '+url);
 	 $.ajax({
      url: url,
    type: 'post',
@@ -86,7 +86,7 @@ for (var i in data1) {
 					   var logo  =server.url+':'+server.bport+'/'+server.logo;
 					  //console.log('server.Players = '+server.Players );
 					   if (typeof server.Players === "undefined") {
-						   console.log('Players not set '+server.server_name);
+						   //console.log('Players not set '+server.server_name);
 						   			return true;
 						   			//server.Players = 0;
 								}   
@@ -145,6 +145,7 @@ for (var i in data1) {
 	setTimeout(online(url),timeout);
 	if (hide == 1 ) {
 		$('#loading').hide();
+		$('#game_block').show();
 	}
   }
    });
@@ -199,13 +200,14 @@ for (var i in data1) {
 	} 	
 	if (server.running == 1 && ud == 0  ) {
 		//return;
-		//console.log( server_id+" running");
+		console.log( server_id+" running");
 		$('#status'+server_id).attr("src","img/online.png");
 		var running =1;
 		
 	}
 	else if  (server.running == 1 && ud == 1  ) {
 		console.log(server_id+" running - ud");
+		$('#status'+server_id).attr("src","img/offline1.png");
 		var running=1;
 	}
 	else {
@@ -213,6 +215,9 @@ for (var i in data1) {
 		server.Players=0;
 		server.Bots=0;
 		$('#status'+server_id).attr("src","img/offline.png");
+		if (ud == 1) {
+			$('#status'+server_id).attr("src","img/offline1.png");
+		}
 		var today=0;
 		var date =0;
 		var running=0;
@@ -420,10 +425,12 @@ function timeConverter(UNIX_timestamp){
   var day =weekday[a.getDay()];
   var date = a.getDate();
   var hour = a.getHours();
+  var timeOfDay = ( hour < 12 ) ? "am" : "pm"; 
   currentHours = ( hour > 12 ) ? hour - 12 : hour;
      // Convert an hours component of "0" to "12"
+    
   hour = ( currentHours == 0 ) ? 12 : currentHours;
-  var timeOfDay = ( hour < 12 ) ? "am" : "pm";
+ 
   var date =dateOrdinal(date);
   var min = a.getMinutes();
   var sec = a.getSeconds();

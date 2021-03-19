@@ -3,7 +3,6 @@
 //error_reporting( 0 );
 error_reporting ( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED);
 define ("CR","\r\n");
-global $argv;
 //echo '??';
 require 'includes/master.inc.php'; 
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
@@ -73,15 +72,13 @@ foreach ($res as $data) {
 	$rules = $Query->GetRules( );
 	$Query->Disconnect( );
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
-	$headmask = "%40.40s %13.13s %25s %25s  \n";
-        printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
-	//echo "\t\t\e[38;5;82m".$info["HostName"]."\e[97m started at ". date('g:ia \o\n l jS F Y \(e\)', $data['starttime']);
-	//echo "\t\t Players Online ".$playersd." Map - ".$info["Map"].CR;
-	if ($info['Players'] >0 ) {
+	$headmask = "%-40.40s %13.13s %25s %25s  \n";
+    printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
+		if ($info['Players'] >0 ) {
 		// players
 		//print_r($players);
 		//echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		$headmask = "%' 50s %30.30s %23s  \n";
+		$headmask = "%50s %30.30s %23s  \n";
 		printf($headmask,"\e[1m \e[34m Player",'Score',"Online For\e[97m");
 		orderBy($players,'Frags',"d"); // order by score
 		foreach ($players as $k=>$v) {
@@ -104,13 +101,13 @@ foreach ($res as $data) {
 			$pscore = $players[$k]['Frags']; //format score
 		} */
 		//echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ". $players[$k]['TimeF'].CR;
-		$headmask = "%20s %-25s %15s %' 8s %17s  \n";
+		$headmask = "%-20s %-25s %15s %' 8s %17s  \n";
 		printf($headmask,' ',$playerN,' ',$players[$k]['Frags'], $players[$k]['TimeF']);
 		
 	}
-	echo CR;
+	//echo CR;
 	}
-	echo CR;
+	//echo CR;
 	}
 	
 }

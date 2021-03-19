@@ -19,7 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * ajax v2 to go with xml v2 
+ * ajax v2 to go with xml v2 & mybb.js
+ *  requires PHP  >= 7.4
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
@@ -28,11 +29,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 'V2.02');
+	define( 'VERSION', 2.03);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define('plus','%2B');
-	define('space','%20');  
+	
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -44,10 +44,14 @@ if(is_cli()) {
 	$cmds =convert_to_argv($argv,"",true);
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
-	if (isset($cmds['debug'])) {
+	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax '.VERSION.cr;
-	    print_r($cmds);
+		echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	    foreach ($cmds as $k => $v) {
+			if ($k == 'debug'){continue;}
+			print "[$k] => $v".cr;
+		}
+		if (empty($cmds['action'])) {exit;}
 	}
 	else {error_reporting( 0 );}
 	
@@ -70,7 +74,7 @@ else {
 }
 
 if(!$valid) { 
-	die( 'invalid request'.cr );
+	die( 'invalid request '.$ip.cr );
 }
 
 // do what's needed
@@ -88,8 +92,21 @@ if(!$valid) {
 			echo get_boot_time();
 			exit;
 			
+		case "check_services" :
+		if ($cmds['debug'] == true){
+			print_r(check_services());
+		}
+		else {
+			echo json_encode(check_services());
+			
+		}
+			exit;
+				
 		case "exescreen" :
 				echo exescreen($cmds);
+				if (is_cli()) {
+					echo cr;
+				}
 				exit;
 				
 		case "exe" :
@@ -134,12 +151,12 @@ if(!$valid) {
 						echo print_r(game_detail(),true).cr;
 						}
 					else {
-							echo json_encode(game_detail());
+							echo json_encode(utf8ize(game_detail()));
 						}
 					exit;	
 			
 			case "version":
-				echo 'Ajax version '.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
+				echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
 				exit;					
 }
 
@@ -331,7 +348,7 @@ function game_detail() {
 														{
 															$Exception = $e;
 															if (strpos($Exception,'Failed to read any data from socket')) {
-																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
+																$Exception = 'Failed to read any data from socket (Game Detail=>'.$sub_cmd.')';
 														}
 						
 														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
@@ -420,7 +437,7 @@ function exescreen ($cmds) {
 	global $database;
 	$exe =$cmds['server'];
 	$localIP = getHostByName(getHostName()); // carefull if the hostname is set to 127.0.0.1
-	$sql = 'select * from servers where host_name = "'.$exe.'"';
+	$sql = 'select * from servers where host_name = "'.trim($exe).'"';
 	$server = $database->get_row($sql); // pull results
 	if (empty($server['host'])) {
 		$return = 'invalid server'; // don't know this server
@@ -517,8 +534,8 @@ function exescreen ($cmds) {
 					break;
 				}
 				chdir ($server['install_dir']);
-				$steamcmd =shell_exec('which steamcmd');
-				$cmds['cmd'] = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
+				//$steamcmd =shell_exec('which steamcmd');
+				//$cmds['cmd'] = $steamcmd.' +login anonymous +force_install_dir '.$server['install_dir'].'/'.$server['game'].' +app_update '.$server['server_id'].' +quit';
 				exe($cmds);
 				break;
 				
@@ -530,18 +547,17 @@ function exescreen ($cmds) {
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
 	
-	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','ls');
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php'.'check_ud.php','steamcmd','tmpreaper');
 	foreach ($allowed as $find) {
-    //if (strstr($string, $url)) { // mine version
-    if (strpos($cmds['cmd'], $find) !== FALSE) { 
-        echo $cmds['cmd']." Match found".cr; 
+       if (strpos($cmds['cmd'], $find) !== FALSE ) { 
+        //echo $cmds['cmd']." Match found".cr; 
         $can_do = true;
-    }
-}
-if(empty($can_do)) {
+		}
+	}
+	if(empty($can_do)) {
 		return 61912;
-		$can_do = false;
-}
+	}
+	
 if($can_do == true) {
 	/* 
 	 * Exit codes
@@ -551,14 +567,64 @@ if($can_do == true) {
 	 */ 
 	
 	exec($cmds['cmd'],$output,$retval);
+	
 	if (isset($cmds['debug'])) {
 	echo ' ready to do command '.$cmds['cmd'].cr;
-	echo $retval.'<br>'.cr; 	
-	foreach ($output as $line) {
-		echo $line.cr;
-	}
+	
+		foreach ($output as $line) {
+			$return .= $line.cr;
+		}
+		$return .=$retval.cr; // put the return value in the array
+		
+	
 }
-return $retval;
+	else {
+		// test if no debug
+		$return .=$retval.cr;
+	}
+	
+return $return;
 } 
+return false; // just in case anything slips through
+}
+
+function utf8ize($mixed) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } else if (is_string ($mixed)) {
+        return utf8_encode($mixed);
+    } else if (is_object($mixed)) {
+        $a = (array)$mixed; // from object to array
+        return utf8ize($a);
+    }
+    return $mixed;
+}
+
+function check_services() {
+	// run service check
+	exec('/usr/sbin/service --status-all',$services,$retVal);
+	//echo "return $retVal<br>";
+	//print_r ($services);
+	foreach ($services as $key=>$service) {
+		
+			if (strpos($service,' + ')) {
+			$service = str_replace('[ + ]','',$service);
+			$id = trim($service);
+			$return[$id] = '✔ ';
+		}
+		elseif (strpos($service,' ? ')) {
+			echo 'not sure'.cr;
+		}
+		else {
+			$service = str_replace('[ - ]','',$service);
+			$id = trim($service);
+			$return[$id] = '✖';
+		}
+		//echo $key.' '.$service.cr;
+	}
+	//print_r($demo);
+	return $return;
 }
 ?>

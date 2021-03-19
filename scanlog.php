@@ -29,23 +29,29 @@
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
+define ('VERSION',2.11);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
+if (empty( $settings['ip_key'] )) {
+	echo 'Fatal Error - api key missing'.cr;
+	exit(7);
+}
 $key = $settings['ip_key'] ;
 if (!isset($argv)){
 echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	echo 'Scanlog V2.0 © 2021'.cr;
+	echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
-	echo 'Example :- '.$argv[0].' <serverid>'.cr;
-	echo 'or - '.$argv[0].' all'.cr;
+	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
+	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
+	echo "\t".$argv[0].' <all> this will scan all servers using the default log '.cr;
 	exit(0);
 }
-$sql = 'select * from players where steam_id64="'; // sql stub for user updates
-
+$asql = 'select * from players where steam_id64="'; // sql stub for user updates
+$update_done= array();
 $file =$argv[1];
 if ($file == 'all') {
 	
@@ -57,12 +63,13 @@ if ($file == 'all') {
 		//bulid path
 		$server_key = md5( ip2long($run['ipaddr'])) ;
 		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
-		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=lsof&lsof_file='.$run['location'].'/'.$run['game'].'/logs/'.'&return=content&key='.$server_key; //used for steam log
+		// /ajaxv2.php?action=lsof&filter=fofserver&loc=/home/nod/games/fof/fof&return=content
+		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
-		//echo $path.cr; // debug code
+		//echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
-			//echo $tmp.cr;
+			//echo $tmp.cr; //debug code
 		$display .= do_all($run['host_name'],$tmp);
 	}
 	}
@@ -70,10 +77,12 @@ if ($file == 'all') {
 }
 else {
 	// do supplied file
-	if (!file_exists($argv[2])) {
-		echo 'could not open '.$argv[2].cr;
+	if(isset($argv[3])) {
+	if (!file_exists($argv[3])) {
+		echo 'could not open '.$argv[3].cr;
 		exit (1);
 	}
+}
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
@@ -84,31 +93,39 @@ else {
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
 	//print_r($run);
-	if (empty($argv[2])) {
+	if (empty($argv[3])) {
 	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 	}
 	else {
 		// assume run local 
-		$path = $argv[2];
+		$path = $argv[3];
 	}
 		
-		echo 'Scanning '.$argv[1].' '.$path.cr;
+		
 		$tmp = file_get_contents($path);
 		echo do_all($argv[1],$tmp);
 }
+
+
 function do_all($server,$data) {
 	// cron code
 	
 	$count = 0;
 	$done= 0;
 	$update_users = 0;
+	$uds = false;
 	global $database, $key;
-	$sql = 'select * from players where steam_id64="'; // sql stub for user updates
+	$update_req = 'Your server needs to be restarted in order to receive the latest update.';
+	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
-		// loop lines
+		// loop lines, in here check for server needs a restart
+		if ( strpos($data,$update_req)) {
+			// server needs an update & restart
+			$uds = true;
+		}
 		$bot = strpos($value,' connected, address "none');
 		if($bot) {continue;} //remove bot lines
 		$x = strpos($value,' connected, address ');
@@ -189,11 +206,14 @@ if (!isset($la)) {
 //echo 'Rows found '.$pc.cr;
 if ( $pc == 0 ) {
 	//echo "\t Nothing to do".cr;
+	if ($uds == true) {
+		update_server($server);
+	}
 return;
 }
 
 foreach ($la as $user_data) {
-	
+	$logon = false; 
 	// now do data
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
@@ -205,27 +225,20 @@ foreach ($la as $user_data) {
 	$added = false;
 	$user_stub ="\t". $user_data['id2'].' '.$username;
 	$ut='';
-	$result = $database->get_row($sql.$user_search);
+	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
 		unset($result['id']); // take out id
+		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
 		$last_logon = strtotime($user_data['time']);
-		/*if ($last_logon >  $result['last_log_on']) {
-			$yz = ' larger';
-		}
-		elseif  ($last_logon =  $result['last_log_on']){
-			$yz= ' equal';
-		}
-		else {
-			$yz = ' smaller';
-		}
-		echo $user_stub.' last played '.$last_logon.' Database sees '.$result['last_log_on'].$yz.cr; // debug code */
+		
 		
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
 			$ut.= ' new logon (total '.$result['log_ons'].')';
 			$modify=true;
+			$logon = true;
 		}
 		if (empty($result['steam_id64'])) {
 		$ut .=' no ID64 (correcting)';
@@ -269,8 +282,12 @@ foreach ($la as $user_data) {
 			
 		if ($modify) {
 		$result = $database->escape($result);
-		//print_r($where);
 		$n = $database->update('players',$result,$where);
+		if ($logon == true) { 
+		$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
+		$database->query($sql);
+		unset($logon);
+		}
 		if ($n === false) {
 			//
 			echo cr.'Database Update failed with'.cr;
@@ -297,7 +314,7 @@ foreach ($la as $user_data) {
 		$last_logon = time();
 		$ip_data = get_ip_detail($ip);
 		$result['ip'] = $user_data['ip'];
-		$result['steam_id'] = $user;
+		//$result['steam_id'] = $user;
 		$result['steam_id64'] = $user_data['id2'];
 		$result['name'] = $username;
 		$result['first_log_on'] = $last_logon;
@@ -325,6 +342,9 @@ foreach ($la as $user_data) {
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
+			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
+			 	 //$ut .= $sql.cr;
+			 	 $database->query($sql);
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
@@ -349,7 +369,10 @@ if ($done || $update_users ) {
 //echo $rt;
 $rt .= sprintf($mask,'New Users',$done );
 $rt .= sprintf($mask,'Modified Users',$update_users );
-
+if ($uds == true) {
+	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
+	update_server($server);
+}
 $rt .= cr.'Processed '.$server.cr.cr;
 //echo $rt;
 return $rt;
@@ -368,4 +391,35 @@ function get_ip_detail($ip) {
 	 return $ip_data;
 }
 
+function update_server($server){
+	// if found stop the server and update
+	//Your server needs to be restarted in order to receive the latest update.
+	global $database, $update_done;
+	if (in_array($game['install_dir'],$update_done)) {
+				echo 'update already done'.cr;
+				return;
+			}
+	$sql = 'select * from server1 where host_name="'.$server.'"';
+	$steamcmd = '/usr/games/steamcmd';
+	$game = $database->get_row($sql);
+	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	$cmd = $stub.'q';
+	echo file_get_contents($cmd); // stopped server
+	echo 'stop server using '.$cmd.cr;
+		    $exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			$result = file_get_contents($cmd);
+			if (!$result == 0) {
+				echo $result.cr;
+			} // scanned the log
+	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+	echo file_get_contents($cmd);
+	echo 'updated server using '.$cmd.cr;
+	$cmd = $stub.'s';
+	echo file_get_contents($cmd);
+	echo 'start server using '.$cmd.cr;
+	
+	$update_done[] = $game['install_dir'];
+}
 ?>
