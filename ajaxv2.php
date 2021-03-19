@@ -597,7 +597,20 @@ function check_services() {
 	exec('service --status-all',$services,$retVal);
 	//print_r ($services);
 	foreach ($services as $key=>$service) {
-		echo $key.' '.$service.cr;
+		$x = strpos($service,' + ');
+		
+			if ($x ) {
+			$service = str_replace('[ + ]','',$service);
+			$id = trim($service);
+			$demo[$id] = '✔ ';
+		}
+		else {
+			$service = str_replace('[ - ]','',$service);
+			$id = trim($service);
+			$demo[$id] = '✖';
+		}
+		//echo $key.' '.$service.cr;
 	}
+	print_r($demo);
 }
 ?>
