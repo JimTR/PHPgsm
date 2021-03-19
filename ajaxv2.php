@@ -88,6 +88,10 @@ if(!$valid) {
 			echo get_boot_time();
 			exit;
 			
+		case "check_services" :
+			check_services();
+			exit;
+				
 		case "exescreen" :
 				echo exescreen($cmds);
 				if (is_cli()) {
@@ -586,5 +590,11 @@ function utf8ize($mixed) {
         return utf8ize($a);
     }
     return $mixed;
+}
+
+function check_services() {
+	// run service check
+	exec('service --status-all',$services,$retVal);
+	print_r ($services);
 }
 ?>
