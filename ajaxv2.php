@@ -156,7 +156,7 @@ if(!$valid) {
 					exit;	
 			
 			case "version":
-				echo 'Ajax version '.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
+				echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
 				exit;					
 }
 
