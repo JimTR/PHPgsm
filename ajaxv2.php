@@ -89,7 +89,13 @@ if(!$valid) {
 			exit;
 			
 		case "check_services" :
-			check_services();
+		if ($cmds['debug'] == true){
+			print_r(check_services());
+		}
+		else {
+			echo json_encode(check_services());
+			
+		}
 			exit;
 				
 		case "exescreen" :
@@ -601,7 +607,7 @@ function check_services() {
 			if (strpos($service,' + ')) {
 			$service = str_replace('[ + ]','',$service);
 			$id = trim($service);
-			$demo[$id] = '✔ ';
+			$return[$id] = '✔ ';
 		}
 		elseif (strpos($service,' ? ')) {
 			echo 'not sure'.cr;
@@ -609,10 +615,11 @@ function check_services() {
 		else {
 			$service = str_replace('[ - ]','',$service);
 			$id = trim($service);
-			$demo[$id] = '✖';
+			$return[$id] = '✖';
 		}
 		//echo $key.' '.$service.cr;
 	}
-	print_r($demo);
+	//print_r($demo);
+	return $return;
 }
 ?>
