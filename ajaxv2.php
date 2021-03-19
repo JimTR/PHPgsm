@@ -606,6 +606,7 @@ function check_services() {
 	// run service check
 	echo "entered check Services<br>";
 	exec('service --status-all',$services,$retVal);
+	echo "return $retVal<br>";
 	//print_r ($services);
 	foreach ($services as $key=>$service) {
 		
