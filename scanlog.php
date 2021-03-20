@@ -223,10 +223,11 @@ foreach ($la as $user_data) {
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
 	$added = false;
-	$user_stub ="\t". $user_data['id2'].' '.$username;
+	; // start of log line
 	$ut='';
 	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
+		$user_stub ="\t".$username.' ('.$result['country_code'].') ';
 		unset($result['id']); // take out id
 		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
