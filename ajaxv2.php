@@ -569,18 +569,18 @@ if($can_do == true) {
 	exec($cmds['cmd'],$output,$retval);
 	
 	if (isset($cmds['debug'])) {
-	echo ' ready to do command '.$cmds['cmd'].cr;
+	//echo ' ready to do command '.$cmds['cmd'].cr;
 	
 		foreach ($output as $line) {
 			$return .= $line.cr;
 		}
-		$return .=$retval.cr; // put the return value in the array
+		$return ; //.= $retval.cr; // put the return value in the array
 		
 	
 }
 	else {
 		// test if no debug
-		$return .=$retval.cr;
+		$return ; //.= $retval.cr;
 	}
 	
 return $return;
