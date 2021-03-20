@@ -19,5 +19,5 @@ Written in PHP as a MyBB extension
 <p>This software will only run on linux servers, if you install to a windows server it, currently, will not work<br>
 The Mybb part of this project has been added to this repository yet, updates will be added in due course.
 </p>
-<p><b>Please Note</b><br>This software will <ins>NOT</ins> work if you have cyberpanel installed to control your server</p> 
+<p><b>Please Note</b><br>This software will <ins>NOT</ins> work if you have cyberpanel installed to control your server/vps</p> 
 <p>Download the master branch for a working copy.</p>
