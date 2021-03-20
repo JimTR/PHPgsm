@@ -296,7 +296,10 @@ function game_detail() {
 				$ip = $cmds['ip'];
 			}
 			else {
-					$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+					$host= gethostname();
+					$ip = gethostbyname($host);
+
+					//$ip = file_get_contents("http://ipecho.net/plain"); // get ip
 					if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
 				}
 				$checkip = substr($ip,0,strlen($ip)-1); 		

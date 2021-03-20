@@ -27,17 +27,18 @@
  * this does check update status and does the update perhaps this is the way to go ?
  * move this to the utilities folder & make sure it's pathed. ??
  */
-include 'includes/cli_master.inc.php';
+include 'includes/master.inc.php';
 include 'functions.php';
 define ("cr",PHP_EOL);
+$processed= array();
 //define('plus','%2B');
 if (!isset($argv)) {
 	echo 'Wrong Enviroment';
 	exit;
 }
-//$host= gethostname();
-//$ip = gethostbyname($host);
-$ip = file_get_contents("http://ipecho.net/plain");
+$host= gethostname();
+$ip = gethostbyname($host);
+//$ip = file_get_contents("http://ipecho.net/plain");
 echo 'Starting Check For '.$ip.cr;
 $steamcmd = trim(shell_exec('which steamcmd'));
 $install_path = dirname($steamcmd);
