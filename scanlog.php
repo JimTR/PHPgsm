@@ -395,14 +395,17 @@ function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done;
-	if (in_array($game['install_dir'],$update_done)) {
-				echo 'update already done'.cr;
-				return;
-			}
+	
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	if (in_array($game['install_dir'],$update_done)) {
+				echo 'update already done'.cr;
+			    $cmd = $stub.'r';
+			    echo file_get_contents($cmd); 	
+				return;
+			}
 	$cmd = $stub.'q';
 	echo file_get_contents($cmd); // stopped server
 	echo 'stop server using '.$cmd.cr;
