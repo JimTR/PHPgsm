@@ -38,7 +38,8 @@ if (!isset($argv)) {
 }
 $host= gethostname();
 $ip = gethostbyname($host);
-//$ip = file_get_contents("http://ipecho.net/plain");
+$ip = file_get_contents('https://api.ipify.org');
+if(empty($ip)) { $ip = file_get_contents("http://ipecho.net/plain");}
 echo 'Starting Check For '.$ip.cr;
 $steamcmd = trim(shell_exec('which steamcmd'));
 $install_path = dirname($steamcmd);
