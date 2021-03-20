@@ -340,6 +340,7 @@ foreach ($la as $user_data) {
 		
 		$result = $database->escape($result);
 	    $in = $database->insert('players',$result);
+	    $user_stub ="\t".$username.' ('.$result['country_code'].') ';
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
