@@ -223,10 +223,11 @@ foreach ($la as $user_data) {
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
 	$added = false;
-	$user_stub ="\t". $user_data['id2'].' '.$username;
+	; // start of log line
 	$ut='';
 	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
+		$user_stub ="\t".$username.' ('.$result['country_code'].') ';
 		unset($result['id']); // take out id
 		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
@@ -339,6 +340,7 @@ foreach ($la as $user_data) {
 		
 		$result = $database->escape($result);
 	    $in = $database->insert('players',$result);
+	    $user_stub ="\t".$username.' ('.$result['country_code'].') ';
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
@@ -395,14 +397,17 @@ function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done;
-	if (in_array($game['install_dir'],$update_done)) {
-				echo 'update already done'.cr;
-				return;
-			}
+	
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	if (in_array($game['install_dir'],$update_done)) {
+				echo 'update already done'.cr;
+			    $cmd = $stub.'r';
+			    echo file_get_contents($cmd); 	
+				return;
+			}
 	$cmd = $stub.'q';
 	echo file_get_contents($cmd); // stopped server
 	echo 'stop server using '.$cmd.cr;

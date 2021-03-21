@@ -209,8 +209,8 @@ function game_detail() {
 	$total_slots = 0;
 	$r=1;
 	if(isset($cmds['filter'])) {
-		$ip = file_get_contents("http://ipecho.net/plain"); // get ip
-		 if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');} 
+		$ip = file_get_contents('https://api.ipify.org');// get ip
+		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
 		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
 		 if ($db->num_rows($sql) >0) {		 
 			$server_data = $db->get_results($sql);
@@ -296,8 +296,10 @@ function game_detail() {
 				$ip = $cmds['ip'];
 			}
 			else {
-					$ip = file_get_contents("http://ipecho.net/plain"); // get ip
-					if (empty($ip)) { $ip = shell_exec('curl http://ipecho.net/plain');}
+					$host= gethostname();
+					$ip = gethostbyname($host);
+					$ip = file_get_contents('https://api.ipify.org');
+					if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
 				}
 				$checkip = substr($ip,0,strlen($ip)-1); 		
 				$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
@@ -569,18 +571,18 @@ if($can_do == true) {
 	exec($cmds['cmd'],$output,$retval);
 	
 	if (isset($cmds['debug'])) {
-	echo ' ready to do command '.$cmds['cmd'].cr;
+	//echo ' ready to do command '.$cmds['cmd'].cr;
 	
 		foreach ($output as $line) {
 			$return .= $line.cr;
 		}
-		$return .=$retval.cr; // put the return value in the array
+		$return ; //.= $retval.cr; // put the return value in the array
 		
 	
 }
 	else {
 		// test if no debug
-		$return .=$retval.cr;
+		$return ; //.= $retval.cr;
 	}
 	
 return $return;
