@@ -213,6 +213,8 @@ function get_user_info ($Disk_info) {
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
+	//echo 'user home collected'.cr;
+	// problem here
 	//print_r ($du).CR;
 	//echo '$q = '.$q.cr;
 	if(empty($q)) {
@@ -462,6 +464,7 @@ function format_num ($string) {
 }
 function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false,$hidden = false) {
 	//if ($positive = "null") { unset($positive);}
+	
 	run:
 echo $salute; // display question
 if ($hidden === true) {
@@ -477,21 +480,21 @@ if ($press_any_key === true and empty($positive)) {
 if ($line === PHP_EOL) {
 	errors:
 	// entered empty string
-	echo "You must have a valid response".CR;
+	echo "You must have a valid response".cr;
 	unset($line); // clear input
 	goto run; // have another go
 }
 //if (preg_match('/\s/',trim($line)) ) {
 if (ctype_space($line)) {
-	echo "ERROR response contains spaces".CR; 
+	echo "ERROR response contains spaces".cr; 
 	goto errors;
 	}
-if ($positive <>"null"){	
+if ($positive <>NULL){	
 	if(trim($line) !== $positive){
 	     return false;
 	}
 }
-return true;
+return $line;
 }
 function display_mem($mem_info,$colour) {
 	// mem display
@@ -1150,5 +1153,11 @@ function validate($valid) {
 	return false;
 }
 
-
+function array_search_partial($arr, $keyword) {
+    foreach($arr as $index => $string) {
+        if (strpos($string, $keyword) !== FALSE)
+            return $index;
+    }
+    return false;
+}
 ?>
