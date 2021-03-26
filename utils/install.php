@@ -308,13 +308,13 @@ function stage_5($data)  {
 	
      $ps = shell_exec('ps -el | grep steamcmd');
 	echo "ps = $ps".cr;
-     $psa = tidy_array(explode('  ',$ps)); // ps data including the pid
-      if (isset($psa[2])) {
-         $pid = $psa[2];
+     $psa = tidy_array(explode(' ',$ps)); // ps data including the pid
+      if (isset($psa[3])) {
+         $pid = $psa[3];
          $oldline= '';
 	echo print_r($psa,true).cr;
 	echo "pid = $pid".cr;
-          echo 'Waiting for steamcmd to start'.cr;
+	     echo 'Waiting for steamcmd to start'.cr;
          while (file_exists( "/proc/$pid" )){
 			$file = "install.log";
 			$fdata = file($file);
