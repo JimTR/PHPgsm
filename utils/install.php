@@ -307,13 +307,10 @@ function stage_5($data)  {
          sleep (1); // wait for ps
 	
      $ps = shell_exec('ps -el | grep steamcmd');
-	echo "ps = $ps".cr;
-     $psa = tidy_array(explode(' ',$ps)); // ps data including the pid
+	 $psa = tidy_array(explode(' ',$ps)); // ps data including the pid
       if (isset($psa[3])) {
          $pid = $psa[3];
          $oldline= '';
-	echo print_r($psa,true).cr;
-	echo "pid = $pid".cr;
 	     echo 'Waiting for steamcmd to start'.cr;
          while (file_exists( "/proc/$pid" )){
 			$file = "install.log";
@@ -343,8 +340,9 @@ function stage_5($data)  {
 	 }
 	 
     $cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
-    $lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log'));
-    //exec($cmd); //clear up the install terminal
+    //$lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log'));
+    $lsof = trim(shell_exec('lsof  install.log'));
+    exec($cmd); //clear up the install terminal
 	 while ($lsof) {
 		 $lsof = trim(shell_exec('lsof install.log'));
 		 }
