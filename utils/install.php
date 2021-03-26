@@ -18,7 +18,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
+ *  developed using PHP V8.0.3
+ * tested to work on PHP V7.4.3
  * 
  */
 $run_path = dirname($_SERVER['PHP_SELF'],2); // these guys should be in the dir above
@@ -46,11 +47,13 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
 	  if (!$rerun) { exit;}
   }
 }
- echo 'Checking available disk space';
+ echo 'Checking available disk space'.cr;
  $diskinfo = get_disk_info();
- if(isset($diskinfo['home_free'])) {$space = ' ('.$diskinfo['home_free'];}
- else { $space = ' ('.$diskinfo['boot_free'];}
- echo $space.' free)'.cr;
+ if (isset($diskinfo['boot_free'])) {
+	 echo 'Disk 1 ('.$diskinfo['boot_free'].')'.cr;
+ }
+ if(isset($diskinfo['home_free'])) {echo 'Disk 2 ('.$diskinfo['home_free'].')'.cr;}
+ 
  if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
@@ -58,12 +61,14 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
  else { $user_level =', user privilege to low, get an administrator to run this script.'; echo $user_level.cr;exit;}
  echo $user_level.cr;
+ $installing['base_user'] = $user['name'];
 }
 else {
 	//
 	echo 'Hi Root, you need to supply a valid user and group for the install,'.cr;
 	echo 'However if you are doing an install that you control & your users are symlinked to the install, enter root as the user'.cr.cr;
 	$answer = trim(ask_question('enter target user '.quit,NULL,NULL)); 
+	$installing['base_user'] = trim($answer);
 	
 }
   $steamcmd = trim(shell_exec('which steamcmd'));
@@ -100,17 +105,12 @@ else {
 	 //echo $ret_val.cr;
 	 //print_r($output);
 	 //stage 1
-	 foreach ($output as $line) {
-		 
-		 if ($x < 2) {
-			echo $line.cr;
-			$x++;
-	 }
-	 }
+	 echo $output[1].cr;
+	 	 
 	 $installing['app_id'] = trim($answer);
 	 $name = str_replace('Found ','',$output[1]);
 	 $server = trim(str_replace('(released)',' ',$name));
-	 $name= $server.' (y/n)';
+	 $name = $server.' (y/n)';
 	 $installing['name'] = trim($server);
 	 echo cr;
     $answer = ask_question('Do you want to install '.trim($name).' ? ','y','n');
@@ -205,6 +205,7 @@ foreach ($list as $temp ) {
  function stage_2($data) {
 	 // add stage 2 location
 	 system('clear');
+	$appinstalled = '';
 	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr.cr;
 	  $maxlen = strlen($data['branch']);
 	  $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
@@ -224,7 +225,35 @@ foreach ($list as $temp ) {
 			$data['path'] = $path;
 		}
 		if (file_exists($path)) {
-				$answer = ask_question(cr.'The location '.$data['path'].' exists !'.cr.cr."Do you want to install in ".$data['path'].' ? (Y/n) or '.quit,NULL,NULL,true);
+			
+			echo cr.'The location '.$data['path'].' exists !'.cr;
+					$ins = check_acf($path);
+					if($ins){
+						echo cr.'Found '.count($ins).' Games installed at '.$path.cr;
+					foreach ($ins as $ins1) {
+						if ($data['app_id'] == $ins1['appid']) { $appinstalled = $ins1;} 
+						echo $ins1['name'].' '.$ins1['appid'].cr;
+					}
+				   }   
+					if($appinstalled) {
+						echo cr.$data['name'].' is already installed at this location'.cr;
+						$answer = ask_question( 'Do you want to validate '.$data['name'].' ?  y/n '.quit,'y','n'); 
+						if ($answer) {
+							echo 'validate'.cr;
+							$data['validate'] = true;
+							$data['stage'] = 5;
+							print_r($data);
+							exit;
+						}
+					}
+					else {
+						echo cr.'This is not good practice to install dedicated servers to the same location proceed with caution'.cr; 
+						echo 'This is not an error condition as some games can be installed to the same location and still work others will break other games installed'.cr;
+						echo '2 games that work in the same location are Fistfull of Frags & Counterstrike Source'.cr;
+				}
+				
+				$answer = ask_question(cr."Do you want to install in ".$data['path'].' ? (Y/n) or '.quit,NULL,NULL,true);
+				
 				if ($answer || $answer == true) {
 					return $data;
 					} 
@@ -310,9 +339,14 @@ function stage_5($data)  {
 	 echo 'this normally indicates either steamcmd is updating itself or steamcmd is having a problem connecting to steam\'s servers'.cr.cr;
 	 $cmd = 'screen -L -Logfile install.log -dmS install';
 	 exec ($cmd,$screen,$retval);
-	 $cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].' +quit';
+	 if(!isset($data['validate'] )) {
+			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].' +quit';
+		}
+	else {
+			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].' validate +quit';
+		}				
          $scmd = 'screen -S install -p 0  -X stuff "'.$cmd.'^M"';
-         exec ($scmd); // got steamcmd running
+         exec ($scmd); // get steamcmd running
          sleep (1); // wait for ps
 	
      $ps = shell_exec('ps -el | grep steamcmd');
@@ -350,11 +384,19 @@ function stage_5($data)  {
 	 
     $cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
     //$lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log'));
-    $lsof = trim(shell_exec('lsof  install.log'));
+   
+    //$lsof = trim(shell_exec('lsof  install.log 2> /dev/null'));
+    //$lsoferr = strpos($lsof,'WARNING: can\'t stat()');
+    //echo "lsoferr - $lsoferr".cr;
+    //if ($lsoferr) {
+	//	   $lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log 2> /dev/null'));
+	 //  }
+	   
     exec($cmd); //clear up the install terminal
-	 while ($lsof) {
-		 $lsof = trim(shell_exec('lsof install.log'));
-		 }
+     sleep(1);
+	 //while ($lsof) {
+		// $lsof = trim(shell_exec('lsof install.log'));
+		 //}
 	$log =explode(PHP_EOL,file_get_contents('install.log'));
 	$line= trim($oldline);
 	$unread = false;
@@ -384,7 +426,7 @@ function stage_5($data)  {
 						printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
 						}
 						else {
-							echo $a.cr;
+							echo "$a blank ?".cr;
 						}
 					}
       
@@ -443,5 +485,40 @@ function randomPassword() {
         $pass[] = $alphabet[$n];
     }
     return implode($pass); //turn the array into a string
-}		 
+}	
+
+function check_acf ($path) {
+	// read files
+	$r = 0;
+	foreach (glob($path."/steamapps/*.acf") as $filename) {
+    //echo "$filename size " . filesize($filename) . "\n";
+    $tmp = file($filename);
+   		foreach ($tmp as $key=>$value) {
+        // clear blanks
+        if(empty(trim($value))) 
+        { 
+                unset ($tmp[$key]);
+                continue;
+                }
+        else {
+                $value =substr(trim($value),1);
+                $z = strpos($value,'"');
+                $nz = substr($value,0,$z);
+                $value =trim(str_replace($nz.'"','',$value));
+        $value=trim(str_replace('"','',$value));
+        $tmp[$key]=$value;
+        $return[$nz]=$value;
+        }       
+        }
+        //print_r ($return);
+        $x[$r]['appid'] = $return['appid'];
+        $x[$r]['name'] = $return['name'];
+        $x[$r]['sizeondisk'] = $return['SizeOnDisk'];
+        $x[$r]['path'] = $filename;
+		$r++;
+		
+}
+//print_r ($x);
+return $x;
+}	 
 ?>
