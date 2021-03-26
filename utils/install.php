@@ -51,12 +51,21 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  if(isset($diskinfo['home_free'])) {$space = ' ('.$diskinfo['home_free'];}
  else { $space = ' ('.$diskinfo['boot_free'];}
  echo $space.' free)'.cr;
+ if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
  //print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
  else { $user_level =', user privilege to low, get an administrator to run this script.'; echo $user_level.cr;exit;}
  echo $user_level.cr;
+}
+else {
+	//
+	echo 'Hi Root, you need to supply a valid user and group for the install,'.cr;
+	echo 'However if you are doing an install that you control & your users are symlinked to the install, enter root as the user'.cr.cr;
+	$answer = trim(ask_question('enter target user '.quit,NULL,NULL)); 
+	
+}
   $steamcmd = trim(shell_exec('which steamcmd'));
  if (empty($steamcmd)) {
 	 echo 'steamcmd not found in the user path, is it installed ?'.cr;
@@ -353,13 +362,31 @@ function stage_5($data)  {
 		if ($unread ) {
 			$p1 = strpos($a, 'Success!');
 				if ($p1 !== false) {
-					echo $a.cr;
-					echo 'yippee'.cr;
+					$finish = "\e[38;5;82mSuccess\e[0m,".$data['name']." is fully installed at ".$data['path']."\e[0m";
+					//echo $finish.cr;
+					//echo 'yippee'.cr;
 					$data['success'] = true;
 					unlink('install.log');
 					break;
 					}
-					
+					else {
+						$tmp = str_replace('(','',trim($a));
+						$tmp = str_replace(')','',$tmp);
+						$steamlog = tidy_array(explode(' ',$tmp));
+						if (isset($steamlog[3])) {  
+						$downloading = $steamlog[3].' '. $data['name'];
+						$dl = strlen($downloading); // server length
+						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
+						$current =  floatval($steamlog[6]);
+						$percent = $steamlog[5].'%';
+						$current = formatBytes($current,2);
+						$total =  formatBytes(floatval($steamlog[8]),2);
+						printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
+						}
+						else {
+							echo $a.cr;
+						}
+					}
       
 		}
         if (trim($a) == $line) {
@@ -367,6 +394,7 @@ function stage_5($data)  {
                 $unread = true;
                 }
 }
+$answer = ask_question(cr.$finish.cr.'press <enter> to configure the server or '.quit,NULL,NULL,true);
 return $data; 
 }
 
