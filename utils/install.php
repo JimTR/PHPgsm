@@ -23,6 +23,12 @@
  * 
  */
 $run_path = dirname($_SERVER['PHP_SELF'],2); // these guys should be in the dir above
+exec('cat /proc/mounts |grep gvfsd-fuse',$tmp,$rval);
+if ($tmp) {
+$tmp =explode(' ',$tmp[0]);
+$gvfs = trim($tmp[1]);
+}
+else { $gvfs='';}
 echo $run_path.PHP_EOL;
 if ($run_path == '.') { $run_path = '..';} // opps perhaps not
 // test the file is in PHPgsm location 
@@ -37,6 +43,7 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
+ echo "gvfs = $gvfs".cr;
  $quit ='(ctl+c to quit) '; 
   echo 'Welcome to PHPgsm Game Installer '.VERSION.cr;
   if (isset($cmds)){
@@ -204,6 +211,7 @@ foreach ($list as $temp ) {
  
  function stage_2($data) {
 	 // add stage 2 location
+	 top:
 	 system('clear');
 	$appinstalled = '';
 	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr.cr;
@@ -252,7 +260,12 @@ foreach ($list as $temp ) {
 						echo '2 games that work in the same location are Fistfull of Frags & Counterstrike Source'.cr;
 				}
 				
-				$answer = ask_question(cr."Do you want to install in ".$data['path'].' ? (Y/n) or '.quit,NULL,NULL,true);
+				$answer = ask_question(cr."Do you want to install in ".$data['path'].' ? (Y/n) or '.quit,'y','n');
+				if ($answer == false) {
+					echo 'false'.cr;
+					goto top ;
+				}
+				
 				
 				if ($answer || $answer == true) {
 					return $data;
@@ -332,6 +345,7 @@ function stage_4($data) {
 
 function stage_5($data)  {
 	// do steamcmd
+	global $gvfs;
 	top:
 	system('clear');
 	 echo 'Installing '.$data['name'].' Stage 5: Installation'.cr.cr;
@@ -383,20 +397,15 @@ function stage_5($data)  {
 	 }
 	 
     $cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
-    //$lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log'));
+    if ($gvfs) {	$lsofcmd = 'lsof -e '.$gvfs.' install.log';}
+    else { $lsofcmd = 'lsof install.log';}
+		$lsof = trim(shell_exec($lsofcmd));
    
-    //$lsof = trim(shell_exec('lsof  install.log 2> /dev/null'));
-    //$lsoferr = strpos($lsof,'WARNING: can\'t stat()');
-    //echo "lsoferr - $lsoferr".cr;
-    //if ($lsoferr) {
-	//	   $lsof = trim(shell_exec('lsof -e /run/user/1000/gvfs install.log 2> /dev/null'));
-	 //  }
-	   
     exec($cmd); //clear up the install terminal
      sleep(1);
-	 //while ($lsof) {
-		// $lsof = trim(shell_exec('lsof install.log'));
-		 //}
+	 while ($lsof) {
+		 $lsof = trim(shell_exec($lsofcmd));
+		 }
 	$log =explode(PHP_EOL,file_get_contents('install.log'));
 	$line= trim($oldline);
 	$unread = false;
