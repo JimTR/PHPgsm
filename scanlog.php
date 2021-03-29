@@ -411,7 +411,7 @@ function update_server($server){
 	$cmd = $stub.'q';
 	echo file_get_contents($cmd); // stopped server
 	echo 'stop server using '.$cmd.cr;
-		    $exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+		    $exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			$result = file_get_contents($cmd);
 			if (!$result == 0) {
