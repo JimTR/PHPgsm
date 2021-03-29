@@ -26,9 +26,9 @@ $run_path = dirname($_SERVER['PHP_SELF'],2); // these guys should be in the dir 
 exec('cat /proc/mounts |grep gvfsd-fuse',$tmp,$rval);
 if ($tmp) {
 $tmp =explode(' ',$tmp[0]);
-$gvfs = trim($tmp[1]);
+$installing['gvfs'] = trim($tmp[1]);
 }
-else { $gvfs='';}
+
 echo $run_path.PHP_EOL;
 if ($run_path == '.') { $run_path = '..';} // opps perhaps not
 // test the file is in PHPgsm location 
@@ -38,12 +38,21 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  define ('cr',PHP_EOL);
  define ('VERSION',2.01);
  define ('quit','ctl+c to quit ');
- define ('green_tick',"\e[1m\e[31m ✔ \e[0m");
- 
+ if (file_exists(dirname(__FILE__) . '/../Table.php')) {
+    require_once dirname(__FILE__) . '/../Table.php';
+} else {
+    require_once 'Console/Table.php';
+}
+
+    require_once 'includes/color.php';
+$cc = new Console_Color2();
+$tick = $cc->convert("%g✔%n");
+$cross = $cc->convert("%r✖%n");
+ define ('green_tick',$tick);
+ define ('red_cross',$cross);
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
- echo "gvfs = $gvfs".cr;
  $quit ='(ctl+c to quit) '; 
   echo 'Welcome to PHPgsm Game Installer '.VERSION.cr;
   if (isset($cmds)){
@@ -212,12 +221,21 @@ foreach ($list as $temp ) {
  function stage_2($data) {
 	 // add stage 2 location
 	 top:
+	 $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
+//$table->setHeaders(array('Installing ',$data['name'],' Stage 2: choose location'));
+$table->addRow(array('','',''));
+$table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	 system('clear');
+	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr;
+	 echo $table->getTable();
 	$appinstalled = '';
-	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr.cr;
+	 
 	  $maxlen = strlen($data['branch']);
 	  $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
-	  printf($lmask,'Branch Selected',$data['branch'],'✔');
+	  //printf($lmask,'Branch Selected',$data['branch'],green_tick);
 		echo 'adding a location that does not start with a \'/\' will create a location below the current location'.cr.cr;
 		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL,true);
 		$path = trim(str_replace('~/',exec('echo ~').'/',$path));
@@ -280,18 +298,22 @@ foreach ($list as $temp ) {
 	 // part 3
 	 
 	 top:
+	  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
+//$table->setHeaders(array('Installing ',$data['name'],' Stage 2: choose location'));
+$table->addRow(array('','',''));
+$table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
+$table->addRow(array('Install Location',$data['path'] ,green_tick));
 	 system('clear');
 	 //print_r($installing);
-	 echo 'Installing '.$data['name'].' Stage 3: User & Password'.cr.cr;
-	 // use printf
-	 $maxlen = strlen($data['path']);
-	 $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
-	 $rmask = "%20.20s %".$maxlen.".".$maxlen."s  %4.4s\n";
-	 printf($lmask,'Branch Selected',$data['branch'],'✔');
-	 printf($rmask, 'Location Selected',$data['path'],'✔');
+	 echo 'Installing '.$data['name'].' Stage 3: User & Password'.cr;
+	 echo $table->getTable();
+	
 	 
 	 if (isset($steam_user)) {
-		 printf($lmask, 'User Selected',$data['steam_user'],'✔');
+		 $table->addRow(array('User',$data['steam_user'] ,green_tick));
 	 }
 	
 	 else {
@@ -323,29 +345,36 @@ foreach ($list as $temp ) {
 function stage_4($data) {
 	// stage 4
 	 top:
-	 system('clear');
-	 echo 'Installing '.$data['name'].' Stage 4: Review Installation'.cr.cr;
-	 echo 'Review the information, if everything is correct press enter to install '.$data['name'].cr.cr;	
-	 // use printf
-	 $maxlen = strlen($data['path']);
-	 $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
-	 $rmask = "%20.20s %".$maxlen.".".$maxlen."s  %4.4s\n";
-	 printf($lmask,'Branch',$data['branch'],'✔');
-	 printf($rmask, 'Location',$data['path'],'✔');
-	 printf($lmask, 'User',$data['steam_user'],'✔');
-	 if(empty($data['steam_password'])) {
-		 printf($lmask, 'Password','Not Required','✔');
+	 	 $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
+//$table->setHeaders(array('Installing ',$data['name'],' Stage 2: choose location'));
+$table->addRow(array('','',''));
+$table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
+$table->addRow(array('Install Location',$data['path'] ,green_tick));
+$table->addRow(array('User',$data['steam_user'] ,green_tick));
+if(empty($data['steam_password'])) {
+	$table->addRow(array('Password','Not Required' ,green_tick));
+		// printf($lmask, 'Password','Not Required','✔');
 	 }
 	 else {
-		 printf($lmask, 'Password','Set','✔');
+		 $table->addRow(array('Password','Set' ,green_tick));
+		
 	 }
+	 system('clear');
+	 //print_r($installing);
+	 echo 'Installing '.$data['name'].' Stage 3: User & Password'.cr;
+	 echo $table->getTable();
+	 echo 'Review the information, if everything is correct press enter to install '.$data['name'].cr.cr;	
+	 // use printf
+	 
 			$steam_user = trim(ask_question(cr.'Press enter to continue or '.quit,NULL,NULL,true));
 	  	  return $data;
 }
 
 function stage_5($data)  {
 	// do steamcmd
-	global $gvfs;
 	top:
 	system('clear');
 	 echo 'Installing '.$data['name'].' Stage 5: Installation'.cr.cr;
@@ -353,12 +382,21 @@ function stage_5($data)  {
 	 echo 'this normally indicates either steamcmd is updating itself or steamcmd is having a problem connecting to steam\'s servers'.cr.cr;
 	 $cmd = 'screen -L -Logfile install.log -dmS install';
 	 exec ($cmd,$screen,$retval);
+	 if ($data['branch'] == 'public') {
+        $branch = '';
+}
+else {
+        $branch =' -beta '.$data['branch'];
+        $data['validate'] = true;
+}
+
 	 if(!isset($data['validate'] )) {
-			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].' +quit';
+			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' +quit';
 		}
 	else {
-			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].' validate +quit';
-		}				
+			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' validate +quit';
+		}		
+		
          $scmd = 'screen -S install -p 0  -X stuff "'.$cmd.'^M"';
          exec ($scmd); // get steamcmd running
          sleep (1); // wait for ps
@@ -397,12 +435,12 @@ function stage_5($data)  {
 	 }
 	 
     $cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
-    if ($gvfs) {	$lsofcmd = 'lsof -e '.$gvfs.' install.log';}
+    if (isset ($data['gvfs'])) {	$lsofcmd = 'lsof -e '.$data['gvfs'].' install.log';}
     else { $lsofcmd = 'lsof install.log';}
 		$lsof = trim(shell_exec($lsofcmd));
    
     exec($cmd); //clear up the install terminal
-     sleep(1);
+   
 	 while ($lsof) {
 		 $lsof = trim(shell_exec($lsofcmd));
 		 }
