@@ -37,13 +37,8 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  include DOC_ROOT.'/functions.php';
  define ('cr',PHP_EOL);
  define ('VERSION',2.01);
- define ('quit','ctl+c to quit ');
- if (file_exists(dirname(__FILE__) . '/../Table.php')) {
-    require_once dirname(__FILE__) . '/../Table.php';
-} else {
-    require_once 'Console/Table.php';
-}
-
+ 
+    require_once 'includes/table.php';
     require_once 'includes/color.php';
 $cc = new Console_Color2();
 $tick = $cc->convert("%g✔%n");
