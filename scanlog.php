@@ -227,7 +227,7 @@ foreach ($la as $user_data) {
 	$ut='';
 	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
-		$user_stub ="\t".$username.' ('.$result['country_code'].') ';
+		$user_stub ="\t".$username.' ('.$result['country'].') ';
 		unset($result['id']); // take out id
 		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
