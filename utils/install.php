@@ -28,7 +28,7 @@ if ($tmp) {
 $tmp =explode(' ',$tmp[0]);
 $installing['gvfs'] = trim($tmp[1]);
 }
-
+clean_up();
 echo $run_path.PHP_EOL;
 if ($run_path == '.') { $run_path = '..';} // opps perhaps not
 // test the file is in PHPgsm location 
@@ -36,8 +36,9 @@ if ($run_path == '.') { $run_path = '..';} // opps perhaps not
  include $run_path.'/includes/master.inc.php';
  include DOC_ROOT.'/functions.php';
  define ('cr',PHP_EOL);
- define ('VERSION',2.01);
- 
+ define('CR',cr);
+ define ('VERSION',2.02);
+ define ('quit','<ctl-c> to quit ');
     require_once 'includes/table.php';
     require_once 'includes/color.php';
 $cc = new Console_Color2();
@@ -61,9 +62,11 @@ $cross = $cc->convert("%r✖%n");
  echo 'Checking available disk space'.cr;
  $diskinfo = get_disk_info();
  if (isset($diskinfo['boot_free'])) {
-	 echo 'Disk 1 ('.$diskinfo['boot_free'].')'.cr;
+	 echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
  }
- if(isset($diskinfo['home_free'])) {echo 'Disk 2 ('.$diskinfo['home_free'].')'.cr;}
+ if(isset($diskinfo['home_free']))  {
+	 echo $diskinfo['home_mount'].' ( '.$diskinfo['home_free'].' free )'.cr;
+	 }
  
  if(!root()) {
  echo 'Checking user capabilities';
@@ -132,7 +135,7 @@ else {
 		$installing = stage_3($installing);
 		$installing = stage_4($installing);
 		$installing = stage_5($installing);
-		//$installing = stage_6($installing);
+		$installing = stage_6($installing);
 		echo print_r($installing,true).cr;
 		exit;
 
@@ -232,7 +235,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	  $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
 	  //printf($lmask,'Branch Selected',$data['branch'],green_tick);
 		echo 'adding a location that does not start with a \'/\' will create a location below the current location'.cr.cr;
-		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL,true);
+		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL);
 		$path = trim(str_replace('~/',exec('echo ~').'/',$path));
 		if(empty($path)) {
 									$data['path'] = getcwd();
@@ -312,7 +315,7 @@ $table->addRow(array('Install Location',$data['path'] ,green_tick));
 	 }
 	
 	 else {
-		$steam_user = trim(ask_question(cr.'Enter Steam User Name, enter for anonymous or '.quit,NULL,NULL,true));
+		$steam_user = trim(ask_question(cr.'Enter Steam User Name, enter for anonymous or '.quit,NULL,NULL,false));
 		if (empty(trim($steam_user))) {$steam_user = 'anonymous';}
 		$data['steam_user'] = $steam_user;
 		
@@ -386,10 +389,10 @@ else {
 }
 
 	 if(!isset($data['validate'] )) {
-			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' +quit';
+			$cmd ='steamcmd +login '.$data['steam_user'].' '.$data['steam_password'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' +quit';
 		}
 	else {
-			$cmd ='steamcmd +login '.$data['steam_user'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' validate +quit';
+			$cmd ='steamcmd +login '.$data['steam_user'].' '.$data['steam_password'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' validate +quit';
 		}		
 		
          $scmd = 'screen -S install -p 0  -X stuff "'.$cmd.'^M"';
@@ -484,11 +487,17 @@ return $data;
 
  function stage_6 ($data) {
 	 // configure
+	 exec('du -hs '.$data['path'],$du,$ret);
+	 $x = strpos($du[0],'/');
+	 $name = $data['name'];
+	 $path = $data['path'];
+	 $dir_size = trim(substr($du[0],0,$x-1));
 	 top:
 	 system('clear');
 	 echo 'Installing '.$data['name'].' Stage 6: Configure Server'.cr.cr;
+     echo "$name is installed at $path and has used $dir_size of disk space ".green_tick.cr; 	
 	 echo "Let's configure your server for use".cr;
-	 $host = ask_question('Your Server Name ',NULL,NULL,true);
+	 $host = ask_question('Server Host Name ',NULL,NULL,false);
 	 if (trim($host) =='') {
 		 echo 'not a good idea to have a blank host name !'.cr.'Let\'s try again';
 		 sleep (3);
@@ -496,14 +505,14 @@ return $data;
 	 }
 	 // host name set 
 	 $config['host']  = trim($host);
-	 $rcon_password = ask_question('Enter a password for RCON or leave blank for a generated password ',NULL,NULL,true);
+	 $rcon_password = ask_question('Enter a password for RCON or leave blank for a generated password ',NULL,NULL,false,true);
 	 if (empty(trim($rcon_password))) {
 		 $config['rcon'] = randomPassword();
 	 }
 	 else {
 		 $config['rcon'] = $rcon_password;
 	 }
-	  
+	 echo cr; 
 	 print_r($config);	 
  }
  
@@ -563,4 +572,17 @@ function check_acf ($path) {
 //print_r ($x);
 return $x;
 }	 
+
+function clean_up() {
+	// did it crash ?
+	if(is_file('install.log')) {
+		unlink('install.log');
+	}
+	exec('screen -ls |grep install',$screen,$ret);
+	if (isset($screen[0])) {
+		// we have an unwanted screen
+		$cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
+		exec($cmd);
+	}
+}
 ?>

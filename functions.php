@@ -213,6 +213,8 @@ function get_user_info ($Disk_info) {
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
+	//$du = filesize("/home/".trim($user['name']));
+	//echo "du raw = $du[0]".CR;
 	//echo 'user home collected'.cr;
 	// problem here
 	//print_r ($du).CR;
@@ -462,21 +464,43 @@ function format_num ($string) {
 	}
 	return $string;
 }
-function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false,$hidden = false) {
-	//if ($positive = "null") { unset($positive);}
+
+function ask_question ($salute,$positive='',$negative='',$press_enter_key=false,$hidden = false) {
 	
+	$length = strlen($salute)+1;
+	str_pad ($salute , $length , " " , STR_PAD_RIGHT );
 	run:
-echo $salute; // display question
-if ($hidden === true) {
-	$line = getObscuredText($strMaskChar='*');
+
+	if ($hidden === true) {
+		echo $salute; // display question
+		$line = getObscuredText($strMaskChar='*');
 	return $line;
 	
-}	
-$handle = fopen ("php://stdin","r"); //open stdin
-$line = fgets($handle); //record it
-if ($press_any_key === true and empty($positive)) {
-	return $line; // return a press any key
+	}
+	
+	if ($press_enter_key === true) {
+	// use press enter to continue
+	echo $salute;
+	system('stty -echo');
+	$handle = fopen ("php://stdin","r"); //open stdin
+	$line = fgets($handle); //record it
+	fclose($handle);
+	system('stty echo');
+	return $line;
 }
+	
+$line = readline($salute);	
+
+if (isset($positive)) {
+		if (trim(strtolower($line)) == $positive) {
+			return true;
+		}
+		elseif (isset($negative)) {
+			return false;
+		}
+		sleep(2);
+	}
+
 if ($line === PHP_EOL) {
 	errors:
 	// entered empty string
@@ -484,6 +508,8 @@ if ($line === PHP_EOL) {
 	unset($line); // clear input
 	goto run; // have another go
 }
+
+/*
 //if (preg_match('/\s/',trim($line)) ) {
 if (ctype_space($line)) {
 	echo "ERROR response contains spaces".cr; 
@@ -493,9 +519,10 @@ if ($positive <>NULL){
 	if(trim($line) !== $positive){
 	     return false;
 	}
-}
+} */
 return $line;
 }
+
 function display_mem($mem_info,$colour) {
 	// mem display
 	if (is_cli()){
@@ -1159,5 +1186,21 @@ function array_search_partial($arr, $keyword) {
             return $index;
     }
     return false;
+}
+
+function folderSize($dir)
+{
+    $size = 0;
+    $dir  = rtrim($dir, '/\\').DIRECTORY_SEPARATOR.'{,.}*';
+    $list = glob($dir, GLOB_BRACE);
+    $list = array_filter($list, function($v){
+        return preg_match('%(\\\\|/)\.{1,2}$%im', $v) ? false : true;
+    });
+
+    foreach ($list as $each) {
+        $size += is_file($each) ? filesize($each) : folderSize($each);
+    }
+
+    return $size;
 }
 ?>
