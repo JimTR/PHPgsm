@@ -316,7 +316,7 @@ $table->addRow(array('Install Location',$data['path'] ,green_tick));
 	
 	 else {
 		$steam_user = trim(ask_question(cr.'Enter Steam User Name, enter for anonymous or '.quit,NULL,NULL,false));
-		if (empty(trim($steam_user))) {$steam_user = 'anonymous';}
+		if (empty(trim($steam_user))) {$steam_user = 'anonymous'; $data['steam_password'] = '';}
 		$data['steam_user'] = $steam_user;
 		
 		goto top;}
