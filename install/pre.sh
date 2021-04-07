@@ -21,5 +21,5 @@ sudo dpkg --add-architecture i386
 echo -e "$Cyan \n Installing PHP & Requirements $Color_Off"
 sudo apt-get install php-cli php-mbstring php-gmp php-mysql php-zip php-xml -y
 echo -e "$Cyan \n Installing Steamcmd & Other Requirements $Color_Off"
-sudo apt-get install steamcmd tmpreaper mlocate apt-show-versions libc-bin -y
+sudo apt-get install steamcmd tmpreaper mlocate apt-show-versions libc-bin libncurses5-dev libncursesw5-dev -y
 echo -e "$Green If all went well we can now run the installer - ./install.php $Color_Off"
