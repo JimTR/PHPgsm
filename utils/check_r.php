@@ -33,7 +33,7 @@ if (!is_numeric($argv[1])) {
 }
 echo 'Checking Server id '.$argv[1].cr;
 $appid = $argv[1];
-$cmd = 'steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit 2>/dev/null';
+$cmd = 'steamcmd +login anonymous +app_info_update 1 +app_info_print '.$appid.' +quit 2>/dev/null';
 exec($cmd,$output,$ret_val);
 //echo "return = $ret_val".cr;
 //print_r($output);
