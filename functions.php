@@ -222,9 +222,17 @@ function get_user_info ($Disk_info) {
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
+		if(isset($Disk_info['home_free'])){
 		$user['quota_used'] = format_num($du[0]); 
 		$user['quota'] = $Disk_info['home_size'];
 		$user['quota_free'] = $Disk_info['home_free'];
+	}
+	else {
+		// use boot
+		$user['quota_used'] = format_num($du[0]); 
+		$user['quota'] = $Disk_info['boot_size'];
+		$user['quota_free'] = $Disk_info['boot_free'];
+	}
 	}
 	else {
 		// run quota
