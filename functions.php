@@ -297,14 +297,18 @@ function getVersion($app, $apt=false) {
 		$app = 'apt-show-versions  '.$app;
 		$soutput = explode(' ',shell_exec($app. '  2> /dev/null')); 
 		$mangle = $soutput[1];
+		//echo print_r($soutput,true).cr;
 		$x= strpos($mangle,':');
 		if ($x > 0) {
+			$mangle = str_replace('~','',$mangle);
 			$mangle = substr($mangle,$x+1);
 			$x = strpos($mangle,'+');
 			$output = substr($mangle,0,$x);
 		}
 		else {
-			$output = $soutput[1];
+			$output = str_replace('~','',$soutput[1]);
+			$output = str_replace('-','.',$output);
+			//echo "output = $output".cr;
 			}
 		}
 	else {
@@ -327,14 +331,16 @@ function getVersion($app, $apt=false) {
 			}
 		} 
   preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
-  
+  //echo 'try 1 '.print_r($version,true).cr;
   if (empty($version[0])) {
 		
 		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
+		//echo 'try 2 '.print_r($version,true).cr;
 	}
   if (empty($version[0])) {
 	   
-	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+	    //echo 'try 3 '.print_r($version,true).cr; 
    }
    
  
