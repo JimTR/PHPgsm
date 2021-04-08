@@ -5,13 +5,13 @@ include DOC_ROOT.'/includes/class.color.php';
 include DOC_ROOT.'/includes/class.table.php';
 // 95555
 $cc = new Console_Color2();
-$tick = $cc->convert("%g✔%n");
-$cross = $cc->convert("%r✖%n");
+$tick = $cc->convert("%g  ✔%n");
+$cross = $cc->convert("%r  ✖%n");
  $table = new Console_Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
-$table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependancy Check'));
+$table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependency Check'));
 system('clear');
 echo $cc->convert("%cPHPgsm Installer%n").cr; 
 //echo get_boot_time().' '.$tick.cr;
@@ -23,15 +23,15 @@ $software['Apache']['version'] =  getVersion('apache2 -v');
 $software['Apache']['use'] = 'only required if using the web API';
 $software['Git']['version'] = getVersion('git --version');
 $software['Git']['use'] = 'required to update PHPgsm automatically';
-$software['Tempreaper']['version'] = getVersion('tmpreaper',true);
-$software['Tempreaper']['use'] = 'used for log pruning';
+$software['Tmpreaper']['version'] = getVersion('tmpreaper',true);
+$software['Tmpreaper']['use'] = 'used for log pruning';
 $software['Steamcmd']['version']  = getVersion('steamcmd',true);
 $software['Steamcmd']['use']  = 'required to install & update Steam game servers';
 $software['GlibC']['version'] = getVersion('libc-bin',true);
 $software['GlibC']['use'] = 'required for steam games';
 $software['foreign_architecture']['version'] = $x32;
 $software['foreign_architecture']['use'] = 'required by Steamcmd';
-$software['webmin']['version'] = getVersion('webmin list-config -c |grep server=M 2>/dev/null');
+$software['webmin']['version'] = getVersion('webmin -v');
 $software['webmin']['use'] = 'Optional - easy configuration tool for apache, mysql etc';
 foreach ($software as $k => $v) {
 	if ($v['version'] !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
@@ -43,6 +43,7 @@ $software['php_mysql'] = getVersion('php-mysql',true);
 $software['php_gmp'] = getVersion('php-gmp',true);
 $software['php_zip'] = getVersion('php-zip',true);
 $software['php_xml'] = getVersion('php-xml',true);
+$software['php_json'] = getVersion('php-json',true);
 $table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
 foreach ($software as $k => $v) {
 	if ($v !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
