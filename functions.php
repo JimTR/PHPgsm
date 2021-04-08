@@ -377,7 +377,8 @@ function get_software_info($database) {
 		$software['postfix'] = getVersion('postfix',$apt);
 		$software['curl'] = getVersion('curl',$apt);
 		$software['tmux'] = getVersion('tmux',$apt);
-		$software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v',$apt);
+		$software['litespeed'] = getVersion('litespeed',$apt);
+		$software['git'] = getVersion('git',$apt);
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
@@ -391,6 +392,8 @@ function get_software_info($database) {
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
 	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
+	     $software['git'] = getVersion('git --version');
+	     $software['tmpreaper'] = getVersion('tmpreaper',true);
 	}
 	//print_r($software);	 
 	 return $software;
@@ -620,6 +623,8 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mQuota Version\e[97m      " .$software['quotav'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m    " .$software['postfix'].CR;
     echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
+    echo "\t\t\e[38;5;82mGit Version      \e[97m  " .$software['git'].CR;
+    echo "\t\t\e[38;5;82mTmpreaper Version\e[97m  " .$software['tmpreaper'].CR;
     echo "\t\t\e[38;5;82mTmux Version\e[97m       " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
