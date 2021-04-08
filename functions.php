@@ -295,7 +295,17 @@ function getVersion($app, $apt=false) {
 	if ($apt == true) {
 		//echo 'apt=true'.PHP_EOL;
 		$app = 'apt-show-versions  '.$app;
-		$output = shell_exec($app. '  2> /dev/null'); 
+		$soutput = explode(' ',shell_exec($app. '  2> /dev/null')); 
+		$mangle = $soutput[1];
+		$x= strpos($mangle,':');
+		if ($x > 0) {
+			$mangle = substr($mangle,$x+1);
+			$x = strpos($mangle,'+');
+			$output = substr($mangle,0,$x);
+		}
+		else {
+			$output = $soutput[1];
+			}
 		}
 	else {
 		if ($app == 'nginx -v') {
@@ -317,6 +327,7 @@ function getVersion($app, $apt=false) {
 			}
 		} 
   preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+  
   if (empty($version[0])) {
 		
 		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
@@ -379,6 +390,7 @@ function get_software_info($database) {
 		$software['tmux'] = getVersion('tmux',$apt);
 		$software['litespeed'] = getVersion('litespeed',$apt);
 		$software['git'] = getVersion('git',$apt);
+		$oftware['asv'] = getVersion('apt-show-versions',$apt);
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
@@ -394,6 +406,7 @@ function get_software_info($database) {
 	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
 	     $software['git'] = getVersion('git --version');
 	     $software['tmpreaper'] = getVersion('tmpreaper',true);
+	     $software['asv'] = getVersion('apt-show-versions -V');
 	}
 	//print_r($software);	 
 	 return $software;
@@ -625,6 +638,7 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
     echo "\t\t\e[38;5;82mGit Version      \e[97m  " .$software['git'].CR;
     echo "\t\t\e[38;5;82mTmpreaper Version\e[97m  " .$software['tmpreaper'].CR;
+    echo "\t\t\e[38;5;82mApt Checker      \e[97m  " .$software['asv'].CR;
     echo "\t\t\e[38;5;82mTmux Version\e[97m       " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
