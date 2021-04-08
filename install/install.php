@@ -3,7 +3,13 @@ include 'data/include.php';
 include DOC_ROOT.'/functions.php';
 include DOC_ROOT.'/includes/class.color.php';
 include DOC_ROOT.'/includes/class.table.php';
-// 95555
+if (!defined('PHP_VERSION_ID')) {
+    $version = explode('.', PHP_VERSION);
+    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+}
+ define('PHP_MAJOR_VERSION',   $version[0]);
+    define('PHP_MINOR_VERSION',   $version[1]);
+    define('PHP_RELEASE_VERSION', $version[2]);
 $cc = new Console_Color2();
 $tick = $cc->convert("%g  ✔%n");
 $cross = $cc->convert("%r  ✖%n");
@@ -39,11 +45,15 @@ foreach ($software as $k => $v) {
 	$table->addRow(array($k,$v['version'] ,$stat,'',$v['use']));
 }
 unset($software);
-$software['php_mysql'] = getVersion('php-mysql',true);
-$software['php_gmp'] = getVersion('php-gmp',true);
-$software['php_zip'] = getVersion('php-zip',true);
-$software['php_xml'] = getVersion('php-xml',true);
-$software['php_json'] = getVersion('php-json',true);
+$software['php'] = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+$software['php_mysql'] = phpversion('mysqli');
+$software['php_gmp'] = phpversion('gmp');
+$software['php_zip'] = phpversion('zip');
+$software['php_xml'] = phpversion('xml');
+$software['php_json'] = phpVersion('json');
+$software['php_mbstring'] = phpversion('mbstring');
+$software['php_readline'] = phpversion('readline');
+$software['php_opcache'] = phpversion('opcache');
 $table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
 foreach ($software as $k => $v) {
 	if ($v !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
