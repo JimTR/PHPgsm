@@ -56,7 +56,7 @@ $software['php_readline'] = phpversion('readline');
 $software['php_opcache'] = phpversion('opcache');
 $table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
 foreach ($software as $k => $v) {
-	if ($v !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
+	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
 	$table->addRow(array($k,$v ,$stat));
 }
