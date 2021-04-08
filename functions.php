@@ -318,6 +318,19 @@ function getVersion($app, $apt=false) {
 				$output = file_get_contents('nginx');
 				unlink('nginx');
 				}
+		else if ($app == 'webmin -v') {
+			// webmin
+			//echo 'hit webmin'.cr;
+			if (is_file('/etc/webmin/miniserv.conf')) {
+			$app = 'webmin list-config -c |grep server=M 2>/dev/null' ;
+			$output = shell_exec($app);
+			}
+			else {
+				$output='';
+			}
+			//$output = file_get_contents('nginx');
+			//unlink('nginx'); 
+		}		
 		else if ($app == 'mysql -V') {
 			// maria test
 			$output = shell_exec($app. '  2> /dev/null'); 
