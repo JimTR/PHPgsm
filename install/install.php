@@ -30,7 +30,10 @@ $git = dpkg('git');
 $tmpr = dpkg('tmpreaper');
 $steam = dpkg('steamcmd:i386');
 $glib = dpkg('libc-bin');
-$st = dpkg('mysql-common');
+$st = dpkg('mysql-server');
+if (!isset($st[2])) {
+	$st = dpkg('mysql-common');
+}
 if (isset($st[2])) {
 	$software['Mysql']['version'] = $st[2];
 	$software['Mysql']['use'] = 'Optional - '.$st[4];

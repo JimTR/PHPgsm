@@ -1255,6 +1255,12 @@ $cmd = "dpkg-query -l | grep -P '( ".$app." )'";
 $cmd = 'dpkg -l |grep "^ii  '.$app.'[[:space:]]"';
 //echo $cmd.PHP_EOL;
 exec ($cmd,$soft,$v);
+if ($v >0) {
+	unset($v);
+	$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
+	//echo $cmd.PHP_EOL;
+	exec ($cmd,$soft,$v);
+}
 if ($v >0){
 	$soft1[]=$app;
 	$soft1[]= 'Not Installed';
