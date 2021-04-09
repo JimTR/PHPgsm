@@ -25,11 +25,12 @@ echo $cc->convert("%cPHPgsm Installer%n").cr;
 $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
 $table->addRow(array('Module','   Version' ,'Status','Usage'));
 
-
+$loc =dpkg('mlocate');
 $git = dpkg('git'); 
 $tmpr = dpkg('tmpreaper');
 $steam = dpkg('steamcmd:i386');
 $glib = dpkg('libc-bin');
+$webmin = dpkg('webmin');
 $st = dpkg('mysql-server');
 if (!isset($st[2])) {
 	$st = dpkg('mysql-common');
@@ -86,10 +87,22 @@ else {
 }	
 $software['foreign_architecture']['version'] = $x32;
 $software['foreign_architecture']['use'] = 'Required  - Steamcmd';
-$software['webmin']['version'] = getVersion('webmin -v');
-$software['webmin']['use'] = 'Optional - easy configuration tool for apache, mysql etc';
-$software['locate']['version'] = getVersion('locate -V');
-$software['locate']['use'] = 'Optional - fast file finder';
+if(isset($webmin[2])) {
+$software['webmin']['version'] = $webmin[2];
+$software['webmin']['use'] = 'Optional - '.$webmin[4];
+}
+else {
+	$software['webmin']['version'] = $webmin[1];
+	$software['webmin']['use'] = 'Optional - web-based administration interface for Unix systems';
+}
+if(isset($loc[2])){
+	$software['locate']['version'] = $loc[2];
+	$software['locate']['use'] = 'Optional - '.$loc[4];
+}
+else {
+	$software['locate']['version'] = $loc[1];
+	$software['locate']['use'] = 'Optional - quickly find files on the filesystem based on their name';
+}		
 foreach ($software as $k => $v) {
 	if ($v['version'] !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_',' ',$k);
