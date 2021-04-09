@@ -33,6 +33,10 @@ define ('VERSION',2.11);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
+if (strtolower($argv[1]) == 'v') {
+	echo 'Scanlog version '.VERSION.cr;
+	exit;
+}
 if (empty( $settings['ip_key'] )) {
 	echo 'Fatal Error - api key missing'.cr;
 	exit(7);
