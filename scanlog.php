@@ -414,21 +414,22 @@ function update_server($server){
 			}
 	$cmd = $stub.'q';
 	echo file_get_contents($cmd); // stopped server
-	echo 'stop server using '.$cmd.cr;
-		    $exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			$result = file_get_contents($cmd);
-			if (!$result == 0) {
-				echo $result.cr;
-			} // scanned the log
+	//echo 'stop server using '.$cmd.cr;
+		    //$exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			//$result = file_get_contents($cmd);
+			//if (!$result == 0) {
+				//echo $result.cr;
+			//} // scanned the log
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	echo file_get_contents($cmd);
-	echo 'updated server using '.$cmd.cr;
+	//echo 'updated server using '.$cmd.cr;
 	$cmd = $stub.'s';
 	echo file_get_contents($cmd);
-	echo 'start server using '.$cmd.cr;
+	//echo 'start server using '.$cmd.cr;
 	
 	$update_done[] = $game['install_dir'];
+	return;
 }
 ?>
