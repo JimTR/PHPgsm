@@ -86,7 +86,7 @@ else {
 	$software['GlibC']['use'] = 'Required -  for Steam dedicated game servers';
 }	
 $software['foreign_architecture']['version'] = $x32;
-$software['foreign_architecture']['use'] = 'Required  - Steamcmd';
+$software['foreign_architecture']['use'] = 'Required - Steamcmd requires 32bit architecture';
 if(isset($webmin[2])) {
 $software['webmin']['version'] = $webmin[2];
 $software['webmin']['use'] = 'Optional - '.$webmin[4];
