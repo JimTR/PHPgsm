@@ -1249,4 +1249,43 @@ function folderSize($dir)
 
     return $size;
 }
+function dpkg($app) {
+
+$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
+$cmd = 'dpkg -l |grep "^ii  '.$app.'[[:space:]]"';
+//echo $cmd.PHP_EOL;
+exec ($cmd,$soft,$v);
+if ($v >0){
+	$soft1[]=$app;
+	$soft1[]= 'Not Installed';
+	return $soft1;
+} 
+$soft1 = explode('  ',trim($soft[0]));
+foreach($soft1 as $k => $v) {
+if (trim($v)=='') {
+unset ($soft1[$k]);
+}
+else {
+$soft1[$k] = trim($v);
+}
+}
+//unset($soft1[0]);
+//echo print_r($soft1,true).cr;
+$soft1=array_values($soft1);
+$ver = str_replace('~','.',$soft1[2]);
+preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $ver, $version);
+if (empty($version[0])) {
+	preg_match('@[0-9]+\.[0-9]+@', $ver, $version);
+}
+ if (empty($version[0])) {
+
+            preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $ver, $version);
+            //echo 'try 3 '.print_r($version,true).cr; 
+   }
+$soft1[2] = $version[0];
+//print_r($version);
+//echo 'found '.count($soft).PHP_EOL;
+//echo PHP_EOL;
+return $soft1;
+}
 ?>

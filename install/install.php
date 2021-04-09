@@ -18,34 +18,82 @@ $cross = $cc->convert("%r  ✖%n");
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
 $table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependency Check'));
+$table->addRow(array('','' ,'',''));
 system('clear');
 echo $cc->convert("%cPHPgsm Installer%n").cr; 
 //echo get_boot_time().' '.$tick.cr;
 $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
-$table->addRow(array('Module','Version' ,'Status','Usage'));
-$software['Mysql']['version'] = getVersion('mysql -V');
-$software['Mysql']['use'] = 'only required if the database is local';
-$software['Apache']['version'] =  getVersion('apache2 -v');
-$software['Apache']['use'] = 'only required if using the web API';
-$software['Git']['version'] = getVersion('git --version');
-$software['Git']['use'] = 'required to update PHPgsm automatically';
-$software['Tmpreaper']['version'] = getVersion('tmpreaper',true);
-$software['Tmpreaper']['use'] = 'used for log pruning';
-$software['Steamcmd']['version']  = getVersion('steamcmd',true);
-$software['Steamcmd']['use']  = 'required to install & update Steam game servers';
-$software['GlibC']['version'] = getVersion('libc-bin',true);
-$software['GlibC']['use'] = 'required for steam games';
+$table->addRow(array('Module','   Version' ,'Status','Usage'));
+
+
+$git = dpkg('git'); 
+$tmpr = dpkg('tmpreaper');
+$steam = dpkg('steamcmd:i386');
+$glib = dpkg('libc-bin');
+$st = dpkg('mysql-common');
+if (isset($st[2])) {
+	$software['Mysql']['version'] = $st[2];
+	$software['Mysql']['use'] = 'Optional - '.$st[4];
+}
+else {
+	$software['Mysql']['version'] = $st[1];
+	$software['Mysql']['use'] = 'Optional - for use if the PHPgsm database is installed locally';
+}
+$apache = dpkg('apache2');
+if (isset($apache[2])) {
+$software['Apache']['version'] =  $apache[2];
+$software['Apache']['use'] = 'Optional - '.$apache[4].', only required if using the web API on this machine ';
+}
+else {
+	$software['Apache']['version'] = $apache[1];
+	$software['Apache']['use'] = 'Optional -  only required if using the web API on this machine ';
+}
+if (isset($git[2])) {
+	$software['Git']['version'] = $git[2];
+	$software['Git']['use'] = 'Optional -  '.$git[4].' required to update PHPgsm automatically';
+}
+else {
+		$software['Git']['version'] = $git[1];
+		$software['Git']['use'] = 'Optional -  use :- to update PHPgsm automatically';
+	}
+if (isset($tmpr[2])) {	
+	$software['Tmpreaper']['version'] = $tmpr[2];
+	$software['Tmpreaper']['use'] = 'Optional - '.$tmpr[4].' used for log pruning';
+}
+else {
+	$software['Tmpreaper']['version'] = $tmpr[1];
+	$software['Tmpreaper']['use'] = 'Optional -  used for log pruning';
+}	
+if(isset($steam[2])){
+	$software['Steamcmd']['version']  = $steam[2];
+	$software['Steamcmd']['use']  = 'Required - '.$steam[4].' install & update Steam dedicated game servers';
+}
+
+else {
+	$software['Steamcmd']['version']  = $steam[1];
+	$software['Steamcmd']['use']  = 'Required -  use :- install & update Steam dedicated game servers';
+}
+if (isset($glib[2])){
+	$software['GlibC']['version'] = $glib[2];
+	$software['GlibC']['use'] = 'Required - '.$glib[4].' for Steam dedicated game servers';
+}
+else {
+	$software['GlibC']['version'] = $glib[1];
+	$software['GlibC']['use'] = 'Required -  for Steam dedicated game servers';
+}	
 $software['foreign_architecture']['version'] = $x32;
-$software['foreign_architecture']['use'] = 'required by Steamcmd';
+$software['foreign_architecture']['use'] = 'Required  - Steamcmd';
 $software['webmin']['version'] = getVersion('webmin -v');
 $software['webmin']['use'] = 'Optional - easy configuration tool for apache, mysql etc';
+$software['locate']['version'] = getVersion('locate -V');
+$software['locate']['use'] = 'Optional - fast file finder';
 foreach ($software as $k => $v) {
 	if ($v['version'] !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_',' ',$k);
 	$table->addRow(array($k,$v['version'] ,$stat,'',$v['use']));
 }
 unset($software);
-$software['php'] = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+$software['php'] = phpversion();
 $software['php_mysql'] = phpversion('mysqli');
 $software['php_gmp'] = phpversion('gmp');
 $software['php_zip'] = phpversion('zip');
@@ -54,7 +102,18 @@ $software['php_json'] = phpVersion('json');
 $software['php_mbstring'] = phpversion('mbstring');
 $software['php_readline'] = phpversion('readline');
 $software['php_opcache'] = phpversion('opcache');
+$table->addRow(array('','' ,'',''));
 $table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
+foreach ($software as $k => $v) {
+	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
+	$k = str_replace('_','-',$k);
+	$table->addRow(array($k,$v ,$stat));
+}
+unset($software);
+$table->addRow(array('','' ,'',''));
+$table->addRow(array($cc->convert("%yPHPgsm Modules%n"),'' ,''));
+$software['Ajax'] = getVersion('php ../ajaxv2.php action=version');
+$software['Scanlog'] = getVersion('../scanlog.php v');
 foreach ($software as $k => $v) {
 	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
@@ -76,7 +135,7 @@ if ($treap !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
 $table->addRow(array('Tmpreaper',$treap ,$stat)); */
 
 echo $table->getTable();
-
+print_r($software);
 ask_question('press a key',null,null,true);
 echo cr;
 if (is_file(DOC_ROOT.'/includes/config.php')) {
