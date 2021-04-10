@@ -149,7 +149,12 @@ $software['php_mysql']['version'] = $pmysql[2];
 $software['php_mysql']['use'] ="$req - ".$pmysql[4];
 $software['php_gmp']['version'] = phpversion('gmp');
 $software['php_gmp']['use'] ="$req - ".'GMP module for PHP - provides advanced math functions';
+if (!empty(phpversion('zip'))) {
 $software['php_zip']['version'] = phpversion('zip');
+}
+else {
+	$software['php_zip']['version'] = 'Not Installed';
+}
 $software['php_zip']['use'] ="$opt - ZIP module for PHP - provides archive functions required for later versions of PHPgsm";
 $software['php_xml']['version'] = phpversion('xml');
 $software['php_xml']['use'] ="$req - ".'XML module for PHP - provides xml data support';
