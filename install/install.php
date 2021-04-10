@@ -1,14 +1,26 @@
+#!/usr/bin/php
 <?php
 include 'data/include.php';
 include DOC_ROOT.'/functions.php';
 include DOC_ROOT.'/includes/class.color.php';
 include DOC_ROOT.'/includes/class.table.php';
 
-define('version','1.0');
+define('version',1.01);
+if (!isset($argv[1])) {
+	echo 'Command Option missing'.cr;
+	echo cr;
+	echo "\t".$argv[0]." master - install a master server".cr;
+	echo "\t".$argv[0]." slave - install a slave server".cr;
+	echo "\t".$argv[0]." h - display help".cr;
+	echo "\t".$argv[0]." v - install version".cr; 
+	echo cr;
+	exit;
+}
     if (strtolower($argv[1] == 'v')) {
 		echo 'Install - '.version.cr;
 		exit;
 	}
+	
 if (!defined('PHP_VERSION_ID')) {
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
