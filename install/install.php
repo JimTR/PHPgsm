@@ -37,7 +37,7 @@ $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
 if (empty($x32)) {
 	$x32 = 'Not Enabled';
 }
-$table->addRow(array('Module','   Version' ,'Status','Usage'));
+$table->addRow(array('Module','   Version' ,'Status',"\t\t\tUsage"));
 $screen = dpkg('screen');
 $loc =dpkg('mlocate');
 $git = dpkg('git'); 
@@ -123,7 +123,8 @@ $software['Webmin']['version'] = $webmin[2];
 $software['Webmin']['use'] = $opt.' - '.$webmin[4];
 }
 else {
-	$software['Webmin']['version'] = $webmin[1];
+	$err = trim($cc->convert("%r".$webmin[1]."%n"));
+	$software['Webmin']['version'] =$webmin[1]; //
 	$software['Webmin']['use'] = $ropt.' - web-based administration interface for Unix systems';
 }
 if(isset($loc[2])){
@@ -140,21 +141,35 @@ foreach ($software as $k => $v) {
 	$table->addRow(array($k,$v['version'] ,$stat,'',$v['use']));
 }
 unset($software);
-$software['php'] = phpversion();
-$software['php_mysql'] = phpversion('mysqli');
-$software['php_gmp'] = phpversion('gmp');
-$software['php_zip'] = phpversion('zip');
-$software['php_xml'] = phpversion('xml');
-$software['php_json'] = phpVersion('json');
-$software['php_mbstring'] = phpversion('mbstring');
-$software['php_readline'] = phpversion('readline');
-$software['php_opcache'] = phpversion('opcache');
+$php_v = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
+$software['php']['version'] = phpversion();
+$software['php']['use'] = "$req - server-side, HTML-embedded scripting language";
+$pmysql = dpkg('php'.$php_v.'-mysql');
+$software['php_mysql']['version'] = $pmysql[2];
+$software['php_mysql']['use'] ="$req - ".$pmysql[4];
+$software['php_gmp']['version'] = phpversion('gmp');
+$software['php_gmp']['use'] ="$req - ".'GMP module for PHP - provides advanced math functions';
+$software['php_zip']['version'] = phpversion('zip');
+$software['php_zip']['use'] ="$opt - ZIP module for PHP - provides archive functions required for later versions of PHPgsm";
+$software['php_xml']['version'] = phpversion('xml');
+$software['php_xml']['use'] ="$req - ".'XML module for PHP - provides xml data support';
+$software['php_json']['version'] = phpVersion('json'); // virtual pack as of 8.0 let php work it out
+$software['php_json']['use'] ="$req - JSON module for PHP";
+$software['php_mbstring']['version'] = phpversion('mbstring');
+$software['php_mbstring']['use'] ="$req - MBSTRING module for PHP - provides database functions for multibyte objects";
+$software['php_readline']['version'] = phpversion('readline');
+$software['php_readline']['use'] ="$req - READLINE module for PHP ";
+$popcache = dpkg('php'.$php_v.'-opcache');
+$software['php_opcache']['version'] = $popcache[2];
+$software['php_opcache']['use'] = "$opt - ".$popcache[4];
+//print_r($software);
+//die();
 $table->addRow(array('','' ,'',''));
 $table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
 foreach ($software as $k => $v) {
-	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
+	if ($v['version'] !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
-	$table->addRow(array($k,$v ,$stat));
+	$table->addRow(array($k,$v['version'] ,$stat,'',$v['use']));
 }
 unset($software);
 $table->addRow(array('','' ,'',''));
@@ -169,7 +184,7 @@ foreach ($software as $k => $v) {
 
 
 echo $table->getTable();
-
+echo cr;
 $answer = strtoupper(ask_question('press (I)nstall (S)kip (Q)uit  ',null,null));
 echo "the answer is $answer".cr;
 if (is_file(DOC_ROOT.'/includes/config.php')) {
