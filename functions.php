@@ -1289,6 +1289,10 @@ if (empty($version[0])) {
             //echo 'try 3 '.print_r($version,true).cr; 
    }
 $soft1[2] = $version[0];
+//echo $soft1[4].cr;
+if(strpos($soft1[4],'my.cnf') !=FALSE) {
+	$soft1[4] = 'MariaDB MySQL database server';
+}
 //print_r($version);
 //echo 'found '.count($soft).PHP_EOL;
 //echo PHP_EOL;
