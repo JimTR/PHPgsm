@@ -1,6 +1,11 @@
 <?php
 //echo 'functions 1.04';
-
+define('fversion',1.04);
+$runfile = substr($argv[0], strrpos($argv[0], '/') + 1);
+if (isset($argv[1])  and $runfile == 'functions.php') {
+	echo 'Functions v'.fversion.PHP_EOL;
+	exit;
+}
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    

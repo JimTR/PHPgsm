@@ -4,23 +4,27 @@ include 'data/include.php';
 include DOC_ROOT.'/functions.php';
 include DOC_ROOT.'/includes/class.color.php';
 include DOC_ROOT.'/includes/class.table.php';
-
+$cc = new Console_Color2();
 define('version',1.01);
 if (!isset($argv[1])) {
-	echo 'Command Option missing'.cr;
 	echo cr;
-	echo "\t".$argv[0]." master - install a master server".cr;
-	echo "\t".$argv[0]." slave - install a slave server".cr;
-	echo "\t".$argv[0]." h - display help".cr;
-	echo "\t".$argv[0]." v - install version".cr; 
+	echo $cc->convert("%rCommand Option Missing%n").cr;
+	echo cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-m%n")." - install a master server".cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-s%n")." - install a slave server".cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-h%n")." - display help".cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-v%n")." - installer version".cr;
 	echo cr;
 	exit;
 }
-    if (strtolower($argv[1] == 'v')) {
+    if (strtolower($argv[1] == '-v')) {
 		echo 'Install - '.version.cr;
 		exit;
 	}
-	
+	if (strtolower($argv[1] == '-h')) {
+		echo 'help'.cr;
+		exit;
+	}
 if (!defined('PHP_VERSION_ID')) {
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
@@ -29,7 +33,7 @@ if (!defined('PHP_VERSION_ID')) {
     define('PHP_MINOR_VERSION',   $version[1]);
     define('PHP_RELEASE_VERSION', $version[2]);
     
-$cc = new Console_Color2();
+
 $tick = $cc->convert("%g  ✔%n");
 $cross = $cc->convert("%r  ✖%n");
 $req = $cc->convert("%gRequired%n");
@@ -49,7 +53,7 @@ $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
 if (empty($x32)) {
 	$x32 = 'Not Enabled';
 }
-$table->addRow(array('Module','   Version' ,'Status',"\t\t\tUsage"));
+$table->addRow(array('Module','   Version' ,'Status',"\t\t\t\tUsage"));
 $screen = dpkg('screen');
 $loc =dpkg('mlocate');
 $git = dpkg('git'); 
@@ -193,6 +197,7 @@ $table->addRow(array('','' ,'',''));
 $table->addRow(array($cc->convert("%yPHPgsm Modules%n"),'' ,''));
 $software['Ajax'] = getVersion('php ../ajaxv2.php action=version');
 $software['Scanlog'] = getVersion('../scanlog.php v');
+$software['Functions'] = getVersion('php ../functions.php -v');
 foreach ($software as $k => $v) {
 	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
