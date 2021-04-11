@@ -1,9 +1,11 @@
 #!/usr/bin/php
 <?php
-include 'data/include.php';
-include DOC_ROOT.'/functions.php';
-include DOC_ROOT.'/includes/class.color.php';
-include DOC_ROOT.'/includes/class.table.php';
+define ('cr',PHP_EOL);
+define ('br','<br>');
+define('DOC_ROOT', dirname(__FILE__,2));
+include 'includes/functions.php';
+include 'includes/class.color.php';
+include 'includes/class.table.php';
 $cc = new Console_Color2();
 define('version',1.01);
 if (!isset($argv[1])) {
@@ -44,8 +46,8 @@ $ropt = $cc->convert("%rOptional%n");
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
-$table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependency Check'));
-$table->addRow(array('','' ,'',''));
+$table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependency Check','','',cr));
+
 system('clear');
 echo $cc->convert("%cPHPgsm Installer%n").cr; 
 //echo get_boot_time().' '.$tick.cr;
@@ -53,7 +55,8 @@ $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
 if (empty($x32)) {
 	$x32 = 'Not Enabled';
 }
-$table->addRow(array('Module','     Version' ,'Status',"\t\t\t\tUsage"));
+$table->addRow(array($cc->convert("%yLinux Modules%n"),'' ,'',''));
+$table->addRow(array($cc->convert("%cModule%n"),$cc->convert("%c\t\tVersion%n"),$cc->convert("%c\t\tStatus%n"),'',$cc->convert("%c\t\t\t\tUsage%n")));
 $headmask = "%13.13s";
 $screen = dpkg('screen');
 $loc =dpkg('mlocate');
@@ -71,7 +74,7 @@ if(isset($steam[2])){
 
 else {
 	$software['Steamcmd']['version']  = sprintf($headmask,$steam[1]);
-	$software['Steamcmd']['use']  = $rreq.' -  use :- install & update Steam dedicated game servers';
+	$software['Steamcmd']['use']  = $rreq.' -  Command-line interface for Valve\'s Steam install & update Steam dedicated game servers';
 }
 if (isset($glib[2])){
 	$software['GlibC']['version'] = sprintf($headmask,$glib[2]);
@@ -188,7 +191,8 @@ $software['php_opcache']['use'] = "$opt - ".$popcache[4];
 //print_r($software);
 //die();
 $table->addRow(array('','' ,'',''));
-$table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,''));
+$table->addRow(array($cc->convert("%yPHP Modules%n"),'' ,'',''));
+$table->addRow(array($cc->convert("%cModule%n"),$cc->convert("%c\t\tVersion%n"),$cc->convert("%c\t\tStatus%n"),'',$cc->convert("%c\t\t\t\tUsage%n")));
 foreach ($software as $k => $v) {
 	if ($v['version'] !='Not Installed'){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
@@ -197,9 +201,10 @@ foreach ($software as $k => $v) {
 unset($software);
 $table->addRow(array('','' ,'',''));
 $table->addRow(array($cc->convert("%yPHPgsm Modules%n"),'' ,''));
-$software['Ajax'] = sprintf($headmask,getVersion('php ../ajaxv2.php action=version'));
-$software['Scanlog'] = sprintf($headmask,getVersion('../scanlog.php v'));
-$software['Functions'] = sprintf($headmask,getVersion('php ../functions.php -v'));
+$table->addRow(array($cc->convert("%cModule%n"),$cc->convert("%c\t\tVersion%n"),$cc->convert("%c\t\tStatus%n"),'',$cc->convert("%c\t\t\t\tUsage%n")));
+$software['Ajax'] = sprintf($headmask,getVersion('php '.DOC_ROOT.'/ajaxv2.php action=version'));
+$software['Scanlog'] = sprintf($headmask,getVersion(DOC_ROOT.'/scanlog.php v'));
+$software['Functions'] = sprintf($headmask,getVersion('php '.DOC_ROOT.'/functions.php -v'));
 foreach ($software as $k => $v) {
 	if ($v !=''){ $stat= $tick;} else{$stat = $cross;}
 	$k = str_replace('_','-',$k);
