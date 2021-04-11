@@ -16,11 +16,11 @@ echo $1;
 echo -e "$Cyan \n Updating System.. $Color_Off"
 sudo apt-get update -y && sudo apt-get upgrade -y
 echo -e
-echo -e "$Purple Enabling 32 bit arch for steamcmd. $Color_Off"
+echo -e "$Purple Enabling 32 bit architecture for steamcmd. $Color_Off"
 sudo dpkg --add-architecture i386
 echo -e "$Cyan \n Installing PHP & Requirements $Color_Off"
-sudo apt-get install php-cli php-mbstring php-gmp php-mysql php-zip php-xml -y
+sudo apt-get install php-cli php-common php-mbstring php-gmp php-mysql php-zip php-xml -y
 echo -e "$Cyan \n Installing Steamcmd & Other Requirements $Color_Off"
-sudo apt-get install steamcmd tmpreaper mlocate apt-show-versions libc-bin libncurses5 libncursesw5:i386 -y
+sudo apt-get install steamcmd tmpreaper mlocate libc-bin libncurses5 libncursesw5:i386 git -y
 echo -e "$Green If all went well we can now run the installer - ./install.php $Color_Off"
 # sudo apt-get install libncurses5 libncurses5:i386

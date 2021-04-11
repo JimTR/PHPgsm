@@ -8,6 +8,16 @@ include 'includes/class.color.php';
 include 'includes/class.table.php';
 $cc = new Console_Color2();
 define('version',1.01);
+$os = lsb();
+if ($os['ID_LIKE'] !== 'debian') {
+	echo 'Currently this installer only works with debian type OS\'s'.cr;
+	echo 'Please refer to the documentation to install on other types of OS'.cr;
+	exit;
+} 
+if (is_file('/var/run/reboot-required') === true) {
+			echo "\t".$cc->convert("%rThis machine requires a restart%n").cr;
+			$rb = ask_question('Restart now ? ','y','n');
+		}
 if (!isset($argv[1])) {
 	echo cr;
 	echo $cc->convert("%rCommand Option Missing%n").cr;
@@ -19,14 +29,29 @@ if (!isset($argv[1])) {
 	echo cr;
 	exit;
 }
-    if (strtolower($argv[1] == '-v')) {
+switch (strtolower($argv[1])) {
+	case '-v':
+	case 'v' :
 		echo 'Install - '.version.cr;
 		exit;
-	}
-	if (strtolower($argv[1] == '-h')) {
-		echo 'help'.cr;
-		exit;
-	}
+	case '-h' :
+	case 'h' :
+			echo 'help'.cr;
+			exit;
+	case '-m' :
+	case 'm' :
+			$install['type'] = 'm';
+			break;
+	case '-s' :
+	case 's':
+			$install['type'] = 's';
+			break;
+	default :
+			echo  $cc->convert("%rInvalid Command Option%n").cr;
+			exit;	
+}
+   
+		
 if (!defined('PHP_VERSION_ID')) {
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
