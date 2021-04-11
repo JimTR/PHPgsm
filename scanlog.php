@@ -29,7 +29,7 @@
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
-define ('VERSION',2.11);
+define ('VERSION',2.12);
 require ('includes/master.inc.php');
 require 'includes/Emoji.php';
 require 'includes/class.steamid.php';
@@ -401,13 +401,13 @@ function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done;
-	
+	echo 'Server Update via Scanlog '.VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
-				echo 'update already done'.cr;
+				echo 'Update already done'.cr;
 			    $cmd = $stub.'r';
 			    echo file_get_contents($cmd); 	
 				return;
