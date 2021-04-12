@@ -73,7 +73,7 @@ $cross = $cc->convert("%r✖%n");
  $user = get_user_info($diskinfo);
  //print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
- else { $user_level =', user privilege to low, get an administrator to run this script.'; echo $user_level.cr;exit;}
+ //else { $user_level =', user privilege to low, get an administrator to run this script.'; echo $user_level.cr;exit;}
  echo $user_level.cr;
  $installing['base_user'] = $user['name'];
 }

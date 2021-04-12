@@ -9,10 +9,11 @@ include 'includes/class.table.php';
 $cc = new Console_Color2();
 define('version',1.01);
 $os = lsb();
+echo print_r($os).cr;
 if ($os['ID_LIKE'] !== 'debian') {
 	echo 'Currently this installer only works with debian type OS\'s'.cr;
 	echo 'Please refer to the documentation to install on other types of OS'.cr;
-	exit;
+//	exit;
 } 
 if (is_file('/var/run/reboot-required') === true) {
 			echo "\t".$cc->convert("%rThis machine requires a restart%n").cr;
@@ -86,9 +87,17 @@ $headmask = "%13.13s";
 $screen = dpkg('screen');
 $loc =dpkg('mlocate');
 $git = dpkg('git'); 
-$tmpr = dpkg('tmpreaper');
-$steam = dpkg('steamcmd:i386');
-$glib = dpkg('libc-bin');
+$tmpr = dpkg('tmpwatch');
+//$steam = dpkg('steamcmd:i386');
+$steam[0] = trim(shell_exec('which steamcmd'));
+if (empty($steam[0])) {
+$steam[2] = 'Not Installed';
+}
+else {
+$steam[2] = 'Unknown';
+}
+$steam[4] = 'Command-line interface for Valve\'s Steam'; 
+$glib = dpkg('glibc');
 $webmin = dpkg('webmin');
 $st = dpkg('mysql-server');
 $tmux = dpkg('tmux');
@@ -190,7 +199,7 @@ unset($software);
 $php_v = PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;
 $software['php']['version'] = sprintf($headmask,phpversion());
 $software['php']['use'] = "$req - server-side, HTML-embedded scripting language";
-$pmysql = dpkg('php'.$php_v.'-mysql');
+$pmysql = dpkg('php'.$php_v.'-mysqlnd');
 $software['php_mysql']['version'] = sprintf($headmask,$pmysql[2]);
 $software['php_mysql']['use'] ="$req - ".$pmysql[4];
 $software['php_gmp']['version'] = sprintf($headmask,phpversion('gmp'));

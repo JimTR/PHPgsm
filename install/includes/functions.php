@@ -480,17 +480,33 @@ function folderSize($dir)
     return $size;
 }
 function dpkg($app) {
-
+$parts = str_split($app);
+$capp = '';
+$first_num = -1;
+$num_loc = 0;
+foreach ($parts AS $a_char) {
+if ($a_char == '.') {continue;}
+if (is_numeric($a_char)) {
+	continue;
+	$first_num = $num_loc;
+	break;
+}
+$capp .= $a_char;
+$num_loc++;
+}
+$app = $capp.'-[0-9]';
 $cmd = "dpkg-query -l | grep -P '( ".$app." )'";
 $cmd = 'dpkg -l |grep "^ii  '.$app.'[[:space:]]"';
+$cmd = 'rpm -qa | grep '.$app;
 //echo $cmd.PHP_EOL;
 exec ($cmd,$soft,$v);
-if ($v >0) {
-	unset($v);
-	$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
+//echo print_r($soft,true).cr;
+//if ($v >0) {
+//	unset($v);
+	//$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
 	//echo $cmd.PHP_EOL;
-	exec ($cmd,$soft,$v);
-}
+	//exec ($cmd,$soft,$v);
+//}
 if ($v >0){
 	$soft1[]=$app;
 	$soft1[]= 'Not Installed';
@@ -508,7 +524,8 @@ $soft1[$k] = trim($v);
 //unset($soft1[0]);
 //echo print_r($soft1,true).cr;
 $soft1=array_values($soft1);
-$ver = str_replace('~','.',$soft1[2]);
+$soft1[4]='';
+$ver = str_replace('~','.',$soft1[0]);
 preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $ver, $version);
 if (empty($version[0])) {
 	preg_match('@[0-9]+\.[0-9]+@', $ver, $version);
