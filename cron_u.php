@@ -59,7 +59,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 	
 	foreach ($res as $data) {
 		        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
-				$disk_size = shell_exec('du - hs '.$data['location']);	    
+				$disk_size = shell_exec('du -hs '.$data['location']);	    
 			    $local =  check_local($acf_loc);
 			    
 			    
