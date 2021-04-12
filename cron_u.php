@@ -59,7 +59,7 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 	
 	foreach ($res as $data) {
 		        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
-					    
+				$disk_size = shell_exec('du - hs '.$data['location']);	    
 			    $local =  check_local($acf_loc);
 			    
 			    
@@ -136,6 +136,12 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 			}
 			
 		}
+		// update disk_space
+		unset($update);
+		unset($where);
+		$where['host_name'] = $data['host_name'];
+		$update['disk_space'] =$disk_size;
+		$database->update('servers',$update,$where);
 	}
 		function local_update($build,$local) {
 			
