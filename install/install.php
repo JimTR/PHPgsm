@@ -22,44 +22,60 @@ if (!isset($argv[1])) {
 	echo cr;
 	echo $cc->convert("%rCommand Option Missing%n").cr;
 	echo cr;
-	echo "\t".$argv[0]." ".$cc->convert("%r-m%n")." - install a master server".cr;
-	echo "\t".$argv[0]." ".$cc->convert("%r-s%n")." - install a slave server".cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-i%n")." - install PHPgsm".cr;
+	echo "\t".$argv[0]." ".$cc->convert("%r-l%n")." - install LGSM support".cr;
 	echo "\t".$argv[0]." ".$cc->convert("%r-h%n")." - display help".cr;
 	echo "\t".$argv[0]." ".$cc->convert("%r-v%n")." - installer version".cr;
 	echo cr;
 	exit;
 }
+echo "argv $argv[1]".cr;
+
 switch (strtolower($argv[1])) {
 	case '-v':
 	case 'v' :
-		echo 'Install - '.version.cr;
+		echo 'Install - '.version.' '.$os['PRETTY_NAME'].cr;
 		exit;
 	case '-h' :
 	case 'h' :
 			echo 'help'.cr;
 			exit;
-	case '-m' :
-	case 'm' :
-			$install['type'] = 'm';
+	case '-i' :
+	case 'i' :
+			$install['type'] = 'i';
 			break;
-	case '-s' :
-	case 's':
+			
+	case '-l' :
+	case 'l':
 			$install['type'] = 's';
-			break;
+			lgsm();
+			exit;
+			
 	default :
 			echo  $cc->convert("%rInvalid Command Option%n").cr;
+			echo cr;
+			echo 'Valid options are'.cr;
+			echo "\t".$argv[0]." ".$cc->convert("%r-i%n")." - install PHPgsm".cr;
+			echo "\t".$argv[0]." ".$cc->convert("%r-l%n")." - install LGSM support".cr;
+			echo "\t".$argv[0]." ".$cc->convert("%r-h%n")." - display help".cr;
+			echo "\t".$argv[0]." ".$cc->convert("%r-v%n")." - installer version".cr;
+			echo cr;
 			exit;	
 }
    
 		
-if (!defined('PHP_VERSION_ID')) {
+
     $version = explode('.', PHP_VERSION);
-    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-}
+
     define('PHP_MAJOR_VERSION',   $version[0]);
     define('PHP_MINOR_VERSION',   $version[1]);
     define('PHP_RELEASE_VERSION', $version[2]);
-    
+    $php_v = $version[0].'.'.$version[1];
+	if ($php_v < 7.4) {
+		echo 'PHP version is too low please install PHP 7.4 or higher'.cr;
+		exit;
+	}
+
 
 $tick = $cc->convert("%g  ✔%n");
 $cross = $cc->convert("%r  ✖%n");
@@ -74,7 +90,7 @@ $ropt = $cc->convert("%rOptional%n");
 $table->setHeaders(array('Installing PHPgsm',' Stage 1: Dependency Check','','',cr));
 
 system('clear');
-echo $cc->convert("%cPHPgsm Installer%n").cr; 
+echo $cc->convert("%cPHPgsm Installer ".$os['NAME']." ".$os['VERSION']."%n").cr;
 //echo get_boot_time().' '.$tick.cr;
 $x32 = trim(shell_exec('dpkg --print-foreign-architectures'));
 if (empty($x32)) {
@@ -258,6 +274,21 @@ function db_config($action) {
 		echo 'do config thingy'.cr;
 		$sqlfile = 'data/structure.sql'; 
 	}
+}
+function lgsm() {
+	$table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
+	$table->setHeaders(array('PHPgsm support for LGSM' ,' ','','',''));
+	$cc = new Console_Color2();
+	
+	system('clear');
+	echo 'Setting up PHPgsm to work with LGSM'.cr;
+	//echo $table->getTable();
+	echo 'PHPgsm will add user data services, server restarts on update, LGSM control in a different way'.cr;
+	$a = ask_question('Where is you LGSM server location ',null,null);
+	exit;
 }
 			
 ?>
