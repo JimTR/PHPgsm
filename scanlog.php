@@ -29,9 +29,9 @@
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
-define ('VERSION',2.12);
+define ('VERSION',2.13);
 require ('includes/master.inc.php');
-require 'includes/Emoji.php';
+require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
 if (strtolower($argv[1]) == 'v') {
 	echo 'Scanlog version '.VERSION.cr;
@@ -409,7 +409,7 @@ function update_server($server){
 	if (in_array($game['install_dir'],$update_done)) {
 				echo 'Update already done'.cr;
 			    $cmd = $stub.'r';
-			    echo file_get_contents($cmd); 	
+			    echo file_get_contents($cmd).cr; 	
 				return;
 			}
 	$cmd = $stub.'q';

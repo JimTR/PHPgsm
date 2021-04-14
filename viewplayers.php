@@ -23,7 +23,7 @@
  * remember js
  */
 require ('includes/master.inc.php'); 
-require 'includes/Emoji.php';
+require 'includes/class.emoji.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 define('CR',PHP_EOL);
 use xPaw\SourceQuery\SourceQuery;
@@ -79,6 +79,7 @@ $disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </spa
 if ($info['Players'] >0) {
 					// we have players
 					// add sub template
+					// take care of players that have the same name as a bot
 					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results; // get the player array
 					orderBy($player_list,'Frags','d');

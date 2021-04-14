@@ -85,17 +85,7 @@ foreach ($data['content'] as $k => $v ) {
 		$v = str_replace('team ','team Unassigned',$v);
 	}
 	$v = str_replace('"','',$v);
-	//$at = preg_replace('/-/','',$at);
-	//$at = strtotime($at);
-	/*if  (date("d-m-Y H:i:s",$v) === '01-01-1970 01:00:00') {
-		$at = date("d/m/Y - H:i:s");
-		//continue;
-		$v = $at.': '.$v;
-		} 
-	else {
-		$j = preg_replace ('/(\d{2})/(\d{2})/(\d{4})/',"$3/$1/$2",$v);
-		//echo '$j = '.$j;
-	} */
+	
 	echo $v.PHP_EOL;
 }
 //print_r($data['content']);
