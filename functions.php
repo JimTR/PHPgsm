@@ -1,6 +1,11 @@
 <?php
 //echo 'functions 1.04';
-
+define('fversion',1.04);
+$runfile = substr($argv[0], strrpos($argv[0], '/') + 1);
+if (isset($argv[1])  and $runfile == 'functions.php') {
+	echo 'Functions v'.fversion.PHP_EOL;
+	exit;
+}
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
@@ -213,14 +218,26 @@ function get_user_info ($Disk_info) {
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
+	//$du = filesize("/home/".trim($user['name']));
+	//echo "du raw = $du[0]".CR;
+	//echo 'user home collected'.cr;
+	// problem here
 	//print_r ($du).CR;
 	//echo '$q = '.$q.cr;
 	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
+		if(isset($Disk_info['home_free'])){
 		$user['quota_used'] = format_num($du[0]); 
 		$user['quota'] = $Disk_info['home_size'];
 		$user['quota_free'] = $Disk_info['home_free'];
+	}
+	else {
+		// use boot
+		$user['quota_used'] = format_num($du[0]); 
+		$user['quota'] = $Disk_info['boot_size'];
+		$user['quota_free'] = $Disk_info['boot_free'];
+	}
 	}
 	else {
 		// run quota
@@ -283,7 +300,21 @@ function getVersion($app, $apt=false) {
 	if ($apt == true) {
 		//echo 'apt=true'.PHP_EOL;
 		$app = 'apt-show-versions  '.$app;
-		$output = shell_exec($app. '  2> /dev/null'); 
+		$soutput = explode(' ',shell_exec($app. '  2> /dev/null')); 
+		$mangle = $soutput[1];
+		//echo print_r($soutput,true).cr;
+		$x= strpos($mangle,':');
+		if ($x > 0) {
+			$mangle = str_replace('~','',$mangle);
+			$mangle = substr($mangle,$x+1);
+			$x = strpos($mangle,'+');
+			$output = substr($mangle,0,$x);
+		}
+		else {
+			$output = str_replace('~','',$soutput[1]);
+			$output = str_replace('-','.',$output);
+			//echo "output = $output".cr;
+			}
 		}
 	else {
 		if ($app == 'nginx -v') {
@@ -292,6 +323,19 @@ function getVersion($app, $apt=false) {
 				$output = file_get_contents('nginx');
 				unlink('nginx');
 				}
+		else if ($app == 'webmin -v') {
+			// webmin
+			//echo 'hit webmin'.cr;
+			if (is_file('/etc/webmin/miniserv.conf')) {
+			$app = 'webmin list-config -c |grep server=M 2>/dev/null' ;
+			$output = shell_exec($app);
+			}
+			else {
+				$output='';
+			}
+			//$output = file_get_contents('nginx');
+			//unlink('nginx'); 
+		}		
 		else if ($app == 'mysql -V') {
 			// maria test
 			$output = shell_exec($app. '  2> /dev/null'); 
@@ -305,13 +349,16 @@ function getVersion($app, $apt=false) {
 			}
 		} 
   preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+  //echo 'try 1 '.print_r($version,true).cr;
   if (empty($version[0])) {
 		
 		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
+		//echo 'try 2 '.print_r($version,true).cr;
 	}
   if (empty($version[0])) {
 	   
-	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version); 
+	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+	    //echo 'try 3 '.print_r($version,true).cr; 
    }
    
  
@@ -365,7 +412,9 @@ function get_software_info($database) {
 		$software['postfix'] = getVersion('postfix',$apt);
 		$software['curl'] = getVersion('curl',$apt);
 		$software['tmux'] = getVersion('tmux',$apt);
-		$software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v',$apt);
+		$software['litespeed'] = getVersion('litespeed',$apt);
+		$software['git'] = getVersion('git',$apt);
+		$oftware['asv'] = getVersion('apt-show-versions',$apt);
 		break;
 		default:
 		 $software['glibc'] = getVersion('ldd --version');
@@ -379,6 +428,9 @@ function get_software_info($database) {
 	     $software['curl'] = getVersion('curl -V');
 	     $software['tmux'] = getVersion('tmux -V');
 	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
+	     $software['git'] = getVersion('git --version');
+	     $software['tmpreaper'] = getVersion('tmpreaper',true);
+	     $software['asv'] = getVersion('apt-show-versions -V');
 	}
 	//print_r($software);	 
 	 return $software;
@@ -460,39 +512,65 @@ function format_num ($string) {
 	}
 	return $string;
 }
-function ask_question ($salute,$positive='yes',$negative='no',$press_any_key=false,$hidden = false) {
-	//if ($positive = "null") { unset($positive);}
+
+function ask_question ($salute,$positive='',$negative='',$press_enter_key=false,$hidden = false) {
+	
+	$length = strlen($salute)+1;
+	str_pad ($salute , $length , " " , STR_PAD_RIGHT );
 	run:
-echo $salute; // display question
-if ($hidden === true) {
-	$line = getObscuredText($strMaskChar='*');
+
+	if ($hidden === true) {
+		echo $salute; // display question
+		$line = getObscuredText($strMaskChar='*');
 	return $line;
 	
-}	
-$handle = fopen ("php://stdin","r"); //open stdin
-$line = fgets($handle); //record it
-if ($press_any_key === true and empty($positive)) {
-	return $line; // return a press any key
+	}
+	
+	if ($press_enter_key === true) {
+	// use press enter to continue
+	echo $salute;
+	system('stty -echo');
+	$handle = fopen ("php://stdin","r"); //open stdin
+	$line = fgets($handle); //record it
+	fclose($handle);
+	system('stty echo');
+	return $line;
 }
+	
+$line = readline($salute);	
+
+if (isset($positive)) {
+		if (trim(strtolower($line)) == $positive) {
+			return true;
+		}
+		elseif (isset($negative)) {
+			return false;
+		}
+		sleep(2);
+	}
+
 if ($line === PHP_EOL) {
 	errors:
 	// entered empty string
-	echo "You must have a valid response".CR;
+	echo "You must have a valid response".cr;
 	unset($line); // clear input
 	goto run; // have another go
 }
+
+/*
 //if (preg_match('/\s/',trim($line)) ) {
 if (ctype_space($line)) {
-	echo "ERROR response contains spaces".CR; 
+	echo "ERROR response contains spaces".cr; 
 	goto errors;
 	}
-if ($positive <>"null"){	
+if ($positive <>NULL){	
 	if(trim($line) !== $positive){
 	     return false;
 	}
+} */
+return $line;
 }
-return true;
-}
+
 function display_mem($mem_info,$colour) {
 	// mem display
 	if (is_cli()){
@@ -582,6 +660,9 @@ if (is_cli()) {
     echo "\t\t\e[38;5;82mQuota Version\e[97m      " .$software['quotav'].CR;
     echo "\t\t\e[38;5;82mPostFix Version\e[97m    " .$software['postfix'].CR;
     echo "\t\t\e[38;5;82mLitespeed Version\e[97m  " .$software['litespeed'].CR;
+    echo "\t\t\e[38;5;82mGit Version      \e[97m  " .$software['git'].CR;
+    echo "\t\t\e[38;5;82mTmpreaper Version\e[97m  " .$software['tmpreaper'].CR;
+    echo "\t\t\e[38;5;82mApt Checker      \e[97m  " .$software['asv'].CR;
     echo "\t\t\e[38;5;82mTmux Version\e[97m       " .$software['tmux']."\e[0m".CR; //required ?
    
 }	
@@ -1150,5 +1231,76 @@ function validate($valid) {
 	return false;
 }
 
+function array_search_partial($arr, $keyword) {
+    foreach($arr as $index => $string) {
+        if (strpos($string, $keyword) !== FALSE)
+            return $index;
+    }
+    return false;
+}
 
+function folderSize($dir)
+{
+    $size = 0;
+    $dir  = rtrim($dir, '/\\').DIRECTORY_SEPARATOR.'{,.}*';
+    $list = glob($dir, GLOB_BRACE);
+    $list = array_filter($list, function($v){
+        return preg_match('%(\\\\|/)\.{1,2}$%im', $v) ? false : true;
+    });
+
+    foreach ($list as $each) {
+        $size += is_file($each) ? filesize($each) : folderSize($each);
+    }
+
+    return $size;
+}
+function dpkg($app) {
+
+$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
+$cmd = 'dpkg -l |grep "^ii  '.$app.'[[:space:]]"';
+//echo $cmd.PHP_EOL;
+exec ($cmd,$soft,$v);
+if ($v >0) {
+	unset($v);
+	$cmd = "dpkg-query -l | grep -P '( ".$app." )'";
+	//echo $cmd.PHP_EOL;
+	exec ($cmd,$soft,$v);
+}
+if ($v >0){
+	$soft1[]=$app;
+	$soft1[]= 'Not Installed';
+	return $soft1;
+} 
+$soft1 = explode('  ',trim($soft[0]));
+foreach($soft1 as $k => $v) {
+if (trim($v)=='') {
+unset ($soft1[$k]);
+}
+else {
+$soft1[$k] = trim($v);
+}
+}
+//unset($soft1[0]);
+//echo print_r($soft1,true).cr;
+$soft1=array_values($soft1);
+$ver = str_replace('~','.',$soft1[2]);
+preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $ver, $version);
+if (empty($version[0])) {
+	preg_match('@[0-9]+\.[0-9]+@', $ver, $version);
+}
+ if (empty($version[0])) {
+
+            preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $ver, $version);
+            //echo 'try 3 '.print_r($version,true).cr; 
+   }
+$soft1[2] = $version[0];
+//echo $soft1[4].cr;
+if(strpos($soft1[4],'my.cnf') !=FALSE) {
+	$soft1[4] = 'MariaDB MySQL database server';
+}
+//print_r($version);
+//echo 'found '.count($soft).PHP_EOL;
+//echo PHP_EOL;
+return $soft1;
+}
 ?>

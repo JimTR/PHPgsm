@@ -22,8 +22,8 @@
  * xml.php v2
  *  
  */
-include 'includes/master.inc.php';
-include 'functions.php';
+include '../includes/master.inc.php';
+include '../functions.php';
  define ('cr',PHP_EOL);
 //run from cli
 //error_reporting (0);
@@ -50,7 +50,7 @@ else{
 Header('Content-type: text/xml');
 if (empty($cmds['type'])) {$cmds['type']='all';} // just return everything
 $xml = new SimpleXMLElement('<Servers/>'); // start xml
-require __DIR__ . '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
+require '../xpaw/SourceQuery/bootstrap.php'; // load xpaw
 use xPaw\SourceQuery\SourceQuery;
 $gameq  = new SourceQuery( );
 define( 'SQ_TIMEOUT',     1 );
