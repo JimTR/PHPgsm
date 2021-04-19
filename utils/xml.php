@@ -24,12 +24,13 @@
  */
 include '../includes/master.inc.php';
 include '../functions.php';
- define ('cr',PHP_EOL);
+define ('cr',PHP_EOL);
+define ('version',2.01);
 //run from cli
 //error_reporting (0);
 if(is_cli()) {
 	Header('Content-type: text/xml');
-	
+	die(print_r($argv));	
 	$type= $argv;
 	$cmds =convert_to_argv($type,"",true);
 	if (isset($cmds['debug'])) {
@@ -47,6 +48,12 @@ else{
 	}
 }
 // run from cli end
+print_r($cmds);
+if ($cmds['action'] == 'v') {
+echo 'version hit';
+echo version.cr;
+exit;
+}
 Header('Content-type: text/xml');
 if (empty($cmds['type'])) {$cmds['type']='all';} // just return everything
 $xml = new SimpleXMLElement('<Servers/>'); // start xml
@@ -61,7 +68,8 @@ $bases = $database->get_results($sql);
 foreach ($bases as $base) {
 	$key =md5( ip2long($base['ip']));
 	$address = $base['url'].':'.$base['port'];
-	$tmp = file_get_contents($address.'/ajax.php?action=game_detail&data=true'.'&key='.$key);
+        echo "address = $address".cr;
+	$tmp = file_get_contents($address.'/ajaxv2.php?action=game_detail&data=true'.'&key='.$key);
 	$game_detail = json_decode(stripslashes($tmp),true);
 	$info[$base['fname']] = $game_detail;
 	}
@@ -119,8 +127,8 @@ foreach ($info as $k => $test) {
 }
 // end replace
 
-//echo print_r($info,true).cr;
-//die();
+echo print_r($info,true).cr;
+die();
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 $xmlserver="game_server"; // set tag
 foreach ($info as $k =>$game) {
