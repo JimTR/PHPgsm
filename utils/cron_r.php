@@ -114,13 +114,13 @@ foreach ($games as $game) {
 			}
 			// log prune
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
-			echo 'Prune command  '.$exe.cr;
+			//echo 'Prune command  '.$exe.cr;
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
-			echo 'Prune here also '.$exe.cr;
+			//echo 'Prune here also '.$exe.cr;
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}

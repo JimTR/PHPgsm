@@ -29,10 +29,14 @@
 //echo cr;
 error_reporting( -1 );
 define('cr',PHP_EOL);
-define ('VERSION',2.11);
+define ('VERSION',2.13);
 require ('includes/master.inc.php');
-require 'includes/Emoji.php';
+require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
+if (strtolower($argv[1]) == 'v') {
+	echo 'Scanlog version '.VERSION.cr;
+	exit;
+}
 if (empty( $settings['ip_key'] )) {
 	echo 'Fatal Error - api key missing'.cr;
 	exit(7);
@@ -227,7 +231,7 @@ foreach ($la as $user_data) {
 	$ut='';
 	$result = $database->get_row($asql.$user_search);
 	if (!empty($result)){
-		$user_stub ="\t".$username.' ('.$result['country_code'].') ';
+		$user_stub ="\t".$username.' ('.$result['country'].') ';
 		unset($result['id']); // take out id
 		unset($result['steam_id']);
 		$where['steam_id64'] = $user_data['id2'];
@@ -340,7 +344,7 @@ foreach ($la as $user_data) {
 		
 		$result = $database->escape($result);
 	    $in = $database->insert('players',$result);
-	    $user_stub ="\t".$username.' ('.$result['country_code'].') ';
+	    $user_stub ="\t".$username.' ('.$result['country'].') ';
 	    if ($in === true ){
 			 	 $done++;
 			 	 $ut .=' Record added'.cr;
@@ -397,34 +401,35 @@ function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done;
-	
+	echo 'Server Update via Scanlog '.VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
-				echo 'update already done'.cr;
+				echo 'Update already done'.cr;
 			    $cmd = $stub.'r';
-			    echo file_get_contents($cmd); 	
+			    echo file_get_contents($cmd).cr; 	
 				return;
 			}
 	$cmd = $stub.'q';
 	echo file_get_contents($cmd); // stopped server
-	echo 'stop server using '.$cmd.cr;
-		    $exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			$result = file_get_contents($cmd);
-			if (!$result == 0) {
-				echo $result.cr;
-			} // scanned the log
+	//echo 'stop server using '.$cmd.cr;
+		    //$exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			//$result = file_get_contents($cmd);
+			//if (!$result == 0) {
+				//echo $result.cr;
+			//} // scanned the log
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	echo file_get_contents($cmd);
-	echo 'updated server using '.$cmd.cr;
+	//echo 'updated server using '.$cmd.cr;
 	$cmd = $stub.'s';
 	echo file_get_contents($cmd);
-	echo 'start server using '.$cmd.cr;
+	//echo 'start server using '.$cmd.cr;
 	
 	$update_done[] = $game['install_dir'];
+	return;
 }
 ?>

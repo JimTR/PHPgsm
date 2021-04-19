@@ -33,14 +33,24 @@ if (!is_numeric($argv[1])) {
 }
 echo 'Checking Server id '.$argv[1].cr;
 $appid = $argv[1];
-$cmd = 'steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit ';
-$output = shell_exec($cmd);
-$fail = strpos($output,'No app info for AppID '.$appid);
-if ($fail >0) {
+$cmd = 'steamcmd +login anonymous +app_info_update 1 +app_info_print '.$appid.' +quit 2>/dev/null';
+exec($cmd,$output,$ret_val);
+//echo "return = $ret_val".cr;
+//print_r($output);
+//array_search('green', $array);
+//$fail = array_search('No app info for AppID '.$appid,$output);
+$m_array = preg_grep('/^No app info for AppID\s.*/', $output);
+$fail = array_values($m_array);
+if (isset ($fail[0]) | $ret_val >0)  {
+	if ($ret_val >0) {
+		echo 'Failure to connect to steam please try again'.cr;
+		exit($ret_val);
+	}
 			echo 'No Data for Server ID '.$appid;
 			echo ' is this server ID valid ?'.cr;
-			exit;
+			exit(7);
 		}
+$output= implode(PHP_EOL, $output);
 $branches = get_block($output,'"branches');
 $t = check_branch($appid);
 $common = get_block($output,'"common','}');
@@ -49,12 +59,21 @@ $extended = get_block($output,'"extended','}');
 $extended = array_block($extended);
 	
 //die();
-echo 'Found '.$common['name'].'('.$common['ReleaseState'].')'.cr;
+if (isset($common['ReleaseState'])) {
+	$release = ' ('.$common['ReleaseState'].')';
+}
+else {
+	$release ='';
+}
+echo 'Found '.$common['name'].$release.cr;
 if (isset($common['oslist'])) {
+	if (!isset($argv[2])){
 	echo 'Runs on '.$common['oslist'].cr;
+}
 }
 else {
 	//print_r($extended);
+	echo 'author has not defind an os list'.cr;
 }
 echo 'Branch Detail'.cr;
 //echo print_r($t,true).cr;
