@@ -74,7 +74,7 @@ if (empty($_GET['id'])) {
 
 
 $sql = 'select * from players where BINARY name="';
-$disp .='<div id="plist"  style= "text-align:center;background-color: #3672C0;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
+$disp .='<div id="plist"  style= "text-align:center;" class="title" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
 
 if ($info['Players'] >0) {
 					// we have players
