@@ -80,7 +80,7 @@ if ($info['Players'] >0) {
 					// we have players
 					// add sub template
 					// take care of players that have the same name as a bot
-					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
+					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;background-color: #c5c3bf;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results; // get the player array
 					orderBy($player_list,'Frags','d');
 					foreach ($player_list as $k=>$v) {
