@@ -65,6 +65,10 @@ switch ($cmds['action']) {
 	case 'details':
 	details($cmds);
 	break;
+	case 'games':
+	case 'g':
+	games($cmds);
+	break;
 	case 's':
 	case 'start':
 	echo 'start'.cr;
@@ -212,6 +216,36 @@ $table->addRow(array('u, or users ','shows user details (takes options see examp
     $table->addRow(array($cc->convert("%y\tTmux Version%n"),$software['tmux']));
     echo $table->getTable();
 }
+    exit;
+ }
+ 
+ function games($data) {
+	 // review games
+	 		system('clear');
+	 		$Query = new SourceQuery( );
+	 		$cc = new Console_Color2();
+	 			  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+	$database = new db(); // connect to database
+	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
+    $res = $database->get_results($sql); // pull results
+    //echo print_r($res,true).cr;
+    echo $cc->convert("%BGame Server Information%n").cr;
+    foreach ($res as $gdata) {
+		 //echo print_r($gdata,true).cr;
+		 $Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
+	$players = $Query->GetPlayers( ) ;
+	$info = $Query->GetInfo();
+	$rules = $Query->GetRules( );
+	$Query->Disconnect( );
+	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+	$host = $cc->convert("%y".$info['HostName']."%n");
+	$table->addRow(array($host,'started at, '.date('g:ia \o\n l jS F Y \(e\)', $gdata['starttime']),"Players Online ".$playersd," Map - ".$info["Map"]));
+	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
+	}
+	echo $table->getTable();
     exit;
  }
 ?>
