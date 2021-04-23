@@ -581,7 +581,12 @@ if($can_do == true) {
 	
 }
 	else {
-		// test if no debug
+		// test if no debug needs to return somthing on success
+		foreach ($output as $line) {
+			//$return .= $line.cr;
+			if(strpos($line,'! App ')) {
+				$return = $line.cr;
+		}
 		$return ; //.= $retval.cr;
 	}
 	
@@ -589,7 +594,7 @@ return $return;
 } 
 return false; // just in case anything slips through
 }
-
+}
 function utf8ize($mixed) {
     if (is_array($mixed)) {
         foreach ($mixed as $key => $value) {
