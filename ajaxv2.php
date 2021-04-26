@@ -576,7 +576,7 @@ if($can_do == true) {
 		foreach ($output as $line) {
 			$return .= $line.cr;
 		}
-		$return ; //.= $retval.cr; // put the return value in the array
+		//$return ; //.= $retval.cr; // put the return value in the array
 		
 	
 }
@@ -587,7 +587,7 @@ if($can_do == true) {
 			if(strpos($line,'! App ')) {
 				$return = $line.cr;
 		}
-		$return ; //.= $retval.cr;
+		//$return ; //.= $retval.cr;
 	}
 	
 return $return;
