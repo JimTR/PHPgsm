@@ -59,7 +59,7 @@ switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-	echo 'V'.VERSION.cr;
+	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
@@ -101,12 +101,15 @@ $table->addRow(array('s or start ','starts a game server requires a server id to
 $table->addRow(array('q, quit or stop ','stops a game server requires a server id to be set'));
 $table->addRow(array('r, or restart ','restarts a game server requires a server id to be set'));
 $table->addRow(array('d, or details ','shows details about the running system (takes options see example page)'));
-$table->addRow(array('g, or games ','shows details on running game servers'));
+$table->addRow(array('g, or games ','shows details on running game servers (takes options see example page)'));
+$table->addRow(array('ig, or igames ','Installs a game from Steam (takes options see example page)'));
+$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes options see example page)'));
 $table->addRow(array('u, or users ','shows user details (takes options see example page)'));
 	 system('clear');
-	
+	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 echo $table->getTable();
 	 echo cr;
+	 echo 'cli will only work on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
 	 $answer = ask_question('enter E for examples or q to quit  ',null,null);
 	 echo $answer.cr.cr;
 	 exit;
@@ -116,7 +119,7 @@ $table->addRow(array('u, or users ','shows user details (takes options see examp
 	 // read server details
 	 system('clear');
 	 $cc = new Console_Color2();
-	 $sw = $cc->convert("%W   Software%n");
+	 $sw = $cc->convert("%W   Modules%n");
 	 $sa = $cc->convert("%W    Server%n");
 	 $ha = $cc->convert("%W    Hardware%n");
 	 $ma = $cc->convert("%W    Memory%n");
@@ -225,13 +228,15 @@ $table->addRow(array('u, or users ','shows user details (takes options see examp
 	 		$Query = new SourceQuery( );
 	 		$cc = new Console_Color2();
 	 			  $table = new Console_Table(
-    CONSOLE_TABLE_ALIGN_LEFT,
+    CONSOLE_TABLE_ALIGN_RIGHT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     //echo print_r($res,true).cr;
+    //^[[0;34mblue^[[0m
+    $table->addRow(array("\t\tServer", "\tStarted"," Online\tCurrent Map"));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
 		 //echo print_r($gdata,true).cr;
@@ -240,9 +245,17 @@ $table->addRow(array('u, or users ','shows user details (takes options see examp
 	$info = $Query->GetInfo();
 	$rules = $Query->GetRules( );
 	$Query->Disconnect( );
+	if ($info['Players'] >0) {
+		$p1 = trim($info['Players']);
+		$info['Players'] = $cc->convert("%B$p1%n");
+		}
+		else {
+			$p1 = trim($info['Players']);
+		$info['Players'] = $cc->convert("%Y$p1%n");
+		}
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	$host = $cc->convert("%y".$info['HostName']."%n");
-	$table->addRow(array($host,'started at, '.date('g:ia \o\n l jS F Y \(e\)', $gdata['starttime']),"Players Online ".$playersd," Map - ".$info["Map"]));
+	$table->addRow(array('',$host,date('g:ia \o\n l jS F Y \(e\)',"\t".$gdata['starttime'])."\t",$playersd,"\t".$info["Map"].""));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
 	echo $table->getTable();
