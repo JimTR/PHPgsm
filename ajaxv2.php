@@ -492,8 +492,22 @@ function exescreen ($cmds) {
 			
 		case 'r':
 			if (!$is_running) {
-				$return = $exe.' is not running';
+				$return = $exe.' is not running, starting instead';
 				// should we just start or quit ??
+				chdir($server['location']);
+				$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				rename($logFile, $savedLogfile); // log rotate
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+				exec($cmd); // open session
+				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+				exec($cmd);
+				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+				$update['running'] = 1;
+				$update['starttime'] = time();
+				$where['host_name'] = $exe; 
+				$database->update('servers',$update,$where);
+				//$return = 'Starting Server '.$server['host_name'];
 				break;
 			}
 			

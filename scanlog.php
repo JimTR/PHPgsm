@@ -34,7 +34,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
 if (strtolower($argv[1]) == 'v') {
-	echo 'Scanlog version '.VERSION.cr;
+	echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
 	exit;
 }
 if (empty( $settings['ip_key'] )) {
@@ -408,27 +408,28 @@ function update_server($server){
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
 				$s .= 'Update already done'.cr;
-			    $cmd = $stub.'r';
-			    $s .=  file_get_contents($cmd).cr; 	
+			    //$cmd = $stub.'r';
+			    //$s .=  file_get_contents($cmd).cr; 	
 				return $s;
 			}
 	$cmd = $stub.'q';
 	$s .= file_get_contents($cmd).cr; // stopped server
-	//echo 'stop server using '.$cmd.cr;
-		    //$exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
-			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			//$result = file_get_contents($cmd);
-			//if (!$result == 0) {
-				//echo $result.cr;
-			//} // scanned the log
+	
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=file_get_contents($cmd);
 	//echo 'updated server using '.$cmd.cr;
-	$cmd = $stub.'s';
-	$s .= file_get_contents($cmd).cr;
-	//echo 'start server using '.$cmd.cr;
-	
+	//$cmd = $stub.'s';
+	//$s .= file_get_contents($cmd).cr;
+	//need to restart all that stem from this install dir
+	$sql = "SELECT * FROM `server1` WHERE `game` like \'".$game['game']."\' and `install_dir` like \'".$game['install_dir']."\'";
+		$restarts = $database->get_results($sql);
+		foreach ($restarts as $restart) {
+			// restart them all
+			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&key='.md5($restart['host']).'&cmd=r'; // used to restart
+			$s .= file_get_contents($cmd);
+		}
+		
 	$update_done[] = $game['install_dir'];
 	return $s;
 }
