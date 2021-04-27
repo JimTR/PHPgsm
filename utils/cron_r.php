@@ -30,8 +30,15 @@ if (!defined('DOC_ROOT')) {
  define('cr',PHP_EOL);
  define('plus','%2B');
  define('space','%20');  
+ define('VERSION',2.01);
 
 require_once DOC_ROOT.'/includes/master.inc.php';
+ if ($argv[1] =='v' || $argv[1] == '-v' ) {
+	 echo 'Cron_R v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	 exit; 
+ }
+ print_r ($argv);
+ exit;
 include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
