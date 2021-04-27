@@ -576,6 +576,7 @@ function exe($cmds) {
 				foreach ($output as $line) {
 					$return .= $line.cr;
 				}
+				echo $return;
 				//$return ; //.= $retval.cr; // put the return value in the array
 		}
 		else {
