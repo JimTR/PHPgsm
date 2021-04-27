@@ -1,1 +1,1 @@
-./cli2.php action=$1 option=$2
+./cli.php action=$1 option=$2
