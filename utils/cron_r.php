@@ -37,9 +37,7 @@ require_once DOC_ROOT.'/includes/master.inc.php';
 	 echo 'Cron_R v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 exit; 
  }
- print_r ($argv);
- exit;
-include  DOC_ROOT.'/functions.php';
+ include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
