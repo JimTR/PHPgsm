@@ -59,15 +59,19 @@ switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
-	details($cmds);
+		details($cmds);
 	break;
 	case 'games':
 	case 'g':
-	games($cmds);
+		games($cmds);
+	break;
+	case 'p':
+	case 'port':
+		
 	break;
 	case 's':
 	case 'start':
