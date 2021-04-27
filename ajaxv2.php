@@ -29,7 +29,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.03);
+	define( 'VERSION', 2.04);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
