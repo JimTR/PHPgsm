@@ -377,7 +377,7 @@ $rt .= sprintf($mask,'New Users',$done );
 $rt .= sprintf($mask,'Modified Users',$update_users );
 if ($uds == true) {
 	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
-	update_server($server);
+	$rt .= update_server($server);
 }
 $rt .= cr.'Processed '.$server.cr.cr;
 //echo $rt;
@@ -401,19 +401,19 @@ function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done;
-	echo 'Server Update via Scanlog '.VERSION.cr;
+	$s = 'Server Update via Scanlog '.VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
-				echo 'Update already done'.cr;
+				$s .= 'Update already done'.cr;
 			    $cmd = $stub.'r';
-			    echo file_get_contents($cmd).cr; 	
-				return;
+			    $s .=  file_get_contents($cmd).cr; 	
+				return $s;
 			}
 	$cmd = $stub.'q';
-	echo file_get_contents($cmd); // stopped server
+	$s .= file_get_contents($cmd).cr; // stopped server
 	//echo 'stop server using '.$cmd.cr;
 		    //$exe = urlencode ('scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
 			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
@@ -423,13 +423,13 @@ function update_server($server){
 			//} // scanned the log
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-	echo file_get_contents($cmd);
+	$s .=file_get_contents($cmd);
 	//echo 'updated server using '.$cmd.cr;
 	$cmd = $stub.'s';
-	echo file_get_contents($cmd);
+	$s .= file_get_contents($cmd).cr;
 	//echo 'start server using '.$cmd.cr;
 	
 	$update_done[] = $game['install_dir'];
-	return;
+	return $s;
 }
 ?>

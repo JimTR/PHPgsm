@@ -74,13 +74,13 @@ if (empty($_GET['id'])) {
 
 
 $sql = 'select * from players where BINARY name="';
-$disp .='<div style= "text-align:center;" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
+$disp .='<div id="plist"  style= "text-align:center;font-size:14px;" class="title" ><span class="c_map">Current Map </span>: &nbsp;<span class="c_map_n">'.$info['Map'].'</span>&nbsp;&nbsp;<span class="pol"> Players Online</span>&nbsp;<span class="numplayers">'.$info['Players'].'</span>/<span class ="maxplayers">'.$info['MaxPlayers'].'</span> </div>';
 
 if ($info['Players'] >0) {
 					// we have players
 					// add sub template
 					// take care of players that have the same name as a bot
-					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
+					$disp .= '<table style="width:100%;border-collapse: inherit;border-spacing: 0px .4em;padding:6px;"><tr class="country"><td style="width:40%;">Name</td><td style="width:30%;">Country</td><td style="width:10%;">Score</td><td>Time Online</td></tr>'; // start table
 					$player_list = $results; // get the player array
 					orderBy($player_list,'Frags','d');
 					foreach ($player_list as $k=>$v) {

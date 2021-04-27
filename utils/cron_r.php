@@ -107,7 +107,7 @@ foreach ($games as $game) {
 				}
 				
 				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
-				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
 				echo file_get_contents($cmd);
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done

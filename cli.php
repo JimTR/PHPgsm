@@ -1,186 +1,264 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
-//error_reporting( 0 );
-error_reporting ( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED);
-define ("CR","\r\n");
-//echo '??';
-require 'includes/master.inc.php'; 
-require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
-use xPaw\SourceQuery\SourceQuery ;
-$Query = new SourceQuery( );
-ini_set('error_reporting', E_ALL);
-if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {   
-	//echo "called directly"; 
-	include ("functions.php");
+/*
+ * cli2.php
+ * 
+ * Copyright 2021 Jim Richardson <jim@noideersoftware.co.uk>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * 
+ */
+require_once 'includes/master.inc.php';
+require_once 'includes/class.table.php';
+require_once 'includes/class.color.php';
+include 'functions.php';
+require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
+	use xPaw\SourceQuery\SourceQuery;
+	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	define( 'LOG',	'logs/ajax.log');
+	define( 'VERSION', 2.02);
+	define ('cr',PHP_EOL);
+	define ('CR',PHP_EOL);
+	error_reporting (0);
+	if(is_cli()) {
+	$valid = 1; // we trust the console
+	$sec = true;
+	$cmds =convert_to_argv($argv,"",true);
+	
+	if ($cmds['debug'] == 'true') {
+		error_reporting( -1 );
+		echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	    foreach ($cmds as $k => $v) {
+			if ($k == 'debug'){continue;}
+			print "[$k] => $v".cr;
+		}
+		if (empty($cmds['action'])) {help();}
 	}
-
-if(root()) {
-	echo "This script Can not be run by Root User".CR;
-	exit;
-}
-
-if (isset($argc)) {
-	for ($i = 1; $i < $argc; $i++) {
-		//echo "Argument #" . $i . " - " . $argv[$i] . "\n";
-	}
+	else {error_reporting( 0 );}
+	
 }
 else {
-	echo "<head><title>PHPgsm Error</title></head>";
-	echo "<h1>This can only be ran from the command line</h1>";
-	exit;
+	die ('invalid enviroment');
 }
-s1:
+switch ($cmds['action']) {
+	
+	case 'v' :
+	case 'version':	
+	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	exit;
+	case 'd':
+	case 'details':
+	details($cmds);
+	break;
+	case 'games':
+	case 'g':
+	games($cmds);
+	break;
+	case 's':
+	case 'start':
+	echo 'start'.cr;
+	break;
+	case 'q':
+	case 'quit':
+	case 'stop':
+	echo 'quit'.cr;
+	break;
+	default:
+	help();
+	echo 'do not get '.$cmds['action'].cr;
+}
 
-if (isset($argv[1])) {
-switch (strtolower($argv[1]))
-{
-	case "help":
-	case "h":
-	    echo "d or debug displays script info".CR;
-	    echo "\t Secondary Commands".CR;
-	    echo "\ts Show Software info only".CR;
-	    echo "\tc Show Hardware info only".CR;
-	    echo "\td Show Disk info only".CR;
-	    echo "\tm Show Memory info only".CR;
-	    echo "g or games show game info only".CR; 
-	    echo "h or help  this help screen".CR;
-	    echo "v or version shows software version".CR;
-	    echo "i or install you will be asked what server you want to install".CR;
-		//echo "help required".CR;
-		exit;
-		break;
-	case "v":
-	case "version":
-		system('clear');
-		display_version();
-		exit;
-	case "g":
-	case "games":
-	if(is_cli()) {
-			system('clear');
-	//$database = new db(); // connect to database
+function help() {
+	$cc = new Console_Color2();
+	$PHP = $cc->convert("%cPHP%n");
+	$gsm = $cc->convert("%rgsm%n");
+	$option = $cc->convert("%cOption%n");
+	$use = $cc->convert("%c\t\tUse%n");
+	$table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
+$table->addRow(array('','',''));
+$table->addRow(array($PHP.$gsm.' Help',''));
+$table->addRow(array($option,$use));
+$table->addRow(array('v or version','show CLI version & exit'));
+$table->addRow(array('s or start ','starts a game server requires a server id to be set'));
+$table->addRow(array('q, quit or stop ','stops a game server requires a server id to be set'));
+$table->addRow(array('r, or restart ','restarts a game server requires a server id to be set'));
+$table->addRow(array('d, or details ','shows details about the running system (takes options see example page)'));
+$table->addRow(array('g, or games ','shows details on running game servers (takes options see example page)'));
+$table->addRow(array('ig, or igames ','Installs a game from Steam (takes options see example page)'));
+$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes options see example page)'));
+$table->addRow(array('u, or users ','shows user details (takes options see example page)'));
+	 system('clear');
+	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	 echo $table->getTable();
+	 echo cr;
+	 echo 'cli will only work on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
+	 $answer = ask_question('enter E for examples or q to quit  ',null,null);
+	 echo $answer.cr.cr;
+	 exit;
+ }
+ 
+ function details($data) {
+	 // read server details
+	 system('clear');
+	 $cc = new Console_Color2();
+	 $sw = $cc->convert("%W   Modules%n");
+	 $sa = $cc->convert("%W    Server%n");
+	 $ha = $cc->convert("%W    Hardware%n");
+	 $ma = $cc->convert("%W    Memory%n");
+	 $da = $cc->convert("%W     Boot Disk%n");
+	 $da1 = $cc->convert("%W     Data Disk%n");
+	 if($data['option'] =='h' || $data['option'] =='a') {
+		 //
+		  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+		$cpu_info = get_cpu_info();
+		 echo $cc->convert("%BHardware Information%n").cr;
+		 $table->addRow(array($ha,''));
+		 $table->addRow(array($cc->convert("%y\tUptime%n"),$cpu_info['boot_time']));
+		 $table->addRow(array($cc->convert("%y\tCpu Model%n"),$cpu_info['model_name']));
+		 $table->addRow(array($cc->convert("%y\tCpu Processors%n"),$cpu_info['processors']));
+		 $table->addRow(array($cc->convert("%y\tCpu Cores%n"),$cpu_info['cpu_cores']));
+		 $table->addRow(array($cc->convert("%y\tCpu Speed%n"),$cpu_info['cpu_MHz'].' MHz'));
+		 $table->addRow(array($cc->convert("%y\tCpu Cache%n"),$cpu_info['cache_size']));
+		 $table->addRow(array($cc->convert("%y\tCpu Load%n"),$cpu_info['load']));
+		 $table->addRow(array($cc->convert("%y\tIP Address %n"),$cpu_info['local_ip']));
+		 $table->addRow(array($cc->convert("%y\tProcesses%n"),$cpu_info['process']));
+		 $table->addRow(array($cc->convert("%y\tReboot Required%n"),$cpu_info['reboot']));
+		 echo $table->getTable();
+		 echo cr;
+	 }
+	  if($data['option'] =='m' || $data['option'] =='a') {
+		 //
+		  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+		$mem_info = get_mem_info();
+		echo $cc->convert("%BMemory Information%n").cr;
+		$table->addRow(array($ma,''));
+		$table->addRow(array('',$cc->convert("%BTotal"),"\t\t Free","  Cached",$cc->convert(" Active%n")));
+		$table->addRow(array(trim($cc->convert("%y    Mem%n")),"\t\t".$mem_info['MemTotal'],"\t".$mem_info['MemFree']," ".$mem_info['Cached'],"  ".$mem_info['Active']));
+		$table->addRow(array($cc->convert("%y   Swap%n"),"\t\t".$mem_info['SwapTotal'], "\t".$mem_info['SwapFree'],$mem_info['SwapCached']));
+		echo $table->getTable();
+		echo cr;
+	}
+	  if($data['option'] =='d' || $data['option'] =='a') {
+		 //
+		  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+		$disk_info = get_disk_info();
+		echo $cc->convert("%BDisk Information%n").cr;
+		$table->addRow(array($da,''));
+		//$table->addRow(array('',$cc->convert("%BTotal"),"\t\t Free","  Cached",$cc->convert(" Active%n")));
+		$table->addRow(array(trim($cc->convert("%y\tFile System%n")),$disk_info['boot_filesystem']));
+		$table->addRow(array($cc->convert("%y\tMount Point%n"),$disk_info['boot_mount']));
+		$table->addRow(array($cc->convert("%y\tDisk Size%n"),$disk_info['boot_size']));
+		$table->addRow(array($cc->convert("%y\tDisk Used%n"),$disk_info['boot_used'].' ('.$disk_info['boot_pc'].')'));
+		$table->addRow(array($cc->convert("%y\tDisk Free%n"),$disk_info['boot_free']));
+		if(isset($disk_info['home_filesystem'])) {
+			$table->addRow(array($da1,''));
+			$table->addRow(array(trim($cc->convert("%y\tFile System%n")),$disk_info['home_filesystem']));
+			$table->addRow(array($cc->convert("%y\tMount Point%n"),$disk_info['home_mount']));
+			$table->addRow(array($cc->convert("%y\tDisk Size%n"),$disk_info['home_size']));
+			$table->addRow(array($cc->convert("%y\tDisk Used%n"),$disk_info['home_used'].' ('.$disk_info['home_pc'].')'));
+			$table->addRow(array($cc->convert("%y\tDisk Free%n"),$disk_info['home_free']));
+		}
+		echo $table->getTable();
+		echo cr;
+	}
+	 if($data['option'] =='s' || $data['option'] =='a') {
+	 $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+    $software = get_software_info($database);
+    //echo print_r($data,true).cr;
+    //echo print_r($software,true).cr;
+    echo $cc->convert("%BSoftware Information%n").cr;
+    //$table->addRow(array('','',''));
+    //$table->addRow(array($cc->convert("%bSoftware Information%n"),'',''));
+   
+    $table->addRow(array($sa,''));
+    $table->addRow(array($cc->convert("%y\tServer OS%n"),$software['os']));
+    $table->addRow(array($cc->convert("%y\tKernel Version%n"),$software['k_ver']));
+    $table->addRow(array($cc->convert("%y\tHost%n"),$software['host']));
+    $table->addRow(array($sw,''));
+    $table->addRow(array($cc->convert("%y\tPHP Version%n"),$software['php']));
+    $table->addRow(array($cc->convert("%y\tScreen Version%n"),$software['screen']));
+    $table->addRow(array($cc->convert("%y\tGlibC Version%n"),$software['glibc']));
+    $table->addRow(array($cc->convert("%y\tMySql Version%n"),$software['mysql']));
+    $table->addRow(array($cc->convert("%y\tApache Version%n"),$software['apache']));
+    $table->addRow(array($cc->convert("%y\tCurl Version%n"),$software['curl']));
+    $table->addRow(array($cc->convert("%y\tNginX Version%n"),$software['nginx']));
+    $table->addRow(array($cc->convert("%y\tQuota Version%n"),$software['quotav']));
+    $table->addRow(array($cc->convert("%y\tPostfix Version%n"),$software['postfix']));
+    $table->addRow(array($cc->convert("%y\tLitespeed Version%n"),$software['litespeed']));
+    $table->addRow(array($cc->convert("%y\tGit Version%n"),$software['git']));
+    $table->addRow(array($cc->convert("%y\tTmux Version%n"),$software['tmux']));
+    echo $table->getTable();
+}
+    exit;
+ }
+ 
+ function games($data) {
+	 // review games
+	 		system('clear');
+	 		$Query = new SourceQuery( );
+	 		$cc = new Console_Color2();
+	 			  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_RIGHT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    );
+	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
-    
-  echo CR."\e[1m\e[34m Game Server Information\e[0m".CR;
-  echo "\t\e[1m\e[31mRunning Servers\e[97m".CR;
-foreach ($res as $data) {
-			
-    $Query->Connect( $data['host'], $data['port'], 1,  SourceQuery::SOURCE  );
+    //echo print_r($res,true).cr;
+    //^[[0;34mblue^[[0m
+    $table->addRow(array("\t\tServer", "\tStarted"," Online\tCurrent Map"));
+    echo $cc->convert("%BGame Server Information%n").cr;
+    foreach ($res as $gdata) {
+		 //echo print_r($gdata,true).cr;
+		 $Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
 	$players = $Query->GetPlayers( ) ;
 	$info = $Query->GetInfo();
 	$rules = $Query->GetRules( );
 	$Query->Disconnect( );
-	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
-	$headmask = "%-40.40s %13.13s %25s %25s  \n";
-    printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
-		if ($info['Players'] >0 ) {
-		// players
-		//print_r($players);
-		//echo "\t\t\t\e[1m \e[34m Player\t\t        Score\t        Online For\e[97m".CR;
-		$headmask = "%50s %30.30s %23s  \n";
-		printf($headmask,"\e[1m \e[34m Player",'Score',"Online For\e[97m");
-		orderBy($players,'Frags',"d"); // order by score
-		foreach ($players as $k=>$v) {
-						//echo $k.' '.$v.cr;
-					//$playerN = substr($players[$k]['Name'],0,20); // chop to 20 chrs
-					setlocale(LC_CTYPE, 'en_AU.utf8');
-					$playerN = trim($players[$k]['Name']);
-//iconv("UTF8", "CP1251//TRANSLIT//IGNORE", $text);	
-					$playerN = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $playerN); //remove high asci
-					$playerN = str_pad($playerN,25,' ' ,STR_PAD_LEFT); //pad to 25 chrs
-		
-	/*	if ($players[$k]['Frags'] <10) {
-			// switch statement !! rather than if's
-			$pscore ="  ".$players[$k]['Frags']; //format score
-		}
-		elseif ($players[$k]['Frags'] <100)  {
-			$pscore = " ".$players[$k]['Frags']; //format score
+	if ($info['Players'] >0) {
+		$p1 = trim($info['Players']);
+		$info['Players'] = $cc->convert("%B$p1%n");
 		}
 		else {
-			$pscore = $players[$k]['Frags']; //format score
-		} */
-		//echo  "\t\t\t".$playerN."\t ".$pscore."\t\t ". $players[$k]['TimeF'].CR;
-		$headmask = "%-20s %-25s %15s %' 8s %17s  \n";
-		printf($headmask,' ',$playerN,' ',$players[$k]['Frags'], $players[$k]['TimeF']);
-		
-	}
-	//echo CR;
-	}
-	//echo CR;
-	}
-	
-}
-else {
-			display_games();
+			$p1 = trim($info['Players']);
+		$info['Players'] = $cc->convert("%Y$p1%n");
 		}
-			exit;
-	case "debug":
-	case "d":
-	system('clear');	
-	if (isset($argv[2])) {
-		switch  (strtolower($argv[2])) 
-		{
-		case "s":
-		case "software";
-			$software = get_software_info($database);
-			$os = lsb();
-			display_software($os,$software);
-			exit;
-		case "c":
-		case "cpu":
-			$cpu_info = get_cpu_info();
-			display_cpu($cpu_info);
-			exit;
-		case "d":
-		case "disk":
-			$disk_info = get_disk_info();
-			display_disk($disk_info);
-			exit;
-		case "m":
-		case "memory":
-			$mem_info = get_mem_info();
-			display_mem($mem_info,True);
-			exit;
-		case "u":
-		case "user":
-			$disk_info = get_disk_info();
-			$user_info = get_user_info($disk_info);
-			display_user($user_info);
-			exit;
+	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+	$host = $cc->convert("%y".$info['HostName']."%n");
+	$table->addRow(array('',$host,date('g:ia \o\n l jS F Y \(e\)',"\t".$gdata['starttime'])."\t",$playersd,"\t".$info["Map"].""));
+	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
-}
-	
-	echo 'Please Wait ';
-	$mem_info = get_mem_info();
-	echo'.';
-	$software = get_software_info($database);
-	echo'.';
-	$disk_info = get_disk_info();
-	echo '.';
-	$user_info = get_user_info($disk_info);
-	echo '.';
-    $cpu_info = get_cpu_info();
-    $os = lsb();
-    echo '.'.CR;
-    
-	echo CR." \r\n\e[1m \e[34mServer Information\e[0m".CR;
-    display_cpu($cpu_info);
-	display_mem($mem_info,True);
-	display_disk($disk_info);
-	display_software($os,$software);
-	display_user($user_info);
-	//display_games();
-	exit;
-	default:
-			echo $argv[1]." is an invalid command. Use one from the list below\r\n";
-			$argv[1]="h";
-			goto s1;
-}			
-}
-else {$test= "help screen";
-	$argv[1]="h";
-	goto s1;
-echo  $test.CR;}
-
+	echo $table->getTable();
+    exit;
+ }
 ?>

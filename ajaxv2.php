@@ -560,7 +560,7 @@ function exe($cmds) {
 		return 61912;
 	}
 	
-if($can_do == true) {
+	if($can_do == true) {
 	/* 
 	 * Exit codes
 	 * 0 = ran correctly
@@ -568,26 +568,31 @@ if($can_do == true) {
 	 * 139 = segmentation
 	 */ 
 	
-	exec($cmds['cmd'],$output,$retval);
+		exec($cmds['cmd'],$output,$retval);
 	
-	if (isset($cmds['debug'])) {
-	//echo ' ready to do command '.$cmds['cmd'].cr;
+			if (isset($cmds['debug'])) {
+				echo ' ready to do command '.$cmds['cmd'].cr;
 	
-		foreach ($output as $line) {
-			$return .= $line.cr;
+				foreach ($output as $line) {
+					$return .= $line.cr;
+				}
+				//$return ; //.= $retval.cr; // put the return value in the array
 		}
-		$return ; //.= $retval.cr; // put the return value in the array
-		
+		else {
+		// test if no debug needs to return somthing on success
+			foreach ($output as $line) {
+				//$return .= $line.cr;
+				if(strpos($line,'! App ')) {
+					$return = $line.cr;
+				}
+				//$return ; //.= $retval.cr;
+				}
 	
+	return $return;
 }
-	else {
-		// test if no debug
-		$return ; //.= $retval.cr;
+ 
+		return false; // just in case anything slips through
 	}
-	
-return $return;
-} 
-return false; // just in case anything slips through
 }
 
 function utf8ize($mixed) {
