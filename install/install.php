@@ -18,6 +18,10 @@ if (is_file('/var/run/reboot-required') === true) {
 			echo "\t".$cc->convert("%rThis machine requires a restart%n").cr;
 			$rb = ask_question('Restart now ? ','y','n');
 		}
+if(!is_cli()) {
+	echo 'Wrong Enviroment';
+	exit;
+}		
 if (!isset($argv[1])) {
 	echo cr;
 	echo $cc->convert("%rCommand Option Missing%n").cr;
