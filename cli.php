@@ -76,11 +76,17 @@ switch ($cmds['action']) {
 		exit;
 		}
 		if ($cmds['server'] == 'all') {
-			echo 'Quick log scan'.cr;
+			echo 'Quick log scan';
 			$exe = urlencode ('./scanlog.php all');
 			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			//echo $cmd.cr;
-			echo file_get_contents($cmd);
+			$content = file_get_contents($cmd);
+			if(empty(trim($content))) {
+			echo cr.'Log(s) up to date'.cr;
+		}
+		else {
+			echo "\r$content";
+		}
 			break;
 		}
 		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
@@ -95,6 +101,9 @@ switch ($cmds['action']) {
 		$content = file_get_contents($cmd);
 		if(empty(trim($content))) {
 			echo cr.'Log up to date'.cr;
+		}
+		else {
+			echo "\r$content";
 		}
 		break;
 	case 'li':
@@ -116,6 +125,57 @@ switch ($cmds['action']) {
 			echo 'installer module missing !'.cr;
 		}
 		break;
+	case 'is':
+	case 'iserver':
+			if (empty($cmds['path']) || !isset($cmds['path'])) {
+				echo 'invalid install location, correct and retry'.cr;
+				break;
+			} 
+			if (empty($cmds['game']) || !isset($cmds['game'])) {
+				echo 'missing game ID, correct and retry'.cr;
+				break;
+			} 
+			if (empty($cmds['ip']) || !isset($cmds['ip'])) {
+				 $ip = file_get_contents('https://api.ipify.org');// get ip
+				if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
+			}
+			exec('utils/check_r.php '.$cmds['game'],$output,$ret);
+			
+			$cds = strpos($output[1] ,'No Data for Server ID');
+			
+			if ($cds === false) {
+				$game_name = str_replace('Found','',$output[1]);
+				$game_name = trim(str_replace('(released)','',$game_name));
+				
+			}
+			else {
+				 echo $output[1].cr;
+				break;
+			}
+			//echo $ip.cr;
+			$sql = "select * from base_servers where base_ip like '".$ip."'";
+			$servers = $database->get_results($sql);
+			if(count($servers) == 0) {
+				echo "no base server record for ($ip), run $argv[0] with the ib switch".cr;
+			}
+			else {
+				// we have a valid base server do we have any installs ?
+				if($servers[0]['enabled'] == 0) {
+					$fname = $servers[0]['fname'];
+					echo "Warning $fname ($ip) is not enabled".cr;
+				}
+				$server = $servers[0];
+				$sql = "select * from game_servers where server_id like '".$cmds['game']."' and installed_on like '".$server['fname']."'";
+				$servers = $database->get_results($sql);
+				if (count($servers) == 0) {
+					$game = $database->get_row("select game_name from game_servers where server_id =".$cmds['game']);
+						echo 'there is no instalation of game server '.$game_name.' on '.$fname.', install the game first'.cr;
+				}
+				else {
+					print_r($servers);
+				}
+			}
+			break; 
 	case 'p':
 	case 'port':
 		
