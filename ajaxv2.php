@@ -585,12 +585,12 @@ function exe($cmds) {
 		exec($cmds['cmd'],$output,$retval);
 	
 			if (isset($cmds['debug'])) {
-				echo ' ready to do command '.$cmds['cmd'].cr;
+				//echo ' ready to do command '.$cmds['cmd'].cr;
 	
 				foreach ($output as $line) {
 					$return .= $line.cr;
 				}
-				echo $return;
+				return $return;
 				//$return ; //.= $retval.cr; // put the return value in the array
 		}
 		else {
