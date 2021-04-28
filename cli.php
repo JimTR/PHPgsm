@@ -26,6 +26,7 @@ require_once 'includes/master.inc.php';
 require_once 'includes/class.table.php';
 require_once 'includes/class.color.php';
 include 'functions.php';
+$cc = new Console_Color2();
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -34,6 +35,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.02);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
+	define ('warning', $cc->convert("%YWarning%n"));
+	define ('error', $cc->convert("%RError%n"));
+	define ('advice', $cc->convert("%BAdvice%n"));
 	error_reporting (0);
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -55,6 +59,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 else {
 	die ('invalid enviroment');
 }
+system('clear');
 switch ($cmds['action']) {
 	
 	case 'v' :
@@ -128,11 +133,11 @@ switch ($cmds['action']) {
 	case 'is':
 	case 'iserver':
 			if (empty($cmds['path']) || !isset($cmds['path'])) {
-				echo 'invalid install location, correct and retry'.cr;
+				echo error.' invalid install location, correct and retry'.cr;
 				break;
 			} 
 			if (empty($cmds['game']) || !isset($cmds['game'])) {
-				echo 'missing game ID, correct and retry'.cr;
+				echo error.' missing game ID, correct and retry'.cr;
 				break;
 			} 
 			if (empty($cmds['ip']) || !isset($cmds['ip'])) {
@@ -156,26 +161,26 @@ switch ($cmds['action']) {
 			$sql = "select * from base_servers where base_ip like '".$ip."'";
 			$servers = $database->get_results($sql);
 			if(count($servers) == 0) {
-				echo "no base server record for ($ip), run $argv[0] with the ib switch".cr;
+				echo warning." no base server record for ($ip), run $argv[0] with the ib switch".cr;
 			}
 			else {
 				// we have a valid base server do we have any installs ?
 				$fname = $servers[0]['fname'];
 				if($servers[0]['enabled'] == 0) {
 					
-					echo "Warning $fname ($ip) is not enabled".cr;
+					echo warning." Base Server $fname ($ip) is not enabled".cr;
 				}
 				$server = $servers[0];
 				$sql = "select * from game_servers where server_id like '".$cmds['game']."' and installed_on like '".$server['fname']."'";
 				$servers = $database->get_results($sql);
 				if (count($servers) == 0) {
 					$game = $database->get_row("select game_name from game_servers where server_id =".$cmds['game']);
-						echo 'there is no installation of game server '.$game_name.' on '.$fname.', install the game first'.cr;
+						echo advice.' There is no installation of game server \''.$game_name.'\' on base server '.$fname.', install the game first'.cr;
 				}
 				else {
 					if (is_dir($cmds['path'])) {
-						echo 'Warning location exists, this operation will overwrite '.$cmds['path'].' ';
-						$answer = ask_question('continue y/n','y','n');
+						echo warning.' location exists, this operation will overwrite '.$cmds['path'].' ';
+						$answer = ask_question('continue y/n ','y','n');
 					}
 					print_r($servers);
 				}
