@@ -91,8 +91,11 @@ switch ($cmds['action']) {
 		} 
 		$exe = urlencode ('./scanlog.php '.$server['host_name'].' '.$server['location'].'/log/console/'.$server['host_name'].'-console.log');
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-		echo 'Full log scan for '.$cmds['server'].cr;
-		echo file_get_contents($cmd);
+		echo 'Full log scan for '.$cmds['server'];
+		$content = file_get_contents($cmd);
+		if(empty(trim($content))) {
+			echo cr.'Log up to date'.cr;
+		}
 		break;
 	case 'li':
 	case 'list':
@@ -140,6 +143,10 @@ switch ($cmds['action']) {
 		}
 		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
 		$server = $database->get_row($sql);
+		if (empty($server)) {
+			echo 'invalid Server ID '.$cmds['server'].cr;
+			break;
+		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=s';
 		echo file_get_contents($cmd).cr;
 	break;
@@ -150,8 +157,13 @@ switch ($cmds['action']) {
 		echo 'no Server ID supplied'.cr;
 		exit;
 	}
+	
 		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
 		$server = $database->get_row($sql);
+		if (empty($server)) {
+			echo 'invalid Server ID '.$cmds['server'].cr;
+			break;
+		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=q';
 		echo file_get_contents($cmd).cr;
 	break;
