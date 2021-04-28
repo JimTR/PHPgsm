@@ -42,7 +42,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;
@@ -69,18 +69,91 @@ switch ($cmds['action']) {
 	case 'g':
 		games($cmds);
 	break;
+	case 'l':
+	case 'log':
+	if(!isset($cmds['server'])) {
+		echo 'no Server ID supplied'.cr;
+		exit;
+		}
+		if ($cmds['server'] == 'all') {
+			echo 'Quick log scan'.cr;
+			$exe = urlencode ('./scanlog.php all');
+			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+			//echo $cmd.cr;
+			echo file_get_contents($cmd);
+			break;
+		}
+		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
+		$server = $database->get_row($sql);
+		if (empty($server)) {
+			echo 'invalid Server ID '.$cmds['server'].cr;
+			break;
+		} 
+		$exe = urlencode ('./scanlog.php '.$server['host_name'].' '.$server['location'].'/log/console/'.$server['host_name'].'-console.log');
+		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+		echo 'Full log scan for '.$cmds['server'].cr;
+		echo file_get_contents($cmd);
+		break;
+	case 'li':
+	case 'list':
+			echo 'list server id\'s'.cr;
+			$sql = "select host_name from server1 where enabled = 1 order by host_name";
+			$hosts = $database->get_results($sql);
+			//echo print_r($hosts,true).cr;
+			foreach ($hosts as $host) {
+				echo $host['host_name'].cr;
+			}
+			break;
+	case 'ig':
+	case 'igames':
+	if (file_exists(DOC_ROOT.'/utils/install.php')) {
+			include DOC_ROOT.'/utils/install.php';
+		}
+		else {
+			echo 'installer module missing !'.cr;
+		}
+		break;
 	case 'p':
 	case 'port':
 		
 	break;
+	case 'r':
+	case 'restart':
+	if(!isset($cmds['server'])) {
+		echo 'no Server ID supplied'.cr;
+		exit;
+		}
+		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
+		$server = $database->get_row($sql);
+		if (empty($server)) {
+			echo 'invalid Server ID '.$cmds['server'].cr;
+			break;
+		} 
+		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=r';
+		echo file_get_contents($cmd).cr;
+		break;
 	case 's':
 	case 'start':
-	echo 'start'.cr;
+	if(!isset($cmds['server'])) {
+		echo 'no Server ID supplied'.cr;
+		exit;
+		}
+		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
+		$server = $database->get_row($sql);
+		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=s';
+		echo file_get_contents($cmd).cr;
 	break;
 	case 'q':
 	case 'quit':
 	case 'stop':
-	echo 'quit'.cr;
+	if(!isset($cmds['server'])) {
+		echo 'no Server ID supplied'.cr;
+		exit;
+	}
+		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
+		$server = $database->get_row($sql);
+		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=q';
+		echo file_get_contents($cmd).cr;
 	break;
 	default:
 	help();
@@ -88,6 +161,7 @@ switch ($cmds['action']) {
 }
 
 function help() {
+	global $settings;
 	$cc = new Console_Color2();
 	$PHP = $cc->convert("%cPHP%n");
 	$gsm = $cc->convert("%rgsm%n");
@@ -108,12 +182,15 @@ $table->addRow(array('d, or details ','shows details about the running system (t
 $table->addRow(array('g, or games ','shows details on running game servers (takes options see example page)'));
 $table->addRow(array('ig, or igames ','Installs a game from Steam (takes options see example page)'));
 $table->addRow(array('is, or iserver ','Installs a server from an installed game (takes options see example page)'));
-$table->addRow(array('u, or users ','shows user details (takes options see example page)'));
+$table->addRow(array('u, or user ','shows user details (takes options see example page)'));
+$table->addRow(array('l, or log ','processes server logs (takes options see example page)'));
+$table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'));
 	 system('clear');
 	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 echo $table->getTable();
 	 echo cr;
-	 echo 'cli will only work on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
+	 echo 'cli will only install games or servers on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
+	 echo 'however, you can control remotely installed servers'.cr;
 	 $answer = ask_question('enter E for examples or q to quit  ',null,null);
 	 echo $answer.cr.cr;
 	 exit;
@@ -122,6 +199,9 @@ $table->addRow(array('u, or users ','shows user details (takes options see examp
  function details($data) {
 	 // read server details
 	 system('clear');
+	 if (empty($data['option']) || !isset($data['option'])) {
+		 $data['option'] = 'a';
+	 }
 	 $cc = new Console_Color2();
 	 $sw = $cc->convert("%W   Modules%n");
 	 $sa = $cc->convert("%W    Server%n");
