@@ -174,7 +174,8 @@ switch ($cmds['action']) {
 				}
 				else {
 					if (is_dir($cmds['path'])) {
-						echo 'Warning location exists, this opperation will over write '.$cmds['path'].cr;
+						echo 'Warning location exists, this opperation will overwrite '.$cmds['path'].cr;
+						$answer = ask_question('continue y/n','y','n');
 					}
 					print_r($servers);
 				}
