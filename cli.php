@@ -170,9 +170,12 @@ switch ($cmds['action']) {
 				$servers = $database->get_results($sql);
 				if (count($servers) == 0) {
 					$game = $database->get_row("select game_name from game_servers where server_id =".$cmds['game']);
-						echo 'there is no instalation of game server '.$game_name.' on '.$fname.', install the game first'.cr;
+						echo 'there is no installation of game server '.$game_name.' on '.$fname.', install the game first'.cr;
 				}
 				else {
+					if (is_dir($cmds['path'])) {
+						echo 'Warning location exists, this opperation will over write '.$cmds['path'].cr;
+					}
 					print_r($servers);
 				}
 			}
