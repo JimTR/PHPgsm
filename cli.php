@@ -160,8 +160,9 @@ switch ($cmds['action']) {
 			}
 			else {
 				// we have a valid base server do we have any installs ?
+				$fname = $servers[0]['fname'];
 				if($servers[0]['enabled'] == 0) {
-					$fname = $servers[0]['fname'];
+					
 					echo "Warning $fname ($ip) is not enabled".cr;
 				}
 				$server = $servers[0];
