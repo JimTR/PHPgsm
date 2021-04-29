@@ -309,6 +309,24 @@ for (var i in data1) {
   //}
    });
  }
+ function server_info(url) {
+	 //get player functions
+	 console.log(url);
+	  $.ajax({ 
+        type: 'GET', 
+        url: url, 
+        dataType: "json", 
+        success: function (data) {
+			console.log('got data');
+             
+           
+        },
+        complete:function(data){
+			 console.log('jog done'); 
+		}
+    });
+ }
+ 
  function base_servers(url) {
 	 // bring back base_server detail
 	  $.ajax({ 
