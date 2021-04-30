@@ -215,16 +215,23 @@ function get_user_info ($Disk_info) {
 	$user['level'] =check_sudo($user['name']);
 	//$q = shell_exec("quota -s 2> /dev/null");
 	$q = shell_exec("quota  2> /dev/null");
+	exec("quota  2> /dev/null",$output,$ret);
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
+	if (strtolower($user['name']) == 'root') {
+		// set root
+		$du[0] = 0;
+	}
+	else {
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
 	$du = explode("\t",$du);
+	}
 	//$du = filesize("/home/".trim($user['name']));
 	//echo "du raw = $du[0]".CR;
 	//echo 'user home collected'.cr;
 	// problem here
 	//print_r ($du).CR;
 	//echo '$q = '.$q.cr;
-	if(empty($q)) {
+	if(empty($quota[1])) {
 		
 		//echo "Quota Not installed".CR;
 		if(isset($Disk_info['home_free'])){
