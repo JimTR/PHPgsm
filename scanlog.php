@@ -426,7 +426,7 @@ function update_server($server){
 	//$cmd = $stub.'s';
 	//$s .= file_get_contents($cmd).cr;
 	//need to restart all that stem from this install dir
-	$sql = "SELECT * FROM `server1` WHERE `game` like \'".$game['game']."\' and `install_dir` like \'".$game['install_dir']."\'";
+	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '".$game['install_dir']."'";
 		$restarts = $database->get_results($sql);
 		foreach ($restarts as $restart) {
 			// restart them all
