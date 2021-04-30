@@ -23,24 +23,26 @@
  * 
  */
 $run_path = dirname($_SERVER['PHP_SELF'],2); // these guys should be in the dir above
+echo $run_path.PHP_EOL;
 exec('cat /proc/mounts |grep gvfsd-fuse',$tmp,$rval);
 if ($tmp) {
 $tmp =explode(' ',$tmp[0]);
 $installing['gvfs'] = trim($tmp[1]);
 }
 clean_up();
-echo $run_path.PHP_EOL;
-if ($run_path == '.') { $run_path = '..';} // opps perhaps not
-// test the file is in PHPgsm location 
-
- include $run_path.'/includes/master.inc.php';
- include DOC_ROOT.'/functions.php';
+if (!defined('DOC_ROOT')) {
+	define('DOC_ROOT',dirname(__DIR__));
+}
+ require_once DOC_ROOT.'/includes/master.inc.php';
+ require_once DOC_ROOT.'/functions.php';
  define ('cr',PHP_EOL);
  define('CR',cr);
  define ('VERSION',2.02);
  define ('quit','<ctl-c> to quit ');
-    require_once 'includes/table.php';
-    require_once 'includes/color.php';
+  echo 'defines done'.cr;
+    require_once DOC_ROOT.'/includes/class.table.php';
+    require_once DOC_ROOT.'/includes/class.color.php';
+    echo 'tables done'.cr;
 $cc = new Console_Color2();
 $tick = $cc->convert("%g✔%n");
 $cross = $cc->convert("%r✖%n");
@@ -49,6 +51,10 @@ $cross = $cc->convert("%r✖%n");
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
+  $table = new Console_Table(
+    CONSOLE_TABLE_ALIGN_RIGHT,
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+);
  $quit ='(ctl+c to quit) '; 
   echo 'Welcome to PHPgsm Game Installer '.VERSION.cr;
   if (isset($cmds)){
@@ -59,15 +65,20 @@ $cross = $cc->convert("%r✖%n");
 	  if (!$rerun) { exit;}
   }
 }
+//$table->addRow(array('','',''));
+$table->addRow(array('Mount Point','Free Space' ));
  echo 'Checking available disk space'.cr;
  $diskinfo = get_disk_info();
  if (isset($diskinfo['boot_free'])) {
-	 echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
+	 //echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
+	 $table->addRow(array($diskinfo['boot_mount'],$diskinfo['boot_free']));
+	 
  }
  if(isset($diskinfo['home_free']))  {
-	 echo $diskinfo['home_mount'].' ( '.$diskinfo['home_free'].' free )'.cr;
+	 //echo $diskinfo['home_mount'].' ( '.$diskinfo['home_free'].' free )'.cr;
+	 $table->addRow(array($diskinfo['home_mount'],$diskinfo['home_free']));
 	 }
- 
+ echo $table->getTable();
  if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
@@ -100,7 +111,7 @@ else {
  if (is_numeric($answer)) {
 	 rerun:
 	 echo 'Please wait checking steam for server ID '.$answer;//.cr;
-	 exec($run_path.'/utils/check_r.php '.$answer,$output,$ret_val);
+	 exec(DOC_ROOT.'/utils/check_r.php '.$answer,$output,$ret_val);
 	 $x=0;
 	 echo $ret_val.cr;
 	 switch ($ret_val) {
@@ -193,7 +204,7 @@ foreach ($list as $temp ) {
 					echo $line.cr;
 				}
 				echo cr.'DO NOT choose a passworded branch, unless you have a valid key & password'.cr;
-		$answer = ask_question('Choose a branch from the list above, press Enter for default or '.quit,NULL,'n',true);
+		$answer = ask_question('Choose a branch from the list above, press Enter for default or '.quit,NULL,null);
 		$answer=trim($answer); 
 		if ($answer =='') {
 			$branch = 5;
@@ -211,8 +222,11 @@ foreach ($list as $temp ) {
 		$tmp = explode('     ',trim($output[$branch]));
 		$tmp = tidy_array($tmp);
 		$data['branch'] = $tmp[0];
-		if(isset($tmp[3])) {$data['password'] = true;}
-		else {$data['password'] = false;}
+		if(isset($tmp[3])) {
+			//$data['password'] = true;
+			$data['branch_password'] = ask_question(cr."Enter Branch Password or ".quit,null,null);
+			}
+		//else {$data['password'] = false;}
 		return $data;
 }
  
@@ -234,6 +248,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	  $maxlen = strlen($data['branch']);
 	  $lmask = "%20.20s %-".$maxlen.".".$maxlen."s  %4.4s\n";
 	  //printf($lmask,'Branch Selected',$data['branch'],green_tick);
+		echo 'Current Location '.getcwd ( ).cr;
 		echo 'adding a location that does not start with a \'/\' will create a location below the current location'.cr.cr;
 		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL);
 		$path = trim(str_replace('~/',exec('echo ~').'/',$path));
@@ -376,7 +391,7 @@ function stage_5($data)  {
 	top:
 	system('clear');
 	 echo 'Installing '.$data['name'].' Stage 5: Installation'.cr.cr;
-	 echo 'This process may take some time, the installer may appear to hang with the prompt \'waiting for steamcmd\''.cr;
+	 echo 'This process may take some time, the installer may appear to hang with the prompt \'waiting for steamcmd to start\''.cr;
 	 echo 'this normally indicates either steamcmd is updating itself or steamcmd is having a problem connecting to steam\'s servers'.cr.cr;
 	 $cmd = 'screen -L -Logfile install.log -dmS install';
 	 exec ($cmd,$screen,$retval);
@@ -495,25 +510,33 @@ return $data;
 	 top:
 	 system('clear');
 	 echo 'Installing '.$data['name'].' Stage 6: Configure Server'.cr.cr;
-     echo "$name is installed at $path and has used $dir_size of disk space ".green_tick.cr; 	
+     echo "$name is installed at $path and has used $dir_size of disk space ".green_tick.cr;
+     if(isset($data['host'])) { 
+		 	 echo "Host Name set to ".$data['host'].' '.green_tick.cr;
+		 }
 	 echo "Let's configure your server for use".cr;
+	 if (!isset($data['host'])) {
 	 $host = ask_question('Server Host Name ',NULL,NULL,false);
 	 if (trim($host) =='') {
 		 echo 'not a good idea to have a blank host name !'.cr.'Let\'s try again';
 		 sleep (3);
 		 goto top;
 	 }
+	 
 	 // host name set 
-	 $config['host']  = trim($host);
+	 $data['host']  = trim($host);
+	 goto top;
+	}
 	 $rcon_password = ask_question('Enter a password for RCON or leave blank for a generated password ',NULL,NULL,false,true);
 	 if (empty(trim($rcon_password))) {
-		 $config['rcon'] = randomPassword();
+		 $data['rcon'] = randomPassword();
 	 }
 	 else {
-		 $config['rcon'] = $rcon_password;
+		 $data['rcon'] = $rcon_password;
 	 }
 	 echo cr; 
-	 print_r($config);	 
+	 echo print_r($data,true).cr;
+	 	 
  }
  
  
