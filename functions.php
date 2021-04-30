@@ -219,7 +219,12 @@ function get_user_info ($Disk_info) {
 	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
 	if (strtolower($user['name']) == 'root') {
 		// set root
-		$du[0] = 0;
+		if(isset($Disk_info['home_free'])){
+			$du[0] = $Disk_info['home_free'];
+		}
+		else {
+			$du[0] = $Disk_info['boot_free'];
+		}
 	}
 	else {
 	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
