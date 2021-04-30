@@ -48,6 +48,7 @@ $tick = $cc->convert("%g✔%n");
 $cross = $cc->convert("%r✖%n");
  define ('green_tick',$tick);
  define ('red_cross',$cross);
+ define ('warning',$cc->convert("%rWarning %n"));
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
@@ -82,9 +83,9 @@ $table->addRow(array('Mount Point','Free Space' ));
  if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
- //print_r($user);
+ print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
- else { $user_level =', user privilege to low, get an administrator to run this script.'; echo $user_level.cr;exit;}
+ else { $user_level =', '.warning.'user privilege level low, the installer will run in safe mode.'; }
  echo $user_level.cr;
  $installing['base_user'] = $user['name'];
 }
