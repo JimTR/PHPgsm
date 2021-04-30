@@ -23,7 +23,14 @@
  * example steamcmd +app_info_update 1 +app_info_print 295230 +quit |  sed '1,/branches/d' 
  */
 define ('cr',PHP_EOL);
-include '../functions.php';
+$dir= dirname($_SERVER['PHP_SELF']);
+if ($dir == '.'){
+$dir = dirname($_SERVER['PWD']);
+}
+else {
+$dir = dirname(__DIR__,1);
+}
+include $dir.'/functions.php';
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
 	exit(1);
