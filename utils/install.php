@@ -152,7 +152,7 @@ else {
         echo  error.$server.' can not be installed, not enough disk space !'.cr;
         $table->addRow(array('Required Disk Space:',$installing['disk_size']));
         $table->addRow(array('Free Disk Space:',$installing['quota_free']));
-        $table->addRow(array('Free up at least:',$need.' GB to install'));
+        $table->addRow(array('Free up at least:',$need.' GB',' to install'));
 		//echo 'Required Disk Space: '.$installing['disk_size'].cr;
 		//echo 'Actual Disk Space: '.$installing['quota_free'].cr;
 		//echo 'Free up at least: '.$need.' GB to install'.cr;
