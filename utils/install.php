@@ -112,11 +112,10 @@ else {
 
  if (is_numeric($answer)) {
 	 rerun:
-	 echo 'Please wait checking steam for server ID '.$answer;//.cr;
+	 echo 'Please wait checking steam for server ID '.$answer.cr;
 	 exec(DOC_ROOT.'/utils/check_r.php '.$answer,$output,$ret_val);
-	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
 	 $x=0;
-	 echo $ret_val.cr;
+	 //echo $ret_val.cr;
 	 switch ($ret_val) {
 		 case 7:
 		 //echo $output[1].cr;
@@ -130,14 +129,28 @@ else {
 		 if ($rerun) {$ret_val=0; $output = array(); goto rerun;} 
 		 exit;
 	 }
+	
 	 //echo $ret_val.cr;
 	 //print_r($output);
 	 //stage 1
-	 echo $output[1].cr;
+	 
 	 	 
 	 $installing['app_id'] = trim($answer);
 	 $name = str_replace('Found ','',$output[1]);
 	 $server = trim(str_replace('(released)',' ',$name));
+ 	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
+        //echo cr.print_r($installing).cr;
+         if ($installing['disk_size'] >= $installing['quota_free']) {
+		$game_size = floatval($installing['disk_size']);
+		$remaining = floatval($installing['quota_free']);
+		$need = $game_size -$remaining;
+                echo  $server.' can not be installed, not enough disk space !'.cr;
+		echo 'Required Disk Space: '.$installing['disk_size'].cr;
+		echo '  Actual Disk Space: '.$installing['quota_free'].cr;
+		echo '   Free up at least: '.$need.' GB to install'.cr; 
+		exit;
+}
+	echo $output[1].cr;
 	 $name = $server.' (y/n)';
 	 $installing['name'] = trim($server);
 	 echo cr;
