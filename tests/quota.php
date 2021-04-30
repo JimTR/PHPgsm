@@ -30,7 +30,7 @@ if (isset($quota[1])){
 $tmp = explode(cr,$q);
 $tmp =trim($tmp[2]);
 $tmp = explode(' ',$tmp);
-foreach ($tmp as $k => $v) {
+foreach ($quota as $k => $v) {
 
                 if (empty(trim($v))) {
 
