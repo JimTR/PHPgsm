@@ -209,8 +209,6 @@ function get_user_info ($Disk_info) {
 	if(!defined('cr') ){
 		define('cr',PHP_EOL);
 	}
-	// return user info as an array
-	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
 	$user['level'] =check_sudo($user['name']);
 	exec("quota 2> /dev/null",$quota,$ret);
@@ -218,21 +216,20 @@ function get_user_info ($Disk_info) {
 		// user has quota
 		$tmp =trim($quota[2]);
 		$tmp = explode(' ',$tmp);
-		//echo print_r($tmp,true).cr;
 		foreach ($tmp as $k => $v) {
                 if (empty(trim($v))) {
                    unset($tmp[$k]);
                 }
 			}
         $tmp = array_values($tmp);
-        // print_r($tmp); // now all renumbered
+        // now all renumbered
         $used = dataSize($tmp[1]*1024);
         $total = dataSize($tmp[2]*1024);
         $free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
         $user['quota_used'] = $used;
         $user['quota'] = $total; 
         $user['quota_free'] = $free;
-        //echo 'Used = '.$used.'   Total = '.$total.'  Free =  '.$free.cr;
+       
 }
 	else {
 			if(isset($Disk_info['home_free'])){
@@ -240,7 +237,6 @@ function get_user_info ($Disk_info) {
 				$user['quota_free'] = $Disk_info['home_free'];
 			}
 			else {
-				$user['quota_free'] = $Disk_info['boot_free'];
 				$user['quota'] = $Disk_info['boot_size'];
 				$user['quota_free'] = $Disk_info['boot_free'];
 			}
@@ -442,11 +438,6 @@ if ($r[0] == $r[1]) {unset($r[1]);}
 		
 		
 	if(isset($r[1])) {
-		$home1 = explode(" ",trim(strstr($home, PHP_EOL)));
-		$home1 = array_filter($home1);
-		
-		$home1 = array_slice($home1,0);
-		//print_r($home1);
 		$disk_info['home_filesystem'] = $r[1][0];
 		$disk_info['home_size'] = $r[1][1];
 		$disk_info['home_used'] = $r[1][2];
