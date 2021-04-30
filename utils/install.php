@@ -150,8 +150,8 @@ else {
 		$remaining = floatval($installing['quota_free']);
 		$need = $game_size -$remaining;
         echo  error.$server.' can not be installed, not enough disk space !'.cr;
-        $table->addRow(array('Required Disk Space:',$installing['disk_size']));
-        $table->addRow(array('Free Disk Space:',$installing['quota_free']));
+        $table->addRow(array('Required Disk Space:',trim($game_size.' GB')));
+        $table->addRow(array('Free Disk Space:',trim($remaining.' GB')));
         $table->addRow(array('Free up at least:',$need.' GB',' to install'));
 		//echo 'Required Disk Space: '.$installing['disk_size'].cr;
 		//echo 'Actual Disk Space: '.$installing['quota_free'].cr;
