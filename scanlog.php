@@ -34,7 +34,9 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
 if(isset($argv[1])){
-	if (strtolower($argv[1]) == 'v') {
+	switch (strtolower($argv[1])) {
+		case 'v':
+		case '-v':
 		echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
 		exit;
 	}
