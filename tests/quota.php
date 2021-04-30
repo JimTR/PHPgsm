@@ -49,7 +49,7 @@ foreach ($tmp as $k => $v) {
 else {
 	
 echo 'root stuff ! or no quota !'.cr;
-exec('df -h /',$df,$ret);
+exec('df -h /',$df,$ret); //need this for sdd or sep system partition
 unset ($df[0]);
 $df = array_values($df);
 exec('df -h |grep sd',$tmps,$ret);
@@ -80,8 +80,9 @@ foreach ($df as $disk) {
 			  }
 			  
 			}
+	$tmp = array_values($tmp);		
 	$r[]=$tmp;   
-	$tmp = array_values($tmp);
+	
 	//echo print_r($tmp,true).cr;
 }
 if ($r[0] == $r[1]) {unset($r[1]);}
