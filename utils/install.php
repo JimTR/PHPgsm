@@ -49,6 +49,7 @@ $cross = $cc->convert("%r✖%n");
  define ('green_tick',$tick);
  define ('red_cross',$cross);
  define ('warning',$cc->convert("%rWarning %n"));
+ define ('error',$cc->convert("%RError %n"));
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
@@ -141,13 +142,21 @@ else {
  	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
         //echo cr.print_r($installing).cr;
          if ($installing['disk_size'] >= $installing['quota_free']) {
+			 $table = new Console_Table(
+			CONSOLE_TABLE_ALIGN_RIGHT,
+			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+			);
 		$game_size = floatval($installing['disk_size']);
 		$remaining = floatval($installing['quota_free']);
 		$need = $game_size -$remaining;
-                echo  $server.' can not be installed, not enough disk space !'.cr;
-		echo 'Required Disk Space: '.$installing['disk_size'].cr;
-		echo '  Actual Disk Space: '.$installing['quota_free'].cr;
-		echo '   Free up at least: '.$need.' GB to install'.cr; 
+        echo  error.$server.' can not be installed, not enough disk space !'.cr;
+        $table->addRow(array('Required Disk Space:',$installing['disk_size']));
+        $table->addRow(array('Free Disk Space:',$installing['quota_free']));
+        $table->addRow(array('Free up at least:',$need.' GB to install'));
+		//echo 'Required Disk Space: '.$installing['disk_size'].cr;
+		//echo 'Actual Disk Space: '.$installing['quota_free'].cr;
+		//echo 'Free up at least: '.$need.' GB to install'.cr;
+		echo $table->getTable(); 
 		exit;
 }
 	echo $output[1].cr;
