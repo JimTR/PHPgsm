@@ -84,6 +84,7 @@ foreach ($df as $disk) {
 	$tmp = array_values($tmp);
 	//echo print_r($tmp,true).cr;
 }
+if ($r[0] == $r[1]) {unset($r[1]);}
 echo print_r($r,true).cr;
 echo print_r($df,true).cr;
 
