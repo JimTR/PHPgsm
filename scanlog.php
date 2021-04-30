@@ -33,9 +33,11 @@ define ('VERSION',2.13);
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
-if (strtolower($argv[1]) == 'v') {
-	echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
-	exit;
+if(isset($argv[1])){
+	if (strtolower($argv[1]) == 'v') {
+		echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
+		exit;
+	}
 }
 if (empty( $settings['ip_key'] )) {
 	echo 'Fatal Error - api key missing'.cr;
@@ -379,7 +381,7 @@ if ($uds == true) {
 	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
 	$rt .= update_server($server);
 }
-$rt .= cr.'Processed '.$server.cr.cr;
+$rt .= cr.'Processed '.$server.cr;
 //echo $rt;
 return $rt;
 }
@@ -400,7 +402,7 @@ function get_ip_detail($ip) {
 function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
-	global $database, $update_done;
+	global $database, $update_done,$settings;
 	$s = 'Server Update via Scanlog '.VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
