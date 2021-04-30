@@ -69,7 +69,7 @@ $cross = $cc->convert("%r✖%n");
 }
 //$table->addRow(array('','',''));
 $table->addRow(array('Mount Point','Free Space' ));
- echo 'Checking available disk space'.cr;
+ echo 'Available disk space'.cr;
  $diskinfo = get_disk_info();
  if (isset($diskinfo['boot_free'])) {
 	 //echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
@@ -224,7 +224,8 @@ foreach ($list as $temp ) {
 	 system('clear');
 	 
 		redobranch:
-			echo 'Installing '.$data['name'].' Stage 1: Choose Branch'.cr.cr;
+			echo 'Installing '.$data['name'].' Stage 1: Choose Branch'.cr;
+			echo 'Approximate Disk usage '.$data['disk_size'].cr.cr;
 		$x=0;
 			 foreach ($output as $line) {
 				if ($x < 4) {
@@ -272,6 +273,7 @@ $table->addRow(array('','',''));
 $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	 system('clear');
 	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr;
+	 echo 'Approximate Disk usage '.$data['disk_size'].cr.cr;
 	 echo $table->getTable();
 	$appinstalled = '';
 	 
