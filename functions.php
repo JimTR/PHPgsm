@@ -236,7 +236,7 @@ function get_user_info ($Disk_info) {
 	// problem here
 	//print_r ($du).CR;
 	//echo '$q = '.$q.cr;
-	if(empty($q)) {
+	if(empty($quota[1])) {
 		
 		//echo "Quota Not installed".CR;
 		if(isset($Disk_info['home_free'])){
@@ -253,6 +253,7 @@ function get_user_info ($Disk_info) {
 	}
 	else {
 		// run quota
+		
 		if(is_cli()) {
 		$tmp = explode(cr,$q);
 		$tmp =trim($tmp[2]);
