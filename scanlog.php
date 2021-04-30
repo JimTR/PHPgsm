@@ -431,7 +431,7 @@ function update_server($server){
 		foreach ($restarts as $restart) {
 			// restart them all
 			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&key='.md5($restart['host']).'&cmd=r'; // used to restart
-			$s .= file_get_contents($cmd);
+			$s .= file_get_contents($cmd).cr;
 		}
 		
 	$update_done[] = $game['install_dir'];
