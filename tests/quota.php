@@ -27,10 +27,12 @@ $q = shell_exec("quota 2> /dev/null");
 exec("quota 2> /dev/null",$quota,$ret);
 echo print_r($quota,true).cr;
 if (isset($quota[1])){
-$tmp = explode(cr,$quota);
-$tmp =trim($tmp[2]);
+//$tmp = explode(cr,$quota);
+//echo print_r($tmp,true).cr;
+$tmp =trim($quota[2]);
 $tmp = explode(' ',$tmp);
-foreach ($quota as $k => $v) {
+echo print_r($tmp,true).cr;
+foreach ($tmp as $k => $v) {
 
                 if (empty(trim($v))) {
 
