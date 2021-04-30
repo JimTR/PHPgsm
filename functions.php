@@ -236,7 +236,7 @@ function get_user_info ($Disk_info) {
 	// problem here
 	//print_r ($du).CR;
 	//echo '$q = '.$q.cr;
-	if(empty($quota[1])) {
+	if(empty($q)) {
 		
 		//echo "Quota Not installed".CR;
 		if(isset($Disk_info['home_free'])){
