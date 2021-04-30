@@ -53,6 +53,9 @@ exec('df -h /',$df,$ret);
 unset ($df[0]);
 $df = array_values($df);
 exec('df -h |grep sd',$tmps,$ret);
+if (empty($tmps)) {
+	exec('df -h |grep vd',$tmps,$ret);
+}
 foreach ($tmps as $tmp) {
 	$df[]=$tmp;
 }
