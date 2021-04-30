@@ -83,11 +83,12 @@ $table->addRow(array('Mount Point','Free Space' ));
  if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
- print_r($user);
+ //print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
  else { $user_level =', '.warning.'user privilege level low, the installer will run in safe mode.'; }
  echo $user_level.cr;
- $installing['base_user'] = $user['name'];
+ $installing = $user;
+
 }
 else {
 	//
@@ -113,6 +114,7 @@ else {
 	 rerun:
 	 echo 'Please wait checking steam for server ID '.$answer;//.cr;
 	 exec(DOC_ROOT.'/utils/check_r.php '.$answer,$output,$ret_val);
+	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
 	 $x=0;
 	 echo $ret_val.cr;
 	 switch ($ret_val) {
@@ -193,12 +195,14 @@ foreach ($list as $temp ) {
  function stage_1($data) {
 	 // add stage 1 game branch
 	 global $output;
+	 
 	 system('clear');
+	 
 		redobranch:
 			echo 'Installing '.$data['name'].' Stage 1: Choose Branch'.cr.cr;
 		$x=0;
 			 foreach ($output as $line) {
-				if ($x < 3) {
+				if ($x < 4) {
 					$x++;
 					continue;
 					}
@@ -208,13 +212,13 @@ foreach ($list as $temp ) {
 		$answer = ask_question('Choose a branch from the list above, press Enter for default or '.quit,NULL,null);
 		$answer=trim($answer); 
 		if ($answer =='') {
-			$branch = 5;
+			$branch = 6;
 		}
 		else {
 			$branch = array_search_partial($output, $answer).cr;
 		}
 		
-		if ($branch < 4) {
+		if ($branch < 5) {
 			system('clear');
 			echo 'Could not find a branch called \''.$answer.'\' retry '.cr; 
 			goto redobranch;
@@ -252,7 +256,8 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 		echo 'Current Location '.getcwd ( ).cr;
 		echo 'adding a location that does not start with a \'/\' will create a location below the current location'.cr.cr;
 		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL);
-		$path = trim(str_replace('~/',exec('echo ~').'/',$path));
+		$full_home = exec('echo ~');
+		$path = trim(str_replace('~/',$full_home.'/',$path));
 		if(empty($path)) {
 									$data['path'] = getcwd();
 								}

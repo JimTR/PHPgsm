@@ -23,6 +23,7 @@
  * example steamcmd +app_info_update 1 +app_info_print 295230 +quit |  sed '1,/branches/d' 
  */
 define ('cr',PHP_EOL);
+include '../functions.php';
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
 	exit(1);
@@ -57,7 +58,12 @@ $common = get_block($output,'"common','}');
 $common = array_block($common);
 $extended = get_block($output,'"extended','}');
 $extended = array_block($extended);
-	
+$depots = get_block($output,'"depots','config');
+$depots =array_block($depots);
+$n = get_block($output,'"depots','branches');
+//echo $n.cr;
+$lin= array_block($n);
+$max_size_raw = $depots['maxsize']+$lin['maxsize'];
 //die();
 if (isset($common['ReleaseState'])) {
 	$release = ' ('.$common['ReleaseState'].')';
@@ -75,6 +81,7 @@ else {
 	//print_r($extended);
 	echo 'author has not defind an os list'.cr;
 }
+echo 'Size on disk '.formatBytes($max_size_raw,2).cr;
 echo 'Branch Detail'.cr;
 //echo print_r($t,true).cr;
 $max = '';
@@ -158,6 +165,7 @@ return $return;
 function get_block($data,$keyword,$toend = "") {
 	// strip blocks from output
 	$x = strpos($data,$keyword);
+	
 	if (!$toend =='') {
 		
 		$y = strpos($data,$toend,$x);
