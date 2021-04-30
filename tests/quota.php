@@ -56,10 +56,34 @@ exec('df -h |grep sd',$tmps,$ret);
 foreach ($tmps as $tmp) {
 	$df[]=$tmp;
 }
+foreach ($df as $disk) {
+	$tmp = explode('  ',trim($disk));
+	
+	foreach ($tmp as $k =>$v) {
+		//squash blanks
+		if (empty(trim($v))) {
 
+                        unset($tmp[$k]);
+                }
+              else {
+				  $x = strpos($v,"%");
+				  if ($x) {
+					  $tmp[$k] = substr($v,0,$x+1);
+					  $tmp[] = trim(substr($v,$x+1));
+				  }
+				  else {
+				  $tmp[$k] = trim($v);
+			  }
+			  }
+			  
+			}
+	$r[]=$tmp;   
+	$tmp = array_values($tmp);
+	//echo print_r($tmp,true).cr;
+}
+echo print_r($r,true).cr;
 echo print_r($df,true).cr;
- exec('lsblk -l |grep "part /"',$lsblk,$ret);
- echo print_r($lsblk,true).cr;
+
 } 
 
 function dataSize($Bytes)
