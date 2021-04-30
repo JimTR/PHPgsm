@@ -84,7 +84,7 @@ $table->addRow(array('Mount Point','Free Space' ));
  if(!root()) {
  echo 'Checking user capabilities';
  $user = get_user_info($diskinfo);
- //print_r($user);
+// print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
  else { $user_level =', '.warning.'user privilege level low, the installer will run in safe mode.'; }
  echo $user_level.cr;
@@ -93,6 +93,8 @@ $table->addRow(array('Mount Point','Free Space' ));
 }
 else {
 	//
+	$user = get_user_info($diskinfo);
+	$installing = $user; 
 	echo 'Hi Root, you need to supply a valid user and group for the install,'.cr;
 	echo 'However if you are doing an install that you control & your users are symlinked to the install, enter root as the user'.cr.cr;
 	$answer = trim(ask_question('enter target user '.quit,NULL,NULL)); 
@@ -110,7 +112,8 @@ else {
  if ($steam_i) {$question = 'Please Enter The Steam Id of the Game Server to install ';}
  else { $question = 'Please Enter The Steam Id of the Game Server to install or C for non steam or ';}
  $answer = trim(ask_question($question.quit,NULL,$n)); 
-
+//echo print_r($user,true).cr;
+//die();
  if (is_numeric($answer)) {
 	 rerun:
 	 echo 'Please wait checking steam for server ID '.$answer.cr;
