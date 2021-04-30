@@ -213,95 +213,39 @@ function get_user_info ($Disk_info) {
 	//print_r($Disk_info);
 	$user['name'] = trim(shell_exec("whoami"));
 	$user['level'] =check_sudo($user['name']);
-	//$q = shell_exec("quota -s 2> /dev/null");
-	$q = shell_exec("quota  2> /dev/null");
-	exec("quota  2> /dev/null",$output,$ret);
-	$cmd = "du -hs /home/".trim($user['name'])." 2> /dev/null";
-	if (strtolower($user['name']) == 'root') {
-		// set root
-		if(isset($Disk_info['home_free'])){
-			$du[0] = $Disk_info['home_free'];
-		}
-		else {
-			$du[0] = $Disk_info['boot_free'];
-		}
-	}
-	else {
-	$du = trim(shell_exec($cmd)); //"du -hs /home/jim 2> /dev/null"
-	$du = explode("\t",$du);
-	}
-	//$du = filesize("/home/".trim($user['name']));
-	//echo "du raw = $du[0]".CR;
-	//echo 'user home collected'.cr;
-	// problem here
-	//print_r ($du).CR;
-	//echo '$q = '.$q.cr;
-	if(!empty($quota[1])) {
-		
-		//echo "Quota Not installed".CR;
-		if(isset($Disk_info['home_free'])){
-		$user['quota_used'] = format_num($du[0]); 
-		$user['quota'] = $Disk_info['home_size'];
-		$user['quota_free'] = $Disk_info['home_free'];
-	}
-	else {
-		// use boot
-		$user['quota_used'] = format_num($du[0]); 
-		$user['quota'] = $Disk_info['boot_size'];
-		$user['quota_free'] = $Disk_info['boot_free'];
-	}
-	}
-	else {
-		// run quota
-		
-		if(is_cli()) {
-		$tmp = explode(cr,$q);
-		$tmp =trim($tmp[2]);
+	exec("quota 2> /dev/null",$quota,$ret);
+	if (isset($quota[1])){
+		// user has quota
+		$tmp =trim($quota[2]);
 		$tmp = explode(' ',$tmp);
-	}
-	else {
-		$tmp = explode(' ',$q);
-		for($i = 0; $i<=40; $i++) {
-			unset($tmp[$i]);
-			}
-			//echo 'in loop'.cr;
-			//echo print_r($tmp,true).cr;
-	}
-		
-		//print_r($tmp);
-		
+		//echo print_r($tmp,true).cr;
 		foreach ($tmp as $k => $v) {
-			if (empty(trim($v))) {
-				unset($tmp[$k]);
-		}
-	}
-	$tmp = array_values($tmp);
-	// print_r($tmp); // now all renumbered
-	$used = dataSize($tmp[1]*1024);
-	$total = dataSize($tmp[2]*1024);
-	$free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
-				//if (intval($tmp[1]) === 0) {
-			// unlimited
-			//$user['quota'] = 'Unlimited';
-			
-		//}
-	    //else {
-			$user['quota'] = $total;
-			$user['quota_raw'] = $tmp[1] ;
-			//}
-	    $user['quota_used'] = $used;
-	    //echo intval($q[15]).CR;
-	    if ($tmp[1] === 0 ) {
-						
-			$user['quota_free'] = $Disk_info['boot_free'];
-		}
-	    else 
-	    {
-			$user['quota_free'] = $free;
+                if (empty(trim($v))) {
+                   unset($tmp[$k]);
+                }
+			}
+        $tmp = array_values($tmp);
+        // print_r($tmp); // now all renumbered
+        $used = dataSize($tmp[1]*1024);
+        $total = dataSize($tmp[2]*1024);
+        $free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
+        $user['quota_used'] = $used;
+        $user['quota'] = $total; 
+        $user['quota_free'] = $free;
+        //echo 'Used = '.$used.'   Total = '.$total.'  Free =  '.$free.cr;
+}
+	else {
+			if(isset($Disk_info['home_free'])){
+				$user['quota'] = $Disk_info['home_size'];	
+				$user['quota_free'] = $Disk_info['home_free'];
+			}
+			else {
+				$user['quota_free'] = $Disk_info['boot_free'];
+				$user['quota'] = $Disk_info['boot_size'];
+				$user['quota_free'] = $Disk_info['boot_free'];
 			}
 	}
-	//print_r($user);
-	//die();
+	
 	return $user;    
 	
 }
@@ -450,66 +394,67 @@ function get_software_info($database) {
 }
 function get_disk_info() {
 	// return disk info as array
-	$disks = shell_exec("lsblk -l");
-	$boot = shell_exec("df -h /boot");
-	$home = shell_exec("df -h /home");
-	$root = shell_exec("df -h /");
-	if ($root === $home) {
-		//echo 'one disk'.CR;
-		//$disk_info['disk'] = $root;
-				if(strstr($boot, PHP_EOL)) {
-		// test for line break
-		//echo "line break".CR;
-		$boot = explode(" ",trim(strstr($root, PHP_EOL)));
-		//print_r($boot).CR;
-		$boot=array_filter($boot);
-		$boot = array_slice($boot, 0);
-		//print_r($boot).CR;
-		$disk_info['boot_filesystem'] = trim($boot[0]);
-		$disk_info['boot_size'] = format_num(trim($boot[1]),2);
-		$disk_info['boot_used'] = format_num(trim($boot[2]),2);
-		$disk_info['boot_free'] = format_num(trim($boot[3]),2);
-		$disk_info['boot_pc'] = trim($boot[4]);
-		$disk_info['boot_mount'] = trim($boot[5]);
+	//echo 'root stuff ! or no quota !'.cr;
+exec('df -h /',$df,$ret); //need this for sdd or sep system partition
+unset ($df[0]);
+$df = array_values($df);
+exec('df -h |grep sd',$tmps,$ret);
+if (empty($tmps)) {
+	exec('df -h |grep vd',$tmps,$ret);
+}
+foreach ($tmps as $tmp) {
+	$df[]=$tmp;
+}
+foreach ($df as $disk) {
+	$tmp = explode('  ',trim($disk));
+	
+	foreach ($tmp as $k =>$v) {
+		//squash blanks
+		if (empty(trim($v))) {
+
+                        unset($tmp[$k]);
+                }
+              else {
+				  $x = strpos($v,"%");
+				  if ($x) {
+					  $tmp[$k] = substr($v,0,$x+1);
+					  $tmp[] = trim(substr($v,$x+1));
+				  }
+				  else {
+				  $tmp[$k] = trim($v);
+			  }
+			  }
+			  
+			}
+	$tmp = array_values($tmp);		
+	$r[]=$tmp;   
+	
+	//echo print_r($tmp,true).cr;
+}
+if ($r[0] == $r[1]) {unset($r[1]);}
+		$disk_info['boot_filesystem'] = $r[0][0];
+		$disk_info['boot_size'] = $r[0][1];
+		$disk_info['boot_used'] = $r[0][2];
+		$disk_info['boot_free'] = $r[0][3];
+		$disk_info['boot_pc'] = $r[0][4];
+		$disk_info['boot_mount'] = $r[0][5];
 		$disk_info['boot_hide'] = "ok";
 		
-	}
-}
-	else {
-		if(strstr($boot, PHP_EOL)) {
-		// test for line break
-		//echo "line break".CR;
-		$boot = explode(" ",trim(strstr($boot, PHP_EOL)));
-		$boot=array_filter($boot);
-		$boot = array_slice($boot, 0);
-		//echo 'new str '.$new_str.CR;
-		$disk_info['boot_filesystem'] = trim($boot[0]);
-		$disk_info['boot_size'] = format_num($boot[1]);
-		$disk_info['boot_used'] = format_num($boot[2]);
-		$disk_info['boot_free'] = format_num($boot[3]);
-		$disk_info['boot_pc'] = trim($boot[4]);
-		$disk_info['boot_mount'] = trim($boot[5]);
-	}	
-	if(strstr($home, PHP_EOL)) {
+		
+	if(isset($r[1])) {
 		$home1 = explode(" ",trim(strstr($home, PHP_EOL)));
 		$home1 = array_filter($home1);
 		
 		$home1 = array_slice($home1,0);
 		//print_r($home1);
-		$disk_info['home_filesystem'] = $home1[0];
-		$disk_info['home_size'] = format_num($home1[1]);
-		$disk_info['home_used'] = format_num($home1[2]);
-		$disk_info['home_free'] = format_num($home1[3]);
-		$disk_info['home_pc'] = $home1[4];
-		$disk_info['home_mount'] = $home1[5];
+		$disk_info['home_filesystem'] = $r[1][0];
+		$disk_info['home_size'] = $r[1][1];
+		$disk_info['home_used'] = $r[1][2];
+		$disk_info['home_free'] = $r[1][3];
+		$disk_info['home_pc'] = $r[1][4];
+		$disk_info['home_mount'] = $r[1][5];
 	}
-		// test for line break
-		//$disk_info['boot'] = $boot;
-		//$disk_info['root'] = $root;
-		//$disk_info['home'] = $home;
-	}
-	//print_r($disk_info);
-	//unset ($disk_info['boot']);
+		
 	return $disk_info;
 }
 function format_num ($string) {
