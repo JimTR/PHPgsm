@@ -88,7 +88,7 @@ $table->addRow(array('Mount Point','Free Space' ));
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
  else { $user_level =', '.warning.'user privilege level low, the installer will run in safe mode.'; }
  echo $user_level.cr;
- $installing = $user;
+ $installing  = array_merge($user, $diskinfo);
 
 }
 else {
@@ -164,7 +164,7 @@ else {
 }
 	echo $output[1].cr;
 	 $name = $server.' (y/n)';
-	 $installing['name'] = trim($server);
+	 $installing['g_name'] = trim($server);
 	 echo cr;
     $answer = ask_question('Do you want to install '.trim($name).' ? ','y','n');
 	//echo $answer.cr;
@@ -224,8 +224,8 @@ foreach ($list as $temp ) {
 	 system('clear');
 	 
 		redobranch:
-			echo 'Installing '.$data['name'].' Stage 1: Choose Branch'.cr;
-			echo 'Approximate Disk usage '.$data['disk_size'].cr.cr;
+			echo 'Installing '.$data['g_name'].' Stage 1: Choose Branch'.cr;
+			echo 'Approximate Disk usage '.$data['disk_size'].' Free disk space '.$data['quota_free'].cr.cr;
 		$x=0;
 			 foreach ($output as $line) {
 				if ($x < 4) {
@@ -272,7 +272,7 @@ foreach ($list as $temp ) {
 $table->addRow(array('','',''));
 $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	 system('clear');
-	 echo 'Installing '.$data['name'].' Stage 2: choose location'.cr;
+	 echo 'Installing '.$data['g_name'].' Stage 2: choose location'.cr;
 	 echo 'Approximate Disk usage '.$data['disk_size'].cr.cr;
 	 echo $table->getTable();
 	$appinstalled = '';
@@ -282,7 +282,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	  //printf($lmask,'Branch Selected',$data['branch'],green_tick);
 		echo 'Current Location '.getcwd ( ).cr;
 		echo 'adding a location that does not start with a \'/\' will create a location below the current location'.cr.cr;
-		$path = ask_question('Enter the path to install '.$data['name'].' enter for current directory or '.quit.' ',NULL,NULL);
+		$path = ask_question('Enter the path to install '.$data['g_name'].' enter for current directory or '.quit.' ',NULL,NULL);
 		$full_home = exec('echo ~');
 		$path = trim(str_replace('~/',$full_home.'/',$path));
 		if(empty($path)) {
@@ -308,8 +308,8 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 					}
 				   }   
 					if($appinstalled) {
-						echo cr.$data['name'].' is already installed at this location'.cr;
-						$answer = ask_question( 'Do you want to validate '.$data['name'].' ?  y/n '.quit,'y','n'); 
+						echo cr.$data['g_name'].' is already installed at this location'.cr;
+						$answer = ask_question( 'Do you want to validate '.$data['g_name'].' ?  y/n '.quit,'y','n'); 
 						if ($answer) {
 							echo 'validate'.cr;
 							$data['validate'] = true;
@@ -335,7 +335,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 					return $data;
 					} 
 			} else {
-				$answer = ask_question(cr.$data['name'].' will be installed to '.trim($data['path']).cr.cr.' press enter to continue or '.quit,NULL,NULL,true);
+				$answer = ask_question(cr.$data['g_name'].' will be installed to '.trim($data['path']).cr.cr.' press enter to continue or '.quit,NULL,NULL,true);
 				return $data;
 		}
  }
@@ -354,7 +354,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 $table->addRow(array('Install Location',$data['path'] ,green_tick));
 	 system('clear');
 	 //print_r($installing);
-	 echo 'Installing '.$data['name'].' Stage 3: User & Password'.cr;
+	 echo 'Installing '.$data['g_name'].' Stage 3: User & Password'.cr;
 	 echo $table->getTable();
 	
 	 
@@ -410,9 +410,9 @@ if(empty($data['steam_password'])) {
 	 }
 	 system('clear');
 	 //print_r($installing);
-	 echo 'Installing '.$data['name'].' Stage 3: User & Password'.cr;
+	 echo 'Installing '.$data['g_name'].' Stage 4: User & Password'.cr;
 	 echo $table->getTable();
-	 echo 'Review the information, if everything is correct press enter to install '.$data['name'].cr.cr;	
+	 echo 'Review the information, if everything is correct press enter to install '.$data['g_name'].cr.cr;	
 	 // use printf
 	 
 			$steam_user = trim(ask_question(cr.'Press enter to continue or '.quit,NULL,NULL,true));
@@ -423,7 +423,7 @@ function stage_5($data)  {
 	// do steamcmd
 	top:
 	system('clear');
-	 echo 'Installing '.$data['name'].' Stage 5: Installation'.cr.cr;
+	 echo 'Installing '.$data['g_name'].' Stage 5: Installation'.cr.cr;
 	 echo 'This process may take some time, the installer may appear to hang with the prompt \'waiting for steamcmd to start\''.cr;
 	 echo 'this normally indicates either steamcmd is updating itself or steamcmd is having a problem connecting to steam\'s servers'.cr.cr;
 	 $cmd = 'screen -L -Logfile install.log -dmS install';
@@ -464,7 +464,7 @@ else {
 						$tmp = str_replace(')','',$tmp);
 						$steamlog = tidy_array(explode(' ',$tmp));
 						if (isset($steamlog[3])) {  
-						$downloading = $steamlog[3].' '. $data['name'];
+						$downloading = $steamlog[3].' '. $data['g_name'];
 						$dl = strlen($downloading); // server length
 						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
 						$current =  floatval($steamlog[6]);
@@ -497,7 +497,7 @@ else {
 		if ($unread ) {
 			$p1 = strpos($a, 'Success!');
 				if ($p1 !== false) {
-					$finish = "\e[38;5;82mSuccess\e[0m,".$data['name']." is fully installed at ".$data['path']."\e[0m";
+					$finish = "\e[38;5;82mSuccess\e[0m,".$data['g_name']." is fully installed at ".$data['path']."\e[0m";
 					//echo $finish.cr;
 					//echo 'yippee'.cr;
 					$data['success'] = true;
@@ -509,7 +509,7 @@ else {
 						$tmp = str_replace(')','',$tmp);
 						$steamlog = tidy_array(explode(' ',$tmp));
 						if (isset($steamlog[3])) {  
-						$downloading = $steamlog[3].' '. $data['name'];
+						$downloading = $steamlog[3].' '. $data['g_name'];
 						$dl = strlen($downloading); // server length
 						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
 						$current =  floatval($steamlog[6]);
@@ -537,12 +537,12 @@ return $data;
 	 // configure
 	 exec('du -hs '.$data['path'],$du,$ret);
 	 $x = strpos($du[0],'/');
-	 $name = $data['name'];
+	 $name = $data['g_name'];
 	 $path = $data['path'];
 	 $dir_size = trim(substr($du[0],0,$x-1));
 	 top:
 	 system('clear');
-	 echo 'Installing '.$data['name'].' Stage 6: Configure Server'.cr.cr;
+	 echo 'Installing '.$data['g_name'].' Stage 6: Configure Server'.cr.cr;
      echo "$name is installed at $path and has used $dir_size of disk space ".green_tick.cr;
      if(isset($data['host'])) { 
 		 	 echo "Host Name set to ".$data['host'].' '.green_tick.cr;
