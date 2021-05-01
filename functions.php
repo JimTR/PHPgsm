@@ -205,7 +205,7 @@ function get_cpu_info() {
 		return $cpu_info;
 }
 function get_user_info ($Disk_info) {
-	error_reporting(E_ALL);
+	
 	if(!defined('cr') ){
 		define('cr',PHP_EOL);
 	}
@@ -233,12 +233,15 @@ function get_user_info ($Disk_info) {
 }
 	else {
 			if(isset($Disk_info['home_free'])){
+				$free =floatval( $Disk_info['home_free'])+floatval($Disk_info['boot_free']).' GB';
 				$user['quota'] = $Disk_info['home_size'];	
-				$user['quota_free'] = $Disk_info['home_free'];
+				$user['quota_free'] = $free;
+				$user['disk_locations'] = 2;
 			}
 			else {
 				$user['quota'] = $Disk_info['boot_size'];
 				$user['quota_free'] = $Disk_info['boot_free'];
+				$user['disk_locations'] = 1;
 			}
 	}
 	
