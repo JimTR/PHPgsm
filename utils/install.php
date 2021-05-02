@@ -162,7 +162,30 @@ else {
 		echo $table->getTable(); 
 		exit;
 }
-	echo $output[1].cr;
+	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
+	 echo $cmd.cr;	
+     exec($cmd,$g_locate,$ret);
+     //echo 'locations '.print_r($g_locate,true).cr;
+     if (count($g_locate)) {
+		 $table = new Console_Table(
+			CONSOLE_TABLE_ALIGN_LEFT,
+			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+			);
+			echo $output[1].' installed at these locations'.cr; 
+			$table->addRow(array('Location',"  Size on disk"));
+		 foreach ($g_locate as $ins) {
+			 $loc = dirname($ins,1);
+			 exec('du -hs '. dirname($ins,2),$dir_size,$r);
+			 $ds=explode("\t",$dir_size[0]);
+			 //echo '$ds = '.print_r($ds,true).cr;
+			 
+			 $table->addRow(array(dirname($ins,2),"\t".$ds[0]));
+		 }
+		 echo $table->getTable(); 
+	 }
+	 else {
+		echo $output[1].cr;
+	}
 	 $name = $server.' (y/n)';
 	 $installing['g_name'] = trim($server);
 	 echo cr;
