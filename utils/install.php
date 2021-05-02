@@ -144,26 +144,9 @@ else {
 	 $server = trim(str_replace('(released)',' ',$name));
  	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
         //echo cr.print_r($installing).cr;
-         if ($installing['disk_size'] >= $installing['quota_free']) {
-			 $table = new Console_Table(
-			CONSOLE_TABLE_ALIGN_RIGHT,
-			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-			);
-		$game_size = floatval($installing['disk_size']);
-		$remaining = floatval($installing['quota_free']);
-		$need = $game_size -$remaining;
-        echo  error.$server.' can not be installed, not enough disk space !'.cr;
-        $table->addRow(array('Required Disk Space:',trim($game_size.' GB')));
-        $table->addRow(array('Free Disk Space:',trim($remaining.' GB')));
-        $table->addRow(array('Free up at least:',$need.' GB',' to install'));
-		//echo 'Required Disk Space: '.$installing['disk_size'].cr;
-		//echo 'Actual Disk Space: '.$installing['quota_free'].cr;
-		//echo 'Free up at least: '.$need.' GB to install'.cr;
-		echo $table->getTable(); 
-		exit;
-}
+       
 	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
-	 echo $cmd.cr;	
+	 //echo $cmd.cr;	
      exec($cmd,$g_locate,$ret);
      //echo 'locations '.print_r($g_locate,true).cr;
      if (count($g_locate)) {
@@ -186,6 +169,24 @@ else {
 	 else {
 		echo $output[1].cr;
 	}
+	  if ($installing['disk_size'] >= $installing['quota_free']) {
+			 $table = new Console_Table(
+			CONSOLE_TABLE_ALIGN_RIGHT,
+			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+			);
+		$game_size = floatval($installing['disk_size']);
+		$remaining = floatval($installing['quota_free']);
+		$need = $game_size -$remaining;
+        echo  error.$server.' can not be installed, not enough disk space !'.cr;
+        $table->addRow(array('Required Disk Space:',trim($game_size.' GB')));
+        $table->addRow(array('Free Disk Space:',trim($remaining.' GB')));
+        $table->addRow(array('Free up at least:',$need.' GB',' to install'));
+		//echo 'Required Disk Space: '.$installing['disk_size'].cr;
+		//echo 'Actual Disk Space: '.$installing['quota_free'].cr;
+		//echo 'Free up at least: '.$need.' GB to install'.cr;
+		echo $table->getTable(); 
+		exit;
+}
 	 $name = $server.' (y/n)';
 	 $installing['g_name'] = trim($server);
 	 echo cr;
