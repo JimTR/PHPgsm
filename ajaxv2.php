@@ -157,7 +157,16 @@ if(!$valid) {
 			
 			case "version":
 				echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
-				exit;					
+				exit;
+						
+			case "viewserver":
+					if($cmds['debug'] =='true' ) {
+						echo print_r(viewserver($cmds),true).cr;
+						}
+					else {
+							echo json_encode(viewserver($cmds));
+						}
+					exit;			
 }
 
 function lsof($cmds) {
@@ -626,6 +635,7 @@ function utf8ize($mixed) {
 
 function check_services() {
 	// run service check
+	
 	exec('/usr/sbin/service --status-all',$services,$retVal);
 	//echo "return $retVal<br>";
 	//print_r ($services);
@@ -648,5 +658,62 @@ function check_services() {
 	}
 	//print_r($demo);
 	return $return;
+}
+
+function viewserver($cmds) {
+	// replace php file viewplayers.php
+		$database = new db();
+		$Query = new SourceQuery( );
+		$emoji = new Emoji;
+try 
+	{
+$Query->Connect( $cmds['ip'], $cmds['port'], SQ_TIMEOUT, SQ_ENGINE );
+$info = $Query->GetInfo();
+$players = $Query->GetPlayers( ) ;
+$rules = $Query->GetRules( );
+	}
+	catch( Exception $e )
+					{
+						$Exception = $e;
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = 'Failed to read any data from socket (Function viewplayers)';
+						}
+						
+						  $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
+						  //sprintf("[%14.14s]",$str2)
+						  $mask = "%17.17s %-30.30s \n";
+						 file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+					}
+$Query->Disconnect( );
+//we now have data
+jump:
+$sql = 'select * from players where BINARY name="';
+if (count($players)) {
+	// we have players
+	orderBy($players,'Frags','d'); // score order
+	foreach ($players as $k=>$v) {
+		//loop  add flag & country $v being the player array 
+		// don't update player here let scanlog do it
+		$players[$k]['Name'] =$emoji->Encode($v['Name']);
+		$player_data = $database->get_results($sql.$database->escape($players[$k]['Name']).'"');
+		if (!empty($player_data)) {
+			// here we go
+			echo 'Result '.print_r($player_data,true).cr;
+			$player_data= reset($player_data);
+			$players[$k]['flag'] = 'https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png'; // windows don't do emoji flags use image 
+			$players[$k]['country'] = $player_data['country'];
+		}
+		else {
+			// no current flag or country
+			// add a default image for the flag
+			// random country
+			echo 'Oh nooo '.cr;
+		}
+	}
+}
+$return['info'] = $info;
+$return['players'] = $players;
+$return['rules'] = $rules;
+return $return;
 }
 ?>
