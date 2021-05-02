@@ -163,6 +163,7 @@ else {
 			 //echo '$ds = '.print_r($ds,true).cr;
 			 
 			 $table->addRow(array(dirname($ins,2),"\t".$ds[0]));
+			 unset($dir_size);
 		 }
 		 echo $table->getTable(); 
 	 }
