@@ -29,7 +29,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.04);
+	define( 'VERSION', 2.05);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
@@ -57,8 +57,6 @@ if(is_cli()) {
 	
 }
 else {
-	//define ('CR',"<br>");
-	//define ('cr',"<br>");
 	error_reporting( 0 );
 	if (!empty($_POST)) {
 		$cmds = convert_to_argv($_POST,"",true);
@@ -94,10 +92,10 @@ if(!$valid) {
 			
 		case "check_services" :
 		if ($cmds['debug'] == true){
-			print_r(check_services());
+			print_r(check_services($cmds));
 		}
 		else {
-			echo json_encode(check_services());
+			echo json_encode(check_services($cmds));
 			
 		}
 			exit;
@@ -633,7 +631,7 @@ function utf8ize($mixed) {
     return $mixed;
 }
 
-function check_services() {
+function check_services($cmds) {
 	// run service check
 	
 	exec('/usr/sbin/service --status-all',$services,$retVal);
@@ -642,9 +640,15 @@ function check_services() {
 	foreach ($services as $key=>$service) {
 		
 			if (strpos($service,' + ')) {
-			$service = str_replace('[ + ]','',$service);
-			$id = trim($service);
-			$return[$id] = '✔ ';
+				$service = str_replace('[ + ]','',$service);
+				$id = trim($service);
+				if(isset($cmds['running']) and $cmds['running'] == 'true'){
+					$return[$id] = '✔ ';
+				}
+				elseif (!isset($cmds['running'])) {
+							$return[$id] = '✔ ';
+						}
+			
 		}
 		elseif (strpos($service,' ? ')) {
 			echo 'not sure'.cr;
@@ -652,7 +656,12 @@ function check_services() {
 		else {
 			$service = str_replace('[ - ]','',$service);
 			$id = trim($service);
-			$return[$id] = '✖';
+			if(isset($cmds['running']) and $cmds['running'] == 'false'){
+					$return[$id] = '✖';
+			}
+			elseif (!isset($cmds['running'])) {
+				$return[$id] = '✖';
+			}
 		}
 		//echo $key.' '.$service.cr;
 	}
@@ -700,14 +709,16 @@ if (count($players)) {
 			// here we go
 			echo 'Result '.print_r($player_data,true).cr;
 			$player_data= reset($player_data);
-			$players[$k]['flag'] = 'https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png'; // windows don't do emoji flags use image 
+			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
 			$players[$k]['country'] = $player_data['country'];
 		}
 		else {
 			// no current flag or country
 			// add a default image for the flag
 			// random country
-			echo 'Oh nooo '.cr;
+			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.'x.png"'; // windows don't do emoji flags use image
+			$players[$k]['country'] = 'undesclosed';
+			
 		}
 	}
 }
