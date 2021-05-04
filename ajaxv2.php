@@ -788,11 +788,12 @@ function readlog($cmds) {
 			$v = str_replace(' killed ',' <span style="color:red;"><b> killed </b></span>',$v);
 			$v = str_replace(' Console ',' <span style="color:#328ba8;"><b> Console </b></span>',$v);
 			$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
-			$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
+			$v = str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
 			$v = str_replace('Server logging enabled',' <span style="color:green;"><b>Server logging enabled</b></span>	',$v);
 			$v = str_replace('disconnected (reason "Kicked from server")','<span style="color:#ffbf00;"><b>disconnected (reason "Kicked from server")</b></span>',$v);
 			$v = str_replace('disconnected',' <span style="color:#ffbf00;"><b>dissconnected</b></span> ',$v);
 			$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
+			$v = str_replace('"','',$v); // knock out "
 		}
 		$return[] = $v;
 	}
