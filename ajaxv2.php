@@ -739,9 +739,7 @@ function readlog($cmds) {
 	$server =$database->get_row($sql);
 	//echo $server['location'].cr;
 	$filename = $server['location'].'/log/console/'.$cmds['id'].'-console.log';
-	echo $filename.cr;
 	if ($ip <> $server['host']) {
-		echo 'this server is remote !'.cr;
 		$url = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=get_file&file='.$filename;
 		echo $url.cr;
 		$log_contents = file_get_contents($url);
@@ -749,6 +747,25 @@ function readlog($cmds) {
 	else {
 		$log_contents = file_get_contents($filename);
 	}
-	echo $log_contents;
+	$log_contents = array_reverse(explode(cr,trim($log_contents)));
+	//print_r($log_contents);
+	foreach($log_contents as $k=>$v) {
+		$v = preg_replace('/<.*?>/', '', $v); //user number ?
+		$v = preg_replace('@\(.*?\)@','',$v); // bracket content
+		$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
+		$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
+		$v = preg_replace('/</',' ',$v);
+		$v = preg_replace('/>/',' ',$v);
+		$date ='L '. date("m/d/Y");
+		$pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
+		$replacement = '<span style="color:yellow;"><b>${2}/$1/$3</b></span>';  
+		//display the result returned by preg_replace  
+		$v = preg_replace($pattern, $replacement, $v,-1,$count);  
+		$replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
+		$pattern = '/(\d+):(\d+):(\d+)/';
+		$v = preg_replace($pattern, $replacement, $v,-1,$count);
+		echo $v.cr;
+	}
+		
 }
 ?>
