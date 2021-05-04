@@ -132,7 +132,12 @@ if(!$valid) {
 			}
 			exit;	
 		case "readlog":
-				readlog($cmds);
+			if($cmds['debug'] =='true' ) {
+				echo print_r(readlog($cmds),true).cr;
+			}
+			else {
+				echo json_encode(readlog($cmds));
+			}
 				exit;
 		case "top" :
 				if (isset($cmds['filter'])) {
@@ -731,6 +736,9 @@ return $return;
 }
 
 function readlog($cmds) {
+	if (!isset($cmds['rows'])) {
+		$cmds['rows']= 10;
+	}
 	//convert readlog to ajax function
 	$ip = file_get_contents('https://api.ipify.org');// get ip
 	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
@@ -741,7 +749,7 @@ function readlog($cmds) {
 	$filename = $server['location'].'/log/console/'.$cmds['id'].'-console.log';
 	if ($ip <> $server['host']) {
 		$url = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=get_file&file='.$filename;
-		echo $url.cr;
+		if (isset($cmds['debug'])) {echo '[url] => '.$url.cr;}
 		$log_contents = file_get_contents($url);
 	}
 	else {
@@ -750,6 +758,7 @@ function readlog($cmds) {
 	$log_contents = array_reverse(explode(cr,trim($log_contents)));
 	//print_r($log_contents);
 	foreach($log_contents as $k=>$v) {
+		if ($k == $cmds['rows']) {break;}
 		$v = preg_replace('/<.*?>/', '', $v); //user number ?
 		$v = preg_replace('@\(.*?\)@','',$v); // bracket content
 		$v = preg_replace('/Console<0><Console><Console>/','Console',$v);
@@ -757,15 +766,36 @@ function readlog($cmds) {
 		$v = preg_replace('/</',' ',$v);
 		$v = preg_replace('/>/',' ',$v);
 		$date ='L '. date("m/d/Y");
-		$pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
-		$replacement = '<span style="color:yellow;"><b>${2}/$1/$3</b></span>';  
-		//display the result returned by preg_replace  
-		$v = preg_replace($pattern, $replacement, $v,-1,$count);  
-		$replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
-		$pattern = '/(\d+):(\d+):(\d+)/';
-		$v = preg_replace($pattern, $replacement, $v,-1,$count);
-		echo $v.cr;
-	}
 		
+		if (is_cli()) {
+			$pattern = ' /L (\w+)\/(\d+)\/(\d+)/i'; 
+			$replacement = '${2}/$1/$3';  
+			$v = preg_replace($pattern, $replacement, $v,-1,$count);  
+			$replacement = '${1}:$2:$3';
+			$pattern = '/(\d+):(\d+):(\d+)/';
+			$v = preg_replace($pattern, $replacement, $v,-1,$count);
+		}
+		else { 
+			// this code block needs to read a replacement array for str_replace rather than hard coding them !
+			$pattern = ' /L (\w+)\/(\d+)\/(\d+)/i'; 
+			$replacement = '<span style="color:yellow;"><b>${2}/$1/$3</b></span>';  
+			//display the result returned by preg_replace  
+			$v = preg_replace($pattern, $replacement, $v,-1,$count);  
+			$replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
+			$pattern = '/(\d+):(\d+):(\d+)/';
+			$v = preg_replace($pattern, $replacement, $v,-1,$count);
+			$v = str_replace(' say ',' <span style="color:magenta;"><b> say </b></span>',$v);
+			$v = str_replace(' killed ',' <span style="color:red;"><b> killed </b></span>',$v);
+			$v = str_replace(' Console ',' <span style="color:#328ba8;"><b> Console </b></span>',$v);
+			$v = str_replace('committed suicide',' <span style="color:red;"><b> committed suicide </b></span>',$v);
+			$v =str_replace('This command can only be used in-game.','<span style="color:red;">This command can only be used in-game.</span>',$v);
+			$v = str_replace('Server logging enabled',' <span style="color:green;"><b>Server logging enabled</b></span>	',$v);
+			$v = str_replace('disconnected (reason "Kicked from server")','<span style="color:#ffbf00;"><b>disconnected (reason "Kicked from server")</b></span>',$v);
+			$v = str_replace('disconnected',' <span style="color:#ffbf00;"><b>dissconnected</b></span> ',$v);
+			$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
+		}
+		$return[] = $v;
+	}
+	return array_reverse($return);	
 }
 ?>
