@@ -131,8 +131,10 @@ if(!$valid) {
 				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
 			}
 			exit;	
-			
-			case "top" :
+		case "readlog":
+				readlog($cmds);
+				exit;
+		case "top" :
 				if (isset($cmds['filter'])) {
 					//do stuff
 					echo shell_exec('top -b -n 1 -p '.$cmds['filter'].' | sed 1,7d');
@@ -726,5 +728,27 @@ $return['info'] = $info;
 $return['players'] = $players;
 $return['rules'] = $rules;
 return $return;
+}
+
+function readlog($cmds) {
+	//convert readlog to ajax function
+	$ip = file_get_contents('https://api.ipify.org');// get ip
+	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
+	$database = new db();
+	$sql = 'select * from server1 where host_name like "'.$cmds['id'].'"';
+	$server =$database->get_row($sql);
+	//echo $server['location'].cr;
+	$filename = $server['location'].'/log/console/'.$cmds['id'].'-console.log';
+	echo $filename.cr;
+	if ($ip <> $server['host']) {
+		echo 'this server is remote !'.cr;
+		$url = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=get_file&file='.$filename;
+		echo $url.cr;
+		$log_contents = file_get_contents($url);
+	}
+	else {
+		$log_contents = file_get_contents($filename);
+	}
+	echo $log_contents;
 }
 ?>
