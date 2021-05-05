@@ -643,7 +643,7 @@ function check_services($cmds) {
 	
 	exec('/usr/sbin/service --status-all 2>/dev/null',$services,$retVal);
 	//echo "return $retVal<br>";
-	print_r ($services);
+	//print_r ($services);
 	foreach ($services as $key=>$service) {
 		
 			if (strpos($service,' + ')) {
