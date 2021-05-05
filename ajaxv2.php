@@ -793,6 +793,7 @@ function readlog($cmds) {
 			$v = str_replace('disconnected (reason "Kicked from server")','<span style="color:#ffbf00;"><b>disconnected (reason "Kicked from server")</b></span>',$v);
 			$v = str_replace('disconnected',' <span style="color:#ffbf00;"><b>dissconnected</b></span> ',$v);
 			$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
+			$v = str_replace('Unknown command','<span style="color:red"><b>Unknow command </b></span>',$v);
 			$v = str_replace('"','',$v); // knock out "
 		}
 		$return[] = $v;
