@@ -726,6 +726,7 @@ if (count($players)) {
 			// no current flag or country
 			// add a default image for the flag
 			// random country
+			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Setting Up';}
 			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.'gb.png"'; // windows don't do emoji flags use image
 			$players[$k]['country'] = 'undesclosed';
 			
@@ -733,6 +734,7 @@ if (count($players)) {
 	}
 }
 $return['info'] = $info;
+$return['info']['real_players'] =$info['Players']-$info['Bots'];
 $return['players'] = $players;
 $return['rules'] = $rules;
 return $return;
