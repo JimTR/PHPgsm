@@ -681,9 +681,12 @@ function viewserver($cmds) {
 		$database = new db();
 		$Query = new SourceQuery( );
 		$emoji = new Emoji;
+		$sql = 'select * from server1 where host_name like "'.$cmds['id'].'"';
+		$server =$database->get_row($sql);
+		
 try 
 	{
-$Query->Connect( $cmds['ip'], $cmds['port'], SQ_TIMEOUT, SQ_ENGINE );
+$Query->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
 $info = $Query->GetInfo();
 $players = $Query->GetPlayers( ) ;
 $rules = $Query->GetRules( );
