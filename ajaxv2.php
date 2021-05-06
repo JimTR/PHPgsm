@@ -717,7 +717,7 @@ if (count($players)) {
 		$player_data = $database->get_results($sql.$database->escape($players[$k]['Name']).'"');
 		if (!empty($player_data)) {
 			// here we go
-			echo 'Result '.print_r($player_data,true).cr;
+			//echo 'Result '.print_r($player_data,true).cr;
 			$player_data= reset($player_data);
 			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
 			$players[$k]['country'] = $player_data['country'];
