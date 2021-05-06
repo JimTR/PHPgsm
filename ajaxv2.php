@@ -726,7 +726,7 @@ if (count($players)) {
 			// no current flag or country
 			// add a default image for the flag
 			// random country
-			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.'x.png"'; // windows don't do emoji flags use image
+			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.'gb.png"'; // windows don't do emoji flags use image
 			$players[$k]['country'] = 'undesclosed';
 			
 		}
