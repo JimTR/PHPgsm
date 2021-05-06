@@ -215,7 +215,8 @@ if (!isset($la)) {
 if ( $pc == 0 ) {
 	//echo "\t Nothing to do".cr;
 	if ($uds == true) {
-		update_server($server);
+		$s = update_server($server);
+		return $s;
 	}
 return;
 }
