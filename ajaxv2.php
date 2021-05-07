@@ -728,13 +728,13 @@ if (count($players)) {
 			// random country
 			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Setting Up';}
 			$players[$k]['flag'] = 'src ="img/'.'unknown.png"'; // windows don't do emoji flags use image
-			$players[$k]['country'] = 'undesclosed';
+			$players[$k]['country'] = 'unknown';
 			
 		}
 	}
 }
 $return['info'] = $info;
-$return['info']['real_players'] =$info['Players']-$info['Bots'];
+$return['info']['real_players'] = $info['Players']-$info['Bots'];
 $return['players'] = $players;
 $return['rules'] = $rules;
 return $return;
