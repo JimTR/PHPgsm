@@ -726,7 +726,7 @@ if (count($players)) {
 			// no current flag or country
 			// add a default image for the flag
 			// random country
-			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Setting Up';}
+			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Spectator';}
 			$players[$k]['flag'] = 'src ="img/'.'unknown.png"'; // windows don't do emoji flags use image
 			$players[$k]['country'] = 'unknown';
 			
