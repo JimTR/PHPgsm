@@ -885,14 +885,15 @@ else {
 		$local = false;
 	}
 		
-	if (empty($cmds['file']) || $local === false) {
-		echo 'no file & server remote'.cr;
-			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
-	}
-	else {
-		// assume run local
+	if (empty($cmds['file']) || $local == true) {
 		echo 'use local file system'.cr; 
 		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	}
+	else {
+		// assume run remote
+		
+		echo 'no file & server remote'.cr;
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 	}
 		
 		
