@@ -214,7 +214,7 @@ function lsof($cmds) {
 						// sending back the contents will save a call but maybe wrong 
 						$filename = $x[10]; //got file name
 						if (!empty($cmds['return'])) {
-							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
+							echo 'get contents of '.$filename.'    '.filesize($filename).cr;
 							echo file_get_contents($filename);
 						}
 						else {
@@ -853,10 +853,10 @@ function scanlog($cmds) {
 		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
-		//echo $run['host_name'].' '.$path.cr; // debug code
+		echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
-			//echo $tmp.cr; //debug code
+			echo $tmp.cr; //debug code
 		//$display .= do_all($run['host_name'],$tmp);
 	}
 	}
@@ -899,14 +899,20 @@ else {
 	}
 	else {
 		// assume run remote
-		
-		echo 'no file & server remote'.cr;
+		if(empty($cmds['file'])) {
+			echo 'no file & server remote'.cr;
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+		}
+		else {
+			echo 'file & server remote'.cr;
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$cmds['file'];
+		}
 	}
 		
 		
 		$tmp = file_get_contents($path);
 		//echo do_all($argv[1],$tmp);
+		echo $tmp.cr;
 }
 	return $path.' done'.cr;
 }
