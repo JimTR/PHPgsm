@@ -863,13 +863,8 @@ function scanlog($cmds) {
 	echo $display;
 }
 else {
-	// do supplied file
-	if(isset($cmds['file'])) {
-	if (!file_exists($cmds['file'])) {
-		echo 'could not open '.$cmds['file'].cr;
-		exit (1);
-	}
-}
+	// do default or supplied file
+
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$cmds['server'].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
@@ -880,6 +875,12 @@ else {
 	if ($ip == $run['host']) {
 		echo ' this is local '.cr; 
 		$local = true;
+			if(isset($cmds['file'])) {
+				if (!file_exists($cmds['file'])) {
+					echo 'could not open '.$cmds['file'].cr;
+					exit (1);
+				}
+			}
 	}
 	else {
 		$local = false;
@@ -888,6 +889,10 @@ else {
 	if (empty($cmds['file']) || $local == true) {
 		echo 'use local file system'.cr; 
 		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	}
+	elseif ($local == true) {
+		//next check
+		$path = $cmds['file'];
 	}
 	else {
 		// assume run remote
