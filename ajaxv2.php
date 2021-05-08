@@ -99,7 +99,18 @@ if(!$valid) {
 			
 		}
 			exit;
-				
+			
+		case "console":
+					$console_data['log'] = readlog($cmds);
+					$console_data = array_merge($console_data,viewserver($cmds));
+					if ($cmds['debug'] == true){
+						print_r($console_data);
+					}
+					else {
+						echo json_encode($console_data);
+					}
+					exit;
+					
 		case "exescreen" :
 				echo exescreen($cmds);
 				if (is_cli()) {
@@ -719,6 +730,7 @@ if (count($players)) {
 			// here we go
 			//echo 'Result '.print_r($player_data,true).cr;
 			$player_data= reset($player_data);
+			$players[$k]['Name'] = Emoji::Decode($players[$k]['Name']);
 			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
 			$players[$k]['country'] = $player_data['country'];
 		}
