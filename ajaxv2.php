@@ -873,20 +873,25 @@ else {
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$cmds['server'].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
-	//if ($ip <> $run['host']) {
-		echo $localip.'run at '.$run['host'].cr; 
-		//
-	
 	if(empty($run)) {
 		echo 'Invalid server id '.$cmds['server'].' correct & try again'.cr;
 		exit(2);
 	}
-	
-	if (empty($cmds['file'])) {
-	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	if ($ip == $run['host']) {
+		echo ' this is local '.cr; 
+		$local = true;
 	}
 	else {
-		// assume run local 
+		$local = false;
+	}
+		
+	if (empty($cmds['file']) || !$local) {
+		echo 'no file & server remote'.cr;
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	}
+	else {
+		// assume run local
+		echo 'use local file system'.cr; 
 		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
 	}
 		
