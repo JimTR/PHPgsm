@@ -141,7 +141,8 @@ if(!$valid) {
 			else {
 				echo shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd'); 
 			}
-			exit;	
+			exit;
+				
 		case "readlog":
 			if($cmds['debug'] =='true' ) {
 				echo print_r(readlog($cmds),true).cr;
@@ -150,6 +151,10 @@ if(!$valid) {
 				echo json_encode(readlog($cmds));
 			}
 				exit;
+				
+		case "scanlog":
+					echo scanlog($cmds);
+					exit;
 		case "top" :
 				if (isset($cmds['filter'])) {
 					//do stuff
@@ -815,6 +820,80 @@ function readlog($cmds) {
 		}
 		$return[] = $v;
 	}
-	return array_reverse($return);	
+	return array_reverse($return);	// send the data back in the right order !
+}
+
+function scanlog($cmds) {
+	// scanlog as a function
+	global $settings,$database;
+	$ip = file_get_contents('https://api.ipify.org');// get ip
+	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
+	$localip = "ip = $ip";
+	 
+	if (empty( $settings['ip_key'] )) {
+		echo 'Fatal Error - api key missing'.cr;
+		exit(7);
+	} 
+	else {
+		$key = $settings['ip_key'] ;
+	}
+	if(empty($cmds['server'])) {
+		return 'function not ran correctly';
+	}
+	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
+	$update_done= array();
+	if ($cmds['server'] == 'all') {
+	
+		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+		$game_results = $database->get_results($allsql);
+		$display='';
+	
+	foreach ($game_results as $run) {
+		//bulid path done this way so we can get the file back from a remote server
+		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+		$tmp = file_get_contents($path);
+		//echo $run['host_name'].' '.$path.cr; // debug code
+				
+		if (!empty($tmp)) {
+			//echo $tmp.cr; //debug code
+		//$display .= do_all($run['host_name'],$tmp);
+	}
+	}
+	echo $display;
+}
+else {
+	// do supplied file
+	if(isset($cmds['file'])) {
+	if (!file_exists($cmds['file'])) {
+		echo 'could not open '.$cmds['file'].cr;
+		exit (1);
+	}
+}
+	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$cmds['server'].'"';
+		//echo $allsql.cr;
+	$run = $database->get_row($allsql);
+	//if ($ip <> $run['host']) {
+		echo $localip.'run at '.$run['host'].cr; 
+		//
+	
+	if(empty($run)) {
+		echo 'Invalid server id '.$cmds['server'].' correct & try again'.cr;
+		exit(2);
+	}
+	
+	if (empty($cmds['file'])) {
+	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	}
+	else {
+		// assume run local 
+		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
+	}
+		
+		
+		$tmp = file_get_contents($path);
+		//echo do_all($argv[1],$tmp);
+}
+	return $path.' done'.cr;
 }
 ?>
