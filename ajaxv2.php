@@ -883,16 +883,19 @@ else {
 			}
 	}
 	else {
+		echo 'remote set'.cr;
 		$local = false;
 	}
 		
-	if (empty($cmds['file']) || $local == true) {
-		echo 'use local file system'.cr; 
+	if ($local === true) {
+		echo 'use local file system'.cr;
+		if (empty($cmds['file'])) { 
 		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
-	}
-	elseif ($local == true) {
+		}
+		else {
 		//next check
 		$path = $cmds['file'];
+		}
 	}
 	else {
 		// assume run remote
