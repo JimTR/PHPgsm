@@ -214,7 +214,7 @@ function lsof($cmds) {
 						// sending back the contents will save a call but maybe wrong 
 						$filename = $x[10]; //got file name
 						if (!empty($cmds['return'])) {
-							echo 'get contents of '.$filename.'    '.filesize($filename).cr;
+							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
 							echo file_get_contents($filename);
 						}
 						else {
