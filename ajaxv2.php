@@ -850,8 +850,8 @@ function scanlog($cmds) {
 	
 	foreach ($game_results as $run) {
 		//bulid path done this way so we can get the file back from a remote server
-		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
-		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
+		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
 		echo $run['host_name'].' '.$path.cr; // debug code
 				
@@ -912,8 +912,31 @@ else {
 		
 		$tmp = file_get_contents($path);
 		//echo do_all($argv[1],$tmp);
-		echo $tmp.cr;
+		$tmp = array_reverse(explode(cr,trim($tmp)));
+		$current_records = count($tmp) ;
+		if (file_exists($run['host_name'].'md5.log')) {
+			$logold = explode(cr,trim(file_get_contents($run['host_name'].'md5.log')));
+			echo 'getting '.$run['host_name'].'md5.log'.cr;
+			if ($current_records == $logold[1]) {
+				echo 'no change since last run'.cr;
+			}
+		}
+		$logpos = md5($tmp[0]); // got log pos
+		file_put_contents($run['host_name'].'md5.log',$logpos.cr.count($tmp));
+		file_put_contents('/tmp/'.$run['host_name'].'md5.log',$logpos.cr.count($tmp));
+		foreach ($tmp as $logline){
+			if(isset($logold[0])){
+				if (md5(trim($logline)) == $logold[0]) {
+					echo 'found line '.$logline.cr;
+					break;
+				}
+			}
+			$return[] = $logline; 
+		}
 }
+	if(!empty($return)) {
+		echo print_r(array_reverse($return),true).cr;
+	}
 	return $path.' done'.cr;
 }
 ?>
