@@ -29,7 +29,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.05);
+	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
@@ -1090,7 +1090,7 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
 		$username = $t[0];
-		echo 'processing '.$username.' '.$ip.' '.$id2.cr; //debug code
+		//echo 'processing '.$username.' '.$ip.' '.$id2.cr; //debug code
 		$la[$username]['ip']=$ip;
 		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
 		if (empty($la[$username]['tst'])) {$la[$username]['tst'] =trim($username);}
@@ -1120,7 +1120,7 @@ foreach ($la as $user_data) {
 	// now do data
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
-	echo $asql.$user_search.cr; //debug code
+	//echo $asql.$user_search.cr; //debug code
 	$username = $user_data['tst'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
