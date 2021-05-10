@@ -901,6 +901,7 @@ function scanlog($cmds) {
 				echo print_r(array_reverse($return),true).cr;
 				echo "display = $display".cr;
 			}
+			unset ($return);
 		}
 			
 	}
@@ -929,18 +930,22 @@ else {
 		$local = true;
 			if(isset($cmds['file'])) {
 				if (!file_exists($cmds['file'])) {
-					echo 'could not open '.$cmds['file'].cr;
+					return 'could not open '.$cmds['file'].cr;
 					exit (1);
 				}
 			}
 	}
 	else {
-		echo 'remote set'.cr;
+		if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+			echo 'remote set'.cr;
+		}
 		$local = false;
 	}
 		
 	if ($local === true) {
-		echo 'use local file system'.cr;
+		if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+			echo 'use local file system'.cr;
+		}
 		if (empty($cmds['file'])) { 
 		$path = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
 		}
@@ -952,11 +957,15 @@ else {
 	else {
 		// assume run remote
 		if(empty($cmds['file'])) {
-			echo 'no file & server remote'.cr;
+			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+				echo 'no file & server remote'.cr;
+			}
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 		}
 		else {
-			echo 'file & server remote'.cr;
+			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+				echo 'file & server remote'.cr;
+			}
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$cmds['file'];
 		}
 	}
@@ -966,12 +975,11 @@ else {
 		//echo do_all($argv[1],$tmp);
 		$tmp = array_reverse(explode(cr,trim($tmp)));
 		$current_records = count($tmp) ;
-		echo "current records = $current_records".cr;
+		echo "current records = $current_records";
 		if (file_exists($run['host_name'].'-md5.log')) {
 			$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
-			echo 'getting '.$run['host_name'].'-md5.log'.cr;
 			if ($current_records == $logold[1]) {
-				echo 'no change since last run'.cr;
+				echo ' - no change since last run'.cr;
 			}
 		}
 		$logpos = md5($tmp[0]); // got log pos
@@ -980,21 +988,22 @@ else {
 		foreach ($tmp as $logline){
 			if(isset($logold[0])){
 				if (md5(trim($logline)) == $logold[0]) {
-					echo 'found line '.$logline.cr;
+					//echo 'found line '.$logline.cr;
 					break;
 				}
 			}
 			$return[] = $logline; 
 		}
-		if (!empty($return)) {
-			//run scan function
+		if(!empty($return)) {
+		if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 			echo print_r(array_reverse($return),true).cr;
 		}
-}
-	if(!empty($return)) {
 		$display .= do_log($run['host_name'],$return);
 		//echo print_r(array_reverse($return),true).cr;
 	}
+		
+		}
+	
 	return $display; //.' - done'.cr;
 }
 
