@@ -34,6 +34,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('CR',PHP_EOL);
 	
 error_reporting (0);
+$update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
@@ -618,7 +619,7 @@ function exe($cmds) {
 		exec($cmds['cmd'],$output,$retval);
 	
 			if (isset($cmds['debug'])) {
-				//echo ' ready to do command '.$cmds['cmd'].cr;
+				echo ' ready to do command '.$cmds['cmd'].cr;
 	
 				foreach ($output as $line) {
 					$return .= $line.cr;
@@ -829,7 +830,7 @@ function readlog($cmds) {
 function scanlog($cmds) {
 	// scanlog as a function
 	error_reporting(E_ALL); // set errors on for dev
-	global $settings,$database;
+	global $settings,$database,$update_done;
 	$ip = file_get_contents('https://api.ipify.org');// get ip
 	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
 	$localip = "ip = $ip";
@@ -845,7 +846,7 @@ function scanlog($cmds) {
 		return 'function not ran correctly';
 	}
 	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
-	$update_done= array();
+	
 	$display='';
 	if ($cmds['server'] == 'all') {
 	
@@ -864,18 +865,19 @@ function scanlog($cmds) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
 			$current_records = count($tmp) ;
 			
-			if (file_exists($run['host_name'].'-md5.log')) {
-				$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
+				if (file_exists($run['host_name'].'-md5.log')) {
+					$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
 				
-			if ($current_records == $logold[1]) {
+				if ($current_records == $logold[1] ) {
 				// this allows for up or down movement rather than >
-				if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
-					echo 'getting '.$run['host_name'].'-md5.log - ';
-					echo "current records = $current_records no change since last run".cr;
+					if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+						echo 'getting '.$run['host_name'].'-md5.log - ';
+						echo "current records = $current_records no change since last run".cr;
+					}
+					if(!isset($cmds['fullscan'])) {
+						continue;
+					}
 				}
-				
-				continue;
-			}
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo 'file changed records => '.$current_records-intval($logold[1]).'/'.$current_records.cr;
@@ -887,7 +889,7 @@ function scanlog($cmds) {
 		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 		foreach ($tmp as $logline){
 			if(isset($logold[0])){
-				if (md5(trim($logline)) == $logold[0]) {
+				if (md5(trim($logline)) == $logold[0] && !isset($cmds['fullscan'])) {
 					//echo 'found line '.$logline.cr;
 					break;
 				}
@@ -912,7 +914,9 @@ function scanlog($cmds) {
 		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 	}
 	}
-	//echo $display;
+	else {
+	  echo 'the file is empty'.cr;
+  }
 }
 }
 else {
@@ -972,37 +976,18 @@ else {
 		
 		
 		$tmp = file_get_contents($path);
-		//echo do_all($argv[1],$tmp);
 		$tmp = array_reverse(explode(cr,trim($tmp)));
 		$current_records = count($tmp) ;
-		echo "current records = $current_records";
-		if (file_exists($run['host_name'].'-md5.log')) {
-			$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
-			if ($current_records == $logold[1]) {
-				echo ' - no change since last run'.cr;
+				
+		if(!empty($tmp)) {
+			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+				echo "current records = $current_records".cr;
+				echo print_r(array_reverse($tmp),true).cr;
 			}
+			$display .= do_log($run['host_name'],$tmp);
 		}
-		$logpos = md5($tmp[0]); // got log pos
-		file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
-		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
-		foreach ($tmp as $logline){
-			if(isset($logold[0])){
-				if (md5(trim($logline)) == $logold[0]) {
-					//echo 'found line '.$logline.cr;
-					break;
-				}
-			}
-			$return[] = $logline; 
-		}
-		if(!empty($return)) {
-		if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
-			echo print_r(array_reverse($return),true).cr;
-		}
-		$display .= do_log($run['host_name'],$return);
-		//echo print_r(array_reverse($return),true).cr;
-	}
 		
-		}
+	}
 	
 	return $display; //.' - done'.cr;
 }
