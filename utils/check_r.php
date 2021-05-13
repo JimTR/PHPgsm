@@ -70,7 +70,14 @@ $depots =array_block($depots);
 $n = get_block($output,'"depots','branches');
 //echo $n.cr;
 $lin= array_block($n);
+//print_r($lin);
+//print_r($depots);
+if (isset($depots['maxsize'])){
 $max_size_raw = $depots['maxsize']+$lin['maxsize'];
+}
+else {
+$max_size_raw = $lin['maxsize'];
+}
 //die();
 if (isset($common['ReleaseState'])) {
 	$release = ' ('.$common['ReleaseState'].')';

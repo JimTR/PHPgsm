@@ -143,9 +143,14 @@ else {
 	 $name = str_replace('Found ','',$output[1]);
 	 $server = trim(str_replace('(released)',' ',$name));
  	 $installing['disk_size'] = str_replace('Size on disk ','',$output[3]);
+ 	 if (strpos($installing['disk_size'],'MB')){
+		 echo 'install less than a gig ! '.$installing['disk_size'].cr;
+		$installing['disk_size'] = number_format(floatval($installing['disk_size'])/1000,2) .'G';
+		// exit;
+	 }
         //echo cr.print_r($installing).cr;
        
-	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
+	 $cmd = 'locate appmanifest_'.$installing['app_id'].'.acf';
 	 //echo $cmd.cr;	
      exec($cmd,$g_locate,$ret);
      //echo 'locations '.print_r($g_locate,true).cr;
@@ -154,7 +159,7 @@ else {
 			CONSOLE_TABLE_ALIGN_LEFT,
 			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 			);
-			echo $output[1].' installed at these locations'.cr; 
+			echo $server.' installed at these locations'.cr; 
 			$table->addRow(array('Location',"  Size on disk"));
 		 foreach ($g_locate as $ins) {
 			 $loc = dirname($ins,1);
@@ -665,5 +670,12 @@ function clean_up() {
 		$cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
 		exec($cmd);
 	}
+	$check_ud = shell_exec('which updatedb');
+	if(!empty($check_ud)){
+		exec('updatedb --require-visibility 0',$ud,$r);
+			if ($r >0) {
+				echo 'setup appears wrong ?'.cr;
+			}
+		}
 }
 ?>
