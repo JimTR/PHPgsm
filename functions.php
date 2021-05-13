@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 define('fversion',1.04);
-$runfile = substr($argv[0], strrpos($argv[0], '/') + 1);
+$runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
 	exit;
@@ -898,99 +898,6 @@ else {
  * @return
  * cure html div bug
  */
-function html_display($tm,$results) {
-	
-	// cure html div bug
-	$database = new db(); // connect to database
-	foreach( $tm as $key=>$value) {
-		// loop through servers
-			$players = 	$results[$key]['gq_numplayers'].'/'.$results[$key]['gq_maxplayers']; //players online
-			$online  = $results[$key]['gq_online']; //server responding
-			$logo ='img/'.strtolower($results[$key]['game_id']).'.ico';
-			    $update['running'] = 1;
-				$update['starttime'] = $value;
-			    $where['host_name'] = $key;
-			    //echo $key.'<br>'; 
-			    $database->update('servers',$update,$where);
-			if (!empty($online)) {
-				// the server is up display title
-				// add sub template ?
-				$link = $results[$key]['gq_address'].':'. $results[$key]['gq_port_client'];
-				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
-				.'</i> <br>Started at '.
-				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;">Players Online <span id="gol'.$key.'">'.$players.'</span> - Map - <span id="cmap'.$key.'">'.$results[$key]["gq_mapname"].
-				 '</span></span><br><i style="color:blue;"><a href="steam://connect/'.$link.'/"><span class="btn btn-primary btn-sm">Join</span></a></i></div>';
-				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
-				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
-				if ($players >0) {
-					// we have players
-					// add sub template
-					
-					$player_list = $results[$key]['players']; // get the player array
-					orderBy($player_list,'gq_score','a'); // order by score
-					foreach ($player_list as $k=>$v) {
-						//loop through player array
-						$playerN = $player_list[$k]['gq_name']; // chop to 20 chrs
-						//$playerN = iconv("UTF-8", "ISO-8859-1//IGNORE", $playerN); //remove high asci
-						$playerN = str_pad($playerN,25); //pad to 25 chrs
-						switch (true) {
-							// format score
-							case  ($player_list[$k]['gq_score']<0) :
-								// minus
-								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
-								break;
-							case  ($player_list[$k]['gq_score']<10) :
-								//
-								$pscore = '&nbsp;&nbsp;&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
-								break;
-								case  ($player_list[$k]['gq_score']<100) :
-								//
-								$pscore = '&nbsp;&nbsp;'.$player_list[$k]['gq_score']; //format score
-								break;
-							case  ($player_list[$k]['gq_score']<1000)	:
-								//
-								$pscore = $player_list[$k]['gq_score']; //format score
-								break;
-						}
-						// format display here
-						// add sub template
-						$disp .='<tr><td><i style="color:green;">'.$playerN.'</i></td align="center"><td><span>'.$pscore.'</span></td><td>&nbsp;'.gmdate("H:i:s", $player_list[$k]['gq_time']).'</td></tr>';
-						
-					}
-					// end of players for each
-					
-				}
-				//end of players
-				// close div
-				$disp .='</tbody></table></div><!--End template--><script>
-				$("#op1'.$key.'").click(function(){
-				$("#ops'.$key.'").slideToggle("fast");
-  });
- 	</script>';
-				$disp .= '<br></div>';
-				
-			}
-			else {
-				//server not responding
-				$logo ='img/warning.png';
-				$players = '<i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start';
-				$disp .= '<!-- start template--><div  class="col-lg-6"><div><img style="width:10%;padding:1%;" src="'.$logo.'"><i style="color:green;">'.$results[$key]["gq_hostname"]
-				.'</i> <i style="color:blue;">('.$results[$key]['gq_address'].':'. $results[$key]['gq_port_client']."</i>)<br>Started at ".
-				 date('g:ia \o\n l jS F Y \(e\)', $value).'<br><span id="op1'.$key.'" style="cursor:pointer;"><span id="gol'.$key.'">'.$players.'</span><span id="cmap'.$key.'"></span></span></div>';
-				 $disp .= '<div id="ops'.$key.'" style="display:none;"><table><thead><tr><th style="width:60%;">Name</th><th style="width:20%;">Score</th><th>Time Online</th></tr></thead>'; // start table
-				 $disp .= '<tbody id ="pbody'.$key.'">'; // add body
-				//$disp .= '<div  class="col-lg-6"><i style=color:red;>'.$key.'</i> is not responding, please recheck the server configuration or wait for the server to start
-				//<br> or perhaps there is something else wrong</div>';
-			}
-			//return $disp;
-		}
-			// no servers running
-			if (empty($disp)) {
-			$disp .= '<div  class="col-lg-6"><i style=color:red;>No Servers Running</i><div>';
-		}
-			return $disp;
-}
-
   
 
   function get_sessions() {
@@ -1041,33 +948,6 @@ function html_display($tm,$results) {
 	 return $xy;
 	
    }
-   function html_display_version() {
-	   echo 'started version'.CR;
-	   /*	$version ='<br style="clear:both;">'. CR."Software Version 1.0.34.0β".CR.
-	 CR.'Copyright (c) '.date("Y").', NoIdeer Software
-All rights reserved.
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that
-the following conditions are met:
-Redistributions of source code must retain the above copyright notice, this list of conditions and the
-following disclaimer.
-Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-following disclaimer in the documentation and/or other materials provided with the distribution.
-Neither the name of the NoIdeer Software nor the names of its contributors may be used to endorse or
-promote products derived from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.'.CR.CR; */
-echo 'ready to return version'.CR;
-//return $version;
-}
 
 function local_build($ldata) {
 	
