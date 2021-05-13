@@ -867,8 +867,9 @@ function scanlog($cmds) {
 			
 				if (file_exists($run['host_name'].'-md5.log')) {
 					$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
+					$lastrecord = intval(trim($logold[1]));
 				
-				if ($current_records == $logold[1] ) {
+				if ($current_records == $lastrecord) {
 				// this allows for up or down movement rather than >
 					if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 						echo 'getting '.$run['host_name'].'-md5.log - ';
@@ -881,7 +882,7 @@ function scanlog($cmds) {
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo print_r($logold,true).cr;
-				echo 'file changed records => '.$current_records-intval($logold[1]).'/'.$current_records.cr;
+				echo 'file changed records => '.$current_records-$lastrecord.'/'.$current_records.cr;
 			}
 			
 		unset($return);
