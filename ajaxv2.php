@@ -880,6 +880,7 @@ function scanlog($cmds) {
 				}
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
+				echo print_r($logold,true).cr;
 				echo 'file changed records => '.$current_records-intval($logold[1]).'/'.$current_records.cr;
 			}
 			
