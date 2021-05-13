@@ -882,6 +882,7 @@ function scanlog($cmds) {
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo print_r($logold,true).cr;
+				echo ' Maths = '.$current_records-$lastrecord.cr;
 				echo 'file changed records => '.intval($current_records)-$lastrecord.'/'.$current_records.cr;
 			}
 			
