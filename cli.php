@@ -154,7 +154,7 @@ switch ($cmds['action']) {
 				
 			}
 			else {
-				 echo $output[1].cr;
+				 echo error.' '.$output[1].cr;
 				break;
 			}
 			//echo $ip.cr;
@@ -214,7 +214,7 @@ switch ($cmds['action']) {
 		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
 		$server = $database->get_row($sql);
 		if (empty($server)) {
-			echo 'invalid Server ID '.$cmds['server'].cr;
+			echo warning.' invalid Server ID '.$cmds['server'].cr;
 			break;
 		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=s';
@@ -231,7 +231,7 @@ switch ($cmds['action']) {
 		$sql = "select * from server1 where host_name like '".trim($cmds['server'])."'";
 		$server = $database->get_row($sql);
 		if (empty($server)) {
-			echo 'invalid Server ID '.$cmds['server'].cr;
+			echo error.' invalid Server ID '.$cmds['server'].cr;
 			break;
 		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=q';
