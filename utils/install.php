@@ -48,7 +48,7 @@ $tick = $cc->convert("%g✔%n");
 $cross = $cc->convert("%r✖%n");
  define ('green_tick',$tick);
  define ('red_cross',$cross);
- define ('warning',$cc->convert("%rWarning %n"));
+ define ('warning',$cc->convert("%RWarning %n"));
  define ('error',$cc->convert("%RError %n"));
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
@@ -58,7 +58,7 @@ $cross = $cc->convert("%r✖%n");
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
  $quit ='(ctl+c to quit) '; 
-  echo 'Welcome to PHPgsm Game Installer '.VERSION.cr;
+  echo 'PHPgsm Game Installer '.VERSION.cr;
   if (isset($cmds)){
   if ($cmds['action'] == 'show') { 
 	  list_games();
@@ -86,7 +86,7 @@ $table->addRow(array('Mount Point','Free Space' ));
  $user = get_user_info($diskinfo);
 // print_r($user);
  if($user['level'] == 1 || root()) {$user_level = ', Privilege OK';}
- else { $user_level =', '.warning.'user privilege level low, the installer will run in safe mode.'; }
+ else { $user_level =', '.warning.' user privilege level low, the installer will run in safe mode.'; }
  echo $user_level.cr;
  $installing  = array_merge($user, $diskinfo);
 
@@ -183,7 +183,7 @@ else {
 		$game_size = floatval($installing['disk_size']);
 		$remaining = floatval($installing['quota_free']);
 		$need = $game_size -$remaining;
-        echo  error.$server.' can not be installed, not enough disk space !'.cr;
+        echo  error.' '.$server.' can not be installed, not enough disk space !'.cr;
         $table->addRow(array('Required Disk Space:',trim($game_size.' GB')));
         $table->addRow(array('Free Disk Space:',trim($remaining.' GB')));
         $table->addRow(array('Free up at least:',$need.' GB',' to install'));
