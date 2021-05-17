@@ -226,7 +226,12 @@ else
 }
 }
 	//print_r($return);
-	return $return;
+	if (isset($return)) {
+		return $return;
+	}
+	else {
+		echo 'Steam has messed up'.cr;
+	}
 }
 
   
