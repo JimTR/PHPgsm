@@ -483,8 +483,14 @@ function exescreen ($cmds) {
 		return 'This Server is not hosted here '.$localip.'/'.$server['host']; // we know this one but it's elsewhere
 	}
 	// valid so do it
-	
-	$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
+	switch ($server['binary_file']) {
+		case 'srcds_run':
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
+			break;
+		default:
+				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd ';
+			break;
+		}
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
 		case 's' :
