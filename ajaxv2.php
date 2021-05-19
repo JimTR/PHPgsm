@@ -480,11 +480,11 @@ function exescreen ($cmds) {
 	   	return $return;
 	}
 	if ($server['host'] <> $localIP) {
-		return 'This Server is not hosted here'; // we know this one but it's elsewhere
+		return 'This Server is not hosted here '.$localip.'/'.$server['host']; // we know this one but it's elsewhere
 	}
 	// valid so do it
 	
-	$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+	$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
 		case 's' :
