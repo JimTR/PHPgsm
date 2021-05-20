@@ -526,7 +526,7 @@ function exescreen ($cmds) {
 			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
 			break;
 		default:
-				$cmd = 'screen -X -S '.$server['host_name'] .' exit';
+				$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			break;
 		}
 			
@@ -559,7 +559,7 @@ function exescreen ($cmds) {
 				break;
 			}
 			
-			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			exec($cmd); // stop the server 
 			chdir($server['location']);
 			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
