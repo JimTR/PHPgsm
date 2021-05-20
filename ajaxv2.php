@@ -488,7 +488,7 @@ function exescreen ($cmds) {
 			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
 			break;
 		default:
-				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
+				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
 		}
 		echo $cmd.cr;
@@ -521,8 +521,15 @@ function exescreen ($cmds) {
 				$return = $exe.' is not running';
 				break;
 			}
-			
+			switch ($server['binary_file']) {
+		case 'srcds_run':
 			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			break;
+		default:
+				$cmd = 'screen -X -S '.$server['host_name'] .' exit';
+			break;
+		}
+			
 			exec($cmd);
 			$return = 'Stopping Server '.$server['host_name'];
 			$update['running'] = 0;
