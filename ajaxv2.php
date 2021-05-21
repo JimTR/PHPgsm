@@ -491,7 +491,7 @@ function exescreen ($cmds) {
 				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
 		}
-		echo $cmd.cr;
+		//echo $cmd.cr;
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
 		case 's' :
