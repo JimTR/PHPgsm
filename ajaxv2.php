@@ -261,7 +261,14 @@ function game_detail() {
 					exit;
 				}
 				        
-                $cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
+                switch ($server['binary_file']) {
+		case 'srcds_run':
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			break;
+		default:
+				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
+			break;
+		}
                
                 $new = trim(shell_exec($cmd));
                 // temp log
