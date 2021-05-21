@@ -485,7 +485,7 @@ function exescreen ($cmds) {
 	// valid so do it
 	switch ($server['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe;
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 			break;
 		default:
 				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
