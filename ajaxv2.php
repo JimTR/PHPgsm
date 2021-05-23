@@ -418,7 +418,7 @@ function game_detail() {
 												switch ($server['binary_file']) {
 													case 'srcds_run':
 														echo 'srcds'.cr;
-														exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v grep',$server_ps,$ret);
+														exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v "/bin/" |grep -v grep',$server_ps,$ret);
 														break;
 													default:
 															echo 'default'.cr;
