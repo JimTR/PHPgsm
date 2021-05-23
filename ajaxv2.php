@@ -418,11 +418,13 @@ function game_detail() {
 												switch ($server['binary_file']) {
 													case 'srcds_run':
 														echo 'srcds'.cr;
+														exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v grep',$server_ps,$ret);
 														break;
 													default:
 															echo 'default'.cr;
+															exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
 														}
-												exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
+												
 												echo print_r ($server_ps,true).cr;
 												$detail= explode(' ',$server_ps[0]);
 												echo print_r($detail,true).cr;
