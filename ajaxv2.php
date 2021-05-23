@@ -246,6 +246,7 @@ function game_detail() {
 		$ip = file_get_contents('https://api.ipify.org');// get ip
 		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
 		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
+		 echo "sql = $sql".cr;
 		 if ($db->num_rows($sql) >0) {		 
 			$server_data = $db->get_results($sql);
 			$server_data=reset($server_data);
@@ -261,12 +262,13 @@ function game_detail() {
 					exit;
 				}
 				        
-                switch ($server['binary_file']) {
+                switch ($server_data['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 			break;
 		default:
-				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
+				$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server_data['binary_file'];
+				echo "cmd = $cmd".cr;
 			break;
 		}
                
