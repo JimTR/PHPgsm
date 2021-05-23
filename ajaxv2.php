@@ -301,6 +301,7 @@ function game_detail() {
 					$server_data['cpu'] = $temp[count($temp)-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
 					$server_data['beta'] = 'running';
+					echo print_r($server_data,true).cr;
 					$server['online'] = 'Online';
 													try
 														{
@@ -323,7 +324,7 @@ function game_detail() {
 																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
 														}
 						
-														$error = date("d/m/Y h:i:sa").' ('.$sever['host'].':'.$server['port'].') '.$Exception;
+														$error = date("d/m/Y h:i:sa").' ('.$sever_data['host'].':'.$server_data['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
