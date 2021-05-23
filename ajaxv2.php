@@ -417,18 +417,14 @@ function game_detail() {
 												//echo 'ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep'.cr;
 												switch ($server['binary_file']) {
 													case 'srcds_run':
-														echo 'srcds'.cr;
-														exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v "/bin/" |grep -v grep',$server_ps,$ret);
-														break;
+															exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v "/bin/" |grep -v grep',$server_ps,$ret);
+															break;
 													default:
-															echo 'default'.cr;
 															exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
 														}
 												
 												//echo print_r ($server_ps,true).cr;
 												$detail= explode(' ',$server_ps[0]);
-												echo print_r($detail,true).cr;
-												// strip pid
 												unset($server_ps);
 												$pid = $detail[0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
