@@ -308,7 +308,7 @@ function game_detail() {
 															$sub_cmd = 'GetInfo';
 															$info1 = $gameq->GetInfo();
 															
-															echo print_r($info1,true).cr;
+															//echo print_r($info1,true).cr;
 															$server_data  = array_merge($server_data ,$info1);
 															if ($info1['Players'] > 0) {
 																$total_players += $info1['Players'];
