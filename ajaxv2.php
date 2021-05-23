@@ -323,7 +323,7 @@ function game_detail() {
 																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
 														}
 						
-														$error = date("d/m/Y h:i:sa").' ('.$sever_data['host'].':'.$server_data['port'].') '.$Exception;
+														$error = date("d/m/Y h:i:sa").' ('.$sever['host'].':'.$server['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
