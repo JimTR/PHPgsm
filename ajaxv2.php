@@ -415,6 +415,13 @@ function game_detail() {
 												//$tmp_array[$i] = explode(' ',$server1); // arrayify
 												// temp log
 												echo 'ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep'.cr;
+												switch ($server['binary_file']) {
+													case 'srcds_run':
+														echo 'srcds'.cr;
+														break;
+													default:
+															echo 'default'.cr;
+														}
 												exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
 												echo print_r ($server_ps,true).cr;
 												$detail= explode(' ',$server_ps[0]);
