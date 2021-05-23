@@ -246,7 +246,7 @@ function game_detail() {
 		$ip = file_get_contents('https://api.ipify.org');// get ip
 		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
 		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
-		 echo "sql = $sql".cr;
+		 //echo "sql = $sql".cr;
 		 if ($db->num_rows($sql) >0) {		 
 			$server_data = $db->get_results($sql);
 			$server_data=reset($server_data);
@@ -262,13 +262,13 @@ function game_detail() {
 					exit;
 				}
 				        
-                switch ($server_data['binary_file']) {
+       switch ($server_data['binary_file']) {
 		case 'srcds_run':
 			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 			break;
 		default:
 				$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server_data['binary_file'];
-				echo "cmd = $cmd".cr;
+				//echo "cmd = $cmd".cr;
 			break;
 		}
                
@@ -344,12 +344,16 @@ function game_detail() {
 					$ip = file_get_contents('https://api.ipify.org');
 					if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
 				}
-				$checkip = substr($ip,0,strlen($ip)-1); 		
-				$t =trim(shell_exec('ps -C srcds_linux -o pid,cmd |sed 1,1d')); // this gets running only 
-				$tmp = explode(PHP_EOL,$t);
+				$checkip = substr($ip,0,strlen($ip)-1); 
+				// alter this bit	
+				// use screen to test 	
+				exec('ps -C screen -o pid,cmd |sed 1,1d',$tmp,$val); // this gets running only needs rework may 2021
+				//$tmp = explode(PHP_EOL,$t);
 				$i=0;
-				if(strlen($t) === 0) {
+				
+				if(empty($tmp)) {
 						// nothing running
+						
 						$sql =  'SET sql_mode = \'\'';
 						$a= $db->query( 'SET sql_mode = \'\''); 
 						$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
@@ -371,7 +375,7 @@ function game_detail() {
 						
 						foreach ($servers as $server) {
 															
-										if (array_find($server['host_name'].'.cfg',$tmp) >= 0) {
+										if (array_find($server['host_name'].'-console.log',$tmp) >= 0) {
 											$total_slots  += $server['max_players'];	
 												// running server add live data 
 												if ($server['running']) {
@@ -403,13 +407,15 @@ function game_detail() {
 														//$server['Players'] = 0;
 														}
 													}
-												$rec = array_find($server['host_name'].'.cfg',$tmp);
+												// redo this 	
+												$rec = array_find($server['host_name'].'.-console.log',$tmp);
 												$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
 												$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
 												$server1= trim($server1); // get rid of spaces & CR's 
 												$tmp_array[$i] = explode(' ',$server1); // arrayify
 												// temp log
-												$pid = $tmp_array[$i][0]; // git process id
+												$detail=explode(' ',exec('ps -a -o pid,cmd |grep "'.$server['startcmd'].'"',$server_ps,$ret));
+												$pid = $detail[0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 												$count = count($top); // how many records  ?
