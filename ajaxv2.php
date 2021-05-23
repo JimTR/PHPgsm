@@ -264,7 +264,7 @@ function game_detail() {
 				        
        switch ($server_data['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
 			break;
 		default:
 				$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server_data['binary_file'];
