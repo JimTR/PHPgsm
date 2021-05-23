@@ -408,12 +408,13 @@ function game_detail() {
 														}
 													}
 												// redo this 	
-												$rec = array_find($server['host_name'].'.-console.log',$tmp);
-												$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
-												$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
-												$server1= trim($server1); // get rid of spaces & CR's 
-												$tmp_array[$i] = explode(' ',$server1); // arrayify
+												//$rec = array_find($server['host_name'].'.-console.log',$tmp);
+												//$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
+												//$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
+												//$server1= trim($server1); // get rid of spaces & CR's 
+												//$tmp_array[$i] = explode(' ',$server1); // arrayify
 												// temp log
+												echo 'ps -a -o pid,cmd |grep "'.$server['startcmd'].'"'.cr;
 												$detail=explode(' ',exec('ps -a -o pid,cmd |grep "'.$server['startcmd'].'"',$server_ps,$ret));
 												$pid = $detail[0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
