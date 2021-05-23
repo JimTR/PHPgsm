@@ -415,7 +415,8 @@ function game_detail() {
 												//$tmp_array[$i] = explode(' ',$server1); // arrayify
 												// temp log
 												echo 'ps -a -o pid,cmd |grep "'.$server['startcmd'].'"'.cr;
-												$detail=explode(' ',exec('ps -a -o pid,cmd |grep "'.$server['startcmd'].'"',$server_ps,$ret));
+												exec('ps -a -o pid,cmd |grep "'.$server['startcmd'].'"',$server_ps,$ret);
+												echo print_r ($server_ps,true).cr;
 												$pid = $detail[0]; // git process id
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
