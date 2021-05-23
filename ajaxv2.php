@@ -414,7 +414,7 @@ function game_detail() {
 												//$server1= trim($server1); // get rid of spaces & CR's 
 												//$tmp_array[$i] = explode(' ',$server1); // arrayify
 												// temp log
-												echo 'ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep'.cr;
+												//echo 'ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep'.cr;
 												switch ($server['binary_file']) {
 													case 'srcds_run':
 														echo 'srcds'.cr;
@@ -425,7 +425,7 @@ function game_detail() {
 															exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
 														}
 												
-												echo print_r ($server_ps,true).cr;
+												//echo print_r ($server_ps,true).cr;
 												$detail= explode(' ',$server_ps[0]);
 												echo print_r($detail,true).cr;
 												// strip pid
