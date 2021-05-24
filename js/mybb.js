@@ -39,7 +39,7 @@ function updateClock ()
      }
 
 function online(url,timeout,hide){
-        //console.log('Welcome to online using '+url);
+        console.log('Welcome to online using '+url);
 	 $.ajax({
      url: url,
    type: 'post',
@@ -63,7 +63,7 @@ for (var i in data1) {
 	}	
    for (var j in data1[i]) {
 	// we have the individal server
-	//console.log('Processing '+j);
+	console.log('Processing '+j);
 	 if (typeof serverlength === 0) {
 						   console.log('server not set');
 						   			return;
@@ -80,15 +80,15 @@ for (var i in data1) {
 	 //console.log(playern);
 	  $('#pl'+server_id).html(playern); 
 	 //alert(server_id);
-     	//console.log(server.server_name);
+     	console.log(server.server_name);
 	                  $("#"+server_id).show();
 	                   var start_date = timeConverter(parseFloat(server.starttime));
 					   var logo  =server.url+':'+server.bport+'/'+server.logo;
 					  //console.log('server.Players = '+server.Players );
 					   if (typeof server.Players === "undefined") {
-						   //console.log('Players not set '+server.server_name);
-						   			return true;
-						   			//server.Players = 0;
+						   console.log('Players not set '+server.server_name);
+						   			//return true;
+						   			server.Players = 0;
 								}   
 					    $("#img"+server_id).attr("src",logo);
 						$('#cmap'+server_id).html(server.Map);
