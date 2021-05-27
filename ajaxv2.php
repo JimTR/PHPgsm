@@ -274,7 +274,7 @@ function game_detail() {
                
                 $new = trim(shell_exec($cmd));
                 // temp log
-				$logline =date("d/m/Y h:i:sa").' Filtered Output '.$cmds['filter'].cr;
+				$logline =date("d/m/Y h:i:sa").' => Filtered Output '.$cmds['filter'].cr;
 				file_put_contents(LOG,$logline,FILE_APPEND);
                 if (empty($new)) {
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
