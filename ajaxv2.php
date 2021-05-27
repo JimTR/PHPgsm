@@ -38,7 +38,7 @@ $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
-
+echo $ip.cr;
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
