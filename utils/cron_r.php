@@ -42,7 +42,7 @@ require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
-define( 'LOG','logs/cron.log'); 
+define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
 $sql = 'select * from servers where running=1';
@@ -108,7 +108,8 @@ foreach ($games as $game) {
 				if(empty($steamcmd)) {
 					$steamcmd = './steamcmd';
 					chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-					echo 'moved to '.getcwd ( ).cr;
+					$log_line = 'moved to '.getcwd ( );
+					file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 				}
 				
 				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
@@ -119,17 +120,20 @@ foreach ($games as $game) {
 			}
 			// log prune
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
-			//echo 'Prune command  '.$exe.cr;
+			$log_line = 'Prune command  '.$exe;
+			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
-			//echo 'Prune here also '.$exe.cr;
+			$log_line = 'Prune here also '.$exe;
+			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
 			}
-	     echo print_r($done,true),cr; //test array
+	     $log_line = print_r($done,true); //test array
+	     file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 	
 	
 	if (isset($check)) { 
