@@ -29,7 +29,9 @@ if ($tmp) {
 $tmp =explode(' ',$tmp[0]);
 $installing['gvfs'] = trim($tmp[1]);
 }
-clean_up();
+echo 'Entering cleanup'.PHP_EOL;
+clean_up('file');
+echo 'done cleanup'.PHP_EOL;
 if (!defined('DOC_ROOT')) {
 	define('DOC_ROOT',dirname(__DIR__));
 }
@@ -150,7 +152,7 @@ else {
 	 }
         //echo cr.print_r($installing).cr;
        
-	 $cmd = 'locate appmanifest_'.$installing['app_id'].'.acf';
+	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
 	 //echo $cmd.cr;	
      exec($cmd,$g_locate,$ret);
      //echo 'locations '.print_r($g_locate,true).cr;
@@ -515,7 +517,7 @@ else {
     else { $lsofcmd = 'lsof install.log';}
 		$lsof = trim(shell_exec($lsofcmd));
    
-    exec($cmd); //clear up the install terminal
+    //exec($cmd); //clear up the install terminal
    
 	 while ($lsof) {
 		 $lsof = trim(shell_exec($lsofcmd));
@@ -659,8 +661,9 @@ function check_acf ($path) {
 return $x;
 }	 
 
-function clean_up() {
+function clean_up($action) {
 	// did it crash ?
+	if ($action =='file') {
 	if(is_file('install.log')) {
 		unlink('install.log');
 	}
@@ -670,6 +673,8 @@ function clean_up() {
 		$cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
 		exec($cmd);
 	}
+	}
+	if ($action == 'reindex'){
 	$check_ud = shell_exec('which updatedb');
 	if(!empty($check_ud)){
 		exec('updatedb --require-visibility 0',$ud,$r);
@@ -677,5 +682,6 @@ function clean_up() {
 				echo 'setup appears wrong ?'.cr;
 			}
 		}
+	}
 }
 ?>
