@@ -406,11 +406,30 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
 		 //echo print_r($gdata,true).cr;
-		 $Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
-	$players = $Query->GetPlayers( ) ;
-	$info = $Query->GetInfo();
-	$rules = $Query->GetRules( );
+	try {	 
+		$Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
+		$players = $Query->GetPlayers( ) ;
+		$info = $Query->GetInfo();
+		$rules = $Query->GetRules( );
+	}
+	catch( Exception $e )
+					{
+						$Exception = $e;
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = 'Failed to read any data from socket (module viewplayers)';
+						}
+						
+						  $error = date("d/m/Y h:i:sa").' ('.$gdata['host'].':'.$gdata['port'].') '.$Exception;
+						  //sprintf("[%14.14s]",$str2)
+						  //echo $error.cr;
+						  $mask = "%17.17s %-30.30s \n";
+						 //file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+						 $Query->Disconnect( );
+						 continue;
+						 
+					}
 	$Query->Disconnect( );
+	//print_r($info);
 	if ($info['Players'] >0) {
 		$p1 = trim($info['Players']);
 		$info['Players'] = $cc->convert("%B$p1%n");
@@ -420,6 +439,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 		$info['Players'] = $cc->convert("%Y$p1%n");
 		}
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+	//echo $playersd.cr;
 	$host = $cc->convert("%y".$info['HostName']."%n");
 	$table->addRow(array('',$host,date('g:ia \o\n l jS F Y \(e\)',"\t".$gdata['starttime'])."\t",$playersd,"\t".$info["Map"].""));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
