@@ -292,7 +292,7 @@ function game_detail() {
 				if (!empty($tmp[0])) {
 					$pid = $tmp[0];
 					$count = count($tmp);
-					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip))));
+					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)))); // works on remote ?
 					$temp = array_values(array_filter(explode(' ',$temp)));
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
 					$x = strpos(trim($du),'/');
@@ -409,29 +409,7 @@ function game_detail() {
 														//$server['Players'] = 0;
 														}
 													}
-												// redo this
-												// example 'screen -ls |grep -w "'.$server['host_name'].'"'  gives wrong pid
-												/*
-												 * exec ('ss -plt |grep '.$server['host'].':'.$server['port'],$detail,$ret);
-												 * $a = explode('  ',$detail[0]);
-												 * $b = explode(',',trim($a[32]));
-												 * preg_match('!\d+!', $b[1], $matches);
-												 * 
-												 * 
-	
-												switch ($server['binary_file']) {
-													case 'srcds_run':
-															exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v "/bin/" |grep -v grep',$server_ps,$ret);
-															break;
-													default:
-															exec('ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep',$server_ps,$ret);
-														}
 												
-												//echo print_r ($server_ps,true).cr;
-												$detail= explode(' ',$server_ps[0]);
-												unset($server_ps);
-												*$pid = $detail[0]; // get process id
-												*/
 												$pid = get_pid($server['host'].':'.$server['port']); 
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
@@ -794,7 +772,7 @@ if (count($players)) {
 			// add a default image for the flag
 			// random country
 			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Spectator';}
-			$players[$k]['flag'] = 'src ="img/'.'unknown.png"'; // windows don't do emoji flags use image
+			$players[$k]['flag'] = 'src ="/img/'.'unknown.png"'; // windows don't do emoji flags use image
 			$players[$k]['country'] = 'unknown';
 			
 		}
