@@ -409,14 +409,16 @@ function game_detail() {
 														//$server['Players'] = 0;
 														}
 													}
-												// redo this 	
-												//$rec = array_find($server['host_name'].'.-console.log',$tmp);
-												//$server1 = str_replace('./srcds_linux','',$tmp[$rec]); // we don't need this throw it
-												//$server1 = str_replace(' -insecure','',$server1); // we don't need this throw it
-												//$server1= trim($server1); // get rid of spaces & CR's 
-												//$tmp_array[$i] = explode(' ',$server1); // arrayify
-												// temp log
-												//echo 'ps -a -o pid,cmd |grep "'.trim($server['startcmd']).'" |grep -v grep'.cr;
+												// redo this
+												// example 'screen -ls |grep -w "'.$server['host_name'].'"'  gives wrong pid
+												/*
+												 * exec ('ss -plt |grep '.$server['host'].':'.$server['port'],$detail,$ret);
+												 * $a = explode('  ',$detail[0]);
+												 * $b = explode(',',trim($a[32]));
+												 * preg_match('!\d+!', $b[1], $matches);
+												 * 
+												 * 
+	
 												switch ($server['binary_file']) {
 													case 'srcds_run':
 															exec('ps -a -o pid,cmd |grep "'.$server['host_name'].'.cfg" |grep -v "/bin/" |grep -v grep',$server_ps,$ret);
@@ -428,7 +430,9 @@ function game_detail() {
 												//echo print_r ($server_ps,true).cr;
 												$detail= explode(' ',$server_ps[0]);
 												unset($server_ps);
-												$pid = $detail[0]; // git process id
+												*$pid = $detail[0]; // get process id
+												*/
+												$pid = get_pid($server['host'].':'.$server['port']); 
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 												$count = count($top); // how many records  ?
@@ -1363,5 +1367,14 @@ function update_server($server){
 		
 	$update_done[] = $game['install_dir'];
 	return $s;
+}
+
+function get_pid($task) {
+	// return pid
+	exec ('ss -plt |grep '.$task,$detail,$ret);
+	$a = explode('  ',$detail[0]);
+	$b = explode(',',trim($a[32]));
+	preg_match('!\d+!', $b[1], $matches);
+	return $matches[0];
 }
 ?>
