@@ -1357,6 +1357,9 @@ function get_pid($task) {
 	$a = explode('  ',$detail[0]);
 	$b = explode(',',trim($a[32]));
 	preg_match('!\d+!', $b[1], $matches);
+	if ($cmds['debug'] == true) {
+		echo print_r($matches,true).cr;
+	}
 	return $matches[0];
 }
 ?>
