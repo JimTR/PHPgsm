@@ -942,7 +942,7 @@ function scanlog($cmds) {
 	}
 	}
 	else {
-	  echo $run['host_name'].' the file is empty'.cr; //debug code 
+	 // echo $run['host_name'].' the file is empty'.cr; //debug code 
   }
 }
 }
