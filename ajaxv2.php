@@ -1045,7 +1045,7 @@ function do_log($server,$data) {
     // echo 'Rows to process '.count($log).cr; //debug code
     foreach ($log as $value) {
 		// loop lines, in here check for server needs a restart
-		if ( strpos($value,$update_req)) {
+		if ( strpos($value,$update_req) !==false) {
 			// server needs an update & restart
 			$uds = true;
 		}
