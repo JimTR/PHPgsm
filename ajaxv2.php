@@ -1358,6 +1358,7 @@ function get_pid($task) {
 	$b = explode(',',trim($a[32]));
 	preg_match('!\d+!', $b[1], $matches);
 	if ($cmds['debug'] == true) {
+		echo print_r($a,true).cr;
 		echo 'used ss -plt |grep '.$task.cr;
 		echo print_r($matches,true).cr;
 	}
