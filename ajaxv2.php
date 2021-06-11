@@ -1355,7 +1355,7 @@ function get_pid($task) {
 	}
 	exec ('ss -plt |grep '.$task,$detail,$ret);
 	$a = explode('  ',$detail[0]);
-	$b = explode(',',trim($a[32]));
+	$b = explode(',',trim(end($a)));
 	preg_match('!\d+!', $b[1], $matches);
 	if ($cmds['debug'] == true) {
 		echo print_r($a,true).cr;
