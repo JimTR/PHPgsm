@@ -1349,6 +1349,10 @@ function update_server($server){
 
 function get_pid($task) {
 	// return pid
+	global $cmds;
+	if ($cmds['debug'] == true ){
+		echo "task = $task".cr;
+	}
 	exec ('ss -plt |grep '.$task,$detail,$ret);
 	$a = explode('  ',$detail[0]);
 	$b = explode(',',trim($a[32]));
