@@ -246,7 +246,7 @@ foreach ($la as $user_data) {
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
-			$ut.= ' new logon (total '.$result['log_ons'].')';
+			$ut.= ' new logon  at '.date('h:m:s',$last_logon).' (total '.$result['log_ons'].')';
 			$modify=true;
 			$logon = true;
 		}
