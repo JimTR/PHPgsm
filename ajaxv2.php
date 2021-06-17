@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	
+	define ('BUILD',"44636-1623923326");
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -48,7 +48,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Ajax v'.VERSION.' build '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;
@@ -89,7 +89,7 @@ if(!$valid) {
 			exit;
 			
 		case "boottime" :
-			echo get_boot_time();
+			echo get_boot_time().cr;
 			exit;
 			
 		case "check_services" :
@@ -182,7 +182,7 @@ if(!$valid) {
 					exit;	
 			
 			case "version":
-				echo 'Ajax v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr; 
+				echo 'Ajax v'.VERSION.' build '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 				exit;
 						
 			case "viewserver":
@@ -1358,9 +1358,9 @@ function get_pid($task) {
 	$b = explode(',',trim(end($a)));
 	preg_match('!\d+!', $b[1], $matches);
 	if ($cmds['debug'] == true) {
-		echo print_r($a,true).cr;
-		echo 'used ss -plt |grep '.$task.cr;
-		echo print_r($matches,true).cr;
+		//echo print_r($a,true).cr;
+		//echo 'used ss -plt |grep '.$task.cr;
+		echo $matches[0].cr;
 	}
 	return $matches[0];
 }
