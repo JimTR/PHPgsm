@@ -1161,7 +1161,7 @@ foreach ($la as $user_data) {
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
-			$ut.= ' new logon at '.date('h:m:s',$last_logon).' (total '.$result['log_ons'].')';
+			$ut.= ' new logon at '.date('h:m:s A',$last_logon).' (total '.$result['log_ons'].')';
 			$modify=true;
 			$logon = true;
 		}
@@ -1236,7 +1236,7 @@ foreach ($la as $user_data) {
 		$added = true;
 		$ut .= $ut.' New user';
 		$count ++;
-		$last_logon = time();
+		$last_logon = strtotime($user_data['time']);
 		$ip_data = get_ip_detail($ip);
 		$result['ip'] = $user_data['ip'];
 		//$result['steam_id'] = $user;
@@ -1267,14 +1267,14 @@ foreach ($la as $user_data) {
 	    $user_stub ="\t".$username.' ('.$result['country'].') ';
 	    if ($in === true ){
 			 	 $done++;
-			 	 $ut .=' Record added'.cr;
+			 	 $ut .=' Record added at'.date('h:m:s A',$last_logon).cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
 			 }
 	   else {
 		 echo 'Database Insertion failed with'.cr;
-		 print_r($result);		 
+		 echo print_r($result,true).cr;		 
 		//echo cr;
 }
 
