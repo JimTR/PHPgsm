@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define ('BUILD',"44634-3559766394");
+	define ('BUILD',"44635-3877352080");
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -1267,7 +1267,7 @@ foreach ($la as $user_data) {
 	    $user_stub ="\t".$username.' ('.$result['country'].') ';
 	    if ($in === true ){
 			 	 $done++;
-			 	 $ut .=' Record added at'.date('H:m:s ',$last_logon).cr;
+			 	 $ut .=' Record added at '.date('H:m:s ',$last_logon).cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
