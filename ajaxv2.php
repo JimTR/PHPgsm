@@ -32,14 +32,14 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define ('BUILD',"44636-3406567857");
+	define ('BUILD',"44638-399150360");
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
-echo $sql.'<br>';
+//echo $sql.'<br>';
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
-echo $ip." Valid = $valid <br>".cr;
+//echo $ip." Valid = $valid <br>".cr;
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
