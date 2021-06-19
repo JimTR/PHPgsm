@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	define ('fBUILD',"36364-1623928309");
+	define ('BUILD',"36364-1552851415");
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
