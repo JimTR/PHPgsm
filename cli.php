@@ -25,6 +25,7 @@
 require_once 'includes/master.inc.php';
 require_once 'includes/class.table.php';
 require_once 'includes/class.color.php';
+	
 include 'functions.php';
 $cc = new Console_Color2();
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
@@ -38,6 +39,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('warning', $cc->convert("%YWarning%n"));
 	define ('error', $cc->convert("%RError%n"));
 	define ('advice', $cc->convert("%BAdvice%n"));
+	define ('BUILD',"18582-2827437829");
 	error_reporting (0);
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -219,6 +221,43 @@ switch ($cmds['action']) {
 		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=s';
 		echo file_get_contents($cmd).cr;
+	break;
+	case 't':
+	case'test':
+		echo 'File Integrity Checker'.cr;
+		if (empty($cmds['file'])) {
+		echo error.' input file missing'.cr;
+		exit;
+	}
+	elseif(is_file($cmds['file']) == false){
+		echo error.' Could not find '.$cmds['file'].cr;
+		exit;
+	}
+	// got the file & valid
+	$file = file_get_contents($cmds['file']);
+	$fsize = filesize($cmds['file']);
+	$nf = explode(cr,$file);
+	$matches = array_values(preg_grep('/(\'BUILD\',"\d+-\d+")/', $nf));
+	if (empty($matches)) {
+	echo error.' unable to check '.$cmds['file'].' file structure is incorrect'.cr;
+	exit;
+}
+	//echo print_r($matches,true).cr; 
+	$tmp = str_replace($matches[0],'',$file);
+    $ns = crc32($tmp);
+	$build = trim($matches[0]);
+	$build = str_replace("define ('BUILD',\"",'',$build);
+	$build = str_replace('");','',$build);
+	$b_detail = explode('-',$build);
+	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
+		
+		echo advice.' '.$cmds['file'].' passes  '.cr;
+		
+	}
+	else {
+		echo $cmds['file'].' has an error !, it\'s not as we coded it  '.cr;
+		echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
+	}
 	break;
 	case 'q':
 	case 'quit':
