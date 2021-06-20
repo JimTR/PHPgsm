@@ -30,7 +30,7 @@
 error_reporting( -1 );
 define('cr',PHP_EOL);
 define ('VERSION',2.13);
-	define ('BUILD',"13849-1623930060");
+	define ('BUILD',"13865-1261170108");
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
@@ -247,7 +247,7 @@ foreach ($la as $user_data) {
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
-			$ut.= ' new logon  at '.date('h:m:s',$last_logon).' (total '.$result['log_ons'].')';
+			$ut.= ' new logon  at '.$user_data['time'].' (total '.$result['log_ons'].')';
 			$modify=true;
 			$logon = true;
 		}
@@ -353,7 +353,7 @@ foreach ($la as $user_data) {
 	    $user_stub ="\t".$username.' ('.$result['country'].') ';
 	    if ($in === true ){
 			 	 $done++;
-			 	 $ut .=' Record added'.cr;
+			 	 $ut .=' Record added at '.$user_data['time'].cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
