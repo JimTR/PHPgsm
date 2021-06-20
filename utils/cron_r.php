@@ -30,8 +30,8 @@ if (!defined('DOC_ROOT')) {
  define('cr',PHP_EOL);
  define('plus','%2B');
  define('space','%20');  
- define('VERSION',2.01);
-
+ define('VERSION',2.03);
+	define ('BUILD',"6001-1424610900");
 require_once DOC_ROOT.'/includes/master.inc.php';
  if ($argv[1] =='v' || $argv[1] == '-v' ) {
 	 echo 'Cron_R v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
