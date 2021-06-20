@@ -30,7 +30,7 @@
 error_reporting( -1 );
 define('cr',PHP_EOL);
 define ('VERSION',2.13);
-	define ('BUILD',"13865-1261170108");
+	define ('BUILD',"13877-2670898936");
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
@@ -38,7 +38,7 @@ if(isset($argv[1])){
 	switch (strtolower($argv[1])) {
 		case 'v':
 		case '-v':
-		echo 'Scanlog V'.VERSION.' © NoIdeer Software '.date('Y').cr;
+		echo 'Scanlog V'.VERSION.' - '.BUILD.' © NoIdeer Software '.date('Y').cr;
 		exit;
 	}
 }
