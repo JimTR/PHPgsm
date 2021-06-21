@@ -43,6 +43,7 @@
  Examples below assume the class has been iniated using $database = DB::getInstance();
  * Altered by JimTR December 18th 2019
 ********************************/
+	define ('BUILD',"25581-3780633116");
 class db
 {
     public $link;
