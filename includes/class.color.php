@@ -46,6 +46,7 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     http://pear.php.net/package/Console_Color
  */
+	define ('BUILD',"10509-348196329");
 class Console_Color2
 {
 
