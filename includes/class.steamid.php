@@ -19,7 +19,7 @@ declare(strict_types=1);
  * @author xPaw
  * @license MIT
  */
-	define ('BUILD',"15635-4050019237");
+	define ('build',"15635-4050019237");
 class SteamID
 {
 	/**
