@@ -37,9 +37,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('warning', $cc->convert("%YWarning%n"));
-	define ('error', $cc->convert("%RError%n"));
+	define ('error', $cc->convert("%RError  %n"));
 	define ('advice', $cc->convert("%BAdvice%n"));
-	define ('BUILD',"18582-2827437829");
+	define ('pass',$cc->convert("%GPassing%n"));
+	define ('fail', $cc->convert("%Y  ✖%n"));
+	define ('BUILD',"20229-1803895818");
+	$tick = $cc->convert("%g  ✔%n");
+    $cross = $cc->convert("%r  ✖%n");
 	error_reporting (0);
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -224,40 +228,34 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
-		echo 'File Integrity Checker'.cr;
+		$table = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
+		$option = $cc->convert("%cFile%n");
+	    $use = $cc->convert("%c\t\t  Status%n");
+	    $notes = $cc->convert("%c\tResult%n");
+		$table->addRow(array('','',''));
+		$table->addRow(array($option,$use,$notes,''));
+		echo $cc->convert("%BFile Integrity Checker%n").cr;
+		
 		if (empty($cmds['file'])) {
-		echo error.' input file missing'.cr;
-		exit;
-	}
-	elseif(is_file($cmds['file']) == false){
-		echo error.' Could not find '.$cmds['file'].cr;
-		exit;
-	}
-	// got the file & valid
-	$file = file_get_contents($cmds['file']);
-	$fsize = filesize($cmds['file']);
-	$nf = explode(cr,$file);
-	$matches = array_values(preg_grep('/(\'BUILD\',"\d+-\d+")/', $nf));
-	if (empty($matches)) {
-	echo error.' unable to check '.$cmds['file'].' file structure is incorrect'.cr;
-	exit;
-}
-	//echo print_r($matches,true).cr; 
-	$tmp = str_replace($matches[0],'',$file);
-    $ns = crc32($tmp);
-	$build = trim($matches[0]);
-	$build = str_replace("define ('BUILD',\"",'',$build);
-	$build = str_replace('");','',$build);
-	$b_detail = explode('-',$build);
-	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
+			echo error.' input file missing'.cr;
+			exit;
+		}
+		elseif ($cmds['file'] == 'all') {
+		//echo 'doing all php files'.cr;
+			foreach (glob("*.php") as $filename) {
 		
-		echo advice.' '.$cmds['file'].' passes  '.cr;
-		
+				$check = check_file($filename);
+				if ($check['status']) {
+					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+				}
+				else {
+					$table->addRow(array($filename,$check['symbol'],$check['reason']));
+				}
+		}
+		echo $table->getTable();
+		break;
 	}
-	else {
-		echo $cmds['file'].' has an error !, it\'s not as we coded it  '.cr;
-		echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-	}
+	echo print_r(check_file ($cmds['file']),true).cr;
 	break;
 	case 'q':
 	case 'quit':
@@ -486,4 +484,59 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	echo $table->getTable();
     exit;
  }
+ 
+ function check_file($file_name) {
+	  // test file
+	global $tick,$cross;
+	if(is_file($file_name) == false){
+		echo error.' Could not find '.$file_name.cr;
+		$return['reason'] = ' Could not find ';
+		$return['symbol'] = $cross;
+		$return['status'] = false;
+		return $return;
+	}
+	
+	$file = file_get_contents($file_name);
+	$fsize = filesize($file_name);
+	$nf = explode(cr,$file);
+	$matches = array_values(preg_grep('/(\'BUILD\',"\d+-\d+")/', $nf));
+	if (empty($matches)) {
+	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
+	$return['reason'] = error.' unable to check, the file structure is incorrect';
+	$return['symbol'] = $cross;
+	$return['status'] = false;
+	$return['fsize'] = $fsize;
+	$return['build'] ='';
+	return $return;
+	}
+	
+	$tmp = str_replace($matches[0],'',$file);
+    $ns = crc32($tmp);
+    
+	$build = trim($matches[0]);
+	$build = str_replace("define ('BUILD',\"",'',$build);
+	$build = str_replace('");','',$build);
+	$b_detail = explode('-',$build);
+	
+	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
+		
+		//echo advice.' '.$file_name.$tick.cr;
+		$return['reason'] = 'file Passed';
+		$return['symbol'] = $tick;
+		$return['status'] = true;
+		$return['fsize'] = $fsize;
+		$return['build'] = $ns;
+		return $return;
+	}
+	else {
+		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
+		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
+		$return['reason'] = warning.' fails check, file has altered ';
+		$return['symbol'] = fail;
+		$return['status'] = false;
+		$return['fsize'] = $fsize;
+		$return['build'] = $ns;
+		return $return;
+	}
+}
 ?>

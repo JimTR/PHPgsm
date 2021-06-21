@@ -29,6 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
+	define ('BUILD',"7886-1553517931");
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
