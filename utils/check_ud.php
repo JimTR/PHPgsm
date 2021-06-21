@@ -23,6 +23,7 @@
  * 
  */
 define ('cr',PHP_EOL);
+	define ('BUILD',"4455-513742835");
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
 	help();
