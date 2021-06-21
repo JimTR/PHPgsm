@@ -41,7 +41,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPassing%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
-	define ('BUILD',"20267-1178995549");
+	define ('BUILD',"21512-1190489682");
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
 	error_reporting (0);
@@ -230,8 +230,8 @@ switch ($cmds['action']) {
 	case'test':
 		$table = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
 		$option = $cc->convert("%cFile%n");
-	    $use = $cc->convert("%c\t\t  Status%n");
-	    $notes = $cc->convert("%c\tResult%n");
+	    $use = $cc->convert("%c\t      Status%n");
+	    $notes = $cc->convert("%c\t\tResult%n");
 		$table->addRow(array('','',''));
 		$table->addRow(array($option,$use,$notes,''));
 		echo $cc->convert("%BFile Integrity Checker%n").cr;
@@ -252,10 +252,48 @@ switch ($cmds['action']) {
 					$table->addRow(array($filename,$check['symbol'],$check['reason']));
 				}
 		}
+		foreach (glob("install/*.php") as $filename) {
+		
+				$check = check_file($filename);
+				if ($check['status']) {
+					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+				}
+				else {
+					$table->addRow(array($filename,$check['symbol'],$check['reason']));
+				}
+		}
+		foreach (glob("utils/*.php") as $filename) {
+		
+				$check = check_file($filename);
+				if ($check['status']) {
+					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+				}
+				else {
+					$table->addRow(array($filename,$check['symbol'],$check['reason']));
+				}
+		}
+		foreach (glob("includes/*.php") as $filename) {
+		
+				$check = check_file($filename);
+				if ($check['status']) {
+					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+				}
+				else {
+					$table->addRow(array($filename,$check['symbol'],$check['reason']));
+				}
+		}
 		echo $table->getTable();
 		break;
 	}
-	echo print_r(check_file ($cmds['file']),true).cr;
+		$filename = $cmds['file'];
+		$check = check_file ($cmds['file']);
+		if ($check['status']) {
+					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+				}
+				else {
+					$table->addRow(array($filename,$check['symbol'],$check['reason']));
+				}
+		echo $table->getTable();
 	break;
 	case 'q':
 	case 'quit':
