@@ -9,7 +9,7 @@
     require DOC_ROOT . '/includes/class.mobile_detect.php'; // device type class
     require DOC_ROOT. '/includes/config.php'; // get config
     include DOC_ROOT. '/includes/settings.php'; // get settings 
-
+	define ('BUILD',"2123-1732187071");
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
