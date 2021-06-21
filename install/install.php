@@ -263,10 +263,10 @@ echo cr;
 $answer = strtoupper(ask_question('press (I)nstall (S)kip (Q)uit  ',null,null));
 echo "the answer is $answer".cr;
 if (is_file(DOC_ROOT.'/includes/config.php')) {
-	//db_config(1);
+	db_config(1);
 }
 else {
-		//db_config(0);
+		db_config(0);
 	}
 	
 	
@@ -274,10 +274,14 @@ function db_config($action) {
 	if ($action == 1) {
 		echo cr.cr;
 		ask_question('We have configuration for the database connection continue with reconfigure ? ',null,null,false);
+		$configfile = DOC_ROOT.'/includes/config.php'; 
+		include $configfile;
+		print_r($config);
 	}
 	else {
 		echo 'do config thingy'.cr;
 		$sqlfile = 'data/structure.sql'; 
+		echo file_get_contents($sqlfile);
 	}
 }
 function lgsm() {

@@ -31,10 +31,17 @@ if (!defined('DOC_ROOT')) {
  define('plus','%2B');
  define('space','%20');  
  define('VERSION',2.03);
-	define ('BUILD',"6001-1424610900");
+ if (!defined('BUILD')) {
+	define ('BUILD',"6122-1160633963");
+}
+else {
+	//
+	define('NEW_ALLEGRO_ID', 5);
+	//use const NEW_ALLEGRO_ID as BUILD;
+}
 require_once DOC_ROOT.'/includes/master.inc.php';
  if ($argv[1] =='v' || $argv[1] == '-v' ) {
-	 echo 'Cron_R v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	 echo 'Cron_R v'.VERSION.' - '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 exit; 
  }
  include  DOC_ROOT.'/functions.php';
