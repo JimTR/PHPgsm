@@ -1,4 +1,5 @@
 <?PHP
+	define ('BUILD',"4395-3939278000");
     class DBSession
     {
         public static function register()
