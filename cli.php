@@ -41,7 +41,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPassing%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
-	define ('BUILD',"20229-1803895818");
+	define ('BUILD',"20267-1178995549");
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
 	error_reporting (0);
