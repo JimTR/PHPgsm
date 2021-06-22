@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define ('BUILD',"44622-2582653845");
+	$build = "44615-2730892393";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -48,7 +48,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax v'.VERSION.' build '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Ajax v'.VERSION.' build '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;

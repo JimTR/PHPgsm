@@ -22,10 +22,11 @@
  * 
  * 
  */
+error_reporting (0);	
 require_once 'includes/master.inc.php';
 require_once 'includes/class.table.php';
 require_once 'includes/class.color.php';
-	
+
 include 'functions.php';
 $cc = new Console_Color2();
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
@@ -33,7 +34,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.02);
+	define( 'VERSION', 2.05);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('warning', $cc->convert("%YWarning%n"));
@@ -41,7 +42,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPassing%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
-	define ('BUILD',"21512-1190489682");
+	$build = "21190-1576745101";
+	use const build as BUILD;
+
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
 	error_reporting (0);
@@ -52,7 +55,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;
@@ -65,12 +68,12 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 else {
 	die ('invalid enviroment');
 }
-system('clear');
+//system('clear');
 switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
@@ -230,17 +233,14 @@ switch ($cmds['action']) {
 	case'test':
 		$table = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
 		$option = $cc->convert("%cFile%n");
-	    $use = $cc->convert("%c\t      Status%n");
+	    $use = $cc->convert("%c\t   Status%n");
 	    $notes = $cc->convert("%c\t\tResult%n");
-		$table->addRow(array('','',''));
-		$table->addRow(array($option,$use,$notes,''));
+	    echo cr;
+	    $table->setHeaders( array ($option,$use,$notes));
+		//$table->addRow(array('','',''));
+		//$table->addRow(array($option,$use,$notes,''));
 		echo $cc->convert("%BFile Integrity Checker%n").cr;
 		
-		if (empty($cmds['file'])) {
-			echo error.' input file missing'.cr;
-			exit;
-		}
-		elseif ($cmds['file'] == 'all') {
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
 		
@@ -284,17 +284,7 @@ switch ($cmds['action']) {
 		}
 		echo $table->getTable();
 		break;
-	}
-		$filename = $cmds['file'];
-		$check = check_file ($cmds['file']);
-		if ($check['status']) {
-					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
-				}
-				else {
-					$table->addRow(array($filename,$check['symbol'],$check['reason']));
-				}
-		echo $table->getTable();
-	break;
+			
 	case 'q':
 	case 'quit':
 	case 'stop':
@@ -537,7 +527,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	$file = file_get_contents($file_name);
 	$fsize = filesize($file_name);
 	$nf = explode(cr,$file);
-	$matches = array_values(preg_grep('/(\'BUILD\',"\d+-\d+")/', $nf));
+	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
 	if (empty($matches)) {
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
 	$return['reason'] = error.' unable to check, the file structure is incorrect';
@@ -552,15 +542,15 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
     $ns = crc32($tmp);
     
 	$build = trim($matches[0]);
-	$build = str_replace("define ('BUILD',\"",'',$build);
-	$build = str_replace('");','',$build);
+	$build = str_replace('$build = "','',$build);
+	$build = str_replace('";','',$build);
 	$b_detail = explode('-',$build);
 	
 	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
 		
 		//echo advice.' '.$file_name.$tick.cr;
 		$return['reason'] = 'file Passed';
-		$return['symbol'] = $tick;
+		$return['symbol'] = trim($tick);
 		$return['status'] = true;
 		$return['fsize'] = $fsize;
 		$return['build'] = $ns;

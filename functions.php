@@ -1,11 +1,11 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	define ('BUILD',"36363-1552851415");
+	$build = "36354-723805280";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
-	echo 'Build '.fBUILD.PHP_EOL;
+	echo 'Build '.$build.PHP_EOL;
 	exit;
 }
 function get_boot_time() {
