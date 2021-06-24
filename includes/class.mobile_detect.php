@@ -24,7 +24,7 @@
  *
  * @version     2.8.12
  */
-
+	$build = "75182-4053421967";
 class Mobile_Detect
 {
     /**

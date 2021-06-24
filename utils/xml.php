@@ -26,7 +26,7 @@ include '../includes/master.inc.php';
 include '../functions.php';
 define ('cr',PHP_EOL);
 define ('version',2.01);
-	define ('BUILD',"11368-1327643286");
+	$build = "11360-1327643286";
 //run from cli
 //error_reporting (0);
 if(is_cli()) {

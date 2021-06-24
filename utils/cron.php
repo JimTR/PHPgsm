@@ -24,7 +24,7 @@
 include '../includes/master.inc.php';
 include '../functions.php';
 define ("cr",PHP_EOL);
-	define ('BUILD',"2738-3960527501");
+	$build = "2730-3960527501";
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;

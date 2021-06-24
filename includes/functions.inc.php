@@ -1,5 +1,6 @@
 <?PHP
 global $database;
+	$build = "47904-935645429";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();

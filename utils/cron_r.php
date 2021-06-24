@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	define ('BUILD',"6122-1160633963");
+	$build = "6114-1160633963";
 }
 else {
 	//

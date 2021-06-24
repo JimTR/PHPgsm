@@ -30,7 +30,7 @@
 error_reporting( -1 );
 define('cr',PHP_EOL);
 define ('VERSION',2.13);
-	define ('BUILD',"13889-2625581543");
+	$build = "13881-2625581543";
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
