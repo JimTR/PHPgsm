@@ -38,7 +38,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "21097-2546306375";
+	$build = "21086-4033066567";
 	
 	
 	if(is_cli()) {
@@ -62,7 +62,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 else {
 	die ('invalid enviroment');
 }
-//system('clear');
+system('clear');
 $cc = new Color();
 define ('warning', $cc->convert("%YWarning%n"));
 	define ('error', $cc->convert("%RError  %n"));
@@ -459,7 +459,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	 // review games
 	 		system('clear');
 	 		$Query = new SourceQuery( );
-	 		$cc = new Console_Color2();
+	 		$cc = new Color();
 	 			  $table = new Table(
     CONSOLE_TABLE_ALIGN_RIGHT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
