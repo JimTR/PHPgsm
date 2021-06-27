@@ -40,7 +40,7 @@ if (!defined('DOC_ROOT')) {
  define ('cr',PHP_EOL);
  define('CR',cr);
  define ('VERSION',2.02);
-	$build = "22503-2977144098";
+	$build = "22454-798079078";
  define ('quit','<ctl-c> to quit ');
   echo 'defines done'.cr;
     require_once DOC_ROOT.'/includes/class.table.php';
@@ -56,7 +56,7 @@ $cross = $cc->convert("%r✖%n");
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
-  $table = new Console_Table(
+  $table = new Table(
     CONSOLE_TABLE_ALIGN_RIGHT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
@@ -158,7 +158,7 @@ else {
      exec($cmd,$g_locate,$ret);
      //echo 'locations '.print_r($g_locate,true).cr;
      if (count($g_locate)) {
-		 $table = new Console_Table(
+		 $table = new Table(
 			CONSOLE_TABLE_ALIGN_LEFT,
 			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 			);
@@ -179,7 +179,7 @@ else {
 		echo $output[1].cr;
 	}
 	  if ($installing['disk_size'] >= $installing['quota_free']) {
-			 $table = new Console_Table(
+			 $table = new Table(
 			CONSOLE_TABLE_ALIGN_RIGHT,
 			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 			);
@@ -297,7 +297,7 @@ foreach ($list as $temp ) {
  function stage_2($data) {
 	 // add stage 2 location
 	 top:
-	 $table = new Console_Table(
+	 $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
@@ -377,7 +377,7 @@ $table->addRow(array('Branch Selected',$data['branch'] ,green_tick));
 	 // part 3
 	 
 	 top:
-	  $table = new Console_Table(
+	  $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
@@ -424,7 +424,7 @@ $table->addRow(array('Install Location',$data['path'] ,green_tick));
 function stage_4($data) {
 	// stage 4
 	 top:
-	 	 $table = new Console_Table(
+	 	 $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );

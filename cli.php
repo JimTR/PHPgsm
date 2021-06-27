@@ -24,11 +24,11 @@
  */
 error_reporting (0);	
 require_once 'includes/master.inc.php';
-require_once 'includes/class.table.php';
-require_once 'includes/class.color.php';
+//require_once 'includes/class.table.php';
+//require_once 'includes/class.color.php';
 
 include 'functions.php';
-$cc = new Console_Color2();
+
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -37,21 +37,17 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.05);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	define ('warning', $cc->convert("%YWarning%n"));
-	define ('error', $cc->convert("%RError  %n"));
-	define ('advice', $cc->convert("%BAdvice%n"));
-	define ('pass',$cc->convert("%GPassing%n"));
-	define ('fail', $cc->convert("%Y  ✖%n"));
-	$build = "21164-3530922931";
-	$tick = $cc->convert("%g  ✔%n");
-    $cross = $cc->convert("%r  ✖%n");
-	error_reporting (0);
+	
+	$build = "21097-2546306375";
+	
+	
 	if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
 	
 	if ($cmds['debug'] == 'true') {
+		echo 'debug'.cr;
 		error_reporting( -1 );
 		echo 'Cli interface v'.VERSION.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
@@ -67,6 +63,14 @@ else {
 	die ('invalid enviroment');
 }
 //system('clear');
+$cc = new Color();
+define ('warning', $cc->convert("%YWarning%n"));
+	define ('error', $cc->convert("%RError  %n"));
+	define ('advice', $cc->convert("%BAdvice%n"));
+	define ('pass',$cc->convert("%GPassing%n"));
+	define ('fail', $cc->convert("%Y  ✖%n"));
+	$tick = $cc->convert("%g  ✔%n");
+    $cross = $cc->convert("%r  ✖%n");
 switch ($cmds['action']) {
 	
 	case 'v' :
@@ -229,7 +233,7 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
-		$table = new Console_Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
+		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
 		$option = $cc->convert("%cFile%n");
 	    $use = $cc->convert("%c\t   Status%n");
 	    $notes = $cc->convert("%c\t\tResult%n");
@@ -307,12 +311,12 @@ switch ($cmds['action']) {
 
 function help() {
 	global $settings;
-	$cc = new Console_Color2();
+	$cc = new Color();
 	$PHP = $cc->convert("%cPHP%n");
 	$gsm = $cc->convert("%rgsm%n");
 	$option = $cc->convert("%cOption%n");
 	$use = $cc->convert("%c\t\tUse%n");
-	$table = new Console_Table(
+	$table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
@@ -356,7 +360,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	 $da1 = $cc->convert("%W     Data Disk%n");
 	 if($data['option'] =='h' || $data['option'] =='a') {
 		 //
-		  $table = new Console_Table(
+		  $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
@@ -378,7 +382,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	 }
 	  if($data['option'] =='m' || $data['option'] =='a') {
 		 //
-		  $table = new Console_Table(
+		  $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
@@ -393,7 +397,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	}
 	  if($data['option'] =='d' || $data['option'] =='a') {
 		 //
-		  $table = new Console_Table(
+		  $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
@@ -418,7 +422,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 		echo cr;
 	}
 	 if($data['option'] =='s' || $data['option'] =='a') {
-	 $table = new Console_Table(
+	 $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
@@ -456,7 +460,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	 		system('clear');
 	 		$Query = new SourceQuery( );
 	 		$cc = new Console_Color2();
-	 			  $table = new Console_Table(
+	 			  $table = new Table(
     CONSOLE_TABLE_ALIGN_RIGHT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
