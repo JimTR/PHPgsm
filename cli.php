@@ -38,7 +38,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "21086-4033066567";
+	$build = "21077-2279497692";
 	
 	
 	if(is_cli()) {
@@ -351,7 +351,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	 if (empty($data['option']) || !isset($data['option'])) {
 		 $data['option'] = 'a';
 	 }
-	 $cc = new Console_Color2();
+	 $cc = new Color();
 	 $sw = $cc->convert("%W   Modules%n");
 	 $sa = $cc->convert("%W    Server%n");
 	 $ha = $cc->convert("%W    Hardware%n");
