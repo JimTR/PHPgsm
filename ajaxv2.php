@@ -182,7 +182,7 @@ if(!$valid) {
 					exit;	
 			
 			case "version":
-				echo 'Ajax v'.VERSION.' build '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+				echo 'Ajax v'.VERSION.' build '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 				exit;
 						
 			case "viewserver":
@@ -880,7 +880,7 @@ function scanlog($cmds) {
 	
 	foreach ($game_results as $run) {
 		//bulid path done this way so we can get the file back from a remote server
-		$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
+		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
 		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
 		//echo $run['host_name'].' '.$path.cr; // debug code
@@ -889,7 +889,7 @@ function scanlog($cmds) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
 			$current_records = count($tmp) ;
 			
-				if (file_exists($run['host_name'].'-md5.log')) {
+				if (file_exists('/tmp/'.$run['host_name'].'-md5.log')) {
 					$logold = explode(cr,trim(file_get_contents($run['host_name'].'-md5.log')));
 					$lastrecord = intval(trim($logold[1]));
 				
