@@ -3,12 +3,12 @@
 define ('cr',PHP_EOL);
 define ('br','<br>');
 define('DOC_ROOT', dirname(__FILE__,2));
-	$build = "11343-3551153557";
+	$build = "11322-2734911782";
 include DOC_ROOT.'/includes/master.inc.php';
 include 'includes/functions.php';
 include 'includes/class.color.php';
 include 'includes/class.table.php';
-$cc = new Console_Color2();
+$cc = new Color();
 define('version',1.01);
 $os = lsb();
 if ($os['ID_LIKE'] !== 'debian') {
@@ -35,12 +35,12 @@ if (!isset($argv[1])) {
 	echo cr;
 	exit;
 }
-echo "argv $argv[1]".cr;
+//echo "argv $argv[1]".cr;
 
 switch (strtolower($argv[1])) {
 	case '-v':
 	case 'v' :
-		echo 'Install - '.version.' '.$os['PRETTY_NAME'].cr;
+		echo 'Install - '.version.' '.$build.' '.$os['PRETTY_NAME'].cr;
 		exit;
 	case '-h' :
 	case 'h' :
@@ -89,7 +89,7 @@ $req = $cc->convert("%gRequired%n");
 $rreq = $cc->convert("%rRequired%n");
 $opt = $cc->convert("%yOptional%n");
 $ropt = $cc->convert("%rOptional%n");
- $table = new Console_Table(
+ $table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
@@ -286,12 +286,12 @@ function db_config($action) {
 	}
 }
 function lgsm() {
-	$table = new Console_Table(
+	$table = new Table(
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
 );
 	$table->setHeaders(array('PHPgsm support for LGSM' ,' ','','',''));
-	$cc = new Console_Color2();
+	$cc = new Color();
 	
 	system('clear');
 	echo 'Setting up PHPgsm to work with LGSM'.cr;
