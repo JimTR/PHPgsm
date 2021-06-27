@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44615-2730892393";
+	$build = "44626-2681974090";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
