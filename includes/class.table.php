@@ -45,7 +45,7 @@ define('CONSOLE_TABLE_ALIGN_LEFT', -1);
 define('CONSOLE_TABLE_ALIGN_CENTER', 0);
 define('CONSOLE_TABLE_ALIGN_RIGHT', 1);
 define('CONSOLE_TABLE_BORDER_ASCII', -1);
-	$build = "29236-849848684";
+	$build = "29228-1394197980";
 /**
  * The main class.
  *
@@ -55,7 +55,7 @@ define('CONSOLE_TABLE_BORDER_ASCII', -1);
  * @license  http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @link     http://pear.php.net/package/Console_Table
  */
-class Console_Table
+class Table
 {
     /**
      * The table headers.
