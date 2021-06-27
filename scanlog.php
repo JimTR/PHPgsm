@@ -30,7 +30,7 @@
 error_reporting( -1 );
 define('cr',PHP_EOL);
 define ('VERSION',2.13);
-	$build = "13881-2625581543";
+	$build = "13883-2154975256";
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
@@ -38,7 +38,7 @@ if(isset($argv[1])){
 	switch (strtolower($argv[1])) {
 		case 'v':
 		case '-v':
-		echo 'Scanlog V'.VERSION.' - '.BUILD.' © NoIdeer Software '.date('Y').cr;
+		echo 'Scanlog V'.VERSION.' - '.$build.' © NoIdeer Software '.date('Y').cr;
 		exit;
 	}
 }
@@ -52,7 +52,7 @@ echo 'wrong enviroment';
 exit;
 }
 if(empty($argv[1])) {
-	echo 'Scanlog V'.VERSION.' - '.BUILD.' © NoIdeer Software '.date('Y').cr;
+	echo 'Scanlog V'.VERSION.' - '.$build.' © NoIdeer Software '.date('Y').cr;
 	echo 'Please supply a Server to scan'.cr;
 	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
 	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
