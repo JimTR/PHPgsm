@@ -43,8 +43,6 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('pass',$cc->convert("%GPassing%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
 	$build = "21190-1576745101";
-	use const build as BUILD;
-
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
 	error_reporting (0);
@@ -55,7 +53,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Cli interface v'.VERSION.' '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;
@@ -73,7 +71,7 @@ switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		echo 'Cli interface v'.VERSION.' '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.VERSION.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
