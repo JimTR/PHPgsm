@@ -38,7 +38,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "21077-2279497692";
+	$build = "21140-2483402390";
 	
 	
 	if(is_cli()) {
@@ -530,6 +530,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	$fsize = filesize($file_name);
 	$nf = explode(cr,$file);
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
+	$v = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
 	if (empty($matches)) {
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
 	$return['reason'] = error.' unable to check, the file structure is incorrect';
