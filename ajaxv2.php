@@ -29,10 +29,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.06);
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44626-2681974090";
+	$build = "44645-756235758";
+	$version = 2.07;
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -48,7 +48,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
 		error_reporting( -1 );
-		echo 'Ajax v'.VERSION.' build '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    foreach ($cmds as $k => $v) {
 			if ($k == 'debug'){continue;}
 			print "[$k] => $v".cr;
@@ -182,7 +182,7 @@ if(!$valid) {
 					exit;	
 			
 			case "version":
-				echo 'Ajax v'.VERSION.' build '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+				echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 				exit;
 						
 			case "viewserver":
@@ -1309,8 +1309,8 @@ return $rt;
 function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
-	global $database, $update_done,$settings;
-	$s = 'Server Update via Scanlog '.VERSION.cr;
+	global $database, $update_done,$version,$settings;
+	$s = 'Server Update via Scanlog '.$version.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = trim(shell_exec('which steamcmd'));
 	if(empty($steamcmd)) {
@@ -1334,8 +1334,8 @@ function update_server($server){
 	//echo 'updated server using '.$cmd.cr;
 	//$cmd = $stub.'s';
 	//$s .= file_get_contents($cmd).cr;
-	//need to restart all that stem from this install dir
-	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '".$game['install_dir']."'";
+	//need to restart all that stem from this install dir if running
+	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '".$game['install_dir']."' and `running` = 1";
 		$restarts = $database->get_results($sql);
 		foreach ($restarts as $restart) {
 			// restart them all
