@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44645-756235758";
+	$build = "44643-1536140246";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1331,7 +1331,7 @@ function update_server($server){
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=file_get_contents($cmd);
-	//echo 'updated server using '.$cmd.cr;
+	echo 'updated server using '.$cmd.cr;
 	//$cmd = $stub.'s';
 	//$s .= file_get_contents($cmd).cr;
 	//need to restart all that stem from this install dir if running
