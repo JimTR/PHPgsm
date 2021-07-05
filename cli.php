@@ -34,11 +34,11 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 2.05);
+	$version = 2.05;
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "21140-2483402390";
+	$build = "21377-2546178741";
 	
 	
 	if(is_cli()) {
@@ -75,7 +75,7 @@ switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		echo 'Cli interface v'.VERSION.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
@@ -310,7 +310,7 @@ switch ($cmds['action']) {
 }
 
 function help() {
-	global $settings;
+	global $settings,$cmds,$argv,$version,$build;
 	$cc = new Color();
 	$PHP = $cc->convert("%cPHP%n");
 	$gsm = $cc->convert("%rgsm%n");
@@ -322,20 +322,21 @@ function help() {
 );
 $table->addRow(array('','',''));
 $table->addRow(array($PHP.$gsm.' Help',''));
+$table->addRow(array('Usage : - '.$argv[0].' action=<option> <sub_options>',''));
 $table->addRow(array($option,$use));
 $table->addRow(array('v or version','show CLI version & exit'));
 $table->addRow(array('s or start ','starts a game server requires a server id to be set'));
 $table->addRow(array('q, quit or stop ','stops a game server requires a server id to be set'));
 $table->addRow(array('r, or restart ','restarts a game server requires a server id to be set'));
-$table->addRow(array('d, or details ','shows details about the running system (takes options see example page)'));
-$table->addRow(array('g, or games ','shows details on running game servers (takes options see example page)'));
-$table->addRow(array('ig, or igames ','Installs a game from Steam (takes options see example page)'));
-$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes options see example page)'));
-$table->addRow(array('u, or user ','shows user details (takes options see example page)'));
-$table->addRow(array('l, or log ','processes server logs (takes options see example page)'));
+$table->addRow(array('d, or details ','shows details about the running system (takes sub options see example page)'));
+$table->addRow(array('g, or games ','shows details on running game servers (takes sub options see example page)'));
+$table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
+$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
+$table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
+$table->addRow(array('l, or log ','processes server logs (takes sub options see example page)'));
 $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'));
 	 system('clear');
-	echo 'Cli interface v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 echo $table->getTable();
 	 echo cr;
 	 echo 'cli will only install games or servers on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
@@ -540,10 +541,10 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
 	$return['build'] ='';
 	return $return;
 	}
-	
+	//echo 'file '.$file_name.' - '.$matches[0];
 	$tmp = str_replace($matches[0],'',$file);
     $ns = crc32($tmp);
-    
+    //echo 'file '.$file_name.' - '.$matches[0].' '.$ns.cr;
 	$build = trim($matches[0]);
 	$build = str_replace('$build = "','',$build);
 	$build = str_replace('";','',$build);
