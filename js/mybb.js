@@ -83,6 +83,7 @@ for (var i in data1) {
      	console.log(server.server_name);
 	                  $("#"+server_id).show();
 	                   var start_date = timeConverter(parseFloat(server.starttime));
+					//console.log(start_date);
 					   var logo  =server.url+':'+server.bport+'/'+server.logo;
 					  //console.log('server.Players = '+server.Players );
 					   if (typeof server.Players === "undefined") {
@@ -440,19 +441,30 @@ function timeConverter(UNIX_timestamp){
   var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   var year = a.getFullYear();
   var month = months[a.getMonth()];
-  var day =weekday[a.getDay()];
+  var day = weekday[a.getDay()];
   var date = a.getDate();
   var hour = a.getHours();
   var timeOfDay = ( hour < 12 ) ? "am" : "pm"; 
   currentHours = ( hour > 12 ) ? hour - 12 : hour;
      // Convert an hours component of "0" to "12"
     
-  hour = ( currentHours == 0 ) ? 12 : currentHours;
+  //hour = ( currentHours == 0 ) ? 12 : currentHours;
  
-  var date =dateOrdinal(date);
-  var min = a.getMinutes();
+  //var date = dateOrdinal(date);
+  var d = a.getDate();
+	var d1 =a.getHours();
+console.log(currentHours);
+var d = ('0'+d).slice(-2);
+	var m = a.getMonth()+1;
+var m = ('0'+m).slice(-2);
+
+var hour =('0'+hour).slice(-2);
+        //m += 1;  // JavaScript months are 0-11
+	var y = a.getFullYear();
+  var min = ('0'+a.getMinutes()).slice(-2);
   var sec = a.getSeconds();
-  var time = day+', '+date+ ' ' + month + ' ' + year + ' ' + hour + ':' + min+timeOfDay ;
+
+  var time = d+ '-' + m + '-' + y + ' ' + hour + ':' + min ;
   return time;
 }
 
