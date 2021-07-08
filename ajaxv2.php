@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44644-1536140246";
+	$build = "44645-294520269";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -937,7 +937,7 @@ function scanlog($cmds) {
 	if (!file_exists($run['host_name'].'-md5.log')) {
 		//create files
 		$logpos = md5($tmp[0]); // got log pos
-		file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
+		//file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 	}
 	}
