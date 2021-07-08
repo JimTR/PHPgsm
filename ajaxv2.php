@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44661-2149773711";
+	$build = "44666-3978668859";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -906,8 +906,8 @@ function scanlog($cmds) {
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo print_r($logold,true).cr;
-				echo ' Maths = '.intval($current_records)-intval($lastrecord).cr;
-				echo 'file changed records => '.intval($current_records)-$lastrecord.'/'.$current_records.cr;
+				//echo ' Maths = '.intval($current_records)-intval($lastrecord).cr;
+				//echo 'file changed records => '.intval($current_records)-$lastrecord.'/'.$current_records.cr;
 			}
 			
 		unset($return);
