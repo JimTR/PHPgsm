@@ -1161,7 +1161,7 @@ foreach ($la as $user_data) {
 		if ($last_logon >  $result['last_log_on']) {
 			$result['last_log_on'] = $last_logon;
 			$result['log_ons'] ++;
-			$ut.= ' new logon at '.$user_data['time'].' (total '.$result['log_ons'].')';
+			$ut.= ' new logon at '.date("d-m-y H:i:s",$last_logon).' (total '.$result['log_ons'].')';
 			$modify=true;
 			$logon = true;
 		}
@@ -1331,7 +1331,7 @@ function update_server($server){
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=file_get_contents($cmd);
-	echo 'updated server using '.$cmd.cr;
+	//echo 'updated server using '.$cmd.cr;
 	//$cmd = $stub.'s';
 	//$s .= file_get_contents($cmd).cr;
 	//need to restart all that stem from this install dir if running
