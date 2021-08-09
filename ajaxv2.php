@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44874-153827243";
+	$build = "44894-810115849";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -164,6 +164,7 @@ if(!$valid) {
 		case "top" :
 				if (isset($cmds['filter'])) {
 					//do stuff
+					print_r($cmds);
 					echo shell_exec('top -b -n 1 -p '.$cmds['filter'].' | sed 1,7d');
 				}
 			 	exit;
