@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44899-4251987077";
+	$build = "44874-153827243";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -293,7 +293,7 @@ function game_detail() {
 				if (!empty($tmp[0])) {
 					$pid = $tmp[0];
 					$count = count($tmp);
-					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajax.php?action=top&filter='.$pid.'&key='.md5( ip2long($ip)))); // works on remote ?
+					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajaxv2.php?action=top&filter='.$pid)); // works on remote ?
 					$temp = array_values(array_filter(explode(' ',$temp)));
 					$du = shell_exec('du -s '.$server_data['location']); // get size of game
 					$x = strpos(trim($du),'/');
