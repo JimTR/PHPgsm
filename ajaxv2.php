@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44877-513053924";
+	$build = "44896-1036074717";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -470,6 +470,7 @@ function all($cmds) {
 			$return = array_merge($return,get_user_info($return));
 			//if(isset($cmds['servers'])) {
 				$tmp = game_detail();
+				print_r($tmp);
 				$add = $tmp['general'];
 				$x = floatval($add['total_size'])/1000; // get size
 				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
