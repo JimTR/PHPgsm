@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44673-2350246497";
+	$build = "44836-4227072618";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -372,6 +372,7 @@ function game_detail() {
 			else{
 						// here we have the runners in $tmp array
 						$sql = 'select * from server1 where host like "'.$checkip.'%" and enabled=1 order by server_name ASC';
+						//$sql = "SELECT DISTINCT `host_name`,`server_name`,`url`,`bport`,`location`,`host`,`port`,`running` FROM server1 where `running` = 1 order by `host_name`";
 						$servers = $db->get_results($sql);
 						$server_count = $db->num_rows($sql);
 						
