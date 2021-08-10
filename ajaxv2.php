@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44918-296319232";
+	$build = "44937-546128406";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1359,6 +1359,7 @@ function get_pid($task) {
 		echo "task = $task".cr;
 	}
 	exec ('ss -plt |grep '.$task,$detail,$ret);
+	print_r($detail);
 	$a = explode('  ',$detail[0]);
 	$b = explode(',',trim(end($a)));
 	preg_match('!\d+!', $b[1], $matches);
