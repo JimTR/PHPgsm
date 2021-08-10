@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44956-2010886781";
+	$build = "44979-1540695361";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -475,6 +475,7 @@ function all($cmds) {
 				//print_r($tmp);
 				$add = $tmp['general'];
 				print_r($add);
+				print_r($return);
 				$x = floatval($add['total_size'])/1000; // get size
 				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 				$return = array_merge($return,$add);
