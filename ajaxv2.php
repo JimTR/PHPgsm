@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44983-2385457769";
+	$build = "44989-2014909015";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -292,7 +292,7 @@ function game_detail() {
                
                 $tmp = explode(' ',$new);
 				if (!empty($tmp[0])) {
-					print_r($tmp);
+					//print_r($tmp);
 					$pid = $tmp[0];
 					$count = count($tmp);
 					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajaxv2.php?action=top&filter='.$pid)); // works on remote ?
@@ -474,8 +474,8 @@ function all($cmds) {
 				$tmp = game_detail();
 				//print_r($tmp);
 				$add = $tmp['general'];
-				print_r($add);
-				print_r($return);
+				//print_r($add);
+				//print_r($return);
 				$x = floatval($add['total_size'])/1000; // get size
 				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 				$return = array_merge($return,$add);
