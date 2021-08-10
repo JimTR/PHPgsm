@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44979-1540695361";
+	$build = "44983-2385457769";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -912,7 +912,7 @@ function scanlog($cmds) {
 				}
 			
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
-				echo print_r($logold,true).cr;
+				//echo print_r($logold,true).cr;
 				//echo ' Maths = '.intval($current_records)-intval($lastrecord).cr;
 				//echo 'file changed records => '.intval($current_records)-$lastrecord.'/'.$current_records.cr;
 			}
@@ -1361,7 +1361,7 @@ function get_pid($task) {
 		echo "task = $task".cr;
 	}
 	exec ('ss -plt |grep '.$task,$detail,$ret);
-	print_r($detail);
+	//print_r($detail);
 	$a = explode('  ',$detail[0]);
 	$b = explode(',',trim(end($a)));
 	preg_match('!\d+!', $b[1], $matches);
