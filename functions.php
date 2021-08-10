@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "36354-723805280";
+	$build = "36380-282100764";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -214,6 +214,7 @@ function get_user_info ($Disk_info) {
 	$user['name'] = trim(shell_exec("whoami"));
 	$user['level'] =check_sudo($user['name']);
 	exec("quota 2> /dev/null",$quota,$ret);
+	print_r($quota);
 	if (isset($quota[1])){
 		// user has quota
 		$tmp =trim($quota[2]);
@@ -256,7 +257,7 @@ function getVersion($app, $apt=false) {
 	// check for apt-show-versions
 	$dbtype='';
 	if ($apt == true) {
-		//echo 'apt=true'.PHP_EOL;
+		echo "apt=true $app".PHP_EOL;
 		$app = 'apt-show-versions  '.$app;
 		$soutput = explode(' ',shell_exec($app. '  2> /dev/null')); 
 		$mangle = $soutput[1];
@@ -350,7 +351,7 @@ function get_software_info($database) {
 		  $newarr[$key]=$value;
 	  }
 	  $hctrl =$newarr; 
-	  $apt=false;
+	 $apt=false;
 	 $php_version = explode('.', PHP_VERSION);
 	 $php  = $php_version[0].'.'.$php_version[1];
 	 $lsb = lsb();
@@ -375,7 +376,7 @@ function get_software_info($database) {
 		$oftware['asv'] = getVersion('apt-show-versions',$apt);
 		break;
 		default:
-		 $software['glibc'] = getVersion('ldd --version');
+		 $software['glibc'] = getVersion('ldd --version',$apt);
 		 $software['apache'] = getVersion('/usr/sbin/apache2 -v');
 	     $software['php'] = getVersion('php -v');
 	     $software['mysql'] = getVersion('mysql -V');
@@ -387,7 +388,7 @@ function get_software_info($database) {
 	     $software['tmux'] = getVersion('tmux -V');
 	     $software['litespeed'] = getVersion('/usr/local/lsws/bin/lshttpd -v');
 	     $software['git'] = getVersion('git --version');
-	     $software['tmpreaper'] = getVersion('tmpreaper',true);
+	     $software['tmpreaper'] = getVersion('tmpreaper',false);
 	     $software['asv'] = getVersion('apt-show-versions -V');
 	}
 	//print_r($software);	 
