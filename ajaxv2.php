@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44894-810115849";
+	$build = "44918-296319232";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -292,6 +292,7 @@ function game_detail() {
                
                 $tmp = explode(' ',$new);
 				if (!empty($tmp[0])) {
+					print_r($tmp);
 					$pid = $tmp[0];
 					$count = count($tmp);
 					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajaxv2.php?action=top&filter='.$pid)); // works on remote ?
@@ -358,8 +359,8 @@ function game_detail() {
 				if(empty($tmp)) {
 						// nothing running
 						
-						$sql =  'SET sql_mode = \'\'';
-						$a= $db->query( 'SET sql_mode = \'\''); 
+						//$sql =  'SET sql_mode = \'\'';
+						//$a= $db->query( 'SET sql_mode = \'\''); 
 						$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
 						//echo $sql;
 						$server_count = $db->get_row($sql);
