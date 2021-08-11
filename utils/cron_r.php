@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6114-1160633963";
+	$build = "6133-4042591254";
 }
 else {
 	//
@@ -40,10 +40,7 @@ else {
 	//use const NEW_ALLEGRO_ID as BUILD;
 }
 require_once DOC_ROOT.'/includes/master.inc.php';
- if ($argv[1] =='v' || $argv[1] == '-v' ) {
-	 echo 'Cron_R v'.VERSION.' - '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
-	 exit; 
- }
+ 
  include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
@@ -52,6 +49,12 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
+if(is_cli()) {
+	if ($argv[1] =='v' || $argv[1] == '-v' ) {
+		echo 'Cron_R v'.VERSION.' - '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		exit; 
+	}
+}
 $sql = 'select * from servers where running=1';
 //$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
 $sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
