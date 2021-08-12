@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "36415-2102928164";
+	$build = "36586-827612682";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -225,6 +225,12 @@ function get_user_info ($Disk_info) {
                    unset($tmp[$k]);
                 }
 			}
+			if(is_numeric($tmp[0])) {
+                $q_len=count($quota)-2;
+                array_unshift($tmp,trim($quota[$q_len]));
+                //print_r($tmp);
+        }
+
         $tmp = array_values($tmp);
         // now all renumbered
         $used = dataSize($tmp[1]*1024);
