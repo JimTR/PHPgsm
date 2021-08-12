@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "36382-2511708632";
+	$build = "36415-2102928164";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -215,9 +215,10 @@ function get_user_info ($Disk_info) {
 	$user['level'] =check_sudo($user['name']);
 	exec("quota 2> /dev/null",$quota,$ret);
 	//print_r($quota);
+	$q_len = count($quota)-1;
 	if (isset($quota[1])){
 		// user has quota
-		$tmp =trim($quota[3]);
+		$tmp =trim($quota[$q_len]);
 		$tmp = explode(' ',$tmp);
 		foreach ($tmp as $k => $v) {
                 if (empty(trim($v))) {
