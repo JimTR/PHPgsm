@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6133-4042591254";
+	$build = "6137-391554392";
 }
 else {
 	//
@@ -49,7 +49,7 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
-if(is_cli()) {
+if(isset($argv)) {
 	if ($argv[1] =='v' || $argv[1] == '-v' ) {
 		echo 'Cron_R v'.VERSION.' - '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 		exit; 
