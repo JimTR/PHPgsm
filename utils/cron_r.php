@@ -49,7 +49,7 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
-if(isset($argv)) {
+if(isset($argv[1])) {
 	if ($argv[1] =='v' || $argv[1] == '-v' ) {
 		echo 'Cron_R v'.VERSION.' - '.BUILD.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 		exit; 
