@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "36586-827612682";
+	$build = "37793-4088961917";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -97,6 +97,7 @@ function get_disks(){
     else{
         // unix
         $data=`mount`;
+        print_r($data);
         $data=explode(' ',$data);
         $disks=array();
         foreach($data as $token)if(substr($token,0,5)=='/dev/')$disks[]=$token;
@@ -402,18 +403,26 @@ function get_software_info($database) {
 	 return $software;
 }
 function get_disk_info() {
-	// return disk info as array
+	/* return disk info as array
 	//echo 'root stuff ! or no quota !'.cr;
-exec('df -h /',$df,$ret); //need this for sdd or sep system partition
+	*/ 
+exec('df -h ',$df,$ret); //need this for sdd or sep system partition
 unset ($df[0]);
 $df = array_values($df);
-exec('df -h |grep sd',$tmps,$ret);
+//print_r($df);
+exec('df -h |grep -w / ',$tmps,$ret); //got the stuff
+//echo '$tmps'.cr;
+//tmps contains ?
+//print_r($tmps);
+//echo 'end $tmps'.cr;
 if (empty($tmps)) {
-	exec('df -h |grep vd',$tmps,$ret);
+	exec('df -h |grep  /boot',$boot,$ret);
 }
-foreach ($tmps as $tmp) {
-	$df[]=$tmp;
-}
+$boot= array_partial_search( $df, '/boot' );
+$home = array_partial_search( $df, '/home' );
+//foreach ($tmps as $tmp) {
+	///$df[]=$tmp;
+//}
 foreach ($df as $disk) {
 	$tmp = explode('  ',trim($disk));
 	
@@ -436,29 +445,36 @@ foreach ($df as $disk) {
 			  
 			}
 	$tmp = array_values($tmp);		
-	$r[]=$tmp;   
 	
-	//echo print_r($tmp,true).cr;
 }
-if ($r[0] == $r[1]) {unset($r[1]);}
-		$disk_info['boot_filesystem'] = $r[0][0];
-		$disk_info['boot_size'] = $r[0][1];
-		$disk_info['boot_used'] = $r[0][2];
-		$disk_info['boot_free'] = $r[0][3];
-		$disk_info['boot_pc'] = $r[0][4];
-		$disk_info['boot_mount'] = $r[0][5];
+$r[]=explode('  ',$boot[0]);
+$r['boot']=explode('  ',$tmps[0]);
+$r['home']=array_values(array_filter(explode('  ',$home[0])));   
+	
+	//echo print_r($r,true).cr;
+if ($r[0] == $r[1]) {unset($r[0]);}
+		echo  'whatever'.cr;
+		$x = strpos($r['boot'][4],"%");
+		$disk_info['boot_filesystem'] = trim($r['boot'][0]);
+		$disk_info['boot_size'] = trim($r['boot'][1]);
+		$disk_info['boot_used'] = trim($r['boot'][2]);
+		$disk_info['boot_free'] = trim($r['boot'][3]);
+		$disk_info['boot_pc'] = substr($r['boot'][4],0,$x+1);
+		$disk_info['boot_mount'] = trim(substr($r['boot'][4],$x+1));
 		$disk_info['boot_hide'] = "ok";
 		
 		
-	if(isset($r[1])) {
-		$disk_info['home_filesystem'] = $r[1][0];
-		$disk_info['home_size'] = $r[1][1];
-		$disk_info['home_used'] = $r[1][2];
-		$disk_info['home_free'] = $r[1][3];
-		$disk_info['home_pc'] = $r[1][4];
-		$disk_info['home_mount'] = $r[1][5];
+	if(isset($r['home'])) {
+		echo 'oh home is set'.cr;
+		$x = strpos($r['home'][4],"%");
+		$disk_info['home_filesystem'] = trim($r['home'][0]);
+		$disk_info['home_size'] = trim($r['home'][1]);
+		$disk_info['home_used'] = trim($r['home'][2]);
+		$disk_info['home_free'] = trim($r['home'][3]);
+		$disk_info['home_pc'] = substr($r['home'][4],0,$x+1);
+		$disk_info['home_mount'] = trim(substr($r['home'][4],$x+1));
 	}
-		
+	//print_r($disk_info);	
 	return $disk_info;
 }
 function format_num ($string) {
@@ -1145,4 +1161,27 @@ if(strpos($soft1[4],'my.cnf') !=FALSE) {
 //echo PHP_EOL;
 return $soft1;
 }
+
+/**
+ * Helper function to do a partial search for string inside array.
+ *
+ * @param array  $array   Array of strings.
+ * @param string $keyword Keyword to search.
+ *
+ * @return array
+ */
+function array_partial_search( $array, $keyword ) {
+    $found = [];
+
+    // Loop through each item and check for a match.
+    foreach ( $array as $string ) {
+        // If found somewhere inside the string, add.
+        if ( strpos( $string, $keyword ) !== false ) {
+            $found[] = $string;
+        }
+    }
+
+    return $found;
+}
+
 ?>
