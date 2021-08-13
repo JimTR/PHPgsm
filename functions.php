@@ -453,7 +453,7 @@ $r['home']=array_values(array_filter(explode('  ',$home[0])));
 	
 	//echo print_r($r,true).cr;
 if ($r[0] == $r[1]) {unset($r[0]);}
-		echo  'whatever'.cr;
+		//echo  'whatever'.cr;
 		$x = strpos($r['boot'][4],"%");
 		$disk_info['boot_filesystem'] = trim($r['boot'][0]);
 		$disk_info['boot_size'] = trim($r['boot'][1]);
@@ -464,7 +464,7 @@ if ($r[0] == $r[1]) {unset($r[0]);}
 		$disk_info['boot_hide'] = "ok";
 		
 		
-	if(isset($r['home'])) {
+	if(isset($r['home'][0])) {
 		echo 'oh home is set'.cr;
 		$x = strpos($r['home'][4],"%");
 		$disk_info['home_filesystem'] = trim($r['home'][0]);
