@@ -102,6 +102,7 @@ else {
 	echo 'However if you are doing an install that you control & your users are symlinked to the install, enter root as the user'.cr.cr;
 	$answer = trim(ask_question('enter target user '.quit,NULL,NULL)); 
 	$installing['base_user'] = trim($answer);
+	print_r($installing);
 	
 }
   $steamcmd = trim(shell_exec('which steamcmd'));
@@ -178,7 +179,8 @@ else {
 	 else {
 		echo $output[1].cr;
 	}
-	  if ($installing['disk_size'] >= $installing['quota_free']) {
+print_r($installing);
+	  if (intval($installing['disk_size']) >= intval($installing['quota_free'])) {
 			 $table = new Table(
 			CONSOLE_TABLE_ALIGN_RIGHT,
 			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
