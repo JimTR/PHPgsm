@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "44989-2014909015";
+	$build = "45002-1666399841";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1274,7 +1274,7 @@ foreach ($la as $user_data) {
 	    $user_stub ="\t".$username.' ('.$result['country'].') ';
 	    if ($in === true ){
 			 	 $done++;
-			 	 $ut .=' Record added at '.$user_data['time'].cr;
+			 	 $ut .=' Record added at '.date("d-m-y H:i:s",$last_logon).cr;
 			 	 $sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 			 	 //$ut .= $sql.cr;
 			 	 $database->query($sql);
