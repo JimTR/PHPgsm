@@ -40,7 +40,7 @@ if (!defined('DOC_ROOT')) {
  define ('cr',PHP_EOL);
  define('CR',cr);
  define ('VERSION',2.02);
-	$build = "23736-4092689013";
+	$build = "21470-4038716450";
  define ('quit','<ctl-c> to quit ');
   echo 'defines done'.cr;
     require_once DOC_ROOT.'/includes/class.table.php';
@@ -102,7 +102,7 @@ else {
 	echo 'However if you are doing an install that you control & your users are symlinked to the install, enter root as the user'.cr.cr;
 	$answer = trim(ask_question('enter target user '.quit,NULL,NULL)); 
 	$installing['base_user'] = trim($answer);
-	print_r($installing);
+	//print_r($installing);
 	
 }
   $steamcmd = trim(shell_exec('which steamcmd'));
@@ -179,7 +179,7 @@ else {
 	 else {
 		echo $output[1].cr;
 	}
-print_r($installing);
+//print_r($installing);
 	  if (intval($installing['disk_size']) >= intval($installing['quota_free'])) {
 			 $table = new Table(
 			CONSOLE_TABLE_ALIGN_RIGHT,
@@ -480,143 +480,66 @@ else {
 		
          $scmd = 'screen -S install -p 0  -X stuff "'.$cmd.'^M"';
          exec ($scmd); // get steamcmd running
-        echo 'Waiting for steamcmd to start'.cr;
-		$pidof = '';
-		while( $pidof == '') {
-			$pidof = trim(shell_exec('pidof steamcmd'));
+       
+$file='install.log';
+$lastpos = 14;
+cursor('off');
+$pidof = trim(shell_exec('pidof steamcmd  2>/dev/null'));
+while( $pidof == '') {
+	$pidof = trim(shell_exec('pidof steamcmd'));
+echo "Waiting for Steamcmd to start\r";
 		}
-	 
-      if (isset($pidof)) {
-           $oldline= '';
-	       //echo "pidof = $pidof".cr;
-         while (isset($pidof)){
-			$file = "install.log";
-			$fdata = file($file);
-			//echo "pidof = $pidof".cr;
-			$dm = array_search($oldline, $fdata);
-			$c = count($fdata)-1;
-			/* if ($dm < $c and $c >= 0 ){
-						// line
-						//echo "$dm/$c".cr;
-						$output = array_slice($fdata, $dm+1);
-						//echo print_r($output,true).cr;
-						foreach ($output as $vx) {
-							$tmp = str_replace('(','',trim($vx));
-							$tmp = str_replace(')','',$tmp);
-							$steamlog = tidy_array(explode(' ',$tmp));
-							//echo print_r($steamlog,true).cr;
-							if (isset($steamlog[3])) {  
-						$downloading = $steamlog[3].' '. $data['g_name'];
-						$dl = strlen($downloading); // server length
-						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
-						
-						if (isset($steamlog[6])) {
-							$current =  floatval($steamlog[6]);
-							$percent = $steamlog[5].'%';
-							$current = formatBytes($current,2);
-							$total =  formatBytes(floatval($steamlog[8]),2);
-							printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
-						}
-						//$oldline =$line;
-					    }
-						} 
-					} */
-			
-			if (isset($fdata[count($fdata)-1])) {
-				if ($dm < $c ){
-						// line
-						//echo "$dm/$c".cr;
-					}
-					 
-				$line = $fdata[count($fdata)-1];
-				
-				if (strpos($line,cr)) {
-					
-					if ($line  != $oldline) { 
-						
-						$tmp = str_replace('(','',trim($line));
-						$tmp = str_replace(')','',$tmp);
-						$steamlog = tidy_array(explode(' ',$tmp));
-						if (isset($steamlog[3])) {  
-						$downloading = $steamlog[3].' '. $data['g_name'];
-						$dl = strlen($downloading); // server length
-						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
-						
-						if (isset($steamlog[6])) {
-							$current =  floatval($steamlog[6]);
-							$percent = $steamlog[5].'%'.' '.$dm.' '.$c;
-							$current = formatBytes($current,2);
-							$total =  formatBytes(floatval($steamlog[8]),2);
-							printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
-						}
-						$oldline =$line;
-					    }
-					}
-					
-				}
-			}
-			
-			$pidof = trim(shell_exec('pidof steamcmd'));
-			if ($pidof == '') {
-				
-				unset($pidof);
-			}
-			
-		 }
+//sleep(4);
+while ($pidof <> '') {
+
+while (!file_exists($file) ){ 
 		
-	 }
-	 
-    $cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
-    if (isset ($data['gvfs'])) {	$lsofcmd = 'lsof -e '.$data['gvfs'].' install.log';}
-    else { $lsofcmd = 'lsof install.log';}
-    
-		$lsof = trim(shell_exec($lsofcmd));
-   
-    exec($cmd); //clear up the install terminal
-   
-	 while ($lsof) {
-		 $lsof = trim(shell_exec($lsofcmd));
-		 }
-	$log =explode(PHP_EOL,trim(file_get_contents('install.log')));
-	$line= trim($oldline);
-	$unread = false;
-	 foreach ($log as $a) {
-		if ($unread ) {
-			$p1 = strpos($a, 'Success!');
-				if ($p1 !== false) {
-					$finish = "\e[38;5;82mSuccess\e[0m,".$data['g_name']." is fully installed at ".$data['path']."\e[0m";
-					//echo $finish.cr;
-					//echo 'yippee'.cr;
-					$data['success'] = true;
-					unlink('install.log');
-					break;
-					}
-					else {
-						$tmp = str_replace('(','',trim($a));
-						$tmp = str_replace(')','',$tmp);
-						$steamlog = tidy_array(explode(' ',$tmp));
-						if (isset($steamlog[3])) {  
-						$downloading = $steamlog[3].' '. $data['g_name'];
-						$dl = strlen($downloading); // server length
-						$mask = "%".$dl.".".$dl."s %25.25s %-40s \n";
-						$current =  floatval($steamlog[6]);
-						$percent = $steamlog[5].'%';
-						$current = formatBytes($current,2);
-						$total =  formatBytes(floatval($steamlog[8]),2);
-						printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
-						}
-						else {
-							echo print_r($log,true).cr;
-							echo "$a blank ?".cr;
-						}
-					}
-      
+	}
+		retry:
+		  $fgc = file_get_contents($file);
+		if($fgc == false) {goto retry;}
+		$fgc = explode(cr,trim(file_get_contents($file)));
+		//print_r($fgc);
+		if (isset($fgc[$lastpos])) {
+		$tmp = str_replace('(','',trim($fgc[$lastpos]));
+		$tmp = str_replace(')','',$tmp);
+		$steamlog = tidy_array(explode(' ',$tmp));
+		//print_r($steamlog);
+		if (isset($steamlog[3])) {
+			
+		$downloading = $steamlog[3].' ' .$data['g_name'];;
+		$dl = strlen($downloading); // server length
+		$mask = "\033[K%".$dl.".".$dl."s %25.25s %-40s \r";
+		if (isset($steamlog[6])) {
+			$current =  floatval($steamlog[6]);
+			$percent = $steamlog[5].'%';
+			$current = formatBytes($current,2);
+			$total =  formatBytes(floatval($steamlog[8]),2);
+			printf($mask,$downloading,"$current out of $total","$steamlog[4] $percent");
+			}
+		
 		}
-        if (trim($a) == $line) {
-                //echo 'found'.cr;
-                $unread = true;
-                }
+            $lastpos++;
+        }
+     
+	$pidof = trim(shell_exec('pidof steamcmd  2>/dev/null'));
+
 }
+
+
+$cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
+ exec($cmd);
+sleep(1);
+ $x = array_slice(explode(cr,trim(file_get_contents($file))),$lastpos-1);
+array_pop($x);
+array_pop($x);
+$suc = array_search_partial( $x, 'Success' );
+echo "\033[K".$x[$suc].cr;
+$finish = "\e[38;5;82mSuccess\e[0m,".$data['g_name']." is fully installed at ".$data['path']."\e[0m";
+$cmd = 'screen -X -S install -p 0 -X stuff "exit^M"';
+$data['success'] = true;
+//unlink('install.log');
+cursor('on');
 $answer = ask_question(cr.$finish.cr.'press <enter> to configure the server or '.quit,NULL,NULL,true);
 return $data; 
 }
