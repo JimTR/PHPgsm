@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "37798-1706755081";
+	$build = "38468-1840572562";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -452,7 +452,7 @@ $r['boot']=explode('  ',$tmps[0]);
 $r['home']=array_values(array_filter(explode('  ',$home[0])));   
 	
 	//echo print_r($r,true).cr;
-if ($r[0] == $r[1]) {unset($r[0]);}
+//if ($r[0] == $r[1]) {unset($r[0]);}
 		//echo  'whatever'.cr;
 		$x = strpos($r['boot'][4],"%");
 		$disk_info['boot_filesystem'] = trim($r['boot'][0]);
@@ -1182,6 +1182,41 @@ function array_partial_search( $array, $keyword ) {
     }
 
     return $found;
+}
+
+function cursor($cmd,$x=0,$y='') {
+$esc = "\033[";
+
+switch ($cmd) {
+        case 'off':
+        echo "$esc?25l".$y;
+        return;
+        case 'on':
+        echo "$esc?25h".$y;
+        return;
+        case 'up':
+        $up =$esc.$x.'A'.$y;
+        echo "$up";
+        return;
+        case 'down':
+        $down = $esc.$x.'B';
+        echo $down;
+        return;
+        case 'left':
+        $left = $esc.$x.'D';
+        echo $left;
+        return;
+        case 'right':
+        $right = $esc.$x.'C';
+        echo $right;
+        return;
+        case 'home':
+        echo $esc."H";
+        return;
+        case 'deline':
+        echo $esc."2K";
+        return;
+}
 }
 
 ?>
