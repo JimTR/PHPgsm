@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "45002-1666399841";
+	$build = "45108-2996918935";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -881,7 +881,8 @@ function scanlog($cmds) {
 	$display='';
 	if ($cmds['server'] == 'all') {
 	
-		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+		//$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+		$allsql = "SELECT * FROM `server1`where running=1";
 		$game_results = $database->get_results($allsql);
 		$display='';
 	
@@ -955,7 +956,7 @@ function scanlog($cmds) {
 }
 else {
 	// do default or supplied file
-
+//$sql = "SELECT * FROM `server1`where running=1";
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$cmds['server'].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
