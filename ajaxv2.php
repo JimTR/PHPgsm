@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "45116-2619144050";
+	$build = "45126-3573063130";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -891,7 +891,7 @@ function scanlog($cmds) {
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
 		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 		$tmp = file_get_contents($path);
-		echo $run['host_name'].' '.$path.cr; // debug code
+		//echo $run['host_name'].' '.$path.cr; // debug code
 				
 		if (!empty($tmp)) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
@@ -942,7 +942,7 @@ function scanlog($cmds) {
 		}
 			
 	}
-	if (!file_exists($run['host_name'].'-md5.log')) {
+	if (!file_exists('/tmp/'.$run['host_name'].'-md5.log')) {
 		//create files
 		$logpos = md5($tmp[0]); // got log pos
 		//file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
