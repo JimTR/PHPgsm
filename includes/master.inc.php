@@ -9,7 +9,7 @@
     require DOC_ROOT . '/includes/class.mobile_detect.php'; // device type class
     require DOC_ROOT. '/includes/config.php'; // get config
     include DOC_ROOT. '/includes/settings.php'; // get settings 
-	$build = "2115-1732187071";
+	$build = "2195-1467258789";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
@@ -23,7 +23,9 @@
 	define( 'TIME_NOW', time()); //time stamp
     define( 'FORMAT_TIME',  date($time_format)); // format the time
     define( 'GIG',1073741824);
-      
+     if ($settings['send_cors'] ==1) {
+		 header("Access-Control-Allow-Origin: *");
+	}
     if ($settings['year'] === "1")
    {
 	// set data to roman numerals
