@@ -24,7 +24,6 @@
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
-header("Access-Control-Allow-Origin: *");
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -32,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "45126-3573063130";
+	$build = "45084-2189513132";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
