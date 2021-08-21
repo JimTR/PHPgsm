@@ -24,8 +24,9 @@
  * utility for console app
  */
  //header('Access-Control-Allow-Origin: *');
+ require_once 'includes/master.inc.php';
  define ('VERSION', 2.01);
-	$build = "4935-2001462921";
+	$build = "4976-603833088";
  define ('cr', PHP_EOL);
  define ('br','<br/>');
 $file = $_GET['path'];
