@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "45084-2189513132";
+	$build = "45678-1917043501";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -107,7 +107,9 @@ if(!$valid) {
 					$console_data = array_merge($console_data,viewserver($cmds));
 					if ($cmds['debug'] == true){
 						print_r($console_data);
+						//exit;
 					}
+					
 					else {
 						echo json_encode($console_data);
 					}
@@ -173,12 +175,20 @@ if(!$valid) {
 					exit;
 					
 			case "game_detail" :
-					
+					$data = game_detail();
 					if($cmds['debug'] =='true' ) {
-						echo print_r(game_detail(),true).cr;
+						echo print_r($data,true).cr;
+						exit;
 						}
+						print_r($cmds);
+					if (isset($cmds['output']) and $cmds['output'] == 'xml') {
+						$xml = array2xml($data, false);
+						//echo '<pre>';
+						//print_r($xml);
+						print($xml->asXML());
+					}	
 					else {
-							echo json_encode(utf8ize(game_detail()));
+							echo json_encode(utf8ize($data));
 						}
 					exit;	
 			
@@ -1371,5 +1381,22 @@ function get_pid($task) {
 		echo $matches[0].cr;
 	}
 	return $matches[0];
+}
+
+function array2xml($array, $xml = false){
+
+    if($xml === false){
+        $xml = new SimpleXMLElement('<result/>');
+    }
+
+    foreach($array as $key => $value){
+        if(is_array($value)){
+            array2xml($value, $xml->addChild($key));
+        } else {
+            $xml->addChild($key, $value);
+        }
+    }
+
+    return $xml->asXML();
 }
 ?>
