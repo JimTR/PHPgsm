@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38468-1840572562";
+	$build = "38494-2347046334";
 $runfile = basename($argv[0]);
 if (isset($argv[1])  and $runfile == 'functions.php') {
 	echo 'Functions v'.fversion.PHP_EOL;
@@ -449,8 +449,9 @@ foreach ($df as $disk) {
 }
 $r[]=explode('  ',$boot[0]);
 $r['boot']=explode('  ',$tmps[0]);
-$r['home']=array_values(array_filter(explode('  ',$home[0])));   
-	
+if (isset($home[0])) {
+	$r['home']=array_values(array_filter(explode('  ',$home[0])));   
+}
 	//echo print_r($r,true).cr;
 //if ($r[0] == $r[1]) {unset($r[0]);}
 		//echo  'whatever'.cr;
@@ -465,7 +466,7 @@ $r['home']=array_values(array_filter(explode('  ',$home[0])));
 		
 		
 	if(isset($r['home'][0])) {
-		echo 'oh home is set'.cr;
+		//echo 'oh home is set'.cr;
 		$x = strpos($r['home'][4],"%");
 		$disk_info['home_filesystem'] = trim($r['home'][0]);
 		$disk_info['home_size'] = trim($r['home'][1]);
