@@ -906,9 +906,9 @@ function scanlog($cmds) {
 		if (!empty($tmp)) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
 			$current_records = count($tmp) ;
-			
-				if (file_exists('/tmp/'.$run['host_name'].'-md5.log')) {
-					$logold = explode(cr,trim(file_get_contents('/tmp/'.$run['host_name'].'-md5.log')));
+				$tmp_path = dirname(getcwd());
+				if (file_exists($tmp_path.'/tmp/'.$run['host_name'].'-md5.log')) {
+					$logold = explode(cr,trim(file_get_contents($tmp_path.'/tmp/'.$run['host_name'].'-md5.log')));
 					$lastrecord = intval(trim($logold[1]));
 				
 				if ($current_records == $lastrecord) {
@@ -930,8 +930,8 @@ function scanlog($cmds) {
 			
 		unset($return);
 		$logpos = md5($tmp[0]); // got log pos
-		file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
-		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
+		//file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
+		file_put_contents($tmp_path.'/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 		foreach ($tmp as $logline){
 			if(isset($logold[0])){
 				if (md5(trim($logline)) == $logold[0] && !isset($cmds['fullscan'])) {
@@ -952,11 +952,11 @@ function scanlog($cmds) {
 		}
 			
 	}
-	if (!file_exists('/tmp/'.$run['host_name'].'-md5.log')) {
+	if (!file_exists($tmp_path.'/tmp/'.$run['host_name'].'-md5.log')) {
 		//create files
 		$logpos = md5($tmp[0]); // got log pos
 		//file_put_contents($run['host_name'].'-md5.log',$logpos.cr.count($tmp));
-		file_put_contents('/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
+		file_put_contents($tmp_path.'/tmp/'.$run['host_name'].'-md5.log',$logpos.cr.count($tmp));
 	}
 	}
 	else {
