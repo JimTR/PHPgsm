@@ -180,7 +180,7 @@ if(!$valid) {
 						echo print_r($data,true).cr;
 						exit;
 						}
-						print_r($cmds);
+						//print_r($cmds);
 					if (isset($cmds['output']) and $cmds['output'] == 'xml') {
 						$xml = array2xml($data, false);
 						//echo '<pre>';
