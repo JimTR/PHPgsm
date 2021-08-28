@@ -907,6 +907,7 @@ function scanlog($cmds) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
 			$current_records = count($tmp) ;
 				$tmp_path = dirname(getcwd());
+				echo $tmp_path.cr;
 				if (file_exists($tmp_path.'/tmp/'.$run['host_name'].'-md5.log')) {
 					$logold = explode(cr,trim(file_get_contents($tmp_path.'/tmp/'.$run['host_name'].'-md5.log')));
 					$lastrecord = intval(trim($logold[1]));
