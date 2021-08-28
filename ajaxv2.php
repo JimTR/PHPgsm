@@ -481,7 +481,7 @@ function all($cmds) {
 			$return = array_merge($return,get_user_info($return));
 			//if(isset($cmds['servers'])) {
 				$tmp = game_detail();
-				//print_r($tmp);
+				print_r($tmp);
 				$add = $tmp['general'];
 				print_r($add);
 				//print_r($return);
