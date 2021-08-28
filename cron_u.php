@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "7878-1553517931";
+	$build = "7957-2855269370";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -53,7 +53,7 @@ else {
 	exit;
 }
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
-$ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
+//$ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
 $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%" and is_steam=1' ;
 
 	$res = $database->get_results($sql);
@@ -111,7 +111,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					else {
 							$pwd='no';
 						}
-						
+						if (!isset($rdata['timeupdated'])) {
+							$rdata['timeupdated']= 0;
+						}
 						printf($mask,$branch, $rdata['buildid'],date('l jS F Y \a\t g:ia',$rdata['timeupdated']),$pwd );
 				}
 			    echo cr.' Local Build id '.$local['buildid'].cr;
