@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "7957-2855269370";
+	$build = "8055-808143035";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -82,6 +82,9 @@ $sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` le
 					$data['buildid']=0;
 					echo 'Correcting Build'.cr;
 				 echo 'Locally installed version '.$man_check['buildid'].cr;
+				}
+				if(!isset($remote['public']['timeupdated'])) {
+					$remote['public']['timeupdated']=0;
 				}
 			    $update['server_id'] = $local['appid'];;
 				$update['buildid'] = $local['buildid'];
