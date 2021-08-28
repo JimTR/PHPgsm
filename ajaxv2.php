@@ -906,8 +906,8 @@ function scanlog($cmds) {
 		if (!empty($tmp)) {
 			$tmp = array_reverse(explode(cr,trim($tmp)));
 			$current_records = count($tmp) ;
-			print_r($_SERVER);
-				$tmp_path = getcwd();
+			//print_r($_SERVER);
+				$tmp_path = $_SERVER['PHP_SELF'];
 				echo $tmp_path.cr;
 				$tmp_path= dirname($tmp_path);
 				echo $tmp_path.cr;
