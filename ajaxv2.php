@@ -483,7 +483,7 @@ function all($cmds) {
 				$tmp = game_detail();
 				//print_r($tmp);
 				$add = $tmp['general'];
-				//print_r($add);
+				print_r($add);
 				//print_r($return);
 				$x = floatval($add['total_size'])/1000; // get size
 				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
