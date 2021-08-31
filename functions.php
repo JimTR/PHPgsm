@@ -1,13 +1,15 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38494-2347046334";
-$runfile = basename($argv[0]);
-if (isset($argv[1])  and $runfile == 'functions.php') {
-	echo 'Functions v'.fversion.PHP_EOL;
-	echo 'Build '.$build.PHP_EOL;
-	exit;
-}
+	$build = "38536-3213837468";
+	if (isset($argv)) {
+		$runfile = basename($argv[0]);
+			if (isset($argv[1])  and $runfile == 'functions.php') {
+				echo 'Functions v'.fversion.PHP_EOL;
+				echo 'Build '.$build.PHP_EOL;
+				exit;
+			}
+		}
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
