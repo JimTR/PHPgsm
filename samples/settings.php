@@ -23,4 +23,5 @@ $settings['date_format'] = "d-m-Y";
 $settings['login'] = "1";
 $settings['ip_key'] ='';
 $settings['scanlog'] = 1;
+$settings['send_cors'] = 0;
 ?>
