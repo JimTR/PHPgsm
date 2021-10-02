@@ -27,41 +27,67 @@
  * Major re work January 2021 
  */
 //echo cr;
-error_reporting( -1 );
 define('cr',PHP_EOL);
-define ('VERSION',2.13);
-	$build = "13883-2154975256";
+    $shortopts ="f:s:v::";
+	$longopts[]="debug::";
+	$longopts[]="help::";
+	$longopts[]="quick::";
+	$options = getopt($shortopts,$longopts);
+	if (isset($options['quick'])) 
+	{
+		define('quick',true);
+		//echo 'quick scan'.cr;
+	}
+	else {
+		define('quick',false);
+		//echo 'deep scan'.cr;
+	}
+	if(isset($options['debug'])) {
+		define('debug',true);
+	}
+	else {
+		define('debug',false);
+	}
+	define ('options',$options);
+	//print_r($options);
+	//print_r ($argv);
+	$prog = basename($argv[0]);
+error_reporting( -1 );
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
-if(isset($argv[1])){
-	switch (strtolower($argv[1])) {
-		case 'v':
-		case '-v':
-		echo 'Scanlog V'.VERSION.' - '.$build.' © NoIdeer Software '.date('Y').cr;
+    $version = 2.41;
+	$build = "13892-1469402399";
+if(isset(options['v'])){
+			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
 	}
-}
+
 if (empty( $settings['ip_key'] )) {
 	echo 'Fatal Error - api key missing'.cr;
 	exit(7);
 }
 $key = $settings['ip_key'] ;
-if (!isset($argv)){
+if (!is_cli()){
 echo 'wrong enviroment';
 exit;
 }
-if(empty($argv[1])) {
-	echo 'Scanlog V'.VERSION.' - '.$build.' © NoIdeer Software '.date('Y').cr;
-	echo 'Please supply a Server to scan'.cr;
-	echo 'Examples :- '.cr."\t".$argv[0].' <server id>'.cr;
-	echo "\t".$argv[0].' <server id> <file to scan>'.cr;
-	echo "\t".$argv[0].' <all> this will scan all servers using the default log '.cr;
+if(empty($options['s'])) {
+	echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
+	if (!isset(options['help'])) {
+		echo 'Please supply a Server to scan'.cr;
+	}
+	echo 'Examples :- '.cr."\t".$prog.' -s<server id>'.cr;
+	echo "\t$prog -s<server id> -f<file to import> do not use -f with the all server option it is used for importing data and not scaning".cr;
+	echo "\t$prog -s<all> this will scan all servers using the default log(s), slow but thorough ".cr;
+	echo "\t--quick scans the current steam log rather than the full log faster but not so thorough, works with all other options".cr;
+	echo "\t--debug logs technical details to the console, works with all other options".cr;
+	echo "\t--help this information".cr;
 	exit(0);
 }
 $asql = 'select * from players where steam_id64="'; // sql stub for user updates
 $update_done= array();
-$file =$argv[1];
+$file =options['s'];
 if ($file == 'all') {
 	
 		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
@@ -71,9 +97,12 @@ if ($file == 'all') {
 	foreach ($game_results as $run) {
 		//bulid path
 		$server_key = md5( ip2long($run['ipaddr'])) ;
-		//$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
-		// /ajaxv2.php?action=lsof&filter=fofserver&loc=/home/nod/games/fof/fof&return=content
-		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+		if (quick) {
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+		}
+		else {
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+		}
 		$tmp = file_get_contents($path);
 		//echo $run['host_name'].' '.$path.cr; // debug code
 				
@@ -92,11 +121,11 @@ else {
 		exit (1);
 	}
 }
-	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.$argv[1].'"';
+	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.options['s'].'"';
 		//echo $allsql.cr;
 	$run = $database->get_row($allsql);
 	if(empty($run)) {
-		echo 'Invalid server id '.$argv[1].' correct & try again'.cr;
+		echo 'Invalid server id '.options['s'].' correct & try again'.cr;
 		exit(2);
 	}
 	$server_key = md5( ip2long($run['ipaddr'])) ;
@@ -112,7 +141,7 @@ else {
 		
 		
 		$tmp = file_get_contents($path);
-		echo do_all($argv[1],$tmp);
+		echo do_all(options['s'],$tmp);
 }
 
 
@@ -136,79 +165,22 @@ function do_all($server,$data) {
 			$uds = true;
 		}
 		$bot = strpos($value,' connected, address "none');
-		if($bot) {continue;} //remove bot lines
+		if($bot) {continue;} //ignore bot lines
 		$x = strpos($value,' connected, address ');
 		if ($x >0) {
 		// save output
 		$value=trim($value);
-	
-		//preg_match($r, $value, $t); // get ip
-		preg_match('/(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}/', $value, $t);
-		//echo print_r ($t,true).cr;
-		if( isset($t[0])) {
-			$ip=$t[0];
-			//echo $ip.cr;
-		}
-			else {unset($ip);
-		     continue;}
-		    $id=''; 
-		    preg_match('/U:[0-9]:\d+/', $value, $t); // get steam id
-		    //print_r ($t);
-		    if (isset($t[0])){
-			$id = trim($t[0]);
-		}
-		
-		
-		
-	if(!empty($id)) {	
-		//echo $id.' - ';
-		try
-{
-		$s = new SteamID( '['.$id.']' );
-		}
-catch( InvalidArgumentException $e )
-{
-	$rt .= 'Given SteamID could not be parsed. in style 3 '.$id.cr;
-	$rt .= 'from '.$value.cr;
-	$rt .= 'extracted '.$id.cr;
-}
-		$id2 = $s->ConvertToUInt64();
-}
-if (empty($id)) {
-			preg_match('/STEAM_[0-9]:[0-9]:\d+/', $value, $t);
-			//print_r($t);
-			$id = $t[0];
-			$s = new SteamID( $id );
-			$id = $s->RenderSteam3();
-			//preg_match('/U:[0-9]:\d+/', $id2, $t);
-			//$id= $t[0];
-			//echo $id.' - ';
-			$id2 = $s->ConvertToUInt64();
-		}
-		else {
-			//unset ($id2);
-		}
-
-if(!empty($id2)){
-	//echo $id2.cr;
-	}
-preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
-        $timestring = $t[0];
-		$timestring = str_replace('-','',$timestring);
-		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
-		$username = $t[0];
-		//echo 'processing '.$username.' '.$ip.' '.$id2.cr;
-		$la[$username]['ip']=$ip;
-		$la[$username]['tst']=Emoji::Encode($username); // encode user name for db
-		if (empty($la[$username]['tst'])) {$la[$username]['tst'] =trim($username);}
-		$la[$username]['time']=$timestring;
-		$la[$username]['id'] = $id;
-		if (isset($id2)) {	$la[$username]['id2']=$id2;}
+		$tmp = user_data($value);
+		$la[$tmp['name'] ]= $tmp;
 		
 	}
 		 
 }
-//if (isset($la)) {echo print_r($la,true).cr;return;} //debug code
+//print_r($la);
+//if (isset($la)) {
+//	echo print_r($la,true).cr;
+//	return;
+//	} //debug code
 if (!isset($la)) { 
 	$pc = 0;
 	} else {$pc = count($la);}
@@ -228,7 +200,7 @@ foreach ($la as $user_data) {
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
 	//echo $sql.$user_search.cr; //debug code
-	$username = $user_data['tst'];
+	$username = $user_data['name'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
 	$modify = false;
@@ -420,7 +392,7 @@ function update_server($server){
 			}
 	$cmd = $stub.'q';
 	$s .= file_get_contents($cmd).cr; // stopped server
-	
+	// need to check if this is a root install, if so use the 'c' module to elevate the privs  
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=file_get_contents($cmd);
@@ -438,5 +410,30 @@ function update_server($server){
 		
 	$update_done[] = $game['install_dir'];
 	return $s;
+}
+function user_data($value) {
+	//
+	 $vx =preg_split('/"/', $value);
+	 $vx = array_filter($vx);
+	 $vx[0] = trim(str_replace('L ','',$vx[0]));
+	 $vx[0] =  substr($vx[0], 0, -1);
+	 $vx[0] = str_replace('-','',$vx[0]);
+	 $s =preg_split('/<\d+>/', $vx[1]);
+	 $s[1] = str_replace('<','',$s[1]);
+	 $s[1] = str_replace('>','',$s[1]);
+	 $vx[1] = Emoji::Encode($s[0]);
+	 $vx[2] = $s[1];
+	 $vx[3] = strtok( $vx[3], ':' );
+	 $steam_id = new SteamID( $vx[2] );
+	 $vx[] = $steam_id->ConvertToUInt64();
+	 $return['time'] = $vx[0];
+	 $return['name'] = $vx[1];
+	 $return['id'] = $vx[2];
+	 $return['id2'] = $steam_id->ConvertToUInt64();
+	 $return['ip'] = $vx[3];
+	 //print_r($return);
+	 //print_r(array_filter($vx));
+	 return $return;
+	 
 }
 ?>
