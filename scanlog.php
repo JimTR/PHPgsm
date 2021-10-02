@@ -78,7 +78,7 @@ if (empty( $settings['ip_key'] )) {
 	exit(7);
 }
 $key = $settings['ip_key'] ;
-if (!is_cli()){
+if (is_cli() == false){
 echo 'wrong enviroment';
 exit;
 }
@@ -114,7 +114,7 @@ if ($file == 'all') {
 			}
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+			$path = $run['url'].':'.$run['bport'].'/ajax.phpv2?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		}
 		$tmp = file_get_contents($path);
 		if(debug) {
@@ -154,7 +154,7 @@ else {
 			}
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 		}
 	}
 	else {
@@ -180,7 +180,9 @@ function do_all($server,$data) {
 	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
-    // echo 'Rows to process '.count($log).cr; //debug code
+	if(debug) {
+		echo 'Rows to process '.count($log).cr; //debug code
+	}
     foreach ($log as $value) {
 		// loop lines, in here check for server needs a restart
 		if ( strpos($data,$update_req)) {
