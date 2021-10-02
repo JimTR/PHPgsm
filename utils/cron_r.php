@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6140-3580726880";
+	$build = "6070-1106323695";
 }
 else {
 	//
@@ -102,7 +102,7 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 			echo file_get_contents($game['restart'].'q').cr; // stop server
 			//print_r($game);
-			$exe = urlencode ('./scanlog.php '.$game['host_name'].' '.$game['location'].'/log/console/'.$game['host_name'].'-console.log');
+			$exe = urlencode ('./scanlog.php -s'.$game['host_name']);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			$result =file_get_contents($cmd);
 			if (!$result == 0) {
