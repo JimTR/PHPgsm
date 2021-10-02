@@ -68,7 +68,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "14797-1034820602";
+	$build = "14884-4238398173";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -406,10 +406,15 @@ if ($uds == true) {
 	$rt .= update_server($server);
 }
 $rt .= cr.'Processed '.$server.cr;
-//echo $rt;
+
 return $rt;
 }
-
+$rt = "no changes on $server".cr;
+if (debug ) {
+	echo strlen($rt).cr;
+	//echo "$rt";
+}
+return $rt;
 }
 function get_ip_detail($ip) {
 	// return api data
