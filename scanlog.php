@@ -32,6 +32,7 @@ define('cr',PHP_EOL);
 	$longopts[]="debug::";
 	$longopts[]="help::";
 	$longopts[]="quick::";
+	$longopts[]="remote::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -67,7 +68,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "14537-1721202798";
+	$build = "14797-1034820602";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -109,9 +110,7 @@ if ($file == 'all') {
 		$server_key = md5( ip2long($run['ipaddr'])) ;
 		if (quick) {
 			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
-			if (debug) {
-				echo $path.cr;
-			}
+			
 		}
 		else {
 			$path = $run['url'].':'.$run['bport'].'/ajax.phpv2?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
@@ -125,6 +124,19 @@ if ($file == 'all') {
 			//echo $tmp.cr; //debug code
 		$display .= do_all($run['host_name'],$tmp);
 	}
+	else {
+		$display .= 'hello'.cr;
+	}
+	}
+	if(isset($display)) {
+		echo 'display not set'.cr;
+	}
+	else {
+		echo 'dunno then'.cr;
+	}
+	echo 'display = '.strlen($display).cr;
+	if(empty($display)) {
+		echo 'no output'.cr;
 	}
 	echo $display;
 }
@@ -219,7 +231,7 @@ if (!isset($la)) {
 		$s = update_server($server);
 		return $s;
 	}
-return;
+return "no player data for $server".cr;
 }
 
 foreach ($la as $user_data) {
