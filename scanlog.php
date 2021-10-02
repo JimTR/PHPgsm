@@ -68,7 +68,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "14884-4238398173";
+	$build = "14776-3797576078";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -89,7 +89,7 @@ if(empty($options['s'])) {
 		echo 'Please supply a Server to scan'.cr;
 	}
 	echo 'Examples :- '.cr."\t".$prog.' -s<server id>'.cr;
-	echo "\t$prog -s<server id> -f<file to import> do not use -f with the all server option it is used for importing data and not scaning".cr;
+	echo "\t$prog -s<server id> -f<file to import> do not use -f with the all server option it is used for importing data and \e[4mnot\e[0m scaning".cr;
 	echo "\t$prog -s<all> this will scan all servers using the default log(s), slow but thorough ".cr;
 	echo "\t--quick scans the current steam log rather than the full log faster but not so thorough, works with all other options".cr;
 	echo "\t--debug logs technical details to the console, works with all other options".cr;
@@ -113,7 +113,7 @@ if ($file == 'all') {
 			
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajax.phpv2?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		}
 		$tmp = file_get_contents($path);
 		if(debug) {
@@ -124,16 +124,9 @@ if ($file == 'all') {
 			//echo $tmp.cr; //debug code
 		$display .= do_all($run['host_name'],$tmp);
 	}
-	else {
-		$display .= 'hello'.cr;
+	
 	}
-	}
-	if(isset($display)) {
-		echo 'display not set'.cr;
-	}
-	else {
-		echo 'dunno then'.cr;
-	}
+	
 	echo 'display = '.strlen($display).cr;
 	if(empty($display)) {
 		echo 'no output'.cr;
@@ -231,7 +224,7 @@ if (!isset($la)) {
 		$s = update_server($server);
 		return $s;
 	}
-return "no player data for $server".cr;
+return ; // "no player data for $server".cr;
 }
 
 foreach ($la as $user_data) {
