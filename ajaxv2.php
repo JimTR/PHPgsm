@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "45678-1917043501";
+	$build = "46260-3968709327";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -550,15 +550,21 @@ function exescreen ($cmds) {
 			}
 			switch ($server['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			//$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.'quit'.'^M"';
 			break;
 		default:
 				$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			break;
 		}
 			
-			exec($cmd);
+			exec($cmd,$content,$ret_val);
 			$return = 'Stopping Server '.$server['host_name'];
+			if ($ret_val == 0) {
+				// tidy up screen 
+				$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+				exec($cmd);
+			}
 			$update['running'] = 0;
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
@@ -1134,6 +1140,11 @@ preg_match('/..\/..\/.... - ..:..:../', $value, $t); // get time
         $timestring = $t[0];
 		$timestring = str_replace('-','',$timestring);
 		preg_match('/(?<=")[^\<]+/', $value, $t); // get user
+		/* preg_split('/<\d>/', $t);
+		 * process $t[0]
+		 * $x = strpos('"',$t[0];
+		 * $username = substr($t[0],$x);
+		 */   
 		$username = $t[0];
 		//echo 'processing '.$username.' '.$ip.' '.$id2.cr; //debug code
 		$la[$username]['ip']=$ip;
