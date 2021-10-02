@@ -67,7 +67,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "14247-1446706014";
+	$build = "14537-1721202798";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -109,6 +109,9 @@ if ($file == 'all') {
 		$server_key = md5( ip2long($run['ipaddr'])) ;
 		if (quick) {
 			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+			if (debug) {
+				echo $path.cr;
+			}
 		}
 		else {
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
@@ -143,8 +146,16 @@ else {
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
 	//print_r($run);
-	if (empty(options['f'])) {
-	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
+	if (!isset(options['f'])) {
+		if (quick) {
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+			if (debug) {
+				echo $path.cr;
+			}
+		}
+		else {
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
+		}
 	}
 	else {
 		// assume run local 
