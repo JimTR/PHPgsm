@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46260-3968709327";
+	$build = "46376-2266099277";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -231,7 +231,13 @@ function lsof($cmds) {
 						$filename = $x[10]; //got file name
 						if (!empty($cmds['return'])) {
 							//echo 'get contents of '.$filename.'    '.filesize($filename).cr;
-							echo file_get_contents($filename);
+							$return = file_get_contents($filename);
+							if (strlen($return) >0) {
+								echo $return;
+							}
+							else {
+								echo 'no data';
+							}
 						}
 						else {
 							echo $filename;
