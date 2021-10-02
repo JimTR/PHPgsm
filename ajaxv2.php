@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46394-2982452992";
+	$build = "46398-2843998931";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -684,9 +684,9 @@ function exe($cmds) {
 		// test if no debug needs to return somthing on success
 			foreach ($output as $line) {
 				//$return .= $line.cr;
-				if(strpos($line,'! App ')) {
+				//if(strpos($line,'! App ')) {
 					$return = $line.cr;
-				}
+				//}
 				//$return ; //.= $retval.cr;
 				}
 	
