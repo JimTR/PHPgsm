@@ -33,31 +33,41 @@ define('cr',PHP_EOL);
 	$longopts[]="help::";
 	$longopts[]="quick::";
 	$options = getopt($shortopts,$longopts);
-	if (isset($options['quick'])) 
-	{
-		define('quick',true);
-		//echo 'quick scan'.cr;
-	}
-	else {
-		define('quick',false);
-		//echo 'deep scan'.cr;
-	}
+	define ('options',$options);
 	if(isset($options['debug'])) {
 		define('debug',true);
+		error_reporting( -1 );
+		unset($options['debug']);
 	}
 	else {
 		define('debug',false);
+		error_reporting(0);
+
 	}
-	define ('options',$options);
-	//print_r($options);
-	//print_r ($argv);
+	if (isset($options['quick'])) 
+	{
+		define('quick',true);
+		if(debug) {
+			echo 'quick scan enabled'.cr;
+		}
+	}
+	else {
+		define('quick',false);
+		
+	}
+	
+	
+	if(debug) {
+		echo 'current options '.cr.print_r($options,true).cr;
+		echo '$argv is '.cr.print_r ($argv,true).cr;
+	}
 	$prog = basename($argv[0]);
-error_reporting( -1 );
+
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "13892-1469402399";
+	$build = "14247-1446706014";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -104,7 +114,9 @@ if ($file == 'all') {
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		}
 		$tmp = file_get_contents($path);
-		//echo $run['host_name'].' '.$path.cr; // debug code
+		if(debug) {
+			echo $run['host_name'].' '.$path.cr; // debug code
+		}
 				
 		if (!empty($tmp)) {
 			//echo $tmp.cr; //debug code
@@ -115,9 +127,9 @@ if ($file == 'all') {
 }
 else {
 	// do supplied file
-	if(isset($argv[3])) {
-	if (!file_exists($argv[3])) {
-		echo 'could not open '.$argv[3].cr;
+	if(isset(options['f'])) {
+	if (!file_exists(options['f'])) {
+		echo 'could not open '.options['f'].cr;
 		exit (1);
 	}
 }
@@ -131,12 +143,12 @@ else {
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
 	//print_r($run);
-	if (empty($argv[3])) {
+	if (empty(options['f'])) {
 	$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
 	}
 	else {
 		// assume run local 
-		$path = $argv[3];
+		$path = options['f'];
 	}
 		
 		
@@ -176,16 +188,19 @@ function do_all($server,$data) {
 	}
 		 
 }
-//print_r($la);
-//if (isset($la)) {
-//	echo print_r($la,true).cr;
-//	return;
-//	} //debug code
+if (debug) {
+	if (isset($la)) {
+		echo 'Found the following:-'.cr. print_r($la,true).cr;
+	} //debug code
+	else {
+		echo "nothing found for $server".cr;
+	}
+}
 if (!isset($la)) { 
 	$pc = 0;
-	} else {$pc = count($la);}
-//echo 'Rows found '.$pc.cr;
-if ( $pc == 0 ) {
+	} 
+	else {$pc = count($la);}
+	if ( $pc == 0 ) {
 	//echo "\t Nothing to do".cr;
 	if ($uds == true) {
 		$s = update_server($server);
@@ -199,7 +214,9 @@ foreach ($la as $user_data) {
 	// now do data
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
-	//echo $sql.$user_search.cr; //debug code
+	if(debug) {
+		echo "query using $user_search".cr; 
+	}
 	$username = $user_data['name'];
 	$ip = $user_data['ip'];
 	$user_data['ip'] = ip2long($user_data['ip']);
@@ -286,11 +303,15 @@ foreach ($la as $user_data) {
 		$ut .= cr;
 	}
 	else{
-		//echo $rt.' no change'.cr;
+		if (debug) {
+			echo "no change for $username".cr;
+		}
 	}
 	}
 	else {
-		//echo 'adding '.$username.cr;
+		if (debug) {
+			echo 'adding '.$username.cr;
+		}
 		$added = true;
 		$ut .= $ut.' New user';
 		$count ++;
@@ -338,7 +359,9 @@ foreach ($la as $user_data) {
 
  //$rt.=cr;			
 	}
-	// print_r($result); //debug code
+	if(debug) {
+		echo "$username record".cr.print_r($result,true).cr; 
+	}
 
 	if (isset($ut)) {
 		if ($modify || $added) {		
@@ -368,7 +391,9 @@ function get_ip_detail($ip) {
 	global $key;
 	
 	$cmd =  'https://api.ipdata.co/'.$ip.'?api-key='.$key;
-	 //echo $cmd.cr; //debug code
+	if (debug) {
+		echo "getting ip data with $cmd".cr; 
+	}
 	$ip_data = json_decode(file_get_contents($cmd), true); //get the result
 	 if (empty($ip_data['threat']['is_threat'])) {$ip_data['threat']['is_threat']=0;}
 	 //print_r($ip_data); //debug code
@@ -431,8 +456,9 @@ function user_data($value) {
 	 $return['id'] = $vx[2];
 	 $return['id2'] = $steam_id->ConvertToUInt64();
 	 $return['ip'] = $vx[3];
-	 //print_r($return);
-	 //print_r(array_filter($vx));
+	 if(debug) {
+	 echo 'Returning user data as'.cr.print_r($return,true).cr;
+	}
 	 return $return;
 	 
 }
