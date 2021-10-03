@@ -68,7 +68,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "14776-3797576078";
+	$build = "15293-1178577219";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -233,7 +233,8 @@ foreach ($la as $user_data) {
 	$user = trim($user_data['id']);
 	$user_search = $user_data['id2'].'"';
 	if(debug) {
-		echo "query using $user_search".cr; 
+		$user_id2 = $user_data['id2'];
+		echo "query using $user_id2".cr; 
 	}
 	$username = $user_data['name'];
 	$ip = $user_data['ip'];
@@ -462,16 +463,29 @@ function update_server($server){
 function user_data($value) {
 	//
 	 $vx =preg_split('/"/', $value);
+	 $sx =preg_split('/<\d+>/', $value);
+	 //preg_split('/: "/', $input_line);
+	 $sx2 = preg_split('/: "/', $sx[0]);
+	 $sx3 = preg_split('/"/', $sx[1]);
 	 $vx = array_filter($vx);
 	 $vx[0] = trim(str_replace('L ','',$vx[0]));
 	 $vx[0] =  substr($vx[0], 0, -1);
 	 $vx[0] = str_replace('-','',$vx[0]);
 	 $s =preg_split('/<\d+>/', $vx[1]);
-	 $s[1] = str_replace('<','',$s[1]);
+	  if(debug) {
+		 echo "value = $value".cr;
+		 echo 'count of $vx = '.count($vx).cr;
+		echo '$vx is set to'.cr.print_r($vx,true).cr;
+		echo '$sx is set to'.cr.print_r($sx,true).cr;
+		echo '$sx2 is set to'.cr.print_r($sx2,true).cr;
+		echo '$sx3 is set to'.cr.print_r($sx3,true).cr;
+		echo '$s is set to'.cr.print_r($s,true).cr;
+		}
+	 $s[1] = str_replace('<','',$sx3[0]);
 	 $s[1] = str_replace('>','',$s[1]);
-	 $vx[1] = Emoji::Encode($s[0]);
+	 $vx[1] = Emoji::Encode($sx2[1]);
 	 $vx[2] = $s[1];
-	 $vx[3] = strtok( $vx[3], ':' );
+	 $vx[3] = strtok( $sx3[2], ':' );
 	 $steam_id = new SteamID( $vx[2] );
 	 $vx[] = $steam_id->ConvertToUInt64();
 	 $return['time'] = $vx[0];
@@ -480,8 +494,8 @@ function user_data($value) {
 	 $return['id2'] = $steam_id->ConvertToUInt64();
 	 $return['ip'] = $vx[3];
 	 if(debug) {
-	 echo 'Returning user data as'.cr.print_r($return,true).cr;
-	}
+		echo 'Returning user data as'.cr.print_r($return,true).cr;
+		}
 	 return $return;
 	 
 }
