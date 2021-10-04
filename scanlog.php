@@ -33,6 +33,7 @@ define('cr',PHP_EOL);
 	$longopts[]="help::";
 	$longopts[]="quick::";
 	$longopts[]="remote::";
+	$logopts[]="silent::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -56,7 +57,12 @@ define('cr',PHP_EOL);
 		define('quick',false);
 		
 	}
-	
+	if(isset(options['silent'])) {
+		define('silent',true);
+	}
+	else {
+		define('silent',false);
+	}
 	
 	if(debug) {
 		echo 'current options '.cr.print_r($options,true).cr;
@@ -68,7 +74,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15293-1178577219";
+	$build = "15370-3077969588";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -127,7 +133,7 @@ if ($file == 'all') {
 	
 	}
 	
-	echo 'display = '.strlen($display).cr;
+	//echo 'display = '.strlen($display).cr;
 	if(empty($display)) {
 		echo 'no output'.cr;
 	}
@@ -219,7 +225,7 @@ if (!isset($la)) {
 	} 
 	else {$pc = count($la);}
 	if ( $pc == 0 ) {
-	//echo "\t Nothing to do".cr;
+	echo "\t Nothing found for $server".cr;
 	if ($uds == true) {
 		$s = update_server($server);
 		return $s;
@@ -403,7 +409,7 @@ $rt .= cr.'Processed '.$server.cr;
 
 return $rt;
 }
-$rt = "no changes on $server".cr;
+$rt = "\t No changes on $server".cr;
 if (debug ) {
 	echo strlen($rt).cr;
 	//echo "$rt";
@@ -432,7 +438,7 @@ function update_server($server){
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd';
 	$game = $database->get_row($sql);
-	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd='; // used to start & stop
+	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
 				$s .= 'Update already done'.cr;
 			    //$cmd = $stub.'r';
@@ -453,7 +459,7 @@ function update_server($server){
 		$restarts = $database->get_results($sql);
 		foreach ($restarts as $restart) {
 			// restart them all
-			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&key='.md5($restart['host']).'&cmd=r'; // used to restart
+			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&cmd=r'; // used to restart
 			$s .= file_get_contents($cmd).cr;
 		}
 		
