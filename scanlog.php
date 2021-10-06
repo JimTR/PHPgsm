@@ -33,7 +33,7 @@ define('cr',PHP_EOL);
 	$longopts[]="help::";
 	$longopts[]="quick::";
 	$longopts[]="remote::";
-	$logopts[]="silent::";
+	$longopts[]="silent::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -57,8 +57,9 @@ define('cr',PHP_EOL);
 		define('quick',false);
 		
 	}
-	if(isset(options['silent'])) {
+	if(isset($options['silent'])) {
 		define('silent',true);
+		
 	}
 	else {
 		define('silent',false);
@@ -135,7 +136,11 @@ if ($file == 'all') {
 	
 	//echo 'display = '.strlen($display).cr;
 	if(empty($display)) {
-		echo 'no output'.cr;
+		
+			if (silent == false) {
+				echo 'silent = false'.cr;
+				echo 'no output'.cr;
+			}
 	}
 	echo $display;
 }
@@ -189,7 +194,7 @@ function do_all($server,$data) {
 	global $database, $key;
 	$update_req = 'Your server needs to be restarted in order to receive the latest update.';
 	$asql = 'select * from players where steam_id64="'; // sql stub for user updates
-	$rt = 'Processing server '.$server.cr.cr;
+	//$rt = 'Processing server '.$server.cr.cr;
 	$log = explode(cr,$data);
 	if(debug) {
 		echo 'Rows to process '.count($log).cr; //debug code
@@ -225,12 +230,17 @@ if (!isset($la)) {
 	} 
 	else {$pc = count($la);}
 	if ( $pc == 0 ) {
-	echo "\t Nothing found for $server".cr;
+		if(!silent) {
+			$rt = "\t Nothing found for $server".cr;
+		}
+		else {
+			$rt ='';
+		}	
 	if ($uds == true) {
 		$s = update_server($server);
 		return $s;
 	}
-return ; // "no player data for $server".cr;
+return $rt ; // "no player data for $server".cr;
 }
 
 foreach ($la as $user_data) {
@@ -389,7 +399,9 @@ foreach ($la as $user_data) {
 	}
 
 	if (isset($ut)) {
-		if ($modify || $added) {		
+		
+		if ($modify || $added) {
+			$rt = 'Processing server '.$server.cr.cr;		
 			$rt .= $user_stub.' '.$ut;
 		}
 	}
@@ -409,7 +421,9 @@ $rt .= cr.'Processed '.$server.cr;
 
 return $rt;
 }
+if (!silent) {
 $rt = "\t No changes on $server".cr;
+}
 if (debug ) {
 	echo strlen($rt).cr;
 	//echo "$rt";
