@@ -22,10 +22,35 @@
  * 
  * 
  */
-error_reporting (0);	
+	$shortopts ="d::f:s:v::g::t::li::r:q:l:";
+	$longopts[]="debug::";
+	$longopts[]="help::";
+	$longopts[]="quick::";
+	$longopts[]="colour::";
+	$longopts[]="server:";
+	$longopts[]="version::";
+	$longopts[]="games::";
+	$longopts[]="details::";
+	$longopts[]="list::";
+	$longopts[]="start:";
+	$longopts[]="restart:";
+	$longopts[] ="quit:";
+	$longopts[]="log:";
+	$options = getopt($shortopts,$longopts);
+	
+	define ('options',$options);
+	if(isset($options['debug'])) {
+		define('debug',true);
+		error_reporting( -1 );
+		unset($options['debug']);
+		print_r($options);
+	}
+	else {
+		define('debug',false);
+		error_reporting(0);
+
+	}
 require_once 'includes/master.inc.php';
-//require_once 'includes/class.table.php';
-//require_once 'includes/class.color.php';
 
 include 'functions.php';
 
@@ -38,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "21377-2546178741";
+	$build = "23360-1754642774";
 	
 	
 	if(is_cli()) {
@@ -46,15 +71,17 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
 	
-	if ($cmds['debug'] == 'true') {
+	if (debug) {
 		echo 'debug'.cr;
 		error_reporting( -1 );
-		echo 'Cli interface v'.VERSION.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
-	    foreach ($cmds as $k => $v) {
-			if ($k == 'debug'){continue;}
-			print "[$k] => $v".cr;
+		echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		if (isset($cmds)) {
+			foreach ($cmds as $k => $v) {
+				if ($k == 'debug'){continue;}
+				print "[$k] => $v".cr;
+			}
 		}
-		if (empty($cmds['action'])) {help();}
+		
 	}
 	else {error_reporting( 0 );}
 	
@@ -62,15 +89,64 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 else {
 	die ('invalid enviroment');
 }
-system('clear');
+//system('clear');
 $cc = new Color();
-define ('warning', $cc->convert("%YWarning%n"));
+	define ('warning', $cc->convert("%YWarning%n"));
 	define ('error', $cc->convert("%RError  %n"));
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPassing%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
+    //print_r($options);
+    if(isset($options['g']) or isset($options['games'])) {$cmds['action']='g';}
+	if(isset($options['v']) or isset($options['version'])) {$cmds['action']='v';}
+	if(isset($options['d']) or isset($options['details'])) {$cmds['action']='d';}
+	if(isset($options['t'])) {$cmds['action']='t';}
+	if(isset($options['l']) or isset($options['log']))  {
+		$cmds['action']='l';
+		if(!empty($options['l'])) {
+			$cmds['server'] = $options['l'];
+		}
+		else if(!empty($options['log'])) {
+			$cmds['server'] = $options['log'];
+		}
+		else {
+			$cmds['server'] = 'all';
+		}
+		}
+	if(isset($options['l']) and isset($options['i']) or isset($options['list'])) {$cmds['action']='li';}
+	if(isset($options['server'])) {$cmds['server'] = $options['server'];} 
+	if(isset($options['s']) or isset($options['start'])) {
+		$cmds['action'] = 's';
+		if(!empty($options['s'])) {
+			$cmds['server'] = $options['s'];
+		}
+		if(!empty($options['start'])) {
+			$cmds['server'] = $options['start'];
+		}
+		}
+	if(isset($options['r']) or isset($options['restart'])) {
+		$cmds['action'] = 'r';
+		if(!empty($options['r'])) {
+			$cmds['server'] = $options['r'];
+		}
+		if(!empty($options['restart'])) {
+			$cmds['server'] = $options['restart'];
+		}
+		}	
+	if(isset($options['q']) or isset($options['quit'])) {
+		$cmds['action'] = 'q';
+		if(!empty($options['q'])) {
+			$cmds['server'] = $options['q'];
+		}
+		if(!empty($options['quit'])) {
+			$cmds['server'] = $options['quit'];
+		}
+		}
+	//if(isset($options['q'])) {$cmds['action'] = 'q';}
+	
+	if (empty($cmds['action'])) {help();}
 switch ($cmds['action']) {
 	
 	case 'v' :
@@ -93,7 +169,7 @@ switch ($cmds['action']) {
 		}
 		if ($cmds['server'] == 'all') {
 			echo 'Quick log scan';
-			$exe = urlencode ('./scanlog.php all');
+			$exe = urlencode ('./scanlog.php -sall');
 			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			//echo $cmd.cr;
 			$content = file_get_contents($cmd);
@@ -111,7 +187,7 @@ switch ($cmds['action']) {
 			echo 'invalid Server ID '.$cmds['server'].cr;
 			break;
 		} 
-		$exe = urlencode ('./scanlog.php '.$server['host_name'].' '.$server['location'].'/log/console/'.$server['host_name'].'-console.log');
+		$exe = urlencode ('./scanlog.php  -s'.$server['host_name']);
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 		echo 'Full log scan for '.$cmds['server'];
 		$content = file_get_contents($cmd);
@@ -324,31 +400,31 @@ $table->addRow(array('','',''));
 $table->addRow(array($PHP.$gsm.' Help',''));
 $table->addRow(array('Usage : - '.$argv[0].' action=<option> <sub_options>',''));
 $table->addRow(array($option,$use));
-$table->addRow(array('v or version','show CLI version & exit'));
-$table->addRow(array('s or start ','starts a game server requires a server id to be set'));
-$table->addRow(array('q, quit or stop ','stops a game server requires a server id to be set'));
-$table->addRow(array('r, or restart ','restarts a game server requires a server id to be set'));
-$table->addRow(array('d, or details ','shows details about the running system (takes sub options see example page)'));
-$table->addRow(array('g, or games ','shows details on running game servers (takes sub options see example page)'));
+$table->addRow(array('-v or --version','show CLI version & exit'));
+$table->addRow(array('-s or --start <server id>','starts a game server'));
+$table->addRow(array('-q, --quit <server id>','stops a game server'));
+$table->addRow(array('-r, or --restart <server id>','restarts a game server'));
+$table->addRow(array('-d, or --details ','shows details about the running system (takes sub options see example page)'));
+$table->addRow(array('-g, or --games ','shows details on running game servers (takes sub options see example page)'));
 $table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
 $table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
 $table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
-$table->addRow(array('l, or log ','processes server logs (takes sub options see example page)'));
-$table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'));
-	 system('clear');
+$table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all (default)'));
+$table->addRow(array('-li, or --list ','Lists valid server Id\'s that cli can use.'));
+	 //system('clear');
 	echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 echo $table->getTable();
 	 echo cr;
 	 echo 'cli will only install games or servers on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
 	 echo 'however, you can control remotely installed servers'.cr;
-	 $answer = ask_question('enter E for examples or q to quit  ',null,null);
+	 //$answer = ask_question('enter E for examples or q to quit  ',null,null);
 	 echo $answer.cr.cr;
 	 exit;
  }
  
  function details($data) {
 	 // read server details
-	 system('clear');
+	 //system('clear');
 	 if (empty($data['option']) || !isset($data['option'])) {
 		 $data['option'] = 'a';
 	 }
@@ -427,6 +503,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
     CONSOLE_TABLE_ALIGN_LEFT,
     array('horizontal' => '', 'vertical' => '', 'intersection' => '')
     );
+    $database= new db();
     $software = get_software_info($database);
     //echo print_r($data,true).cr;
     //echo print_r($software,true).cr;
@@ -458,7 +535,7 @@ $table->addRow(array('li, or list ','Lists valid server Id\'s that cli can use.'
  
  function games($data) {
 	 // review games
-	 		system('clear');
+	 		//system('clear');
 	 		$Query = new SourceQuery( );
 	 		$cc = new Color();
 	 			  $table = new Table(

@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6058-2423585934";
+	$build = "6058-148110562";
 }
 else {
 	//
@@ -81,7 +81,7 @@ foreach ($games as $game) {
 														file_put_contents(LOG,$error.cr,FILE_APPEND);
 														}
 		$Query->Disconnect( );
-		if ($info['Players'] == 0 ) {
+		if (isset($info['Players'])) {
 			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
 			$restart[] = $game;
 		}
