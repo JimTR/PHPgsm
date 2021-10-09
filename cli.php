@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "23360-1754642774";
+	$build = "23370-380555873";
 	
 	
 	if(is_cli()) {
@@ -398,7 +398,7 @@ function help() {
 );
 $table->addRow(array('','',''));
 $table->addRow(array($PHP.$gsm.' Help',''));
-$table->addRow(array('Usage : - '.$argv[0].' action=<option> <sub_options>',''));
+$table->addRow(array('Usage : - '.basename($argv[0]).' action=<option> <sub_options>',''));
 $table->addRow(array($option,$use));
 $table->addRow(array('-v or --version','show CLI version & exit'));
 $table->addRow(array('-s or --start <server id>','starts a game server'));
