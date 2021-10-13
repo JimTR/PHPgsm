@@ -1,6 +1,6 @@
 <?PHP
 global $database;
-	$build = "48238-4068756206";
+	$build = "48437-461553674";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();
@@ -520,7 +520,7 @@ global $database;
     }
 
     // Grabs the contents of a remote URL. Can perform basic authentication if un/pw are provided.
-    function geturl($url, $username = null, $password = null,$options= null)
+    function geturl($url, $username = null, $password = null,$options= null,$query=null)
     {
         if(function_exists('curl_init'))
         {
@@ -543,6 +543,12 @@ global $database;
              if(isset($headr)) {
 				 curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
 			 }   
+			 if(!is_null($query)) {
+				 print_r($query);
+				 // add post fields
+				 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+				 curl_setopt( $ch, CURLOPT_POSTFIELDS, $query );
+			 }
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
