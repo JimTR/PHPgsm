@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * ajax v2 to go with xml v2 & mybb.js
+ * ajax v2 to go with xml v2 & mybb.js perhaps
  *  requires PHP  >= 7.4
  */
 require_once 'includes/master.inc.php';
@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46402-2260723750";
+	$build = "46410-720129996";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
