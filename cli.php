@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "23370-380555873";
+	$build = "23371-3855903511";
 	
 	
 	if(is_cli()) {
@@ -363,7 +363,7 @@ switch ($cmds['action']) {
 		echo $table->getTable();
 		break;
 			
-	case 'q':
+	case 'q': 
 	case 'quit':
 	case 'stop':
 	if(!isset($cmds['server'])) {
