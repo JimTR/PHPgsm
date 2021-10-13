@@ -26,6 +26,8 @@ include ('functions.php');
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
+	$build = "2210-3192922336";
+$version= 1.01;
 if(is_cli()) {
 $cmds = convert_to_argv($argv,"",true);
 }
@@ -40,9 +42,11 @@ $cmds = convert_to_argv($argv,"",true);
 			$cmds = convert_to_argv($_GET,"",true);
 		}
 	}
-echo print_r($cmds,true);
+echo '$cmds = '.print_r($cmds,true);
 if (isset($cmds['query'])) {
-$cmd =  $cmds['url'].$cmds['query'];
+	$query = split_query($cmds['query']);
+	print_r($query);
+$cmd =  $cmds['url'];
 }
 else {
 	$cmd = $cmds['url'];
@@ -51,6 +55,25 @@ echo "cmd = $cmd".PHP_EOL;
 $options['phpgsm-auth'] = "true";
 $options['HTTP_HOST']= 'cgi.localhost';
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
-echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options).PHP_EOL;
+echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query).PHP_EOL;
 
+function split_query($query) {
+	// split up query
+	$return='';
+	$items = preg_split('/:/', $query);
+	print_r($items);
+	foreach ($items as $item) {
+		//build query string
+		if (empty($return)) {
+			$return = '?'.$item;
+		}
+		else {
+			$return .='&'.$item;
+		}
+		$split_item = preg_split('/=/',$item);
+		$return_array[$split_item[0]] = $split_item[1];
+	}
+	//die(print_r($return_array));
+	return $return_array;
+}
 ?>
