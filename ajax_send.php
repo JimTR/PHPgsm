@@ -26,7 +26,7 @@ include ('functions.php');
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-if(isset($argv[1])) {
+if(is_cli()) {
 $cmds = convert_to_argv($argv,"",true);
 }
 	if (!empty($_POST)) {
@@ -48,7 +48,7 @@ else {
 	$cmd = $cmds['url'];
 }
 echo "cmd = $cmd".PHP_EOL;
-$options['test'] ="hello";
+$options['phpgsm_auth'] ="true";
 $options['HTTP_HOST']= 'cgi.localhost';
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
 echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options).PHP_EOL;
