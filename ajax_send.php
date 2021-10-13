@@ -48,7 +48,7 @@ else {
 	$cmd = $cmds['url'];
 }
 echo "cmd = $cmd".PHP_EOL;
-$options['phpgsm_auth'] ="true";
+$options['phpgsm-auth'] = "true";
 $options['HTTP_HOST']= 'cgi.localhost';
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
 echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options).PHP_EOL;
