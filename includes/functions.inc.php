@@ -533,18 +533,20 @@ global $database;
 				  foreach($options as $k=>$v){
 					   $headr[] = "$k: $v";
 				  }
-                   print_r($headr);
+                   //print_r($headr);
                    //die();
 			  }
 			  else {
-				  echo 'no options<br>';
+				  //echo 'no options<br>';
 			  }  
 			  
              if(isset($headr)) {
 				 curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
 			 }   
 			 if(!is_null($query)) {
-				 //print_r($query);
+				 echo 'in geturl<br>';
+				 print_r($query);
+				 echo '<br>';
 				 // add post fields
 				 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
 				 curl_setopt( $ch, CURLOPT_POSTFIELDS, $query );
