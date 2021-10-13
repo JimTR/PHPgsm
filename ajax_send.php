@@ -46,9 +46,9 @@ if(!defined('cr')){
 			$cmds = convert_to_argv($_GET,"",true);
 		}
 	}
-	if(isset($cmds['debug'])) {
+	//if(isset($cmds['debug'])) {
 		echo '$cmds = '.print_r($cmds,true);
-}
+//}
 if (isset($cmds['query'])) {
 	$query = split_query($cmds['query']);
 	if (isset($cmds['debug'])){
@@ -59,9 +59,9 @@ $cmd =  $cmds['url'];
 else {
 	$cmd = $cmds['url'];
 }
-if (isset($cmds['debug'])) {
+//if (isset($cmds['debug'])) {
 	echo "cmd = $cmd".cr;
-}
+//}
 $options['phpgsm-auth'] = "true";
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
 echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query).cr;
@@ -82,7 +82,7 @@ function split_query($query) {
 		$split_item = preg_split('/=/',$item);
 		$return_array[$split_item[0]] = $split_item[1];
 	}
-	//die(print_r($return_array));
+	die(print_r($return_array));
 	return $return_array;
 }
 ?>
