@@ -22,14 +22,17 @@
  * send proxy requests to server
  */
 require ('includes/master.inc.php');
+include ('functions.php');
 //print_r($settings);
-print_r($_SERVER);
+//print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-//$cmds = convert_to_argv($_GET,"",true);
+if(isset($argv[1])) {
+$cmds = convert_to_argv($argv,"",true);
+}
 	if (!empty($_POST)) {
 		$cmds = convert_to_argv($_POST,"",true);
 	}
-	else {
+	elseif (!empty($_GET)) {
 		if (isset($cmds)) {
 			$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
 		}
@@ -44,6 +47,7 @@ $cmd =  $cmds['url'].$cmds['query'];
 else {
 	$cmd = $cmds['url'];
 }
+echo "cmd = $cmd".PHP_EOL;
 $options['test'] ="hello";
 $options['HTTP_HOST']= 'cgi.localhost';
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
