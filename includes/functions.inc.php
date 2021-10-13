@@ -1,6 +1,6 @@
 <?PHP
 global $database;
-	$build = "48437-461553674";
+	$build = "48439-984936804";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();
@@ -544,7 +544,7 @@ global $database;
 				 curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
 			 }   
 			 if(!is_null($query)) {
-				 print_r($query);
+				 //print_r($query);
 				 // add post fields
 				 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
 				 curl_setopt( $ch, CURLOPT_POSTFIELDS, $query );
