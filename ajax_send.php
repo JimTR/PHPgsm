@@ -26,7 +26,7 @@ include ('functions.php');
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-	$build = "2330-1933753447";
+	$build = "2332-2220967822";
 $version= 1.01;
 if(is_cli()) {
 $cmds = convert_to_argv($argv,"",true);
@@ -60,7 +60,7 @@ else {
 	$cmd = $cmds['url'];
 }
 if (isset($cmds['debug'])) {
-	echo "cmd = $cmd".cr;
+	//echo "cmd = $cmd".cr;
 }
 $options['phpgsm-auth'] = "true";
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
