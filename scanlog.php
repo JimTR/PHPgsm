@@ -75,7 +75,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15561-2224407523";
+	$build = "15506-1928804645";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -122,7 +122,7 @@ if ($file == 'all') {
 		else {
 			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
 		}
-		$tmp = file_get_contents($path);
+		$tmp = geturl($path);
 		if(debug) {
 			echo $run['host_name'].' '.$path.cr; // debug code
 		}
@@ -179,7 +179,7 @@ else {
 	}
 		
 		
-		$tmp = file_get_contents($path);
+		$tmp = geturl($path);
 		echo do_all(options['s'],$tmp);
 }
 
@@ -460,11 +460,11 @@ function update_server($server){
 				return $s;
 			}
 	$cmd = $stub.'q';
-	$s .= file_get_contents($cmd).cr; // stopped server
+	$s .= geturl($cmd).cr; // stopped server
 	// need to check if this is a root install, if so use the 'c' module to elevate the privs  
 	$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-	$s .=file_get_contents($cmd);
+	$s .=geturl($cmd);
 	//echo 'updated server using '.$cmd.cr;
 	//$cmd = $stub.'s';
 	//$s .= file_get_contents($cmd).cr;
@@ -474,7 +474,7 @@ function update_server($server){
 		foreach ($restarts as $restart) {
 			// restart them all
 			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&cmd=r'; // used to restart
-			$s .= file_get_contents($cmd).cr;
+			$s .= geturl($cmd).cr;
 		}
 		
 	$update_done[] = $game['install_dir'];
