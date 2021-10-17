@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46409-720129996";
+	$build = "46365-2189878556";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -361,8 +361,8 @@ function game_detail() {
 			else {
 					$host= gethostname();
 					$ip = gethostbyname($host);
-					$ip = file_get_contents('https://api.ipify.org');
-					if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
+					$ip = geturl('https://api.ipify.org');
+					if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 				}
 				//$checkip = substr($ip,0,strlen($ip)-1);
 				$checkip = $ip; 
@@ -912,7 +912,7 @@ function scanlog($cmds) {
 		//bulid path done this way so we can get the file back from a remote server
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
 		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
-		$tmp = file_get_contents($path);
+		$tmp = geturl($path);
 		if (isset($cmds['debug'])) {
 			echo $run['host_name'].' '.$path.cr; // debug code
 		}
@@ -1038,7 +1038,7 @@ else {
 	}
 		
 		
-		$tmp = file_get_contents($path);
+		$tmp = getul($path);
 		$tmp = array_reverse(explode(cr,trim($tmp)));
 		$current_records = count($tmp) ;
 				
