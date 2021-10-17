@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46610-2042097618";
+	$build = "46588-2917214838";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -894,8 +894,8 @@ function scanlog($cmds) {
 	// scanlog as a function
 	error_reporting(E_ALL); // set errors on for dev
 	global $settings,$database,$update_done;
-	$ip = file_get_contents('https://api.ipify.org');// get ip
-	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
+	$ip = geturl('https://api.ipify.org');// get ip
+	if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 	$localip = "ip = $ip";
 	 
 	if (empty( $settings['ip_key'] )) {
