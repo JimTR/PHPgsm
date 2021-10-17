@@ -1060,7 +1060,7 @@ function get_ip_detail($ip) {
 	global $settings; // get settings
 	$key = $settings['ip_key'];  // this has been checked via the calling function and should not be empty
 	$cmd =  'https://api.ipdata.co/'.$ip.'?api-key='.$key;
-	 $ip_data = json_decode(file_get_contents($cmd), true); //get the result
+	 $ip_data = json_decode(geturl($cmd), true); //get the result
 	 if (empty($ip_data['threat']['is_threat'])) {$ip_data['threat']['is_threat']=0;}
 	 return $ip_data;
 }
