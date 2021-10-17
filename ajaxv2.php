@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46445-54210847";
+	$build = "46444-2825675591";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -76,7 +76,7 @@ else {
 if(!$valid) { 
 	die( 'invalid request '.$ip.cr );
 }
-$logline = date("d-m-Y H:i:s")."$ip Valid = $valid cmds = ".print_r($cmds,true).cr;
+$logline = date("d-m-Y H:i:s")." $ip Valid = $valid cmds = ".print_r($cmds,true).cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
