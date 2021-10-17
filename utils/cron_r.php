@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6058-148110562";
+	$build = "6250-3046339934";
 }
 else {
 	//
@@ -100,13 +100,17 @@ foreach ($games as $game) {
 
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			echo file_get_contents($game['restart'].'q').cr; // stop server
+			echo geturl($game['restart'].'q').cr; // stop server
 			//print_r($game);
 			$exe = './scanlog.php -s'.$game['host_name'];
-			$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe);
-			$result = file_get_contents($cmd);
-			if (!$result == 0) {
+			$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe); // run scanlog
+			$result = geturl($cmd);
+			if (!empty($result) ) {
+				file_put_contents(LOG,'Got some data back from '.$game['host_name'].cr,FILE_APPEND);
 				echo $result.cr;
+			}
+			else {
+				file_put_contents(LOG,'Scanlog failed for '.$game['host_name'].cr,FILE_APPEND);
 			}
 					 
 			// check updates
@@ -125,19 +129,19 @@ foreach ($games as $game) {
 				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
-				echo file_get_contents($cmd);
+				echo geturl($cmd);
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
 			}
 			// log prune
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
-			$log_line = 'Prune command  '.$exe;
+			$log_line = 'Prune console logs for  '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo file_get_contents($cmd);
-			$log_line = 'Prune here also '.$exe;
+			$log_line = 'Prune steam log files for '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
 			echo file_get_contents($game['restart'].'s').cr; // start server
