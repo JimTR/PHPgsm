@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46365-2189878556";
+	$build = "46445-54210847";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -39,7 +39,7 @@ $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 //echo $sql.'<br>';
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
-//echo $ip." Valid = $valid <br>".cr;
+
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
@@ -76,7 +76,8 @@ else {
 if(!$valid) { 
 	die( 'invalid request '.$ip.cr );
 }
-
+$logline = date("d-m-Y H:i:s")."$ip Valid = $valid cmds = ".print_r($cmds,true).cr;
+file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "all" :
