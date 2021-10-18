@@ -75,7 +75,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15506-1928804645";
+	$build = "15510-3848059868";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -108,7 +108,7 @@ $update_done= array();
 $file =options['s'];
 if ($file == 'all') {
 	
-		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
+		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name ASC';
 		$game_results = $database->get_results($allsql);
 		$display='';
 	//print_r ($game_results);
