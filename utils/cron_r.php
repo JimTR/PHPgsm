@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6250-3046339934";
+	$build = "6260-3808767217";
 }
 else {
 	//
@@ -102,7 +102,7 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 			echo geturl($game['restart'].'q').cr; // stop server
 			//print_r($game);
-			$exe = './scanlog.php -s'.$game['host_name'];
+			$exe = './scanlog.php --silent -s'.$game['host_name'];
 			$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe); // run scanlog
 			$result = geturl($cmd);
 			if (!empty($result) ) {
