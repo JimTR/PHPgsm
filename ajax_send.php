@@ -64,7 +64,7 @@ if (isset($cmds['debug'])) {
 }
 $options['phpgsm-auth'] = "true";
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
-echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query).cr;
+echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query);
 
 function split_query($query) {
 	// split up query
