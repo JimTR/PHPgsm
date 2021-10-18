@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46588-2917214838";
+	$build = "46611-3909981191";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -914,7 +914,7 @@ function scanlog($cmds) {
 	if ($cmds['server'] == 'all') {
 	
 		//$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
-		$allsql = "SELECT * FROM `server1`where running=1";
+		$allsql = "SELECT * FROM `server1`where running=1 order by host_name ASC";
 		$game_results = $database->get_results($allsql);
 		$display='';
 	
