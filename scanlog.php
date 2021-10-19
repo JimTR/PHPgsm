@@ -28,12 +28,13 @@
  */
 //echo cr;
 define('cr',PHP_EOL);
-    $shortopts ="f:s:v::";
+    $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
 	$longopts[]="quick::";
 	$longopts[]="remote::";
 	$longopts[]="silent::";
+	$longopts[]="force-modify::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -64,7 +65,12 @@ define('cr',PHP_EOL);
 	else {
 		define('silent',false);
 	}
-	
+	if(isset($options['force-modify'])){
+		define('modify',true);
+	}
+	else {
+		define('modify',false);
+	}
 	if(debug) {
 		echo 'current options '.cr.print_r($options,true).cr;
 		echo '$argv is '.cr.print_r ($argv,true).cr;
@@ -75,7 +81,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15510-3848059868";
+	$build = "15928-664940181";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -96,10 +102,11 @@ if(empty($options['s'])) {
 		echo 'Please supply a Server to scan'.cr;
 	}
 	echo 'Examples :- '.cr."\t".$prog.' -s<server id>'.cr;
-	echo "\t$prog -s<server id> -f<file to import> do not use -f with the all server option it is used for importing data and \e[4mnot\e[0m scaning".cr;
+	echo "\t$prog -s<server id> -i<file to import> do not use -i with the all server option it is used for importing data and \e[4mnot\e[0m scanning".cr;
 	echo "\t$prog -s<all> this will scan all servers using the default log(s), slow but thorough ".cr;
 	echo "\t--quick scans the current steam log rather than the full log faster but not so thorough, works with all other options".cr;
 	echo "\t--debug logs technical details to the console, works with all other options".cr;
+	echo "\t--force-modify updates user information even if their IP address has not changed".cr;
 	echo "\t--help this information".cr;
 	exit(0);
 }
@@ -107,7 +114,9 @@ $asql = 'select * from players where steam_id64="'; // sql stub for user updates
 $update_done= array();
 $file =options['s'];
 if ($file == 'all') {
-	
+	    if(isset($options['i'] )) {
+			die( 'Error  -i can not be set if -s is set to all'.cr);
+		}
 		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name ASC';
 		$game_results = $database->get_results($allsql);
 		$display='';
@@ -146,9 +155,9 @@ if ($file == 'all') {
 }
 else {
 	// do supplied file
-	if(isset(options['f'])) {
-	if (!file_exists(options['f'])) {
-		echo 'could not open '.options['f'].cr;
+	if(isset(options['i'])) {
+	if (!file_exists(options['i'])) {
+		echo 'could not open '.options['i'].cr;
 		exit (1);
 	}
 }
@@ -162,7 +171,7 @@ else {
 	$server_key = md5( ip2long($run['ipaddr'])) ;
 	//$path = $argv[1];
 	//print_r($run);
-	if (!isset(options['f'])) {
+	if (!isset(options['i'])) {
 		if (quick) {
 			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 			if (debug) {
@@ -175,7 +184,7 @@ else {
 	}
 	else {
 		// assume run local 
-		$path = options['f'];
+		$path = options['i'];
 	}
 		
 		
@@ -222,7 +231,7 @@ if (debug) {
 		echo 'Found the following:-'.cr. print_r($la,true).cr;
 	} //debug code
 	else {
-		echo "nothing found for $server".cr;
+		echo "No Logons in selected log for $server".cr;
 	}
 }
 if (!isset($la)) { 
@@ -231,7 +240,8 @@ if (!isset($la)) {
 	else {$pc = count($la);}
 	if ( $pc == 0 ) {
 		if(!silent) {
-			$rt = "\t Nothing found for $server".cr;
+			//echo "No Logons in selected log for $server".cr;
+			$rt = "\t No Logons in selected log for $server".cr;
 		}
 		else {
 			$rt ='';
@@ -281,7 +291,7 @@ foreach ($la as $user_data) {
 		$modify=true;
 		}
 		
-		if ($user_data['ip'] <> $result['ip'] ) {
+		if ($user_data['ip'] <> $result['ip']  or modify) {
 			$ut.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
 			//check ip on change
 			$ip_data = get_ip_detail($ip);
@@ -422,7 +432,7 @@ $rt .= cr.'Processed '.$server.cr;
 return $rt;
 }
 if (!silent) {
-$rt = "\t No changes on $server".cr;
+$rt = "\t No new logons on $server since last run".cr;
 }
 if (debug ) {
 	echo strlen($rt).cr;
@@ -438,7 +448,7 @@ function get_ip_detail($ip) {
 	if (debug) {
 		echo "getting ip data with $cmd".cr; 
 	}
-	$ip_data = json_decode(file_get_contents($cmd), true); //get the result
+	$ip_data = json_decode(geturl($cmd), true); //get the result
 	 if (empty($ip_data['threat']['is_threat'])) {$ip_data['threat']['is_threat']=0;}
 	 //print_r($ip_data); //debug code
 	 return $ip_data;
