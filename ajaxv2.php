@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46611-3909981191";
+	$build = "46762-1512073285";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -805,6 +805,8 @@ if (count($players)) {
 			$players[$k]['Name'] = Emoji::Decode($players[$k]['Name']);
 			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
 			$players[$k]['country'] = $player_data['country'];
+			$players[$k]['steam_id'] = $player_data['steam_id64']; // user steam_id
+			$players[$k]['ip'] = long2ip($player_data['ip']); // recorded ip address
 		}
 		else {
 			// no current flag or country
