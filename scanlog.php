@@ -81,7 +81,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15928-664940181";
+	$build = "15925-1937754710";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -355,7 +355,7 @@ foreach ($la as $user_data) {
 	}
 	else {
 		if (debug) {
-			echo 'adding '.$username.cr;
+			echo "adding $username".cr;
 		}
 		$added = true;
 		$ut .= $ut.' New user';
@@ -428,7 +428,6 @@ if ($uds == true) {
 	$rt .= update_server($server);
 }
 $rt .= cr.'Processed '.$server.cr;
-
 return $rt;
 }
 if (!silent) {
