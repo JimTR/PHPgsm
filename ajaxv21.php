@@ -136,22 +136,27 @@ echo 'running'.cr;
 	}
 	function help($option=null) {
 		// display help
-		global $version,$build,$settings;
-		$year = $settings['start_year'];
-		$date = date('Y');
-		$cc = new Color();
-		echo $cc->convert("%GAjax v$version $build Copyright Noideer Software $year - $date%n").cr;
-		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
-		$option = $cc->convert("%cOption\t\t\t%n");
-	    $use = $cc->convert("%cUse\t\t\t%n");
-	    $notes = $cc->convert("%c\tNotes%n");
-	    echo cr;
-	    $table->setHeaders( array ($option,$use,$notes));
+		if (is_cli()) {
+			global $version,$build,$settings;
+			$year = $settings['start_year'];
+			$date = date('Y');
+			$cc = new Color();
+			echo $cc->convert("%GAjax v$version $build Copyright Noideer Software $year - $date%n").cr;
+			$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
+			$option = $cc->convert("%cOption\t\t\t%n");
+			$use = $cc->convert("%cUse\t\t\t%n");
+			$notes = $cc->convert("%c\tNotes%n");
+			echo cr;
+			$table->setHeaders( array ($option,$use,$notes));
 		//$table->addRow(array('','',''));
 		//$table->addRow(array($option,$use,$notes));
-		$table->addRow(array('-h, --help' ,'get help','display help on a subject e.g \'--help action\''));
-		$table->addRow(array('-a, --action' ,'send action','major option must be set'));
-		$table->setHeaders( array ($option,$use,$notes));
-		echo $table->getTable().cr;
+			$table->addRow(array('-h, --help' ,'get help','display help on a subject e.g \'--help action\''));
+			$table->addRow(array('-a, --action' ,'send action','major option must be set'));
+			$table->setHeaders( array ($option,$use,$notes));
+			echo $table->getTable().cr;
+	}
+	else {
+		echo 'no help available<br>';
+	}
 	}
 ?>
