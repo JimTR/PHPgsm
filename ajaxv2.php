@@ -379,7 +379,7 @@ function game_detail() {
 					$ip= trim(shell_exec("hostname -I | awk '{print $1}'"));
 				}
 				$checkip = $ip; 
-				if($cmds['debug']='true') {echo "checkip=$ip";}
+				//if($cmds['debug']='true') {echo "checkip=$ip";}
 				// alter this bit	
 				// use screen to test 	
 				exec('ps -C screen -o pid,cmd |sed 1,1d',$tmp,$val); // this gets running only needs rework may 2021
