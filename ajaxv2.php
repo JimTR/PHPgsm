@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "46762-1512073285";
+	$build = "46907-2387843909";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
