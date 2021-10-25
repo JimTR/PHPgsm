@@ -375,6 +375,9 @@ function game_detail() {
 					if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 				}
 				//$checkip = substr($ip,0,strlen($ip)-1);
+				if(empty($ip)) {
+					$ip= trim(shell_exec("hostname -I | awk '{print $1}'"));
+				}
 				$checkip = $ip; 
 				if($cmds['debug']='true') {echo "checkip=$ip";}
 				// alter this bit	
