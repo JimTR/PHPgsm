@@ -371,7 +371,7 @@ function game_detail() {
 			else {
 					$host= gethostname();
 					$ip = gethostbyname($host);
-					$ip = geturl('https://api.ipify.org');
+					//$ip = geturl('https://api.ipify.org');
 					if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 				}
 				//$checkip = substr($ip,0,strlen($ip)-1);
