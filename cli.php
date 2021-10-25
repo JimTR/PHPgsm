@@ -22,7 +22,7 @@
  * 
  * 
  */
-	$shortopts ="d::f:s:v::g::t::li::r:q:l:";
+	$shortopts ="d::f:s:v::g::t::i::r:q:l::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
 	$longopts[]="quick::";
@@ -31,7 +31,7 @@
 	$longopts[]="version::";
 	$longopts[]="games::";
 	$longopts[]="details::";
-	$longopts[]="list::";
+	$longopts[]="id::";
 	$longopts[]="start:";
 	$longopts[]="restart:";
 	$longopts[] ="quit:";
@@ -59,11 +59,11 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	$version = 2.05;
+	$version = 2.06;
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "23371-3855903511";
+	$build = "24058-1538443409";
 	
 	
 	if(is_cli()) {
@@ -74,7 +74,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	if (debug) {
 		echo 'debug'.cr;
 		error_reporting( -1 );
-		echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 		if (isset($cmds)) {
 			foreach ($cmds as $k => $v) {
 				if ($k == 'debug'){continue;}
@@ -115,7 +115,15 @@ $cc = new Color();
 			$cmds['server'] = 'all';
 		}
 		}
-	if(isset($options['l']) and isset($options['i']) or isset($options['list'])) {$cmds['action']='li';}
+	if(isset($options['i']) or isset($options['id'])) 
+	{
+		if($options['i'] =='g') {
+			$cmds['action'] = 'ig';
+		}
+		else {
+			$cmds['action']='li';
+		}
+		}
 	if(isset($options['server'])) {$cmds['server'] = $options['server'];} 
 	if(isset($options['s']) or isset($options['start'])) {
 		$cmds['action'] = 's';
@@ -145,13 +153,13 @@ $cc = new Color();
 		}
 		}
 	//if(isset($options['q'])) {$cmds['action'] = 'q';}
-	
+	echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	if (empty($cmds['action'])) {help();}
 switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
@@ -163,20 +171,22 @@ switch ($cmds['action']) {
 	break;
 	case 'l':
 	case 'log':
+	echo $cmds['server'].cr;
 	if(!isset($cmds['server'])) {
 		echo 'no Server ID supplied'.cr;
 		exit;
 		}
 		if ($cmds['server'] == 'all') {
-			echo 'Quick log scan';
+			echo 'Quick log scan'.cr;
 			$exe = urlencode ('./scanlog.php -sall');
 			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			//echo $cmd.cr;
-			$content = file_get_contents($cmd);
+			$content = geturl($cmd);
 			if(empty(trim($content))) {
 			echo cr.'Log(s) up to date'.cr;
 		}
 		else {
+			echo 'Checking '.$cmds['server'].cr;
 			echo "\r$content";
 		}
 			break;
@@ -189,8 +199,8 @@ switch ($cmds['action']) {
 		} 
 		$exe = urlencode ('./scanlog.php  -s'.$server['host_name']);
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-		echo 'Full log scan for '.$cmds['server'];
-		$content = file_get_contents($cmd);
+		echo 'Full log scan for '.$cmds['server'].cr;
+		$content = geturl($cmd);
 		if(empty(trim($content))) {
 			echo cr.'Log up to date'.cr;
 		}
@@ -290,7 +300,7 @@ switch ($cmds['action']) {
 			break;
 		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=r';
-		echo file_get_contents($cmd).cr;
+		echo geturl($cmd).cr;
 		break;
 	case 's':
 	case 'start':
@@ -305,19 +315,30 @@ switch ($cmds['action']) {
 			break;
 		} 
 		$cmd = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=exescreen&server='.$server['host_name'].'&key='.md5($server['host']).'&cmd=s';
-		echo file_get_contents($cmd).cr;
+		echo geturl($cmd).cr;
 	break;
 	case 't':
 	case'test':
-		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
-		$option = $cc->convert("%cFile%n");
-	    $use = $cc->convert("%c\t   Status%n");
-	    $notes = $cc->convert("%c\t\tResult%n");
-	    echo cr;
-	    $table->setHeaders( array ($option,$use,$notes));
-		//$table->addRow(array('','',''));
-		//$table->addRow(array($option,$use,$notes,''));
+	/*╔═══════╦══╦══╦══╦══╗
+║ hello ║  ║  ║  ║  ║
+╠═══════╬══╬══╬══╬══╣
+║       ║  ║  ║  ║  ║
+╠═══════╬══╬══╬══╬══╣
+║       ║  ║  ║  ║  ║
+╠═══════╬══╬══╬══╬══╣
+║       ║  ║  ║  ║  ║
+╚═══════╩══╩══╩══╩══╝*/
 		echo $cc->convert("%BFile Integrity Checker%n").cr;
+		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '─', 'vertical' => '', 'intersection' => ''));
+		$option = $cc->convert("%cFile\t%n");
+		$space = chr(032);
+	    $use = $cc->convert("%c\t   Status%n");
+	    $notes = $cc->convert("%c\t\t\tResult%n");
+	    echo cr;
+	    //$table->setHeaders( array ($option,$use,$notes));
+		//$table->addRow(array('','',''));
+		$table->addRow(array($option,$use,$notes));
+		
 		
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
@@ -410,7 +431,7 @@ $table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub opt
 $table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
 $table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
 $table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all (default)'));
-$table->addRow(array('-li, or --list ','Lists valid server Id\'s that cli can use.'));
+$table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'));
 	 //system('clear');
 	echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 echo $table->getTable();
