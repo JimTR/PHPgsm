@@ -376,6 +376,7 @@ function game_detail() {
 				}
 				//$checkip = substr($ip,0,strlen($ip)-1);
 				$checkip = $ip; 
+				if(debug) {echo "checkip=$ip";}
 				// alter this bit	
 				// use screen to test 	
 				exec('ps -C screen -o pid,cmd |sed 1,1d',$tmp,$val); // this gets running only needs rework may 2021
