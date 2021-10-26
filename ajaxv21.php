@@ -128,7 +128,7 @@ echo 'running'.cr;
 					
 				}
 			}
-			 if (isset($_SERVER['HTTP_PHPGSM_AUTH'])) {
+			 if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
                         $cmds['valid'] = true;
                         //echo 'auth on'.cr;
                         }
