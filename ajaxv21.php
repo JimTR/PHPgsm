@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 		die( 'invalid entry point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
-		die('I don\'t know what you mean');
+		die('I don\'t know what you mean'.cr);
 	}
         if($cmds['action'] == 'version'){
            echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
@@ -57,7 +57,7 @@ echo 'running'.cr;
 			 //echo 'raw argv '.print_r($argv,true);
                 $argv = array_map('strtolower',$argv);
                // echo 'lowered argv '.print_r($argv,true);
-                        echo 'in cli'.CR;
+                      //  echo 'in cli'.CR;
 			$shortopts ="a:A:s:S:d::D::v::V::h::H::";
 			$longopts[] = "debug::";
 			$longopts[] = "DEBUG::";
@@ -69,17 +69,13 @@ echo 'running'.cr;
 			$longopts[] = "HELP::";
 			$longopts[] = "topic:";
 			$longopts[] = "TOPIC:";
-			//$result = array_map('strtolower',$myArray);
 			$options = getopt($shortopts,$longopts);
 			//echo 'options as is  '.print_r($options,true);
 			$options = array_change_key_case($options,CASE_LOWER);
 			$options = array_map('strtolower',$options);
-			echo 'case changed '.print_r($options,true);
+			//echo 'case changed '.printr($options,true);
 			// running from the command line
 			//echo 'options '.print_r($options,true).CR;
-                        echo "setting valid".cr; 
-			$cmds['valid'] = 1; // we trust the console
-                        print_r($cmds);
 			$method = 'cli';
 			if (!isset($argv['action'])) { 
 				$cmds = convert_to_argv($argv,"",true);
@@ -100,9 +96,7 @@ echo 'running'.cr;
             if(isset($options['a'])) {$cmds['action'] = $options['a'];} 
             //switch ($options) {
             $cmds['valid'] = true; // we trust the console
-        				
-           print_r($cmds);
-                        return $cmds;
+            //return $cmds;
 		}
 
 		else {
@@ -149,15 +143,12 @@ echo 'running'.cr;
                  $output .= "$method finished".cr;
 		//echo print_r($cmds,true);
                 if(isset($_SERVER)) {
-                foreach ($_SERVER as $k => $v) {
-                     if(!is_array($v)) { 
-                     $output .=  "[$k]=>$v".cr;
-                      }
-                } 
+                 $output .= printr($_SERVER);
                 }
                 //echo print_r($_SERVER,true);
-              
-                //echo $output;
+              if(isset($cmds['debug'])) {
+                  echo $output;
+			}
             return $cmds; 
 	}
 	function help($option=null) {
