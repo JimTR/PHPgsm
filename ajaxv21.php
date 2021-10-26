@@ -33,10 +33,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$version = 2.101;
 	$cmds =startup();
 	//echo 'returned $cmds ',print_r($cmds,true).cr;
+	if ($cmds['valid'] === false) {
+		echo 'invalid entry point';
+	}
         if($cmds['action'] == 'version'){
            echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
         }
-        if($cmds['action'] =='help') {die(help());}
+        if($cmds['action'] =='help') {die(help($cmds['helpopt']));}
 echo 'running'.cr;
 	function startup() {
 		// get supplied options
@@ -58,15 +61,17 @@ echo 'running'.cr;
 			$longopts[] = "VERSION";
 			$longopts[] = "help::";
 			$longopts[] = "HELP::";
+			$longopts[] = "topic:";
+			$longopts[] = "TOPIC:";
 			//$result = array_map('strtolower',$myArray);
 			$options = getopt($shortopts,$longopts);
 			//echo 'options as is  '.print_r($options,true);
 			$options = array_change_key_case($options,CASE_LOWER);
 			$options = array_map('strtolower',$options);
-			//echo 'case changed '.print_r($options,true);
+			echo 'case changed '.print_r($options,true);
 			// running from the command line
 			//echo 'options '.print_r($options,true).CR;
-			$cmds['valid'] = 1; // we trust the console
+			$cmds['valid'] = true; // we trust the console
 			$method = 'cli';
 			define ('cr',PHP_EOL);
 			if (!isset($argv['action'])) { 
@@ -74,7 +79,17 @@ echo 'running'.cr;
 			}
 			if(isset($options['debug'])) {$cmds['debug']= true;}
             if(isset($options['v']) or isset($options['version'])) {$cmds['action'] ='version';}
-            if(isset($options['h']) or isset($options['help'])) {$cmds['action'] ='help';}
+            
+            if(isset($options['help'])||isset($options['h'])){
+				$cmds['action'] ='help';
+			}
+				if(!empty($options['topic'])) {
+					$cmds['helpopt'] = $options['topic'];
+				}
+				else {
+					$cmds['helpopt'] = null;
+				}
+			//}
             if(isset($options['a'])) {$cmds['action'] = $options['a'];} 
             //switch ($options) {
 				
@@ -95,11 +110,11 @@ echo 'running'.cr;
 			}
 			if(!empty($_GET)) {
 				// not the best but added
-                                 echo 'in get<br>';
-                                 echo print_r($_GET,true).'<br>';
+                                 //echo 'in get<br>';
+                                 //echo print_r($_GET,true).'<br>';
 				if (isset($cmds)) {
 					// we have details from $_POST
-                                        echo 'merge get<br>';
+                                        //echo 'merge get<br>';
 					$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
 					$method .='/$_GET';
 				}
@@ -127,21 +142,24 @@ echo 'running'.cr;
                 }
                 //echo print_r($_SERVER,true);
                if (isset($_SERVER['HTTP_PHPGSM_AUTH'])) {
-                        $cmds['valid'] = 1;
+                        $cmds['valid'] = true;
                         //echo 'auth on'.cr;
-                        
-                }
+                        }
+                else {
+					$cmds['valid'] = false;
+				}        
                 //echo $output;
             return $cmds; 
 	}
 	function help($option=null) {
 		// display help
 		if (is_cli()) {
+			echo "option = $option".cr;
 			global $version,$build,$settings;
 			$year = $settings['start_year'];
 			$date = date('Y');
 			$cc = new Color();
-			echo $cc->convert("%GAjax v$version $build Copyright Noideer Software $year - $date%n").cr;
+			echo $cc->convert("%MAjax v$version $build Copyright Noideer Software $year - $date%n").cr;
 			$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '', 'vertical' => '', 'intersection' => ''));
 			$option = $cc->convert("%cOption\t\t\t%n");
 			$use = $cc->convert("%cUse\t\t\t%n");
@@ -150,13 +168,13 @@ echo 'running'.cr;
 			$table->setHeaders( array ($option,$use,$notes));
 		//$table->addRow(array('','',''));
 		//$table->addRow(array($option,$use,$notes));
-			$table->addRow(array('-h, --help' ,'get help','display help on a subject e.g \'--help action\''));
+			$table->addRow(array(' --help' ,'get help','display help on a subject e.g \'--help --topic action\''));
 			$table->addRow(array('-a, --action' ,'send action','major option must be set'));
 			$table->setHeaders( array ($option,$use,$notes));
 			echo $table->getTable().cr;
 	}
 	else {
-		echo 'no help available<br>';
+		echo 'no help available'.cr;
 	}
 	}
 ?>
