@@ -146,7 +146,7 @@ echo 'running'.cr;
                  $output .= printr($_SERVER);
                 }
                 //echo print_r($_SERVER,true);
-              if(isset($cmds['debug'])) {
+              if(isset($cmds['debug']) and $cmds['valid']) {
                   echo $output;
 			}
             return $cmds; 
