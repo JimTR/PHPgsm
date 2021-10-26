@@ -24,20 +24,46 @@ global $database;
         return $db->affectedRows();
     }
 
-    function printr($var,$return)
+    function printr($var,$return=false,$key='')
     {
 		
-        $output = print_r($var,true);
-        $output = str_replace("\n", "<br>", $output);
-        $output = str_replace(' ', '&nbsp;', $output);
-        if ($return === true){
-			
-        echo "<div style='font-family:courier;'>$output</div>";}
-        if ($return === false) {
-			
-			return $output;
+       
+        if(is_cli()) {
+			$output='';
+			foreach($var as $k=>$v){
+				// parse array
+				if (is_array($v)) {
+					// value is an array recursive call to function
+					$output .= printr($v,false,$k);
+				}
+				else {
+					if (empty($key)) {
+						$output .= "$k => $v".PHP_EOL;
+					}
+					else {
+						// add key
+						$output .= "$key"."[$k] => $v".PHP_EOL;
+					}
+				}
+			}
+			if ($return === true) {
+				echo $output;
+			}
+			else {
+				return $output;
+			}
 		}
-		
+        else{
+			 $output = print_r($var,true);
+			 $output = str_replace("\n", "<br>", $output);
+			$output = str_replace(' ', '&nbsp;', $output);
+			if ($return === true){
+			        echo "<div style='font-family:courier;'>$output</div>";
+			   }
+			if ($return === false) {
+				return $output;
+		}
+	}
 			
     }
 
@@ -544,14 +570,15 @@ global $database;
 				 curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
 			 }   
 			 if(!is_null($query)) {
-				 //echo 'in geturl<br>';
-				 //print_r($query);
-				 //echo '<br>';
+				 echo 'in geturl<br>';
+				 print_r($query);
+				 echo '<br>';
 				 // add post fields
 				 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
 				 curl_setopt( $ch, CURLOPT_POSTFIELDS, $query );
 			 }
             curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
             $html = curl_exec($ch);
