@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$build = "4657-1166691063";
 	$version = 2.101;
 	$cmds =startup();
-	//echo 'returned $cmds ',print_r($cmds,true).cr;
+	echo 'returned $cmds ',print_r($cmds,true).cr;
 	if ($cmds['valid'] === false) {
 		die( 'invalid entry point');
 	}
@@ -48,14 +48,16 @@ echo 'running'.cr;
 		// get supplied options
                 
                 $output ='';
+                $cmds = array();
                
 		if (is_cli()) {
 			global $argv; 
-			$method = 'none';
+			//$method = $argv";
+                        define ('cr',PHP_EOL);
 			 //echo 'raw argv '.print_r($argv,true);
                 $argv = array_map('strtolower',$argv);
                // echo 'lowered argv '.print_r($argv,true);
-            //echo 'in cli'.CR;
+                        echo 'in cli'.CR;
 			$shortopts ="a:A:s:S:d::D::v::V::h::H::";
 			$longopts[] = "debug::";
 			$longopts[] = "DEBUG::";
@@ -75,9 +77,10 @@ echo 'running'.cr;
 			echo 'case changed '.print_r($options,true);
 			// running from the command line
 			//echo 'options '.print_r($options,true).CR;
-			$cmds['valid'] = true; // we trust the console
+                        echo "setting valid".cr; 
+			$cmds['valid'] = 1; // we trust the console
+                        print_r($cmds);
 			$method = 'cli';
-			define ('cr',PHP_EOL);
 			if (!isset($argv['action'])) { 
 				$cmds = convert_to_argv($argv,"",true);
 			}
@@ -96,9 +99,10 @@ echo 'running'.cr;
 			//}
             if(isset($options['a'])) {$cmds['action'] = $options['a'];} 
             //switch ($options) {
-				
-           
-                        //die('cli');
+            $cmds['valid'] = true; // we trust the console
+        				
+           print_r($cmds);
+                        return $cmds;
 		}
 
 		else {
