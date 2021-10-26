@@ -570,9 +570,9 @@ global $database;
 				 curl_setopt($ch, CURLOPT_HTTPHEADER, $headr);
 			 }   
 			 if(!is_null($query)) {
-				 echo 'in geturl<br>';
-				 print_r($query);
-				 echo '<br>';
+				 //echo 'in geturl<br>';
+				 //print_r($query);
+				 //echo '<br>';
 				 // add post fields
 				 curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
 				 curl_setopt( $ch, CURLOPT_POSTFIELDS, $query );
