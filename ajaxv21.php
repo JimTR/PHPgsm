@@ -125,12 +125,18 @@ echo 'running'.cr;
 				}
 				else {
 					// no $_POST backwards compat
-                                        echo 'just get<br>'; 
-					$cmds = convert_to_argv($_GET,"",true);
+                    $cmds = convert_to_argv($_GET,"",true);
 					$method = '$_GET';
 					
 				}
 			}
+			 if (isset($_SERVER['HTTP_PHPGSM_AUTH'])) {
+                        $cmds['valid'] = true;
+                        //echo 'auth on'.cr;
+                        }
+                else {
+					$cmds['valid'] = false;
+				}        
 		} 
 		$output .= "method = $method".cr;
                  foreach ($cmds as $k => $v) {
@@ -146,13 +152,7 @@ echo 'running'.cr;
                 } 
                 }
                 //echo print_r($_SERVER,true);
-               if (isset($_SERVER['HTTP_PHPGSM_AUTH'])) {
-                        $cmds['valid'] = true;
-                        //echo 'auth on'.cr;
-                        }
-                else {
-					$cmds['valid'] = false;
-				}        
+              
                 //echo $output;
             return $cmds; 
 	}
