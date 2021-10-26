@@ -101,16 +101,17 @@ echo 'running'.cr;
                         //die('cli');
 		}
 
-		//else {
+		else {
 			// run via url
                         //echo 'run by url<br>';
+                        define ('cr','<br>');
 			if(!empty($_POST)) {
 				// this is the norm
                                //echo 'in post<br>';
                                // echo print_r($_POST,true).'<br>';
 				$cmds =convert_to_argv($_POST,"",true);
 				$method = '$_POST';
-				define ('cr','<br>');
+				//define ('cr','<br>');
 			}
 			if(!empty($_GET)) {
 				// not the best but added
@@ -127,10 +128,10 @@ echo 'running'.cr;
                                         echo 'just get<br>'; 
 					$cmds = convert_to_argv($_GET,"",true);
 					$method = '$_GET';
-					define ('cr','<br>');
+					
 				}
 			}
-		//} 
+		} 
 		$output .= "method = $method".cr;
                  foreach ($cmds as $k => $v) {
                      $output .= "[$k]=>$v".cr;
