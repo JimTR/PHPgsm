@@ -34,7 +34,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$cmds =startup();
 	//echo 'returned $cmds ',print_r($cmds,true).cr;
 	if ($cmds['valid'] === false) {
-		echo 'invalid entry point';
+		die( 'invalid entry point');
+	}
+	if (!isset($cmds['action']) || empty($cmds['action'])){
+		die('I don\'t know what you mean');
 	}
         if($cmds['action'] == 'version'){
            echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
