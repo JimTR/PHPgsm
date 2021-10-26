@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$build = "4657-1166691063";
 	$version = 2.101;
 	$cmds =startup();
-	echo 'returned $cmds ',print_r($cmds,true).cr;
+	//echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
 		die( 'invalid entry point');
 	}
