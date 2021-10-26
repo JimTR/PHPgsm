@@ -51,6 +51,7 @@ echo 'running'.cr;
                
 		if (is_cli()) {
 			global $argv; 
+			$method = 'none';
 			 //echo 'raw argv '.print_r($argv,true);
                 $argv = array_map('strtolower',$argv);
                // echo 'lowered argv '.print_r($argv,true);
