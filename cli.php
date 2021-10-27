@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "24058-1538443409";
+	$build = "24060-4247163327";
 	
 	
 	if(is_cli()) {
@@ -329,12 +329,13 @@ switch ($cmds['action']) {
 ║       ║  ║  ║  ║  ║
 ╚═══════╩══╩══╩══╩══╝*/
 		echo $cc->convert("%BFile Integrity Checker%n").cr;
-		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '─', 'vertical' => '', 'intersection' => ''));
-		$option = $cc->convert("%cFile\t%n");
+		//$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼'),0,null,true);
+		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '  ', 'vertical' => '  ', 'intersection' => '  '), 0, null,true);
+		$option = $cc->convert("%cFile%n");
 		$space = chr(032);
-	    $use = $cc->convert("%c\t   Status%n");
-	    $notes = $cc->convert("%c\t\t\tResult%n");
-	    echo cr;
+	    $use = $cc->convert("%cStatus%n");
+	    $notes = $cc->convert("%cResult%n");
+	    //echo cr;
 	    //$table->setHeaders( array ($option,$use,$notes));
 		//$table->addRow(array('','',''));
 		$table->addRow(array($option,$use,$notes));
@@ -342,10 +343,9 @@ switch ($cmds['action']) {
 		
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
-		
 				$check = check_file($filename);
 				if ($check['status']) {
-					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
+					$table->addRow(array($cc->convert( "%g$filename%n"),$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
 				}
 				else {
 					$table->addRow(array($filename,$check['symbol'],$check['reason']));
@@ -458,10 +458,7 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 $da1 = $cc->convert("%W     Data Disk%n");
 	 if($data['option'] =='h' || $data['option'] =='a') {
 		 //
-		  $table = new Table(
-    CONSOLE_TABLE_ALIGN_LEFT,
-    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-    );
+		  $table = new Table(CONSOLE_TABLE_ALIGN_LEFT,'',4,null,true);
 		$cpu_info = get_cpu_info();
 		 echo $cc->convert("%BHardware Information%n").cr;
 		 $table->addRow(array($ha,''));
@@ -480,16 +477,15 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 }
 	  if($data['option'] =='m' || $data['option'] =='a') {
 		 //
-		  $table = new Table(
-    CONSOLE_TABLE_ALIGN_LEFT,
-    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-    );
+		  $table = new table(
+    CONSOLE_TABLE_ALIGN_LEFT,'',3,null,true
+);
 		$mem_info = get_mem_info();
 		echo $cc->convert("%BMemory Information%n").cr;
-		$table->addRow(array($ma,''));
-		$table->addRow(array('',$cc->convert("%BTotal"),"\t\t Free","  Cached",$cc->convert(" Active%n")));
-		$table->addRow(array(trim($cc->convert("%y    Mem%n")),"\t\t".$mem_info['MemTotal'],"\t".$mem_info['MemFree']," ".$mem_info['Cached'],"  ".$mem_info['Active']));
-		$table->addRow(array($cc->convert("%y   Swap%n"),"\t\t".$mem_info['SwapTotal'], "\t".$mem_info['SwapFree'],$mem_info['SwapCached']));
+		//$table->addRow(array($ma,''));
+		$table->setheaders(array($ma,$cc->convert("%BTotal"),"Free","Cached",$cc->convert("Active%n")));
+		$table->addRow(array($cc->convert("%y      Real%n"),$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']));
+		$table->addRow(array($cc->convert("%y      Swap%n"),$mem_info['SwapTotal'], $mem_info['SwapFree'],$mem_info['SwapCached']));
 		echo $table->getTable();
 		echo cr;
 	}
