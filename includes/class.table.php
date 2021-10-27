@@ -45,7 +45,7 @@ define('CONSOLE_TABLE_ALIGN_LEFT', -1);
 define('CONSOLE_TABLE_ALIGN_CENTER', 0);
 define('CONSOLE_TABLE_ALIGN_RIGHT', 1);
 define('CONSOLE_TABLE_BORDER_ASCII', -1);
-	$build = "29229-1394197980";
+	$build = "32364-2886287643";
 /**
  * The main class.
  *
@@ -154,6 +154,7 @@ class Table
         'intersection' => '+',
         'horizontal' => '-',
         'vertical' => '|',
+        'left' => '├',
     );
 
     /**
@@ -176,7 +177,7 @@ class Table
      * @var Console_Color2
      */
     var $_ansiColor = false;
-
+    var $_headers_done = false;
     /**
      * Constructor.
      *
@@ -199,10 +200,10 @@ class Table
         $this->setBorder($border);
         $this->_padding      = $padding;
         if ($color) {
-            if (!class_exists('Console_Color2')) {
-                include_once 'Console/Color2.php';
+            if (!class_exists('Color')) {
+                include_once 'class.color.php';
             }
-            $this->_ansiColor = new Console_Color2();
+            $this->_ansiColor = new Color();
         }
         if (!empty($charset)) {
             $this->setCharset($charset);
@@ -288,12 +289,13 @@ class Table
      */
     function setBorder($border)
     {
+		
         if ($border === CONSOLE_TABLE_BORDER_ASCII) {
             $intersection = '+';
             $horizontal = '-';
             $vertical = '|';
         } else if (is_string($border)) {
-            $intersection = $horizontal = $vertical = $border;
+            $intersection = $horizontal = $vertical =  $left = $right = $left_top =$right_top = $left_bottom = $right_bottom = $top_intersection = $border;
         } else if ($border == '') {
             $intersection = $horizontal = $vertical = '';
         } else {
@@ -304,6 +306,13 @@ class Table
             'intersection' => $intersection,
             'horizontal' => $horizontal,
             'vertical' => $vertical,
+            'left'=> $left,
+            'right'=>$right,
+            'left_top'=>$left_top,
+            'right_top'=>$right_top,
+            'left_bottom'=>$left_bottom,
+            'right_bottom'=>$right_bottom,
+            'top_intersection' => $top_intersection,
         );
     }
 
@@ -446,6 +455,7 @@ class Table
      */
     function addData($data, $col_id = 0, $row_id = 0)
     {
+        echo "addData row_id = $row_id".PHP_EOL;
         foreach ($data as $row) {
             if ($row === CONSOLE_TABLE_HORIZONTAL_RULE) {
                 $this->_data[$row_id] = CONSOLE_TABLE_HORIZONTAL_RULE;
@@ -469,6 +479,7 @@ class Table
      */
     function addSeparator()
     {
+        echo 'addSep '.  CONSOLE_TABLE_HORIZONTAL_RULE.PHP_EOL;
         $this->_data[] = CONSOLE_TABLE_HORIZONTAL_RULE;
     }
 
@@ -548,6 +559,7 @@ class Table
         }
 
         for ($i = 0; $i < $this->_max_rows; $i++) {
+			//echo "validate i = $i".PHP_EOL;
             for ($j = 0; $j < $this->_max_cols; $j++) {
                 if (!isset($this->_data[$i][$j]) &&
                     (!isset($this->_data[$i]) ||
@@ -641,13 +653,22 @@ class Table
         if (!count($this->_data)) {
             return '';
         }
-
+        global $_headers_done;
         $vertical = $this->_border['vertical'];
-        $separator = $this->_getSeparator();
-
-        $return = array();
+         $return = array();
+          $table_count = count($this->_data);
         for ($i = 0; $i < count($this->_data); $i++) {
+             if ($i < count($this->_data)-1) {
+				$separator = $this->_getSeparator($i);
+			}
+			
+			else {
+				
+				$separator = $this->_getSeparator(0);
+			}
+				
             if (is_array($this->_data[$i])) {
+               
                 for ($j = 0; $j < count($this->_data[$i]); $j++) {
                     if ($this->_data[$i] !== CONSOLE_TABLE_HORIZONTAL_RULE &&
                         $this->_strlen($this->_data[$i][$j]) <
@@ -661,9 +682,11 @@ class Table
             }
 
             if ($this->_data[$i] !== CONSOLE_TABLE_HORIZONTAL_RULE) {
+                //echo  "i in loop = $i".PHP_EOL;
                 $row_begin = $this->_borderVisibility['left']
                     ? $vertical . str_repeat(' ', $this->_padding)
                     : '';
+                    //echo "\$row_begin = $row_begin".PHP_EOL; 
                 $row_end = $this->_borderVisibility['right']
                     ? str_repeat(' ', $this->_padding) . $vertical
                     : '';
@@ -671,19 +694,24 @@ class Table
                     . str_repeat(' ', $this->_padding);
                 $return[]     = $row_begin
                     . implode($implode_char, $this->_data[$i]) . $row_end;
+                    
             } elseif (!empty($separator)) {
+				
                 $return[] = $separator;
             }
 
         }
 
         $return = implode(PHP_EOL, $return);
+       
         if (!empty($separator)) {
             if ($this->_borderVisibility['inner']) {
                 $return = $separator . PHP_EOL . $return;
             }
             if ($this->_borderVisibility['bottom']) {
-                $return .= PHP_EOL . $separator;
+				// this is it ! count($this->_data)-1
+				$finish = $this->_getSeparator(count($this->_data)-1);
+                $return .= PHP_EOL . $finish;
             }
         }
         $return .= PHP_EOL;
@@ -701,29 +729,62 @@ class Table
      *
      * @return string  The horizontal separator.
      */
-    function _getSeparator()
+    function _getSeparator($roz=null)
     {
         if (!$this->_border) {
             return;
         }
-
+        global $_headers_done; 
         $horizontal = $this->_border['horizontal'];
         $intersection = $this->_border['intersection'];
-
+        $right = $this->_border['right']; //'┤';
+        $left = $this->_border['left'];
+        $left_top = $this->_border['left_top'];
+        $left_bottom = $this->_border['left_bottom'];
+        $right_top = $this->_border['right_top'];
+        $right_bottom = $this->_border['right_bottom'];
+        $intersection_top = $this->_border['top_intersection'];
+        $intersection_bottom = '┴';
         $return = array();
         foreach ($this->_cell_lengths as $cl) {
+            //echo $cl.PHP_EOL;
             $return[] = str_repeat($horizontal, $cl);
         }
-
-        $row_begin = $this->_borderVisibility['left']
-            ? $intersection . str_repeat($horizontal, $this->_padding)
+       
+			//echo "ended up here with roz at $roz".PHP_EOL;
+			if (!$_headers_done) {
+				//echo 'headers not set here yet'.PHP_EOL;
+				//if (!empty($this->_headers)) {
+					//echo 'row count '. count($this->_data).PHP_EOL;
+					if ($roz ===  count($this->_data)-1) {
+						//echo 'is this the last row ?'.PHP_EOL.print_r($this->_data[$roz],true).PHP_EOL;
+							$row_begin = $this->_borderVisibility['left']  ? $left_bottom . str_repeat($horizontal, $this->_padding): '';
+							$row_end = $this->_borderVisibility['right']   ? str_repeat($horizontal, $this->_padding) . $right_bottom : '';
+							$implode_char = str_repeat($horizontal, $this->_padding) . $intersection_bottom. str_repeat($horizontal, $this->_padding);
+						//die();
+					}
+				else{
+				//echo 'table data '.print_r($this->_data[$roz],true).PHP_EOL;	
+				$row_begin = $this->_borderVisibility['left']
+            ? $left . str_repeat($horizontal, $this->_padding)
             : '';
-        $row_end = $this->_borderVisibility['right']
-            ? str_repeat($horizontal, $this->_padding) . $intersection
+			$row_end = $this->_borderVisibility['right']
+            ? str_repeat($horizontal, $this->_padding) . $right
             : '';
-        $implode_char = str_repeat($horizontal, $this->_padding) . $intersection
+             $implode_char = str_repeat($horizontal, $this->_padding) . $intersection
             . str_repeat($horizontal, $this->_padding);
-
+		}
+		//}
+		
+			}
+			else{
+				//echo 'headers are now set here'.PHP_EOL;
+				$row_begin = $this->_borderVisibility['left'] ? $left_top . str_repeat($horizontal, $this->_padding) : '';
+				$row_end = $this->_borderVisibility['right']  ? str_repeat($horizontal, $this->_padding) . $right_top : '';
+				$implode_char = str_repeat($horizontal, $this->_padding) . $intersection_top. str_repeat($horizontal, $this->_padding);
+		}
+		//}
+        //echo "return  thingy = $row_begin".print_r($return,true).$row_end.PHP_EOL;
         return $row_begin . implode($implode_char, $return) . $row_end;
     }
 
@@ -735,6 +796,8 @@ class Table
     function _getHeaderLine()
     {
         // Make sure column count is correct
+        global $_headers_done;
+        $_headers_done= true;
         for ($j = 0; $j < count($this->_headers); $j++) {
             for ($i = 0; $i < $this->_max_cols; $i++) {
                 if (!isset($this->_headers[$j][$i])) {
@@ -757,6 +820,7 @@ class Table
         }
 
         $vertical = $this->_border['vertical'];
+        $left_top = '┌';
         $row_begin = $this->_borderVisibility['left']
             ? $vertical . str_repeat(' ', $this->_padding)
             : '';
@@ -765,8 +829,8 @@ class Table
             : '';
         $implode_char = str_repeat(' ', $this->_padding) . $vertical
             . str_repeat(' ', $this->_padding);
-
-        $separator = $this->_getSeparator();
+         // echo "header - $row_begin".PHP_EOL;
+        $separator = $this->_getSeparator(0); // add top row
         if (!empty($separator) && $this->_borderVisibility['top']) {
             $return[] = $separator;
         }
@@ -774,7 +838,12 @@ class Table
             $return[] = $row_begin
                 . implode($implode_char, $this->_headers[$j]) . $row_end;
         }
-
+        if(!$_headers_done) {
+			//echo 'should we set headers done ?'.PHP_EOL;
+			//print_r($return);
+			$_headers_done= true;
+		} 
+		//echo 'header return'.PHP_EOL.print_r($return,true);
         return implode(PHP_EOL, $return);
     }
 
