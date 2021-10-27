@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "24060-4247163327";
+	$build = "24075-1990809070";
 	
 	
 	if(is_cli()) {
@@ -557,14 +557,14 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 		$cc = new Color();
 	 			  $table = new Table(
     CONSOLE_TABLE_ALIGN_RIGHT,
-    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
+    array('horizontal' => '', 'vertical' => '', 'intersection' => '',4,null,true)
     );
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     //echo print_r($res,true).cr;
     //^[[0;34mblue^[[0m
-    $table->addRow(array("\t\tServer", "\tStarted"," Online\tCurrent Map"));
+    $table->setheaders(array("Server", "Started"," Online","    Current Map"));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
 		 //echo print_r($gdata,true).cr;
