@@ -39,7 +39,7 @@
 	$options = getopt($shortopts,$longopts);
 	require_once 'includes/master.inc.php';
     include 'functions.php';
-	echo printr($options);
+	//echo printr($options);
 	define ('options',$options);
 	if(isset($options['debug'])) {
 		define('debug',true);
@@ -62,7 +62,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24333-2767565208";
+	$build = "24335-3841968606";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -211,7 +211,7 @@ switch ($cmds['action']) {
 	case 'list':
 			echo $cc->convert("%BList Server ID's%n").cr;
 			$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true);
-			$table->setHeaders(array($cc->convert("%cServer Name%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
+			$table->setHeaders(array($cc->convert("%cServer ID%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
 			$sql = "select * from server1 where enabled = 1 order by host_name";
 			$hosts = $database->get_results($sql);
 			//echo print_r($hosts,true).cr;
@@ -225,7 +225,7 @@ switch ($cmds['action']) {
 					//not running
 					$running = $cross;
 				}
-				$table->addRow(array($host['host_name'],$host['fname'].' ( '.$host['host'].' )',$host['location'],$running));
+				$table->addRow(array($host['host_name'],$host['fname'].' ('.$host['host'].')',$host['location'],$running));
 			}
 			echo $table->getTable();
 			break;
@@ -418,7 +418,7 @@ function help() {
 	$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,borders,1,null,true);
 //$table->addRow(array('','',''));
 $table->setHeaders(array($option,$use));
-$table->addRow(array('-s or --start <server id>','starts a game server'));
+$table->addRow(array('-s or --start <server id>','starts a game server, use -i to find <server id>'));
 $table->addRow(array('-q, or --quit <server id>','stops a game server'));
 $table->addRow(array('-r, or --restart <server id>','restarts a game server'));
 $table->addRow(array('-d, or --details ','shows details about the running system (takes sub options)'));
