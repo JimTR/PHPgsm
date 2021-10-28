@@ -81,7 +81,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "15926-1937754710";
+	$build = "16083-682082732";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -231,7 +231,7 @@ if (debug) {
 		echo 'Found the following:-'.cr. print_r($la,true).cr;
 	} //debug code
 	else {
-		echo "No Logons in selected log for $server".cr;
+		echo "No Logons in selected log for $server since last server start".cr;
 	}
 }
 if (!isset($la)) { 
@@ -241,7 +241,7 @@ if (!isset($la)) {
 	if ( $pc == 0 ) {
 		if(!silent) {
 			//echo "No Logons in selected log for $server".cr;
-			$rt = "\t No Logons in selected log for $server".cr;
+			$rt = "\t No Logons in selected log for $server since last server start".cr;
 		}
 		else {
 			$rt ='';
@@ -292,6 +292,7 @@ foreach ($la as $user_data) {
 		}
 		
 		if ($user_data['ip'] <> $result['ip']  or modify) {
+			if(!is_nul($user_data)) {
 			$ut.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
 			//check ip on change
 			$ip_data = get_ip_detail($ip);
@@ -312,7 +313,7 @@ foreach ($la as $user_data) {
 			$result['ip'] = $user_data['ip'];
 			$modify=true;
 		}
-		
+	}
 		if (trim($username) <> $result['name']) {
 			$ut.= ' User name change from '.$result['name'].' to '.$username;
 			$result['name'] = trim($username);
@@ -448,6 +449,10 @@ function get_ip_detail($ip) {
 		echo "getting ip data with $cmd".cr; 
 	}
 	$ip_data = json_decode(geturl($cmd), true); //get the result
+	if (empty($ip_data)) {
+		echo "Couldn't get data for $ip".cr;
+		return null;
+	}
 	 if (empty($ip_data['threat']['is_threat'])) {$ip_data['threat']['is_threat']=0;}
 	 //print_r($ip_data); //debug code
 	 return $ip_data;
