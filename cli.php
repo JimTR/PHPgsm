@@ -59,11 +59,11 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	$version = 2.06;
+	$version = 2.07;
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "24075-1990809070";
+	$build = "24079-3324845249";
 	
 	
 	if(is_cli()) {
@@ -319,26 +319,22 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
-	/*╔═══════╦══╦══╦══╦══╗
-║ hello ║  ║  ║  ║  ║
-╠═══════╬══╬══╬══╬══╣
-║       ║  ║  ║  ║  ║
-╠═══════╬══╬══╬══╬══╣
-║       ║  ║  ║  ║  ║
-╠═══════╬══╬══╬══╬══╣
-║       ║  ║  ║  ║  ║
-╚═══════╩══╩══╩══╩══╝*/
-		echo $cc->convert("%BFile Integrity Checker%n").cr;
-		//$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼'),0,null,true);
-		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '  ', 'vertical' => '  ', 'intersection' => '  '), 0, null,true);
+
+		//echo $cc->convert("%BFile Integrity Checker%n").cr;;
+		//$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','top_left'=>'a'),4,null,true);
+		//$table = new Table(CONSOLE_TABLE_ALIGN_LEFT, array('horizontal' => '  ', 'vertical' => '  ', 'intersection' => '  '), 0, null,true);
+		$table = new table(
+    CONSOLE_TABLE_ALIGN_LEFT,
+    array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'),3,null,true
+);
 		$option = $cc->convert("%cFile%n");
 		$space = chr(032);
 	    $use = $cc->convert("%cStatus%n");
 	    $notes = $cc->convert("%cResult%n");
-	    //echo cr;
-	    //$table->setHeaders( array ($option,$use,$notes));
+	    echo cr; echo $cc->convert("%BFile Integrity Checker%n").cr;;
+	    //$table->setHeaders( array ($cc->convert("%BFile Integrity Checker%n"),'',''));
 		//$table->addRow(array('','',''));
-		$table->addRow(array($option,$use,$notes));
+		$table->setHeaders(array($option,$use,$notes));
 		
 		
 		//echo 'doing all php files'.cr;
@@ -453,7 +449,7 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 $sw = $cc->convert("%W   Modules%n");
 	 $sa = $cc->convert("%W    Server%n");
 	 $ha = $cc->convert("%W    Hardware%n");
-	 $ma = $cc->convert("%W    Memory%n");
+	 $ma = $cc->convert("%B     Memory%n");
 	 $da = $cc->convert("%W     Boot Disk%n");
 	 $da1 = $cc->convert("%W     Data Disk%n");
 	 if($data['option'] =='h' || $data['option'] =='a') {
@@ -555,16 +551,13 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 		//system('clear');
 	 		$Query = new SourceQuery( );
 	 		$cc = new Color();
-	 			  $table = new Table(
-    CONSOLE_TABLE_ALIGN_RIGHT,
-    array('horizontal' => '', 'vertical' => '', 'intersection' => '',4,null,true)
-    );
+	 		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,array('horizontal' => '', 'vertical' => '', 'intersection' => ''),4,null,true);
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     //echo print_r($res,true).cr;
     //^[[0;34mblue^[[0m
-    $table->setheaders(array("Server", "Started"," Online","    Current Map"));
+    $table->setheaders(array("",$cc->convert("%WServer%n"), $cc->convert("%WStarted%n"),$cc->convert("%WOnline%n"),$cc->convert("%WCurrent Map%n")));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
 		 //echo print_r($gdata,true).cr;
@@ -600,10 +593,12 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 			$p1 = trim($info['Players']);
 		$info['Players'] = $cc->convert("%Y$p1%n");
 		}
+		$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	//echo $playersd.cr;
-	$host = $cc->convert("%y".$info['HostName']."%n");
-	$table->addRow(array('',$host,date('g:ia \o\n l jS F Y \(e\)',"\t".$gdata['starttime'])."\t",$playersd,"\t".$info["Map"].""));
+	$host = $cc->convert("%y".$info['HostName']."%n")	;
+	$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
+	$table->addRow(array('',$host,$start_date,$playersd,$info["Map"]));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
 	echo $table->getTable();
