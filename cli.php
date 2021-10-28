@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	
-	$build = "24079-3324845249";
+	$build = "24137-2189430115";
 	
 	
 	if(is_cli()) {
