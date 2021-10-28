@@ -81,7 +81,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "16083-682082732";
+	$build = "16084-1795709685";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -292,7 +292,7 @@ foreach ($la as $user_data) {
 		}
 		
 		if ($user_data['ip'] <> $result['ip']  or modify) {
-			if(!is_nul($user_data)) {
+			if(!is_null($user_data)) {
 			$ut.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
 			//check ip on change
 			$ip_data = get_ip_detail($ip);
