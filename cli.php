@@ -22,7 +22,7 @@
  * 
  * 
  */
-	$shortopts ="d::f:s:v::g::t::i::r:q:l::";
+	$shortopts ="d::f:s:v::g::t::i::r:q:l:";
 	$longopts[]="debug::";
 	$longopts[]="help::";
 	$longopts[]="quick::";
@@ -37,7 +37,9 @@
 	$longopts[] ="quit:";
 	$longopts[]="log:";
 	$options = getopt($shortopts,$longopts);
-	
+	require_once 'includes/master.inc.php';
+    include 'functions.php';
+	echo printr($options);
 	define ('options',$options);
 	if(isset($options['debug'])) {
 		define('debug',true);
@@ -50,20 +52,17 @@
 		error_reporting(0);
 
 	}
-require_once 'includes/master.inc.php';
-
-include 'functions.php';
 
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	$version = 2.07;
+	$version = 2.071;
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24246-4001933670";
+	$build = "24333-2767565208";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -212,7 +211,7 @@ switch ($cmds['action']) {
 	case 'list':
 			echo $cc->convert("%BList Server ID's%n").cr;
 			$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true);
-			$table->setHeaders(array('Server Name','Host','Location','Online'));
+			$table->setHeaders(array($cc->convert("%cServer Name%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
 			$sql = "select * from server1 where enabled = 1 order by host_name";
 			$hosts = $database->get_results($sql);
 			//echo print_r($hosts,true).cr;
@@ -331,7 +330,7 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
-		$table = new table(CONSOLE_TABLE_ALIGN_LEFT,array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'),3,null,true);
+		$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true);
 		$option = $cc->convert("%cFile%n");
 		$space = chr(032);
 	    $use = $cc->convert("%cStatus%n");
@@ -415,29 +414,36 @@ function help() {
 	$option = $cc->convert("%cOption%n");
 	$use = $cc->convert("%cUse%n");
 	echo $PHP.$gsm.' Help'.cr;
-	echo 'Usage : - '.basename($argv[0]).' <option> <sub_options>'.cr;
+	echo 'Usage : - '.basename($argv[0]).$cc->convert("%G <option>%n").$cc->convert("%y <sub_options>%n").cr;
 	$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,borders,1,null,true);
 //$table->addRow(array('','',''));
 $table->setHeaders(array($option,$use));
-$table->addRow(array('-v or --version','show CLI version & exit'));
 $table->addRow(array('-s or --start <server id>','starts a game server'));
 $table->addRow(array('-q, or --quit <server id>','stops a game server'));
 $table->addRow(array('-r, or --restart <server id>','restarts a game server'));
-$table->addRow(array('-d, or --details ','shows details about the running system (takes sub options see example page)'));
-$table->addRow(array('-g, or --games ','shows details on running game servers (takes sub options see example page)'));
-$table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
-$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
-$table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
-$table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all (default)'));
+$table->addRow(array('-d, or --details ','shows details about the running system (takes sub options)'));
+$table->addRow(array('-g, or --games ','shows details on running game servers (takes sub options)'));
+//$table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
+//$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
+//$table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
+$table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all servers'));
 $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'));
+$table->addRow(array('-v or --version','show version & exit'));
 	 //system('clear');
 	//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+	 
+	 	 //echo $table1->getTable();
+	 $option = $cc->convert("%cSub Options%n");
+	 $use = $cc->convert("%cNotes%n");
+	 $table->addSeparator();
+	 $table->addRow(array($option,$use));
+	  $table->addSeparator();
+	 $table->addRow(array('-m or --module <module>','used with -d <module> can be :- m,s' ));
 	 echo $table->getTable();
 	 echo cr;
 	 echo 'cli will only install games or servers on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
 	 echo 'however, you can control remotely installed servers'.cr;
-	 //$answer = ask_question('enter E for examples or q to quit  ',null,null);
-	 echo $answer.cr.cr;
+	
 	 exit;
  }
  
@@ -545,13 +551,13 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 	 		//system('clear');
 	 		$Query = new SourceQuery( );
 	 		$cc = new Color();
-	 		$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,'',4,null,true);
+	 		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true);
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     //echo print_r($res,true).cr;
     //^[[0;34mblue^[[0m
-    $table->setheaders(array("",$cc->convert("%WServer%n"), $cc->convert("%WStarted%n"),$cc->convert("%WPlayers Online%n"),$cc->convert("%W\tCurrent Map%n")));
+    $table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
 		 //echo print_r($gdata,true).cr;
@@ -588,11 +594,11 @@ $table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'
 		$info['Players'] = $cc->convert("%Y$p1%n");
 		}
 		$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
-	$playersd ="\t".$info['Players'].'/'.$info['MaxPlayers'];
+	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	//echo $playersd.cr;
 	$host = $cc->convert("%y".$info['HostName']."%n")	;
 	$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
-	$table->addRow(array('',$host,$start_date,$playersd,"\t".$info["Map"]));
+	$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
 	echo $table->getTable();
