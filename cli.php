@@ -22,7 +22,7 @@
  * 
  * 
  */
-	$shortopts ="d::f:s:v::g::t::i::r:q:l:";
+	$shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
 	$longopts[]="debug::";
 	$longopts[]="help::";
 	$longopts[]="quick::";
@@ -31,6 +31,7 @@
 	$longopts[]="version::";
 	$longopts[]="games::";
 	$longopts[]="details::";
+	$longopts[] ="module::";
 	$longopts[]="id::";
 	$longopts[]="start:";
 	$longopts[]="restart:";
@@ -39,7 +40,7 @@
 	$options = getopt($shortopts,$longopts);
 	require_once 'includes/master.inc.php';
     include 'functions.php';
-	//echo printr($options);
+	
 	define ('options',$options);
 	if(isset($options['debug'])) {
 		define('debug',true);
@@ -62,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24359-2254984419";
+	$build = "24743-2807687141";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -97,9 +98,18 @@ $cc = new Color();
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
     //print_r($options);
-    if(isset($options['g']) or isset($options['games'])) {$cmds['action']='g';}
+    if(isset($options['g']) or isset($options['games'])) {
+		$cmds['action']='g';
+		
+		}
 	if(isset($options['v']) or isset($options['version'])) {$cmds['action']='v';}
-	if(isset($options['d']) or isset($options['details'])) {$cmds['action']='d';}
+	if(isset($options['d']) or isset($options['details'])) {
+		$cmds['action']='d';
+		if (!empty($options['d'])) {
+			$cmds['option'] = $options['d'][1];
+		}
+		
+		}
 	if(isset($options['t'])) {$cmds['action']='t';}
 	if(isset($options['l']) or isset($options['log']))  {
 		$cmds['action']='l';
@@ -151,14 +161,14 @@ $cc = new Color();
 		}
 		}
 	//if(isset($options['q'])) {$cmds['action'] = 'q';}
-	$banner = 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
-	echo $cc->convert("%Y$banner%n");
+	$banner = cr.'cli interface v'.$version.'-'.$build.' ©Noideer Software '.$settings['start_year'].'-'.date('Y').cr;
+	echo $cc->convert("%y$banner%n");
 	if (empty($cmds['action'])) {help();}
 switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		//echo 'Cli interface v'.$version.' © '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	exit;
 	case 'd':
 	case 'details':
@@ -170,13 +180,13 @@ switch ($cmds['action']) {
 	break;
 	case 'l':
 	case 'log':
-	echo $cmds['server'].cr;
+	//echo $cmds['server'].cr;
 	if(!isset($cmds['server'])) {
 		echo 'no Server ID supplied'.cr;
 		exit;
 		}
-		if ($cmds['server'] == 'all') {
-			echo 'Quick log scan'.cr;
+		if ($cmds['server'] == 'all' || empty($cmds['server'])) {
+			echo $cc->convert("%bLog scan%n").cr;
 			$exe = urlencode ('./scanlog.php -sall');
 			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			//echo $cmd.cr;
@@ -210,8 +220,11 @@ switch ($cmds['action']) {
 	case 'li':
 	case 'list':
 			echo $cc->convert("%BList Server ID's%n").cr;
-			$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true);
+			$table = new table(CONSOLE_TABLE_ALIGN_CENTER,borders,3,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 			$table->setHeaders(array($cc->convert("%cServer ID%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
+			$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
+			$table->setAlign(1, CONSOLE_TABLE_ALIGN_RIGHT);
+			$table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
 			$sql = "select * from server1 where enabled = 1 order by host_name";
 			$hosts = $database->get_results($sql);
 			//echo print_r($hosts,true).cr;
@@ -336,11 +349,7 @@ switch ($cmds['action']) {
 	    $use = $cc->convert("%cStatus%n");
 	    $notes = $cc->convert("%cResult%n");
 	    echo cr; echo $cc->convert("%BFile Integrity Checker%n").cr;;
-	    //$table->setHeaders( array ($cc->convert("%BFile Integrity Checker%n"),'',''));
-		//$table->addRow(array('','',''));
 		$table->setHeaders(array($option,$use,$notes));
-		
-		
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
 				$check = check_file($filename);
@@ -415,20 +424,20 @@ function help() {
 	$use = $cc->convert("%cUse%n");
 	echo $PHP.$gsm.' Help'.cr;
 	echo 'Usage : - '.basename($argv[0]).$cc->convert("%G <option>%n").$cc->convert("%y <sub_options>%n").cr;
-	$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,borders,1,null,true);
-//$table->addRow(array('','',''));
-$table->setHeaders(array($option,$use));
-$table->addRow(array('-s or --start <server id>','starts a game server, use -i to find <server id>'));
-$table->addRow(array('-q, or --quit <server id>','stops a game server'));
-$table->addRow(array('-r, or --restart <server id>','restarts a game server'));
-$table->addRow(array('-d, or --details ','shows details about the running system (takes sub options)'));
-$table->addRow(array('-g, or --games ','shows details on running game servers (takes sub options)'));
-//$table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
-//$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
-//$table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
-$table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all servers'));
-$table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'));
-$table->addRow(array('-v or --version','show version & exit'));
+	$table = new Table(CONSOLE_TABLE_ALIGN_LEFT,borders,1,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+	//$table->addRow(array('','',''));
+	$table->setHeaders(array($option,$use));
+	$table->addRow(array('-s or --start <server id>','starts a game server, use -i to find <server id>'));
+	$table->addRow(array('-q, or --quit <server id>','stops a game server'));
+	$table->addRow(array('-r, or --restart <server id>','restarts a game server'));
+	$table->addRow(array('-d','shows details about the running system (takes sub options)'));
+	$table->addRow(array('-g, or --games ','shows details on running game servers (takes sub options)'));
+	//$table->addRow(array('ig, or igames ','Installs a game from Steam (takes sub options see example page)'));
+	//$table->addRow(array('is, or iserver ','Installs a server from an installed game (takes sub options see example page)'));
+	//$table->addRow(array('u, or user ','shows user details (takes sub options see example page)'));
+	$table->addRow(array('-l, or --log  <server id>','processes server logs, if server id is set to all scans all servers'));
+	$table->addRow(array('-i, or --id ','Lists valid server Id\'s that cli can use.'));
+	$table->addRow(array('-v or --version','show version & exit'));
 	 //system('clear');
 	//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	 
@@ -437,8 +446,10 @@ $table->addRow(array('-v or --version','show version & exit'));
 	 $use = $cc->convert("%cNotes%n");
 	 $table->addSeparator();
 	 $table->addRow(array($option,$use));
-	  $table->addSeparator();
-	 $table->addRow(array('-m or --module <module>','used with -d <module> can be :- m,s' ));
+	 $table->addSeparator();
+	 $table->addRow(array('-dm(option) ','option can be h,d,s,m e.g '.basename($argv[0]).' -dms' ));
+	 $table->addRow(array('-f or --file <file>','no clue on what this can do noideer at all' ));
+	 //$table->setAlign(0, CONSOLE_TABLE_ALIGN_CENTER);
 	 echo $table->getTable();
 	 echo cr;
 	 echo 'cli will only install games or servers on this machine, if you have remotes either use cli on that machine or the web api.'.cr;
@@ -450,6 +461,7 @@ $table->addRow(array('-v or --version','show version & exit'));
  function details($data) {
 	 // read server details
 	 //system('clear');
+	 //printr($data,true);
 	 if (empty($data['option']) || !isset($data['option'])) {
 		 $data['option'] = 'a';
 	 }
@@ -654,7 +666,7 @@ $table->addRow(array('-v or --version','show version & exit'));
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
 		$return['reason'] = warning.' fails check, file has altered ';
 		$return['symbol'] = fail;
-		$return['status'] = false;
+		$return['status'] = 2;
 		$return['fsize'] = $fsize;
 		$return['build'] = $ns;
 		return $return;
