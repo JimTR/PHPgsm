@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24743-2807687141";
+	$build = "24308-3130876595";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -91,9 +91,9 @@ else {
 //system('clear');
 $cc = new Color();
 	define ('warning', $cc->convert("%YWarning%n"));
-	define ('error', $cc->convert("%RError  %n"));
+	define ('error', $cc->convert("%RError%n"));
 	define ('advice', $cc->convert("%BAdvice%n"));
-	define ('pass',$cc->convert("%GPassing%n"));
+	define ('pass',$cc->convert("%GPass%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
@@ -343,7 +343,7 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
-		$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true);
+		$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 		$option = $cc->convert("%cFile%n");
 		$space = chr(032);
 	    $use = $cc->convert("%cStatus%n");
@@ -353,42 +353,23 @@ switch ($cmds['action']) {
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
 				$check = check_file($filename);
-				if ($check['status']) {
-					$table->addRow(array($cc->convert( "%g$filename%n"),$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
-				}
-				else {
-					$table->addRow(array($filename,$check['symbol'],$check['reason']));
-				}
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
+				
 		}
 		foreach (glob("install/*.php") as $filename) {
 		
 				$check = check_file($filename);
-				if ($check['status']) {
-					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
-				}
-				else {
-					$table->addRow(array($filename,$check['symbol'],$check['reason']));
-				}
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 		}
 		foreach (glob("utils/*.php") as $filename) {
 		
 				$check = check_file($filename);
-				if ($check['status']) {
-					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
-				}
-				else {
-					$table->addRow(array($filename,$check['symbol'],$check['reason']));
-				}
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 		}
 		foreach (glob("includes/*.php") as $filename) {
 		
 				$check = check_file($filename);
-				if ($check['status']) {
-					$table->addRow(array($filename,$check['symbol'],pass.' build '.$check['fsize'].'-'.$check['build']));
-				}
-				else {
-					$table->addRow(array($filename,$check['symbol'],$check['reason']));
-				}
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 		}
 		echo $table->getTable();
 		break;
@@ -620,6 +601,8 @@ function help() {
  function check_file($file_name) {
 	  // test file
 	global $tick,$cross;
+	$cc = new Color; 
+	$return=array();
 	if(is_file($file_name) == false){
 		echo error.' Could not find '.$file_name.cr;
 		$return['reason'] = ' Could not find ';
@@ -635,7 +618,8 @@ function help() {
 	$v = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
 	if (empty($matches)) {
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
-	$return['reason'] = error.' unable to check, the file structure is incorrect';
+	$return['file_name'] = $file_name;
+	$return['reason'] = error." Unable To Check ! The file structure is incorrect";
 	$return['symbol'] = $cross;
 	$return['status'] = false;
 	$return['fsize'] = $fsize;
@@ -654,9 +638,10 @@ function help() {
 	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
 		
 		//echo advice.' '.$file_name.$tick.cr;
-		$return['reason'] = 'file Passed';
+		$return['file_name'] = $file_name;
+		$return['reason'] = pass." File Passed Integrity Check";
 		$return['symbol'] = trim($tick);
-		$return['status'] = true;
+		$return['status'] = 1;
 		$return['fsize'] = $fsize;
 		$return['build'] = $ns;
 		return $return;
@@ -664,7 +649,8 @@ function help() {
 	else {
 		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-		$return['reason'] = warning.' fails check, file has altered ';
+		$return['file_name'] = $file_name;
+		$return['reason'] = warning." File has altered !";
 		$return['symbol'] = fail;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
