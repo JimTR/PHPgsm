@@ -45,7 +45,7 @@ define('CONSOLE_TABLE_ALIGN_LEFT', -1);
 define('CONSOLE_TABLE_ALIGN_CENTER', 0);
 define('CONSOLE_TABLE_ALIGN_RIGHT', 1);
 define('CONSOLE_TABLE_BORDER_ASCII', -1);
-	$build = "32366-1667572798";
+	$build = "32854-590145974";
 /**
  * The main class.
  *
@@ -194,9 +194,25 @@ class Table
      */
     function __construct($align = CONSOLE_TABLE_ALIGN_LEFT,
                          $border = CONSOLE_TABLE_BORDER_ASCII, $padding = 1,
-                         $charset = null, $color = false)
+                         $charset = null, $color = false, $header_align = CONSOLE_TABLE_ALIGN_LEFT, )
     {
         $this->_defaultAlign = $align;
+        $this->_headerAlign = $header_align;
+        switch($header_align) {
+			// set header padding
+			
+        case CONSOLE_TABLE_ALIGN_CENTER:
+            $pad = STR_PAD_BOTH;
+            break;
+        case CONSOLE_TABLE_ALIGN_RIGHT:
+            $pad = STR_PAD_LEFT;
+            break;
+        default:
+            $pad = STR_PAD_RIGHT;
+            break;
+        }
+			 $this->_headerAlign = $pad;
+		
         $this->setBorder($border);
         $this->_padding      = $padding;
         if ($color) {
@@ -798,7 +814,7 @@ class Table
         // Make sure column count is correct
         global $_headers_done;
         $_headers_done= true;
-        for ($j = 0; $j < count($this->_headers); $j++) {
+         for ($j = 0; $j < count($this->_headers); $j++) {
             for ($i = 0; $i < $this->_max_cols; $i++) {
                 if (!isset($this->_headers[$j][$i])) {
                     $this->_headers[$j][$i] = '';
@@ -814,7 +830,8 @@ class Table
                         $this->_strpad($this->_headers[$j][$i],
                                        $this->_cell_lengths[$i],
                                        ' ',
-                                       $this->_col_align[$i]);
+                                       $this->_headerAlign);
+                                       
                 }
             }
         }
