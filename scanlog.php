@@ -81,7 +81,7 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "16084-1795709685";
+	$build = "16086-2687333789";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -432,7 +432,7 @@ $rt .= cr.'Processed '.$server.cr;
 return $rt;
 }
 if (!silent) {
-$rt = "\t No new logons on $server since last run".cr;
+$rt = "\t No new logons on $server since last scan".cr;
 }
 if (debug ) {
 	echo strlen($rt).cr;
