@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24308-3130876595";
+	$build = "24574-1456991976";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -544,7 +544,7 @@ function help() {
 	 		//system('clear');
 	 		$Query = new SourceQuery( );
 	 		$cc = new Color();
-	 		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true);
+	 		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
@@ -587,6 +587,9 @@ function help() {
 		$info['Players'] = $cc->convert("%Y$p1%n");
 		}
 		$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
+		if ($info['MaxPlayers'] <10){
+			$info['MaxPlayers'] = $info['MaxPlayers'].' ';
+		}
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	//echo $playersd.cr;
 	$host = $cc->convert("%y".$info['HostName']."%n")	;
@@ -594,6 +597,9 @@ function help() {
 	$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
+	$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
+	$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
+	//$table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
 	echo $table->getTable();
     exit;
  }
@@ -639,7 +645,7 @@ function help() {
 		
 		//echo advice.' '.$file_name.$tick.cr;
 		$return['file_name'] = $file_name;
-		$return['reason'] = pass." File Passed Integrity Check";
+		$return['reason'] = pass ;//." File Passed Integrity Check";
 		$return['symbol'] = trim($tick);
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
