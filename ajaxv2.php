@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "47337-547798848";
+	$build = "47406-1400820471";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -42,10 +42,13 @@ $valid = $database->num_rows($sql); // get result if the ip can use the data the
 if ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ){$valid=1;}
 if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
                         //$cmds['valid'] = true;
-                        $logline = date("d-m-Y H:i:s")." HTTP_AUTH ON".cr;
-                         file_put_contents(LOG,$logline,FILE_APPEND);
+                        $HTTP_AUTH =' HTTP_AUTH on ';
+                         //file_put_contents(LOG,$logline,FILE_APPEND);
                         //echo 'auth on'.cr;
                         }
+                        else{
+							$HTTP_AUTH = ' insecure requst ';
+						}
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
@@ -91,7 +94,7 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $rip = $_SERVER['REMOTE_ADDR'];
-$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry".cr;
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
