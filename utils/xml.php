@@ -26,7 +26,7 @@ include '../includes/master.inc.php';
 include '../functions.php';
 define ('cr',PHP_EOL);
 define ('version',2.01);
-	$build = "11360-1327643286";
+	$build = "11355-4197223490";
 //run from cli
 //error_reporting (0);
 if(is_cli()) {
@@ -69,8 +69,8 @@ $bases = $database->get_results($sql);
 foreach ($bases as $base) {
 	$key =md5( ip2long($base['ip']));
 	$address = $base['url'].':'.$base['port'];
-        echo "address = $address".cr;
-	$tmp = file_get_contents($address.'/ajaxv2.php?action=game_detail&data=true'.'&key='.$key);
+       // echo "address = $address".cr;
+	$tmp = geturl($address.'/ajaxv2.php?action=game_detail&data=true'.'&key='.$key);
 	$game_detail = json_decode(stripslashes($tmp),true);
 	$info[$base['fname']] = $game_detail;
 	}
@@ -128,8 +128,8 @@ foreach ($info as $k => $test) {
 }
 // end replace
 
-echo print_r($info,true).cr;
-die();
+//echo print_r($info,true).cr;
+//die();
 if ($cmds['type'] == 'games' || $cmds['type'] == 'all') {
 $xmlserver="game_server"; // set tag
 foreach ($info as $k =>$game) {
