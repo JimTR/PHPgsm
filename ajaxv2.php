@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48906-934854943";
+	$build = "48969-1515486863";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -93,7 +93,13 @@ foreach ($cmds as $k=>$v) {
 	//
 	$entry .="$k=>$v ";
 }
-$rip = $_SERVER['REMOTE_ADDR'];
+if (!is_cli()) {
+	$rip = $_SERVER['REMOTE_ADDR'];
+}
+else {
+	$rip = 'local';
+	$method = 'cli';
+}
 $logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
