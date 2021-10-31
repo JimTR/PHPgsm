@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "47406-1400820471";
+	$build = "48127-1075958749";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -869,6 +869,9 @@ function readlog($cmds) {
 		$v = preg_replace('/<[U:1:[0-9]+]>/', ' ', $v);
 		$v = preg_replace('/</',' ',$v);
 		$v = preg_replace('/>/',' ',$v);
+		if ($v == 'say admin') {
+			// show admin names
+		}
 		$date ='L '. date("m/d/Y");
 		
 		if (is_cli()) {
@@ -1052,13 +1055,19 @@ else {
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo 'no file & server remote'.cr;
 			}
+			$new_path =  $run['url'].':'.$run['bport'].'ajax_send.php?url='.$run['bport'].'/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method url = $new_path remote $HTTP_AUTH".cr;
+			file_put_contents(LOG,$logline,FILE_APPEND);
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 		}
 		else {
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo 'file & server remote'.cr;
 			}
-			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$cmds['file'];
+			$new_path =  $run['url'].':'.$run['bport'].'ajax_send.php?url='.$run['url'].':'.$run['bport'].'/ajaxv2.php&query=action=get_file:file='.$cmds['file'];
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$cmds['file'];
+			$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method url = $new_path  local $HTTP_AUTH".cr;
+			file_put_contents(LOG,$logline,FILE_APPEND);
 		}
 	}
 		
