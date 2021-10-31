@@ -35,13 +35,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "7673-2284465056";
+	$build = "9102-3606648806";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
 	//echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
-		die( 'invalid API entry point');
+		//die( 'invalid API entry point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
