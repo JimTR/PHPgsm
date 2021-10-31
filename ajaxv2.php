@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48949-1659726144";
+	$build = "48523-3244605102";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -93,13 +93,7 @@ foreach ($cmds as $k=>$v) {
 	//
 	$entry .="$k=>$v ";
 }
-if (!is_cli()) {
-	$rip = $_SERVER['REMOTE_ADDR'];
-}
-else {
-	$rip = 'local';
-	$method = 'cli';
-}
+$rip = $_SERVER['REMOTE_ADDR'];
 $logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
@@ -156,22 +150,20 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				$logline = "POST";
 				foreach ($cmds as $k =>$v) {
 					//
-					$logline .= " $k => $v";
+					$logline .= " $k => $v".cr;
 				}
-				$logline .=cr;
 				file_put_contents(LOG,$logline,FILE_APPEND);
-				//file_put_contents($cmds['file'],$cmds['data']);
-				echo file_get_contents($cmds['file']);
+				file_put_contents($cmds['file'],$cmds['data']);
+				
 			}
 			
 			else {
 				$logline= "GET";
 				foreach ($cmds as $k => $v) {
-					$logline .= " $k => $v";
+					$logline .= " $k => $v".cr;
 				}
-				$logline .=cr;
 				   file_put_contents(LOG,$logline,FILE_APPEND); 
-					echo file_get_contents($cmds['file']);
+					echo geturl($cmds['file']);
 				}
 			exit;	
 			
@@ -963,11 +955,8 @@ function scanlog($cmds) {
 	foreach ($game_results as $run) {
 		//bulid path done this way so we can get the file back from a remote server
 		$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
-		$new_path =  $run['url'].':'.$run['bport'].'/ajax_send.php?url=/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
-		$logline = date("d-m-Y H:i:s")."$new_path is going to be used".cr;
-		file_put_contents(LOG,$logline,FILE_APPEND);
 		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
-		$tmp = geturl($new_path);
+		$tmp = geturl($path);
 		if (isset($cmds['debug'])) {
 			echo $run['host_name'].' '.$path.cr; // debug code
 		}
@@ -1082,10 +1071,10 @@ else {
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo 'no file & server remote'.cr;
 			}
-			$new_path =  $run['url'].':'.$run['bport'].'/ajax_send.php?url=/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			$new_path =  $run['url'].':'.$run['bport'].'ajax_send.php?url='.$run['bport'].'/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 			$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method url = $new_path remote $HTTP_AUTH".cr;
 			file_put_contents(LOG,$logline,FILE_APPEND);
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 		}
 		else {
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
