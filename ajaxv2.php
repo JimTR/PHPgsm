@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48870-3066929170";
+	$build = "48902-2012110018";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -150,8 +150,9 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				$logline = "POST";
 				foreach ($cmds as $k =>$v) {
 					//
-					$logline .= " $k => $v".cr;
+					$logline .= " $k => $v";
 				}
+				$logline .=cr;
 				file_put_contents(LOG,$logline,FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
 				
@@ -160,8 +161,9 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 			else {
 				$logline= "GET";
 				foreach ($cmds as $k => $v) {
-					$logline .= " $k => $v".cr;
+					$logline .= " $k => $v";
 				}
+				$logline .=cr;
 				   file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo geturl($cmds['file']);
 				}
