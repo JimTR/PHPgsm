@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48190-1364276857";
+	$build = "48194-1411161904";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1073,7 +1073,7 @@ else {
 	}
 		
 		
-		$tmp = getul($path);
+		$tmp = getul($new_path);
 		$tmp = array_reverse(explode(cr,trim($tmp)));
 		$current_records = count($tmp) ;
 				
