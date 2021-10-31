@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48183-2912744036";
+	$build = "48523-3244605102";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -147,12 +147,22 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				
 		case "get_file" :
 			if (isset($cmds['post'])) {
-				file_put_contents(LOG,print_r($cmds,true),FILE_APPEND);
+				$logline = "POST";
+				foreach ($cmds as $k =>$v) {
+					//
+					$logline .= " $k => $v".cr;
+				}
+				file_put_contents(LOG,$logline,FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
+				
 			}
 			
 			else {
-				   file_put_contents(LOG,print_r($cmds,true),FILE_APPEND); 
+				$logline= "GET";
+				foreach ($cmds as $k => $v) {
+					$logline .= " $k => $v".cr;
+				}
+				   file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo geturl($cmds['file']);
 				}
 			exit;	
@@ -180,6 +190,11 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				if (isset($cmds['email'])) {
 					echo 'email set'.cr;
 				}	
+				    $logline = "SCANLOG";
+				    foreach ($cmds as $k => $v) {
+					$logline .= " $k => $v".cr;
+				}
+				   file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo scanlog($cmds);
 					exit;
 		case "top" :
