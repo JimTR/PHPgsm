@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48902-2012110018";
+	$build = "48906-934854943";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -961,7 +961,7 @@ function scanlog($cmds) {
 		$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method url = $new_path remote $HTTP_AUTH".cr;
 		file_put_contents(LOG,$logline,FILE_APPEND);
 		//$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
-		$tmp = geturl($path);
+		$tmp = geturl($new_path);
 		if (isset($cmds['debug'])) {
 			echo $run['host_name'].' '.$path.cr; // debug code
 		}
