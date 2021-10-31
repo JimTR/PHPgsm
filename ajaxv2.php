@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48969-1515486863";
+	$build = "48953-1694840050";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1082,7 +1082,7 @@ else {
 			if (isset($cmds['debug']) && $cmds['debug'] == 'true') {
 				echo 'no file & server remote'.cr;
 			}
-			$new_path =  $run['url'].':'.$run['bport'].'ajax_send.php?url='.$run['bport'].'/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			$new_path =  $run['url'].':'.$run['bport'].'ajax_send.php?url=/ajaxv2.php&query=action=get_file:file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
 			$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method url = $new_path remote $HTTP_AUTH".cr;
 			file_put_contents(LOG,$logline,FILE_APPEND);
 			$path = $run['url'].':'.$run['bport'].'/ajax.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
