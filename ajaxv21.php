@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10248-3978262241";
+	$build = "10248-3575362379";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -298,7 +298,7 @@ function get_pid($task) {
 	$a = explode('  ',$detail[0]);
 	$b = explode(',',trim(end($a)));
 	preg_match('!\d+!', $b[1], $matches);
-	if ($cmds['debug'] == true) {
+	if (isset($cmds['debug'] )) {
 		//echo print_r($a,true).cr;
 		//echo 'used ss -plt |grep '.$task.cr;
 		echo $matches[0].cr;
