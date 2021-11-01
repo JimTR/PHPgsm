@@ -1,6 +1,6 @@
 <?PHP
 global $database;
-	$build = "49039-412861285";
+	$build = "49040-1629661511";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();
@@ -46,7 +46,7 @@ global $database;
 					}
 				}
 			}
-			if ($return === true) {
+			if ($return === false) {
 				echo $output;
 			}
 			else {
