@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10234-2858029862";
+	$build = "10389-506437898";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -63,7 +63,17 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'output');
 						break;
 				case 'text':	
-					foreach ($content as $line) {echo $line.cr;}
+					foreach ($content as $line) {
+						if (is_array($line)) {
+							foreach ($line as $subline) {
+								echo "\t$subline".cr;
+							}
+						}
+						else {
+								echo $line.cr;
+							}
+					}
+				
 					break;
 				 default:
                      echo "i is not equal to 0, 1 or 2";	
