@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10498-3590515269";
+	$build = "10524-1261270557";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -99,7 +99,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
 						break;
 				case 'text':	
-					foreach ($content as $line) {echo $line.cr;}
+					//foreach ($content as $line) {echo $line.cr;}
+					printr($content);
 					break;
 				 default:
                      echo "i is not equal to 0, 1 or 2";	
