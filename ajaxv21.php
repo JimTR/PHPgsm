@@ -35,7 +35,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "9102-3606648806";
+	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
+	define ('IN_PHPGSM','');
+	$build = "9444-1464923214";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -50,6 +52,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
         case 'version' :
            echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
             break;
+         case 'game_detail':
+				include 'modules/game_detail.php';
+				print_r(game_detail());
+				break;
         case 'help' :
 			if(empty($cmds['topic'])) {$cmds['topic'] = null;} 
           die(help($cmds['topic']));
