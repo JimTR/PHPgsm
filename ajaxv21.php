@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10249-1249423458";
+	$build = "10248-3978262241";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -290,7 +290,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 function get_pid($task) {
 	// return pid
 	global $cmds;
-	if ($cmds['debug'] == true ){
+	if (isset($cmds['debug']) ){
 		echo "task = $task".cr;
 	}
 	exec ('ss -plt |grep '.$task,$detail,$ret);
