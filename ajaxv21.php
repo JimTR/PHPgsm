@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10551-1182843277";
+	$build = "10551-2707141936";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -61,7 +61,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 					break;
 				case 'xml':
 						header('Content-Type: text/xml; charset=UTF-8');
-						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'output');
+						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'player');
 						break;
 				case 'text':
 						printr($content);
