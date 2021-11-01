@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10244-2053687408";
+	$build = "10249-1249423458";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -60,7 +60,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 					echo json_encode($content);
 					break;
 				case 'xml':
-						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
+						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'output');
 						break;
 				case 'text':	
 					foreach ($content as $line) {echo $line.cr;}
