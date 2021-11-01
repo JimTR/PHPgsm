@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10524-1261270557";
+	$build = "10551-1182843277";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -63,8 +63,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 						header('Content-Type: text/xml; charset=UTF-8');
 						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'output');
 						break;
-				case 'text':	
-					foreach ($content as $line) {
+				case 'text':
+						printr($content);
+					/*foreach ($content as $line) {
 						if (is_array($line)) {
 							foreach ($line as $subline) {
 								echo "\t$subline".cr;
@@ -73,7 +74,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 						else {
 								echo $line.cr;
 							}
-					}
+					}*/
 				
 					break;
 				 default:
@@ -99,8 +100,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
 						break;
 				case 'text':	
-					//foreach ($content as $line) {echo $line.cr;}
-					printr($content);
+					foreach ($content as $line) {echo $line.cr;}
+					//printr($content);
 					break;
 				 default:
                      echo "i is not equal to 0, 1 or 2";	
