@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "9444-1464923214";
+	$build = "10244-2053687408";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -54,7 +54,20 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
             break;
          case 'game_detail':
 				include 'modules/game_detail.php';
-				print_r(game_detail());
+				$content =game_detail();
+				switch ($cmds['output']) {
+				case 'json':
+					echo json_encode($content);
+					break;
+				case 'xml':
+						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
+						break;
+				case 'text':	
+					foreach ($content as $line) {echo $line.cr;}
+					break;
+				 default:
+                     echo "i is not equal to 0, 1 or 2";	
+				}
 				break;
         case 'help' :
 			if(empty($cmds['topic'])) {$cmds['topic'] = null;} 
@@ -272,5 +285,24 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
     }
 
     return $xml->asXML();
+}
+
+function get_pid($task) {
+	// return pid
+	global $cmds;
+	if ($cmds['debug'] == true ){
+		echo "task = $task".cr;
+	}
+	exec ('ss -plt |grep '.$task,$detail,$ret);
+	//print_r($detail);
+	$a = explode('  ',$detail[0]);
+	$b = explode(',',trim(end($a)));
+	preg_match('!\d+!', $b[1], $matches);
+	if ($cmds['debug'] == true) {
+		//echo print_r($a,true).cr;
+		//echo 'used ss -plt |grep '.$task.cr;
+		echo $matches[0].cr;
+	}
+	return $matches[0];
 }
 ?>
