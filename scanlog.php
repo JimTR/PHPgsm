@@ -81,7 +81,8 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
-	$build = "16075-2078130313";
+    define("VERSION",$version);
+	$build = "16107-2651242059";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
