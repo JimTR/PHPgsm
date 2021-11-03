@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24785-2866483702";
+	$build = "24888-2338818012";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -484,7 +484,9 @@ function help() {
 		$table->addRow(array($cc->convert("%y      Swap%n"),$mem_info['SwapTotal'], $mem_info['SwapFree'],$mem_info['SwapCached']));
 		$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
 		 $table->setAlign(1, CONSOLE_TABLE_ALIGN_RIGHT);
-		  $table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
+		 $table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
+		 $table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
+		 $table->setAlign(4, CONSOLE_TABLE_ALIGN_RIGHT);
 		echo $table->getTable();
 		echo cr;
 	}
