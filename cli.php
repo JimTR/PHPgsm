@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24574-1456991976";
+	$build = "24785-2866483702";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -161,7 +161,7 @@ $cc = new Color();
 		}
 		}
 	//if(isset($options['q'])) {$cmds['action'] = 'q';}
-	$banner = cr.'cli interface v'.$version.'-'.$build.' ©Noideer Software '.$settings['start_year'].'-'.date('Y').cr;
+	$banner = 'cli v'.$version.'-'.$build.' Noideer Software ©'.date('Y').cr;
 	echo $cc->convert("%y$banner%n");
 	if (empty($cmds['action'])) {help();}
 switch ($cmds['action']) {
@@ -220,11 +220,12 @@ switch ($cmds['action']) {
 	case 'li':
 	case 'list':
 			echo $cc->convert("%BList Server ID's%n").cr;
-			$table = new table(CONSOLE_TABLE_ALIGN_CENTER,borders,3,null,true,CONSOLE_TABLE_ALIGN_CENTER);
-			$table->setHeaders(array($cc->convert("%cServer ID%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
+			$table = new table(CONSOLE_TABLE_ALIGN_CENTER,borders,2,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+			$table->setHeaders(array($cc->convert("%cGame Server ID%n"),$cc->convert("%cServer ID%n"),$cc->convert("%cHost%n"),$cc->convert("%cLocation%n"),$cc->convert("%cOnline%n")));
 			$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
 			$table->setAlign(1, CONSOLE_TABLE_ALIGN_RIGHT);
 			$table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
+			$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
 			$sql = "select * from server1 where enabled = 1 order by host_name";
 			$hosts = $database->get_results($sql);
 			//echo print_r($hosts,true).cr;
@@ -238,7 +239,7 @@ switch ($cmds['action']) {
 					//not running
 					$running = $cross;
 				}
-				$table->addRow(array($host['host_name'],$host['fname'].' ('.$host['host'].')',$host['location'],$running));
+				$table->addRow(array($host['server_id'],$host['host_name'],$host['fname'].' ('.$host['host'].')',$host['location'],$running));
 			}
 			echo $table->getTable();
 			break;
@@ -262,8 +263,8 @@ switch ($cmds['action']) {
 				break;
 			} 
 			if (empty($cmds['ip']) || !isset($cmds['ip'])) {
-				 $ip = file_get_contents('https://api.ipify.org');// get ip
-				if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');}
+				 $ip = geturl('https://api.ipify.org');// get ip
+				if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 			}
 			exec('utils/check_r.php '.$cmds['game'],$output,$ret);
 			
@@ -348,7 +349,7 @@ switch ($cmds['action']) {
 		$space = chr(032);
 	    $use = $cc->convert("%cStatus%n");
 	    $notes = $cc->convert("%cResult%n");
-	    echo cr; echo $cc->convert("%BFile Integrity Checker%n").cr;;
+	    echo $cc->convert("%BFile Integrity Checker%n").cr;;
 		$table->setHeaders(array($option,$use,$notes));
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
@@ -474,13 +475,16 @@ function help() {
 	 }
 	  if($data['option'] =='m' || $data['option'] =='a') {
 		 //
-		  $table = new table(CONSOLE_TABLE_ALIGN_LEFT,'',4,null,true);
+		  $table = new table(CONSOLE_TABLE_ALIGN_LEFT,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 		$mem_info = get_mem_info();
 		echo $cc->convert("%BMemory Information%n").cr;
 		//$table->addRow(array($ma,''));
 		$table->setheaders(array($ma,$cc->convert("%BTotal"),"Free","Cached",$cc->convert("Active%n")));
 		$table->addRow(array($cc->convert("%y      Real%n"),$mem_info['MemTotal'],$mem_info['MemFree'],$mem_info['Cached'],$mem_info['Active']));
 		$table->addRow(array($cc->convert("%y      Swap%n"),$mem_info['SwapTotal'], $mem_info['SwapFree'],$mem_info['SwapCached']));
+		$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
+		 $table->setAlign(1, CONSOLE_TABLE_ALIGN_RIGHT);
+		  $table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
 		echo $table->getTable();
 		echo cr;
 	}
