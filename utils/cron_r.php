@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6311-892194958";
+	$build = "6306-1771142547";
 }
 else {
 	//
@@ -137,10 +137,10 @@ foreach ($games as $game) {
 			$log_line = 'Prune console logs for  '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			//echo geturl($cmd);
+			echo geturl($cmd);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			//echo geturl($cmd);
+			echo geturl($cmd);
 			$log_line = 'Prune steam log files for '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
