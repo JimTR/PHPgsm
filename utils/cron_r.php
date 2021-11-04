@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6260-3808767217";
+	$build = "6307-1771142547";
 }
 else {
 	//
@@ -102,7 +102,7 @@ foreach ($games as $game) {
 	foreach ($restart as $game) {
 			echo geturl($game['restart'].'q').cr; // stop server
 			//print_r($game);
-			$exe = './scanlog.php --silent -s'.$game['host_name'];
+			$exe = './scanlog.php  -s'.$game['host_name'];
 			$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe); // run scanlog
 			$result = geturl($cmd);
 			if (!empty($result) ) {
@@ -118,15 +118,15 @@ foreach ($games as $game) {
 				//echo 'update already checked'.cr;
 			}
 			else{
-				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
+				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ? if so great we can sudo
 				if(empty($steamcmd)) {
-					$steamcmd = './steamcmd';
+					$steamcmd = './steamcmd'; // need to fix this as steamcmd may need to run as root
 					chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
 					$log_line = 'moved to '.getcwd ( );
 					file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 				}
 				
-				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+				$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
 				echo geturl($cmd);
@@ -137,14 +137,14 @@ foreach ($games as $game) {
 			$log_line = 'Prune console logs for  '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd);
+			echo geturl($cmd);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo file_get_contents($cmd);
+			echo geturl($cmd);
 			$log_line = 'Prune steam log files for '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
-			echo file_get_contents($game['restart'].'s').cr; // start server
+			echo geturl($game['restart'].'s').cr; // start server
 			}
 	     $log_line = print_r($done,true); //test array
 	     file_put_contents(LOG,$log_line.cr,FILE_APPEND);
