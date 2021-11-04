@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "10585-746844021";
+	$build = "10586-3602253606";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -88,7 +88,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
         case 'scanlog':
              //printr($cmds);
              $exe = './scanlog.php -s'.$cmds['server'];
-             if(isset($cmds['silent'])) { $exe.=' --'.$cmds['silent'];}
+             if(isset($cmds['silent'])) { 
+				 $exe.=' --silent';
+				 }
 			exec($exe,$content,$ret_val);
 			//printr($content);
 			switch ($cmds['output']) {
