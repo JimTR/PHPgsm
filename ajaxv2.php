@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49313-2064033138";
+	$build = "49316-2026253521";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -861,7 +861,7 @@ function readlog($cmds) {
 		$cmds['rows']= 10;
 	}
 	$table = new table(CONSOLE_TABLE_ALIGN_CENTER,borders,2,null,true,CONSOLE_TABLE_ALIGN_CENTER);
-	$table->setHeaders(array("User ID/IP","Period"));
+	//$table->setHeaders(array("User ID/IP","Period"));
 	//convert readlog to ajax function
 	$ip = file_get_contents('https://api.ipify.org');// get ip
 	if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');} 
