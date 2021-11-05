@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49351-3417141125";
+	$build = "49351-3488855423";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -923,12 +923,12 @@ function readlog($cmds) {
 			$v = str_replace('listip','<span style="color:blue"><b>List Banned IP\'s </b></span>',$v);
 			$v = str_replace('listid','<span style="color:green"><b>List Banned ID\'s </b></span>',$v);
 			if (strpos($v,' filter list:') == true) {
-				//$v ='';
+				$v ='';
 				}
-			if (strpos($v,'permanent') or strpos($v,' min')) {
+			if (strpos($v,'permanent') or strpos($v,'.000 min')) {
 				// do ban lines
 				$data = explode(':',$v);
-				//$v = print_r($data,true);
+				$v = print_r($data,true);
 			}	
 			$v = str_replace('"','',$v); // knock out "
 		}
