@@ -26,7 +26,7 @@
  //header('Access-Control-Allow-Origin: *');
  require_once 'includes/master.inc.php';
  define ('VERSION', 2.01);
-	$build = "5176-591523922";
+	$build = "5201-3021734928";
  define ('cr', PHP_EOL);
  define ('br','<br/>');
  if(is_cli()) {
@@ -46,7 +46,7 @@ $data['time']    = filemtime($file);
 $data['content'] = $_GET['time'] < $data['time']
     ? getLastLines($filename,$_GET['lines'])
     : false;
-
+print_r($data['content']);
 foreach ($data['content'] as $k => $v ) {
 	$x = strpos($v,'" connected, address "');
 	if ($x >0 ) {
