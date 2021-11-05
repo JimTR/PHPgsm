@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49456-2936431521";
+	$build = "49458-2214371586";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -878,7 +878,7 @@ function readlog($cmds) {
 	else {
 		$log_contents = file_get_contents($filename); // local file
 	}
-	$log_contents = array_reverse(explode(cr,trim($log_contents)));
+	//$log_contents = array_reverse(explode(cr,trim($log_contents)));
 	//print_r($log_contents);
 	foreach($log_contents as $k=>$v) {
 		if ($k == $cmds['rows']) {break;}
