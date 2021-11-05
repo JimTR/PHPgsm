@@ -26,11 +26,19 @@
  //header('Access-Control-Allow-Origin: *');
  require_once 'includes/master.inc.php';
  define ('VERSION', 2.01);
-	$build = "4975-603833088";
+	$build = "5146-1540286587";
  define ('cr', PHP_EOL);
  define ('br','<br/>');
+ if(is_cli()) {
+	 //die('running from command'.cr);
+	 $file= $argv[1];
+	 $id = $argv[2];
+	 $filename = $file.'/log/console/'.$id.'-console.log';
+ }
+ if(!isset($file)) {
 $file = $_GET['path'];
 $filename = $file.'/log/console/'.$_GET['id'].'-console.log';
+}
 $result = array();
 clearstatcache(true, $filename);
 $data['time']    = filemtime($file);
