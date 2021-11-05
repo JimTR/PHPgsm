@@ -372,6 +372,11 @@ switch ($cmds['action']) {
 				$check = check_file($filename);
 				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 		}
+		foreach (glob("modules/*.php") as $filename) {
+		
+				$check = check_file($filename);
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
+		}
 		echo $table->getTable();
 		break;
 			
