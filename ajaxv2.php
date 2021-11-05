@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48542-1096926242";
+	$build = "48636-3196678353";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -917,6 +917,7 @@ function readlog($cmds) {
 			$v = str_replace('disconnected',' <span style="color:#ffbf00;"><b>dissconnected</b></span> ',$v);
 			$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
 			$v = str_replace('Unknown command','<span style="color:red"><b>Unknown command </b></span>',$v);
+			$v = str_replace('listip','<span style="color:blue"><b>List Banned Ip\'s </b></span>',$v);
 			$v = str_replace('"','',$v); // knock out "
 		}
 		$return[] = $v;
