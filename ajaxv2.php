@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49452-2310730762";
+	$build = "49431-4103695493";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -873,10 +873,10 @@ function readlog($cmds) {
 	if ($ip <> $server['host']) {
 		$url = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=get_file&file='.$filename;
 		if (isset($cmds['debug'])) {echo '[url] => '.$url.cr;}
-		$log_contents = file_get_contents($url);
+		$log_contents = geturl($url);
 	}
 	else {
-		$log_contents = file_get_contents($filename);
+		$log_contents = geturl($filename);
 	}
 	$log_contents = array_reverse(explode(cr,trim($log_contents)));
 	//print_r($log_contents);
