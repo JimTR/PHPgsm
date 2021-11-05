@@ -31,7 +31,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48960-933891121";
+	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
+	$build = "49313-2064033138";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -859,9 +860,11 @@ function readlog($cmds) {
 	if (!isset($cmds['rows'])) {
 		$cmds['rows']= 10;
 	}
+	$table = new table(CONSOLE_TABLE_ALIGN_CENTER,borders,2,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+	$table->setHeaders(array("User ID/IP","Period"));
 	//convert readlog to ajax function
 	$ip = file_get_contents('https://api.ipify.org');// get ip
-	if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
+	if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');} 
 	$database = new db();
 	$sql = 'select * from server1 where host_name like "'.$cmds['id'].'"';
 	$server =$database->get_row($sql);
@@ -870,10 +873,10 @@ function readlog($cmds) {
 	if ($ip <> $server['host']) {
 		$url = $server['url'].':'.$server['bport'].'/ajaxv2.php?action=get_file&file='.$filename;
 		if (isset($cmds['debug'])) {echo '[url] => '.$url.cr;}
-		$log_contents = file_get_contents($url);
+		$log_contents = geturl($url);
 	}
 	else {
-		$log_contents = file_get_contents($filename);
+		$log_contents = geturl($filename);
 	}
 	$log_contents = array_reverse(explode(cr,trim($log_contents)));
 	//print_r($log_contents);
@@ -920,12 +923,12 @@ function readlog($cmds) {
 			$v = str_replace('listip','<span style="color:blue"><b>List Banned IP\'s </b></span>',$v);
 			$v = str_replace('listid','<span style="color:green"><b>List Banned ID\'s </b></span>',$v);
 			if (strpos($v,' filter list:') == true) {
-				$v ='';
+				//$v ='';
 				}
 			if (strpos($v,'permanent') or strpos($v,' min')) {
 				// do ban lines
 				$data = explode(':',$v);
-				$v = print_r($data,true);
+				//$v = print_r($data,true);
 			}	
 			$v = str_replace('"','',$v); // knock out "
 		}
