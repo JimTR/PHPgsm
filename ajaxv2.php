@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48818-2111978539";
+	$build = "48949-977330819";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -922,8 +922,14 @@ function readlog($cmds) {
 			if (strpos($v,' filter list:') == true) {
 				$v ='';
 				}
+			if (strpos($v,'permanent') or strpos($v,' min')) {
+				// do ban lines
+				$data = explode($v,':');
+				$v = $data[1];
+			}	
 			$v = str_replace('"','',$v); // knock out "
 		}
+		
 		if(!empty($v)) {
 			$return[] = $v;
 		}
