@@ -26,13 +26,14 @@
  //header('Access-Control-Allow-Origin: *');
  require_once 'includes/master.inc.php';
  define ('VERSION', 2.01);
-	$build = "5146-1540286587";
+	$build = "5176-591523922";
  define ('cr', PHP_EOL);
  define ('br','<br/>');
  if(is_cli()) {
 	 //die('running from command'.cr);
 	 $file= $argv[1];
 	 $id = $argv[2];
+	 $_GET['lines'] = $argv[3];
 	 $filename = $file.'/log/console/'.$id.'-console.log';
  }
  if(!isset($file)) {
