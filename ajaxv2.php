@@ -31,7 +31,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'LOG',	'logs/ajax.log');
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	$build = "48725-3871267105";
+	$build = "48723-3110011853";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -918,7 +918,7 @@ function readlog($cmds) {
 			$v = str_replace('Writing ','<span style="color:green"><b>Writing </b></span>',$v);
 			$v = str_replace('Unknown command','<span style="color:red"><b>Unknown command </b></span>',$v);
 			$v = str_replace('listip','<span style="color:blue"><b>List Banned Ip\'s </b></span>',$v);
-			if (strpos($v,'IP filter list:') == true) {
+			if (strpos($v,' filter list:') == true) {
 				$v ='';
 				}
 			$v = str_replace('"','',$v); // knock out "
