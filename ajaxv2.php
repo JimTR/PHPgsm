@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49757-4134323976";
+	$build = "50444-2252196118";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -397,6 +397,8 @@ function game_detail() {
 			else {
 					$host= gethostname();
 					$ip = gethostbyname($host);
+					$localIP = trim(shell_exec('hostname -I'));
+	                $localIPs = explode(' ',$localIP);
 					//$ip = geturl('https://api.ipify.org');
 					if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 				}
@@ -417,7 +419,9 @@ function game_detail() {
 						
 						//$sql =  'SET sql_mode = \'\'';
 						//$a= $db->query( 'SET sql_mode = \'\''); 
-						$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
+						
+							$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
+						
 						//echo $sql;
 						$server_count = $db->get_row($sql);
 						if (empty($server_count['location'])) {
@@ -430,7 +434,24 @@ function game_detail() {
 				}
 			else{
 						// here we have the runners in $tmp array
-						$sql = 'select * from server1 where host like "'.$checkip.'%" and enabled=1 order by server_name ASC';
+						if (count($localIPs >1)) {
+							//
+							 $sql = "select * from server1 where ";
+							foreach ($localIPs as $lip) {
+								// glue the sql together with $sql = "select * from server1 where (host like \"185%\") or (host like \"109%\") and enabled=1 order by server_name ASC";
+								if(!isset($subsql)) {
+									$subsql = '(host like "'.$lip.'") ';
+								}
+								else {
+									$subsql .=  'or (host like "'.$lip.'") ';
+									// more
+								} 
+							}
+							$sql .=$subsql." and enabled=1 order by server_name ASC";
+						}
+						else {
+							$sql = 'select * from server1 where host like "'.$checkip.'%" and enabled=1 order by server_name ASC';
+						}
 						//$sql = "SELECT DISTINCT `host_name`,`server_name`,`url`,`bport`,`location`,`host`,`port`,`running` FROM server1 where `running` = 1 order by `host_name`";
 						$servers = $db->get_results($sql);
 						$server_count = $db->num_rows($sql);
