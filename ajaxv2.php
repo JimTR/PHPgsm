@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "50495-3153590870";
+	$build = "50554-3297733743";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -580,7 +580,8 @@ function exescreen ($cmds) {
 	   	return $return;
 	}
 	if ($server['host'] <> $localIP) {
-		return 'This Server is not hosted here '.$localip.'/'.$server['host']; // we know this one but it's elsewhere
+		$choices = print_r($localIPs,true);
+		return "This Server is not hosted here $localip /".$server['host']." choices are $choices"; // we know this one but it's elsewhere
 	}
 	// valid so do it
 	switch ($server['binary_file']) {
