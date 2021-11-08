@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49734-1446438057";
+	$build = "49747-2809881566";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -814,7 +814,7 @@ $rules = $Query->GetRules( );
 					{
 						$Exception = $e;
 						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = 'Failed to read any data from socket (Function viewplayers)';
+							$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
 						}
 						
 						  $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
