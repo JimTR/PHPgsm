@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49747-2809881566";
+	$build = "49757-4134323976";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -1477,7 +1477,7 @@ function get_pid($task) {
 	if ($cmds['debug'] == true) {
 		//echo print_r($a,true).cr;
 		//echo 'used ss -plt |grep '.$task.cr;
-		echo $matches[0].cr;
+		echo "get_Pid $matches[0]".cr;
 	}
 	return $matches[0];
 }
