@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "24888-2338818012";
+	$build = "25057-1900177031";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -472,7 +472,7 @@ function help() {
 		 $table->addRow(array($cc->convert("%y\tCpu Speed%n"),$cpu_info['cpu_MHz'].' MHz'));
 		 $table->addRow(array($cc->convert("%y\tCpu Cache%n"),$cpu_info['cache_size']));
 		 $table->addRow(array($cc->convert("%y\tCpu Load%n"),$cpu_info['load']));
-		 $table->addRow(array($cc->convert("%y\tIP Address %n"),$cpu_info['local_ip']));
+		 $table->addRow(array($cc->convert("%y\tIP Address %n"),$cpu_info['ips']));
 		 $table->addRow(array($cc->convert("%y\tProcesses%n"),$cpu_info['process']));
 		 $table->addRow(array($cc->convert("%y\tReboot Required%n"),$cpu_info['reboot']));
 		 echo $table->getTable();
