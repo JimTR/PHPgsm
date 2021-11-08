@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49547-1760454752";
+	$build = "49698-396388416";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -546,9 +546,13 @@ function exescreen ($cmds) {
 	global $database;
 	$exe =$cmds['server'];
 	$localIP = getHostByName(getHostName()); // carefull if the hostname is set to 127.0.0.1
-	$localIP = str_replace('/','',$localIP); // multiple ip's returned
+	$localIP = trim(shell_exec('hostname -I'));
+	$localIPs = explode(' ',$localIP);
+	$key = array_search($exe, $localIPs);
 	$sql = 'select * from server1 where host_name = "'.trim($exe).'"';
 	$server = $database->get_row($sql); // pull results
+	$key = array_search($server['host'], $localIPs);
+	if (!empty($key)) {$localIP = $localIPs[$key];}
 	if (empty($server['host'])) {
 		$return = 'invalid server'; // don't know this server
 	   	return $return;
