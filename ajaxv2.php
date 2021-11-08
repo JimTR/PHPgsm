@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "49698-396388416";
+	$build = "49734-1446438057";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -800,6 +800,7 @@ function viewserver($cmds) {
 		$Query = new SourceQuery( );
 		$emoji = new Emoji;
 		$sql = 'select * from server1 where host_name like "'.$cmds['id'].'"';
+		file_put_contents('sql.txt',$sql);
 		$server =$database->get_row($sql);
 		
 try 
