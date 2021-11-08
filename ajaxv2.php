@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "50571-1921832896";
+	$build = "50602-591002345";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -574,7 +574,8 @@ function exescreen ($cmds) {
 	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
 	$server = $database->get_row($sql); // pull results
 	$key = array_search($server['host'], $localIPs);
-	if (!empty($key)) {$localIP = $localIPs[$key];}
+	//if (!empty($key)) {$localIP = $localIPs[$key];}
+	$localIP = $localIPs[$key];
 	if (empty($server['host'])) {
 		$return = "invalid server $exe"; // don't know this server
 	   	return $return;
