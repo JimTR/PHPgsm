@@ -41,7 +41,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
-	//echo 'returned $cmds '.cr,printr($cmds).cr;
+	echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
 		//die( 'invalid API entry point');
 	}
@@ -110,6 +110,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
                     echo "i is not equal to 0, 1 or 2";	
 				}
 			break; 
+			
 			case 'console':
 				include 'modules/console.php';
 			    echo 'console code';
