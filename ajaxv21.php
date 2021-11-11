@@ -43,7 +43,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	//print_r($argv);
 	echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
-		//die( 'invalid API entry point');
+		die( 'invalid API entry point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
@@ -115,10 +115,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"';
 				$server = $database->get_row($sql);
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log';
-				echo "we will use $file".cr;
+				//echo "we will use $file".cr;
 				include 'modules/console.php';
 			    echo 'console code'.cr;
-			    echo 'returned $cmds '.cr,printr($cmds).cr;
+			    //echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 				foreach ($output as $show) {
 					echo $show;
