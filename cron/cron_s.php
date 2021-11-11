@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "4908-4122512090";
+	$build = "4896-2612330413";
 }
 else {
 	//
@@ -62,7 +62,7 @@ $games = $database->get_results($sql);
 				$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE ); // may need to up SQ_TIMEOUT if on a slow server 
 				$sub_cmd = 'GetInfo';
 				$info = $Query->GetInfo();
-				printr($info);
+				
 			   }
 		catch( Exception $e ){
 												$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
@@ -125,6 +125,6 @@ if(isset($restart)) {
 }
 }
 else {
-	echo 'all good'.cr;
+	//echo 'all good'.cr;
 }
 ?>
