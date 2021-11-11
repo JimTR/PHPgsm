@@ -12,7 +12,7 @@ global $console;
 $n = $cmds[1];
 //print_r($cmds);
 $count=0;
-$a = file('/home/nod/games/nmrih/log/console/nmrihserver-console.log');
+$a = file($file);
 //$lines_to_process = count($a);
 
 
