@@ -1,12 +1,12 @@
 <?php
-$cmds = $argv;
+//$cmds = $argv;
 include 'console_colour.php';
 //print_r($console);
 //die();
 //$output = readlog($cmds);
-foreach ($output as $show) {
-echo $show;
-}
+//foreach ($output as $show) {
+//echo $show;
+//}
 function readlog($cmds,$file='') {
 global $console;
 $n = $cmds[1];
