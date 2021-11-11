@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "4896-2612330413";
+	$build = "4894-3686460891";
 }
 else {
 	//
@@ -125,6 +125,6 @@ if(isset($restart)) {
 }
 }
 else {
-	//echo 'all good'.cr;
+	echo 'all good'.cr;
 }
 ?>
