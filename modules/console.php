@@ -3,7 +3,7 @@ $cmds = $argv;
 include 'console_colour.php';
 //print_r($console);
 //die();
-$output =readlog($cmds);
+//$output = readlog($cmds);
 foreach ($output as $show) {
 echo $show;
 }
