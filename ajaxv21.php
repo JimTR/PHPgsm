@@ -43,7 +43,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	//print_r($argv);
 	echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
-		die( 'invalid API entry point');
+		//die( 'invalid API entry point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
