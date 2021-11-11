@@ -117,13 +117,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log';
 				//echo "we will use $file".cr;
 				include 'modules/console.php';
-			    echo 'console code'.cr;
+			    echo 'console code<body style="bacground:#000;color:#ccc;">'.cr;
 			    //echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 				foreach ($output as $show) {
 					echo $show;
 				}
-
+                 echo '</body>';
 			    break;
           }
 
