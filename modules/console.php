@@ -7,16 +7,24 @@ $output =readlog($cmds);
 foreach ($output as $show) {
 echo $show;
 }
-function readlog($cmds) {
+function readlog($cmds,$file='') {
 global $console;
 $n = $cmds[1];
+//print_r($cmds);
 $count=0;
-$a = file('/home/nod/games/fof5/log/console/fofserver5-console.log');
+$a = file('/home/nod/games/nmrih/log/console/nmrihserver-console.log');
+//$lines_to_process = count($a);
+
+
+if (empty($n)) {
+      $n = count($a)-2;
+}
 $arr = array_slice($a, -$n);
 //print_r($arr);
 $stats = false;
 foreach ($arr as  $v) {
-	     
+        if($v[0] == '#') {continue;}
+	$v = strip_tags($v);     
         //$v = preg_replace('/<bot>/',' ',$v);
         $v = str_ireplace('<bot>', "",$v);
         $v = str_ireplace('<spectator>', "",$v);
@@ -178,20 +186,17 @@ foreach ($arr as  $v) {
                           //banid list
                         }
          if(!empty($v)) {
-         $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
-        $pattern = '/(\d+):(\d+):(\d+):/';
-        //$v = preg_replace($pattern, $replacement, $v,-1);
-        //$v = preg_replace('@\(.*?\)@','',$v); // bracket content
-        //$v = str_replace(' say ',$console['say'],$v);
-        //$v = str_replace('Unknown command',$console['Unknown command'],$v);
-        //$v = preg_replace('/with (.*) /', ' with <span id="last-hit" style="color:yellow;">$1</span> ', $v);
-        $v =  preg_replace('/(.*) killed (.*) with ?(.*)? (.*)/', '$1 killed$2 with <span id="alf" style="color:yellow;">$3</span> <span id="kev" style="color:red;">$4</span>', $v);
+         	$v =  preg_replace('/(.*) killed (.*) with ?(.*)? (.*)/', '$1 killed$2 with <span id="alf" style="color:yellow;">$3</span> <span id="kev" style="color:red;">$4</span>', $v);
         //if(!empty($date_time)){
          foreach ($console as $k => $val) {
                $v = str_replace($k,$val,$v);
               //preg_replace('/(Unknown command)(.*)/', '$0 --> <span style="color:red;">$1</span>$2', $input_lines);
 
 	}
+         $v = preg_replace('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\:\d{1,5}/', '$1 <span style="color:'.$console['user_ip'].';">$0</span>', $v);
+         $v = preg_replace('/sv_[^=]*/', '$1<span style="color:cyan;">$0</span>', $v);
+         $v = preg_replace('/tv_[^=]*/', '$1<span id="bug" style="color:cyan;">$0</span>', $v); 
+         $v = preg_replace('/(\w+\/){1,3}\w+\.\w+/', '<span style="color:Violet;">$0</span>', $v);
         //}
        //else {
         //    $v = '<span style="color:cyan;">'.$v.'</span>';
