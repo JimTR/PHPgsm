@@ -110,6 +110,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
                     echo "i is not equal to 0, 1 or 2";	
 				}
 			break; 
+			case 'console':
+			    echo 'console code';
+			    break;
           }
 
 	function startup() {
