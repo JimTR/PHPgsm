@@ -112,6 +112,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			break; 
 			
 			case 'console':
+				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"';
+				$server = $database->get_row($sql);
+				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log';
+				echo "we will use $file".cr;
 				include 'modules/console.php';
 			    echo 'console code'.cr;
 			    echo 'returned $cmds '.cr,printr($cmds).cr;
