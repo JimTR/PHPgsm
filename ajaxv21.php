@@ -113,7 +113,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			case 'console':
 				include 'modules/console.php';
 			    echo 'console code';
-			    print_r($cmds);
+			    'cmds =  '.print_r($cmds,true);
 			    break;
           }
 
