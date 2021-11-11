@@ -112,7 +112,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			break; 
 			
 			case 'console':
-				include 'modules/console.php';
+				//include 'modules/console.php';
 			    echo 'console code'.cr;
 			    echo 'returned $cmds '.cr,printr($cmds).cr;
 			    break;
