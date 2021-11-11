@@ -115,6 +115,11 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				include 'modules/console.php';
 			    echo 'console code'.cr;
 			    echo 'returned $cmds '.cr,printr($cmds).cr;
+			    $output = readlog($cmds);
+				foreach ($output as $show) {
+					echo $show;
+				}
+
 			    break;
           }
 
