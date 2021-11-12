@@ -9,7 +9,8 @@ $console['permanent'] = '<span style="color:red;"><b> permanent</b></span>';
 $console['VAC secure mode is activated.'] = '<span style="color:green;">VAC secure mode is activated.</span>';
 $console['VAC secure mode disabled.'] = '<span style="color:orange;">VAC secure mode disabled.</span>';
 $console['Writing'] = '<span style="color:cyan;">Writing </span>'; 
-$console['not present; not executing.'] = '<span style="color:red;"><b>not present; not executing.</b></span>';
+$console['not present; '] = '<span style="color:orange;">not present; </span>';
+$console['not executing.'] = '<span style="color:red;">not executing.</span>';
 $console['Server is hibernating'] = '<span style="color:cyan;">Server is hibernating</span>';
 $console['server is hibernating'] = '<span style="color:cyan;">server is hibernating</span>';
 $console['Server waking up from hibernation'] = '<span style="color:cyan;">Server waking up from hibernation</span>';
@@ -39,6 +40,7 @@ $console['committed suicide'] = '<span style="color:red;">committed suicide</spa
 $console['notoriety'] = '<span style="color:tomato;">notoriety</span>';
 $console['triggered combat'] = '<span style="color:dodgerblue;">triggered combat</span>';
 $console['disconnected'] = '<span style="color:orange;">disconnected</span>';
+$console['connected,'] = '<span style="color:green;">connected</span>';
 $console['Kicked from server'] = '<span style="color:red;">Kicked from server</span>';
 $console['kicked from server due high ping or unreliable connection'] = '<span style="color:tomato;">kicked from server due high ping or unreliable connection</span>';
 $console['reason'] ='<span style="color:dodgerblue;">reason</span>';
@@ -46,6 +48,7 @@ $console['Disconnect by user.'] = '<span style="color:tomato;">Disconnect by use
 $console['validated'] = '<span style="color:green;">validated</span>';
 $console['Steam auth ticket has been canceled'] = '<span style="color:orange;">Steam auth ticket has been canceled</span>';
 $console['Client left game'] = '<span style="color:tomato;">Client left game</span>';
+$console['entered the game'] = '<span style="color:cyan;">entered the game</span>';
 $console['Forcing client reconnect'] = '<span style = "color:mediumseagreen;">Forcing client reconnect</span>';
 $console['Dropping ClientInfo packet from client not in appropriate state'] = '<span style ="color:cyan;">Dropping ClientInfo packet from client not in appropriate state</span>';
 $console['Using breakpad crash handler'] = '<span style="color:cyan;">Using breakpad crash handler</span>';
@@ -58,4 +61,11 @@ $console['upLoaded '] = '<span style="color:orange;">upLoaded </span>';
 $console['Loaded '] = '<span style="color:cyan;">Loaded </span>';
 $console[' VPK file hashes from '] = '<span style="color:cyan;"> VPK file hashes from </span>';
 $console[' for pure server operation.'] = '<span style="color:cyan;"> for pure server operation.</span>';
+$console['STEAM USERID'] = '<span style="color:slateblue;font-weight:bold;">STEAM USERID</span>';
+$console['user_ip'] ='purple';
+$console['Connection to Steam servers lost. '] = '<span style="color:orange;">Connection to Steam servers lost. </span>';
+$console['for rcon hacking attempts'] = '<span style="color:orange;">for rcon hacking attempts</span>';
+$console['Banning'] = '<span style="color:red;">Banning</span>'; 
+$console['Attempted to create unknown entity type'] = '<span style="color:orange;">Attempted to create unknown entity type</span>';
+$console['Can\'t init'] = '<span style="color:red;">Can\'t init</span>';
 ?>

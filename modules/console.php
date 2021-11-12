@@ -1,39 +1,25 @@
 <?php
 //$cmds = $argv;
 include 'console_colour.php';
-//print_r($console);
-//die();
-//$output = readlog($cmds);
-//foreach ($output as $show) {
-//echo $show;
-//}
 function readlog($cmds,$file='') {
 global $console;
-$n = $cmds[1];
-//print_r($cmds);
+$roll_back = $cmds['rows'];
 $count=0;
 $a = file($file);
-//$lines_to_process = count($a);
-
 
 if (empty($n)) {
       $n = count($a)-2;
 }
-$arr = array_slice($a, -$n);
-//print_r($arr);
+$arr = array_slice($a, - $roll_back);
 $stats = false;
 foreach ($arr as  $v) {
         if($v[0] == '#') {continue;}
-	$v = strip_tags($v);     
-        //$v = preg_replace('/<bot>/',' ',$v);
-        $v = str_ireplace('<bot>', "",$v);
-        $v = str_ireplace('<spectator>', "",$v);
-        $v = str_ireplace('<Unassigned>',"",$v);
-        $v = rtrim($v);
-        preg_match('/\d+\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+/', $v, $result);
+		$v = rtrim($v); 
+	    preg_match('/\d+\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+/', $v, $result);
         if (isset($result[0])){$ips = $result[0];} else{$ips = '';}
          unset($result);
         preg_match('/<([U:\d+:[0-9]+])>/', $v, $result);
+        //print_r($result);
          if(isset($result[1])){$steam_id = $result[1];} else {$steam_id='';}
         unset($result);
         preg_match('/(\d+)\/(\d+)\/(\d+) - (\d+):(\d+):(\d+)/', $v, $result);
@@ -44,26 +30,20 @@ foreach ($arr as  $v) {
         //die($v); 
         preg_match('/"([^<]*)<\d/', $v, $result);
         if(isset($result[1])){$user = $result[1]; } else {$user='';}
-        if($user == '11'){die($v);}   
         $v = str_replace($user,' ',$v);
         $v = preg_replace('/<\d+>/', ' ', $v);
         $v= preg_replace('/<([U:\d+:[0-9]+])>/', ' ', $v);
         $v= preg_replace('/"/', '', $v);
         $v = preg_replace('/<>/', '', $v);
+        $v = strip_tags($v);
         $date ='L '. date("m/d/Y");
         $pattern = ' /L (\w+)\/(\d+)\/(\d+)/i';  
         $replacement = '<span style="color:yellow;"><b>${2}/$1/$3</b></span>'; //display the result returned by preg_replace  
         $v = preg_replace($pattern, $replacement, $v,-1,$counts);
         $v = preg_replace('/Console<0><Console><Console>/','Console',$v);
-        //preg_replace('/(Unknown command)(.*)/', '$0 --> <span style="color:red;">$1</span>$2', $v); 
-        //$v = preg_replace('/Unknown command/',$console['Unknown command'],$v); 
-       // $v = str_replace('"','',$v); // remove quotes
-        $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
+         $replacement = '<span style="color:yellow;"><b>${1}:$2:$3</b></span>';
         $pattern = '/(\d+):(\d+):(\d+):/';
-        //$v = preg_replace($pattern, $replacement, $v,-1);
-        //if (empty($count)) {continue;} // clears non dated rows
          $v = preg_replace('/\((notoriety.*)\)/', '($1)', $v); 
-        //$v = preg_replace('@\(.*?\)@','',$v); // bracket content
         $v = preg_replace('/\((attacker.*)\) \((victim.*)\)/', '', $v);
         //if (strpos($v,'========= Stats For') == true) {$stats = true;}
         //if (strpos($v,'HANGE LEVEL:') == true) {$stats = false;}
@@ -89,19 +69,12 @@ foreach ($arr as  $v) {
                                 //echo $type.PHP_EOL;
                                 $count=0;
                                 if($count == 0){
-                                   if($type =='IP') {
-                                   	$v = "<table style='width:20%;'><tr><td style='width:50%;text-align:center;'>IP Address</td><td>Ban Period</td></tr>";
-                                        //$v = 'why br ?';
-                                   }
-                                  else {
-                                     $v = "<table style='width:20%;'><tr><td style='width:50%;text-align:center;'>User ID</td><td>Ban Period</td></tr>";
-				}     
+                                   if($type =='IP') {$v = "<table style='width:20%;'><tr><td style='width:50%;text-align:center;'>IP Address</td><td>Ban Period</td></tr>";}
+                                   else {$v = "<table style='width:20%;'><tr><td style='width:50%;text-align:center;'>User ID</td><td>Ban Period</td></tr>";}     
                                  } 
-				//$v = '';//trim($data[1]);
-                                //print_r($data);
+				
 				$count = intval($data[1]);
-                                //echo "\$count = $count";
-			           //$v=$count;
+                   
 				}
 			if (strpos($v,': permanent') or strpos($v,'.000 min')) {
 				// do ban lines
@@ -111,16 +84,8 @@ foreach ($arr as  $v) {
                                 $data[1] = str_replace('.000','',$data[1]);
                                 //echo "we start with $v".PHP_EOL;
                                 $uobject = array_filter(explode(' ',$data[0]));
-                                //echo 'new $uobject '.print_r($uobject,true).PHP_EOL;
-                                if(!isset($uobject[1])) {
-                                   $uobject[1] = '';
-                                }
-                                //echo 'count of $uobject = '.count($uobject).PHP_EOL;
-                                //if($uobject[0] == $count) {
-                                   //echo 'we hit the full amount'.PHP_EOL;
-                                  // $v.='</table>';
-				 //}
-                                   $data[0] = trim(str_replace($uobject[0],'',$data[0]));
+                                if(!isset($uobject[1])) {$uobject[1] = '';}
+                                $data[0] = trim(str_replace($uobject[0],'',$data[0]));
                                   if(isset($uobject[2])) {
 					$uobject[1].=trim($uobject[2]);
                                         unset($uobject[2]);
@@ -148,6 +113,7 @@ foreach ($arr as  $v) {
                       
                          elseif($type == 'ID') {
                                $data = explode(' ',$v);
+                               //echo print_r($data,true); 
                                $v = $data[3].' - '.$data[1];
                                $v = '<tr><td style="text-align:right;padding-right:11%;">'.trim($data[1]).'</td><td>'.trim($data[3]).'</td></tr>' ;
                                 //$v="count = $count ".print_r($data,true);
@@ -172,45 +138,37 @@ foreach ($arr as  $v) {
                            //addip
 			}
                         if(strpos($v,'Banid:')) {
-                           //$v = trim(str_replace('"','',str_replace(')','',$v)));
-                          //$v = trim(str_replace('<','',str_replace('>','',$v)));
                           $data = explode(' ',$v);
+                          //echo print_r($data,true)."steam_id = $steam_id ".cr;  
                           $data[2] =' ID ';
                           $data[3] =" $steam_id "; 
-                          //$data[0]= 'Banid'.$data[0];
-                          //$data[1] = trim(str_replace('<','',str_replace('>','',$data[1])));
-                          //$data[1] = trim(str_replace('"','',str_replace(')','',$data[1])));
-                          //$data[1] = str_replace(': ',': ID ',$steam_id);
-                          $v= $data[1].$data[2].$data[3].$data[4].' '.$data[6].' '.$data[5].' '.$data[7].' '.$data[8];
-                          //$v = print_r($data,true);
-                          //banid list
+                          $v = $data[1].$data[2].$data[3].$data[4].' '.$data[6].' '.$data[5].' '.$data[7].' '.$data[8];
                         }
          if(!empty($v)) {
-         	$v =  preg_replace('/(.*) killed (.*) with ?(.*)? (.*)/', '$1 killed$2 with <span id="alf" style="color:yellow;">$3</span> <span id="kev" style="color:red;">$4</span>', $v);
+         	$v =  preg_replace('/(.*) killed (.*) with ?(.*)? (.*)/', '$1 killed $2 with <span id="alf" style="color:yellow;">$3</span> <span id="kev" style="color:red;">$4</span>', $v);
         //if(!empty($date_time)){
          foreach ($console as $k => $val) {
                $v = str_replace($k,$val,$v);
-              //preg_replace('/(Unknown command)(.*)/', '$0 --> <span style="color:red;">$1</span>$2', $input_lines);
-
-	}
+            
+				}
          $v = preg_replace('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\:\d{1,5}/', '$1 <span style="color:'.$console['user_ip'].';">$0</span>', $v);
          $v = preg_replace('/sv_[^=]*/', '$1<span style="color:cyan;">$0</span>', $v);
          $v = preg_replace('/tv_[^=]*/', '$1<span id="bug" style="color:cyan;">$0</span>', $v); 
-         $v = preg_replace('/(\w+\/){1,3}\w+\.\w+/', '<span style="color:Violet;">$0</span>', $v);
-        //}
-       //else {
-        //    $v = '<span style="color:cyan;">'.$v.'</span>';
-       // } 
-       //$v = preg_replace('/ killid with (.*)/', ' with <span id="last-hit" style="color:yellow;">$1</span> ', $v);
-       //$v = preg_replace('/(.*) killed(.*) with (.*)/', '$1 killed$2 with <span style="color:yellow;">$3</span>', $v);
+         $v = preg_replace('/(\w+\/){1,5}\w+\.\w+/', '<span style="color:Violet;">$0</span>', $v);
+     
        if (!strpos($v,'</tr>')){
-         $return[] = "$date_time $user $v<br>"; // build line here
-       //} this is the correct one
-        //if(!empty($ips)) {
-         // $return[] = "$date_time $user $ips $steam_id $v<br>";
-        //} 
+         if(isset($cmds['colour']) and $cmds['colour'] == false) {
+                $date_time = strip_tags($date_time);
+		$v = strip_tags($v,'<br> <table> <tr> <td>');
+		} 
+         $return[] = "<div>$date_time $user $v</div>"; // build line here
+      
     	}
         else {
+              if(!isset($cmds['colour']) or $cmds['colour'] == false) {
+                $v = strip_tags($v,'<br> <table> <tr> <td>');
+                } 
+
           $return[] = $v;
           }
 	}
