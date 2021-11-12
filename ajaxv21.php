@@ -55,31 +55,21 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
          case 'game_detail':
 				include 'modules/game_detail.php';
 				$content =game_detail();
-				switch ($cmds['output']) {
-				case 'json':
-					echo json_encode($content);
-					break;
-				case 'xml':
+				output($content,$cmds['output']);
+				/*switch ($cmds['output']) {
+					case 'json':
+						echo json_encode($content);
+						break;
+					case 'xml':
 						header('Content-Type: text/xml; charset=UTF-8');
 						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'player');
 						break;
-				case 'text':
+					case 'text':
 						printr($content);
-					/*foreach ($content as $line) {
-						if (is_array($line)) {
-							foreach ($line as $subline) {
-								echo "\t$subline".cr;
-							}
-						}
-						else {
-								echo $line.cr;
-							}
-					}*/
-				
-					break;
-				 default:
-                     echo "i is not equal to 0, 1 or 2";	
-				}
+						break;
+					default:
+						echo "Did not understand Output Option";	
+				}*/
 				break;
         case 'help' :
 			if(empty($cmds['topic'])) {$cmds['topic'] = null;} 
@@ -341,4 +331,22 @@ function get_pid($task) {
 	}
 	return $matches[0];
 }
+
+function output ($content, $type,$node='',$sub_node='') {
+	// do output
+	switch ($type) {
+		case "json":
+			echo json_encode($content);
+			break;
+		case "xml":
+			header('Content-Type: text/xml; charset=UTF-8');
+			echo  arrayToXML($content, new SimpleXMLElement($node), $subnode);
+			break;	
+		case "text":
+				printr($content);
+				break;
+		default:
+				echo "Did not understand Output Option";	
+	}
+}	
 ?>
