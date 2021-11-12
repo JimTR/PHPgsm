@@ -121,7 +121,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			    echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 			    if(!isset($cmds['colour']) or $cmds['colour'] == false) {
-					echo strip_tags($output,'<br> <table> <tr> <td>');
+					$output = strip_tags($output,'<br> <table> <tr> <td>');
 				}
 
 				foreach ($output as $show) {
