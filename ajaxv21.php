@@ -120,6 +120,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			    echo 'console code<body style="background:#000;color:#ccc;">'.cr;
 			    echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
+			    if(!isset($cmds['colour']) or $cmds['colour'] == false) {
+					echo strip_tags($output,'<br> <table> <tr> <td>');
+				}
+
 				foreach ($output as $show) {
 					echo $show;
 				}
