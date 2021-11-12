@@ -118,7 +118,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				//echo "we will use $file".cr;
 				include 'modules/console.php';
 			    echo 'console code<body style="background:#000;color:#ccc;">'.cr;
-			    echo 'returned $cmds '.cr,printr($cmds).cr;
+			    //echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 			    //if(!isset($cmds['colour']) or $cmds['colour'] == false) {
 					//$output = strip_tags($output,'<br> <table> <tr> <td>');
