@@ -41,7 +41,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
-	echo 'returned $cmds '.cr,printr($cmds).cr;
+	//echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false) {
 		//die( 'invalid API entry point');
 	}
@@ -118,7 +118,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				//echo "we will use $file".cr;
 				include 'modules/console.php';
 			    echo 'console code<body style="background:#000;color:#ccc;">'.cr;
-			    //echo 'returned $cmds '.cr,printr($cmds).cr;
+			    echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 				foreach ($output as $show) {
 					echo $show;
