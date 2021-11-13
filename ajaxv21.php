@@ -55,13 +55,16 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
          case 'game_detail':
 				include 'modules/game_detail.php';
 				$content =game_detail();
-				output($content,$cmds['output']);
+				//echo 'doing new function'.cr;
+				output($content,$cmds['output'],'<game_detail/>','player');
+				//echo 'returned from function'.cr;
+				//header('Content-Type: text/xml; charset=UTF-8');
 				/*switch ($cmds['output']) {
 					case 'json':
 						echo json_encode($content);
 						break;
 					case 'xml':
-						header('Content-Type: text/xml; charset=UTF-8');
+						echo (header('Content-Type: text/xml; charset=UTF-8'));
 						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'player');
 						break;
 					case 'text':
@@ -88,7 +91,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 					echo json_encode($content);
 					break;
 				case 'xml':
-						header('Content-Type: text/xml; charset=UTF-8');
+						echo (header('Content-Type: text/xml; charset=UTF-8'));
 						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
 						break;
 				case 'text':	
@@ -105,9 +108,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"';
 				$server = $database->get_row($sql);
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log';
+				$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
 				//echo "we will use $file".cr;
 				include 'modules/console.php';
-			    echo 'console code<body style="background:#000;color:#ccc;">'.cr;
+			    echo '<body style="background:#000;color:#ccc;">';
 			    //echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 			    //if(!isset($cmds['colour']) or $cmds['colour'] == false) {
@@ -332,7 +336,11 @@ function get_pid($task) {
 	return $matches[0];
 }
 
-function output ($content, $type,$node='',$sub_node='') {
+function output ($content, $type,$node,$sub_node) {
+	global $cmds;
+	//print_r($cmds);
+	//echo "<pre>node = $node sub_node = $sub_node</pre>".cr;
+	//die();
 	// do output
 	switch ($type) {
 		case "json":
@@ -340,7 +348,10 @@ function output ($content, $type,$node='',$sub_node='') {
 			break;
 		case "xml":
 			header('Content-Type: text/xml; charset=UTF-8');
-			echo  arrayToXML($content, new SimpleXMLElement($node), $subnode);
+			//printr($content);
+			//echo '<pre>';
+			print  arrayToXML($content, new SimpleXMLElement($node), $sub_node);
+			//echo '</pre>';
 			break;	
 		case "text":
 				printr($content);
