@@ -29,7 +29,7 @@ if (!defined('DOC_ROOT')) {
 
  define('cr',PHP_EOL);
  define('VERSION',2.05);
-	$build = "2381-3051572690";
+	$build = "2396-3831736644";
 require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
@@ -50,8 +50,8 @@ $games = $database->get_results($sql);
 				
 			   }
 		catch( Exception $e ){
-												$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
-												$restart[] = $game;
+												$restart[] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=r';
+												//$restart[] = $game;
 	     	}
 		$Query->Disconnect( );
 		}
@@ -59,7 +59,8 @@ $games = $database->get_results($sql);
 if(isset($restart)) {
 	echo 'Starting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&debug=true';
+			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&debug=true';
+			$cmd = $game;
 			$result =geturl($cmd);
 			if (!$result == 0) {
 				echo $result.cr;
