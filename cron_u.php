@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8823-2915291339";
+	$build = "8824-3538648747";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -62,14 +62,14 @@ foreach ($localIPs as $lip) {
 								// glue the sql together with $sql = "select * from server1 where (host like \"185%\") or (host like \"109%\") and enabled=1 order by server_name ASC";
 								 $sql = "select * from server1 where ";
 								if(!isset($subsql)) {
-									$subsql = '(host like "'.$lip.'") ';
+									$subsql = 'host like "'.$lip.'" ';
 								}
 								else {
-									$subsql .=  'or (host like "'.$lip.'") ';
+									$subsql .=  'or host like "'.$lip.'" ';
 									// more
 								} 
 							}
-							$sql .=$subsql." and enabled=1 and is_steam=1 order by server_name ASC";
+							$sql .='('.$subsql.") and enabled=1 and is_steam=1 order by server_name ASC";
 						}
 						else {
 							$sql = 'select * from server1 where host like "'.$ip.'%" and enabled=1 and is_steam=1 order by server_name ASC';
