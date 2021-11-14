@@ -82,7 +82,7 @@ require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
     define("VERSION",$version);
-	$build = "16107-2651242059";
+	$build = "16109-2291184304";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -245,7 +245,7 @@ if (!isset($la)) {
 			$rt = "\t No Logons in selected log for $server since last server start".cr;
 		}
 		else {
-			$rt ='';
+			//$rt ='';
 		}	
 	if ($uds == true) {
 		$s = update_server($server);
