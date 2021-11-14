@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8792-3065617495";
+	$build = "8823-2915291339";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -69,10 +69,10 @@ foreach ($localIPs as $lip) {
 									// more
 								} 
 							}
-							$sql .=$subsql." and enabled=1 order by server_name ASC";
+							$sql .=$subsql." and enabled=1 and is_steam=1 order by server_name ASC";
 						}
 						else {
-							$sql = 'select * from server1 where host like "'.$ip.'%" and enabled=1 order by server_name ASC';
+							$sql = 'select * from server1 where host like "'.$ip.'%" and enabled=1 and is_steam=1 order by server_name ASC';
 						}
 	$res = $database->get_results($sql);
 	
