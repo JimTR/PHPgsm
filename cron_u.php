@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8054-808143035";
+	$build = "8792-604157594";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -41,7 +41,9 @@ $host= gethostname();
 $ip = gethostbyname($host);
 $ip = file_get_contents('https://api.ipify.org');
 if(empty($ip)) { $ip = file_get_contents("http://ipecho.net/plain");}
-echo 'Starting Check For '.$ip.cr;
+$localIP = trim(shell_exec('hostname -I'));
+$localIPs = explode(' ',$localIP);
+echo 'Starting Check For '.$localIp.cr;
 $steamcmd = trim(shell_exec('which steamcmd'));
 $install_path = dirname($steamcmd);
 if (!empty($steamcmd)) {
@@ -54,8 +56,24 @@ else {
 }
 list($ip1, $ip2, $ip3, $ip4) = explode(".", $ip);
 //$ip = $ip1.'.'.$ip2.'.'.$ip3; // get all ip's attached to this server
-$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%" and is_steam=1' ;
-
+//$sql = 'SELECT servers.* , base_servers.url, base_servers.port FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.enabled="1"  and servers.server_id >=0 and host like "'.$ip.'%" and is_steam=1' ;
+if (count($localIPs) >1) {
+foreach ($localIPs as $lip) {
+								// glue the sql together with $sql = "select * from server1 where (host like \"185%\") or (host like \"109%\") and enabled=1 order by server_name ASC";
+								 $sql = "select * from server1 where ";
+								if(!isset($subsql)) {
+									$subsql = '(host like "'.$lip.'") ';
+								}
+								else {
+									$subsql .=  'or (host like "'.$lip.'") ';
+									// more
+								} 
+							}
+							$sql .=$subsql." and enabled=1 order by server_name ASC";
+						}
+						else {
+							$sql = 'select * from server1 where host like "'.$ip.'%" and enabled=1 order by server_name ASC';
+						}
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
