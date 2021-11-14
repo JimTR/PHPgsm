@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8792-604157594";
+	$build = "8792-3065617495";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -43,7 +43,7 @@ $ip = file_get_contents('https://api.ipify.org');
 if(empty($ip)) { $ip = file_get_contents("http://ipecho.net/plain");}
 $localIP = trim(shell_exec('hostname -I'));
 $localIPs = explode(' ',$localIP);
-echo 'Starting Check For '.$localIp.cr;
+echo 'Starting Check For '.$localIP.cr;
 $steamcmd = trim(shell_exec('which steamcmd'));
 $install_path = dirname($steamcmd);
 if (!empty($steamcmd)) {
