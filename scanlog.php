@@ -82,7 +82,7 @@ require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
     $version = 2.41;
     define("VERSION",$version);
-	$build = "16109-2291184304";
+	$build = "16113-1723752186";
 if(isset(options['v'])){
 			echo "Scanlog v$version - $build © NoIdeer Software ".date('Y').cr;
 		exit;
@@ -410,13 +410,13 @@ foreach ($la as $user_data) {
 		echo "$username record".cr.print_r($result,true).cr; 
 	}
 
-	if (isset($ut)) {
+	//if (isset($ut)) {
 		
 		if ($modify || $added) {
 			$rt = 'Processing server '.$server.cr.cr;		
 			$rt .= $user_stub.' '.$ut;
 		}
-	}
+	//}
 }
 
 
