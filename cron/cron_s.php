@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * restart servers at a given time
+ * restart servers if failed
  *  
  */
 if (!defined('DOC_ROOT')) {
@@ -28,23 +28,10 @@ if (!defined('DOC_ROOT')) {
     }
 
  define('cr',PHP_EOL);
- define('plus','%2B');
- define('space','%20');  
- define('VERSION',2.03);
- if (!defined('BUILD')) {
-	$build = "4884-1866521905";
-}
-else {
-	//
-	define('NEW_ALLEGRO_ID', 5);
-	//use const NEW_ALLEGRO_ID as BUILD;
-}
+ define('VERSION',2.05);
+	$build = "2381-3051572690";
 require_once DOC_ROOT.'/includes/master.inc.php';
- //if ($argv[1] =='v' || $argv[1] == '-v' ) {
-	// echo 'Cron_S v'.VERSION.' - '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
-	 //exit; 
- //}
- include  DOC_ROOT.'/functions.php';
+include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -52,8 +39,6 @@ define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
-$sql = 'select * from servers where running=1';
-//$sql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr, base_servers.base_ip,base_servers.password FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name';
 $sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
 $games = $database->get_results($sql);
 	foreach ($games as $game) {
@@ -70,7 +55,7 @@ $games = $database->get_results($sql);
 	     	}
 		$Query->Disconnect( );
 		}
-	//die();
+	
 if(isset($restart)) {
 	echo 'Starting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
@@ -79,50 +64,9 @@ if(isset($restart)) {
 			if (!$result == 0) {
 				echo $result.cr;
 			}
-					 
-			// check updates
-			if (in_array($game['install_dir'],$done)) {
-				//echo 'update already checked'.cr;
-			}
-			else{
-				$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ?
-				if(empty($steamcmd)) {
-					$steamcmd = './steamcmd';
-					chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-					$log_line = 'moved to '.getcwd ( );
-					file_put_contents(LOG,$log_line.cr,FILE_APPEND);
-				}
-				
-				$exe = urlencode($steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
-				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
-				//echo 'will execute '.$cmd.cr; // update full url
-				echo geturl($cmd);
-				$done[]=$game['install_dir']; // use this to test if update on core files has been done
-			}
-			// log prune
-			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
-			$log_line = 'Prune command  '.$exe;
-			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo geturl($cmd);
-			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
-			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
-			echo geturl($cmd);
-			$log_line = 'Prune here also '.$exe;
-			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
-			echo geturl($game['restart'].'s').cr; // start server
-			}
-	     $log_line = print_r($done,true); //test array
-	     file_put_contents(LOG,$log_line.cr,FILE_APPEND);
-	
-	
-	if (isset($check)) { 
-		echo 'Defered '.count($check).'/'.count($games).' server(s)'.cr;
-	foreach ($check as $restart) {
-		echo  $restart['server_name'].cr;
-	}
-}
+		}
+
 }
 else {
 	//echo 'all good'.cr;
