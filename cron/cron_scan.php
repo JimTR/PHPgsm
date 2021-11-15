@@ -26,12 +26,12 @@ define('cr',PHP_EOL);
 if (!defined('DOC_ROOT')) {
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
-require ('includes/master.inc.php');
-require 'includes/class.emoji.php';
-require 'includes/class.steamid.php';
+require (DOC_ROOT.'/includes/master.inc.php');
+require DOC_ROOT.'/includes/class.emoji.php';
+require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "12080-2003267289";
+	$build = "12110-1306926481";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
