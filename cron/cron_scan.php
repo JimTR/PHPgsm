@@ -345,7 +345,7 @@ function scan_log($server,$data) {
 				$insert = $database->escape($insert); // escape data
 				$update = $database->insert('players',$insert); // add to database
 				if ($update === true ){
-			 	 $return .="\t".$user_name.' ('.$insert['country'].') ';' Record added at '.$user['time'].cr;
+			 	 $return .="\t".$user_name.' ('.$insert['country'].') New Record added at '.$user['time'].cr;
 			 	 $sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
 			 	 $database->query($sql);
 			 }
