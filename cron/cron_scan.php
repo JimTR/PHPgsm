@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "14091-3840035004";
+	$build = "15958-2030516350";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -94,7 +94,20 @@ if (is_cli() == false){
 echo 'wrong enviroment';
 exit;
 }
-
+if(empty($options['s'])) {
+	echo "$prog v$version - $build © NoIdeer Software ".date('Y').cr;
+	if (!isset(options['help'])) {
+		echo 'Please supply a Server to scan'.cr;
+	}
+	echo 'Examples :- '.cr."\t".$prog.' -s<server id>'.cr;
+	echo "\t$prog -s<server id> -i<file to import> do not use -i with the all server option it is used for importing data and \e[4mnot\e[0m scanning".cr;
+	echo "\t$prog -s<all> this will scan all servers using the default log(s), slow but thorough ".cr;
+	//echo "\t--quick scans the current steam log rather than the full log faster but not so thorough, works with all other options".cr;
+	echo "\t--debug logs technical details to the console, works with all other options".cr;
+	echo "\t--force-modify updates user information even if their IP address has not changed".cr;
+	echo "\t--help this information".cr;
+	exit(0);
+}
 $update_done= array();
 $file =options['s'];
 if ($file == 'all') {
@@ -137,6 +150,44 @@ if ($file == 'all') {
 			}
 	}
 	echo $display;
+}
+else {
+	// do supplied file
+	if(isset(options['i'])) {
+	if (!file_exists(options['i'])) {
+		echo 'could not open '.options['i'].cr;
+		exit (1);
+	}
+}
+	$allsql = 'SELECT * FROM `server1` where host_name="'.options['s'].'"';
+		//echo $allsql.cr;
+	$run = $database->get_row($allsql);
+	if(empty($run)) {
+		echo 'Invalid server id '.options['s'].' correct & try again'.cr;
+		exit(2);
+	}
+	//$server_key = md5( ip2long($run['ipaddr'])) ;
+	//$path = $argv[1];
+	//print_r($run);
+	if (!isset(options['i'])) {
+		if (quick) {
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+			if (debug) {
+				echo $path.cr;
+			}
+		}
+		else {
+			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+		}
+	}
+	else {
+		// assume run local 
+		$path = options['i'];
+	}
+		
+		
+		$tmp = geturl($path);
+		echo scan_log(options['s'],$tmp);
 }
 
 /* ----- LOCAL FUNCTIONS  -----*/
