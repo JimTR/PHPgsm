@@ -23,12 +23,15 @@
  * 
  */
 define('cr',PHP_EOL);
+if (!defined('DOC_ROOT')) {
+    	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
+    }
 require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require 'includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "11983-2460184321";
+	$build = "12080-2003267289";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
