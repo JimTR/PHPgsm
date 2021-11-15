@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "15997-1957973694";
+	$build = "16044-1741225870";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -274,7 +274,7 @@ function scan_log($server,$data) {
 						//$return .= "new login from $user_name on $server ";
 						$user_result['last_log_on'] = $last_logon; // update time
 						$user_result['log_ons'] ++; // add the logon
-						$user_output.= ' new logon  at '.date($settings['date_format'],$lastlogon).' (total '.$user_result['log_ons'].')'; //screen display
+						$user_output.= ' new logon  at '.date($settings['date_format'],$lastlogon).'  '.date($settings['time_format'],$lastlogon).' (total '.$user_result['log_ons'].')'; //screen display
 						if ($ip <> $user_result['ip'] or modify) {
 							// we have a changed IP or forcing an update
 							$ip_data = get_ip_detail($user['ip']); // get new ip information
