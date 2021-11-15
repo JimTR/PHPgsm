@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "15958-2030516350";
+	$build = "15997-1957973694";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -201,7 +201,7 @@ function scan_log($server,$data) {
 	$update_users = 0;
 	$update_server = false;
 	$return ='';
-	global $database, $key;
+	global $database, $key, $settings;
 	$update_req = 'Your server needs to be restarted in order to receive the latest update.';
 	$user_sql = 'select * from players where steam_id64="'; // sql stub for user updates
 	$log_lines = explode(cr,$data);
@@ -274,7 +274,7 @@ function scan_log($server,$data) {
 						//$return .= "new login from $user_name on $server ";
 						$user_result['last_log_on'] = $last_logon; // update time
 						$user_result['log_ons'] ++; // add the logon
-						$user_output.= ' new logon  at '.$user['time'].' (total '.$user_result['log_ons'].')'; //screen display
+						$user_output.= ' new logon  at '.date($settings['date_format'],$lastlogon).' (total '.$user_result['log_ons'].')'; //screen display
 						if ($ip <> $user_result['ip'] or modify) {
 							// we have a changed IP or forcing an update
 							$ip_data = get_ip_detail($user['ip']); // get new ip information
