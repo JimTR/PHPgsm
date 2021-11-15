@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "12110-1306926481";
+	$build = "12194-4117173296";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -182,7 +182,9 @@ function scan_log($server,$data) {
 		$pc = count($users);
 	} //debug code
 	else {
-		$return = "\t No Logons in selected log for $server since last server start".cr;
+		if (!silent){
+			$return = "\t No Logons in selected log for $server since last server start".cr;
+		}
 		$pc = 0;
 		return $return;
 	}
@@ -288,7 +290,7 @@ function scan_log($server,$data) {
 				$insert = $database->escape($insert); // escape data
 				$update = $database->insert('players',$insert); // add to database
 				if ($update === true ){
-			 	 $return .=' Record added at '.$user['time'].cr;
+			 	 $return .="\t".$user_name.' ('.$insert['country'].') ';' Record added at '.$user['time'].cr;
 			 	 $sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
 			 	 $database->query($sql);
 			 }
@@ -306,10 +308,12 @@ function scan_log($server,$data) {
 		$return .= sprintf($mask,'New Users',$new_users );
 	} 
 	if(!empty($return)) {
-		$return .= cr.'Processed '.$server.cr;
+		$return .= "Processed $server".cr;
 	}
 	else {
-		return "\t No new logons on $server since last scan".cr;
+		if (!silent) {
+			return "\t No new logons on $server since last scan".cr;
+		}
 	}
 	if (debug) {
 		$return .= "counts modified = $update_users new = $new_users".cr;
