@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "12194-4117173296";
+	$build = "14091-3840035004";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -186,6 +186,10 @@ function scan_log($server,$data) {
 			$return = "\t No Logons in selected log for $server since last server start".cr;
 		}
 		$pc = 0;
+		if ($update_server == true) {
+			$s = update_server($server);
+		return $s;
+	}
 		return $return;
 	}
 	
@@ -307,6 +311,10 @@ function scan_log($server,$data) {
 		$return .= sprintf($mask,'Modified Users',$update_users );
 		$return .= sprintf($mask,'New Users',$new_users );
 	} 
+	if ($update_server == true) {
+		$return .= cr.'Warning '.$server.' needs updating & restarting'.cr;
+		$return .= update_server($server);
+	}
 	if(!empty($return)) {
 		$return .= "Processed $server".cr;
 	}
@@ -378,4 +386,41 @@ function user_data($value) {
 		}
 	 return $return;
 }	 
+
+function update_server($server){
+	// if found stop the server and update
+	//Your server needs to be restarted in order to receive the latest update.
+	global $database, $update_done,$settings;
+	$s = 'Server Update via Scanlog '.VERSION.cr;
+	$sql = 'select * from server1 where host_name="'.$server.'"';
+	$steamcmd = '/usr/games/steamcmd';
+	$game = $database->get_row($sql);
+	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&cmd='; // used to start & stop
+	if (in_array($game['install_dir'],$update_done)) {
+				$s .= 'Update already done'.cr;
+			    //$cmd = $stub.'r';
+			    //$s .=  file_get_contents($cmd).cr; 	
+				return $s;
+			}
+	$cmd = $stub.'q';
+	$s .= geturl($cmd).cr; // stopped server
+	// need to check if this is a root install, if so elevate the privs  
+	$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+	$s .=geturl($cmd);
+	//echo 'updated server using '.$cmd.cr;
+	//$cmd = $stub.'s';
+	//$s .= file_get_contents($cmd).cr;
+	//need to restart all that stem from this install dir
+	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '".$game['install_dir']."'";
+		$restarts = $database->get_results($sql);
+		foreach ($restarts as $restart) {
+			// restart them all
+			$cmd =  $game['url'].':'.$restart['bport'].'/ajaxv2.php?action=exescreen&server='.$restart['host_name'].'&cmd=r'; // used to restart
+			$s .= geturl($cmd).cr;
+		}
+		
+	$update_done[] = $game['install_dir'];
+	return $s;
+}
 ?>
