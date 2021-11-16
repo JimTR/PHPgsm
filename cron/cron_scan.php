@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16044-1741225870";
+	$build = "16122-1653193028";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -345,14 +345,14 @@ function scan_log($server,$data) {
 				$insert = $database->escape($insert); // escape data
 				$update = $database->insert('players',$insert); // add to database
 				if ($update === true ){
-			 	 $return .="\t".$user_name.' ('.$insert['country'].') New Record added at '.$user['time'].cr;
-			 	 $sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
-			 	 $database->query($sql);
-			 }
+					$return .="\t".$user_name.' ('.$insert['country'].') New User Record added at '.date($settings['date_format'],$last_logon).' '.date($settings['time_format'],$last_logon).cr;
+					$sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
+					$database->query($sql);
+				}
 			 
 			else {
 				echo 'Database Insertion failed with'.cr;
-				print_r($result);		 
+				print_r($insert);		 
 			}
 
 		}	
