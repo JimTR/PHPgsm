@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16122-1653193028";
+	$build = "16428-660592791";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -149,7 +149,17 @@ if ($file == 'all') {
 				echo 'no output'.cr;
 			}
 	}
-	echo $display;
+	if(debug) {
+		echo $display;
+	}
+	else {
+		$full_date = date($settings['date_format'].' - '.$settings['time_format']);
+		$to = $settings['adminemail'];
+		$subject = "User Scan at $full_date";
+		$txt = $display;
+		$headers = "From: PHPgsm" . "\r\n";
+		mail($to,$subject,$txt,$headers);
+	}
 }
 else {
 	// do supplied file
@@ -444,7 +454,7 @@ function update_server($server){
 	global $database, $update_done,$settings;
 	$s = 'Server Update via Scanlog '.VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
-	$steamcmd = '/usr/games/steamcmd';
+	$steamcmd = '/usr/games/steamcmd'; // needs to be full path for sudo
 	$game = $database->get_row($sql);
 	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
