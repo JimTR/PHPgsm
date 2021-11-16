@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16428-660592791";
+	$build = "16468-3849790793";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -153,12 +153,14 @@ if ($file == 'all') {
 		echo $display;
 	}
 	else {
-		$full_date = date($settings['date_format'].' - '.$settings['time_format']);
-		$to = $settings['adminemail'];
-		$subject = "User Scan at $full_date";
-		$txt = $display;
-		$headers = "From: PHPgsm" . "\r\n";
-		mail($to,$subject,$txt,$headers);
+		if(!empty(trim($display))) {
+			$full_date = date($settings['date_format'].' - '.$settings['time_format']);
+			$to = $settings['adminemail'];
+			$subject = "User Scan at $full_date";
+			$txt = $display;
+			$headers = "From: PHPgsm" . "\r\n";
+			mail($to,$subject,$txt,$headers);
+		}
 	}
 }
 else {
