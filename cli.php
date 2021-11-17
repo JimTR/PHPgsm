@@ -459,6 +459,7 @@ function help() {
 	 $ma = $cc->convert("%WMemory%n");
 	 $da = $cc->convert("%WBoot Disk%n");
 	 $da1 = $cc->convert("%WData Disk%n");
+	 $da2 = $cc->convert("%WRoot Disk%n");
 	 if($data['option'] =='h' || $data['option'] =='a') {
 		 //
 		  $table = new Table(CONSOLE_TABLE_ALIGN_LEFT,'',4,null,true);
@@ -514,6 +515,14 @@ function help() {
 			$table->addRow(array($cc->convert("%y\tDisk Size%n"),$disk_info['home_size']));
 			$table->addRow(array($cc->convert("%y\tDisk Used%n"),$disk_info['home_used'].' ('.$disk_info['home_pc'].')'));
 			$table->addRow(array($cc->convert("%y\tDisk Free%n"),$disk_info['home_free']));
+		}
+		if(isset($disk_info['root_filesystem'])) {
+			$table->addRow(array($da2,''));
+			$table->addRow(array(trim($cc->convert("%y\tFile System%n")),$disk_info['root_filesystem']));
+			$table->addRow(array($cc->convert("%y\tMount Point%n"),$disk_info['root_mount']));
+			$table->addRow(array($cc->convert("%y\tDisk Size%n"),$disk_info['root_size']));
+			$table->addRow(array($cc->convert("%y\tDisk Used%n"),$disk_info['root_used'].' ('.$disk_info['root_pc'].')'));
+			$table->addRow(array($cc->convert("%y\tDisk Free%n"),$disk_info['root_free']));
 		}
 		echo $table->getTable();
 		echo cr;
