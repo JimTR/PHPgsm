@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38511-1294885789";
+	$build = "38572-50104474";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -224,6 +224,7 @@ function get_user_info () {
 	$groupinfo = posix_getgrgid($groupid);
 	//print_r($groupinfo);
 	$user['members'] = $groupinfo['members'];
+	$user['gecos'] = explode(',',$user['gecos']); // split data
     //die(print_r($user));
 	exec("quota 2> /dev/null",$quota,$ret);
 	//print_r($quota);
