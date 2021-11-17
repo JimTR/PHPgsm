@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "37881-3827137066";
+	$build = "38511-1294885789";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -209,15 +209,25 @@ function get_cpu_info() {
 		}
 		return $cpu_info;
 }
-function get_user_info ($Disk_info) {
-	
+function get_user_info () {
+	$Disk_info = get_disk_info();
 	if(!defined('cr') ){
 		define('cr',PHP_EOL);
 	}
-	$user['name'] = trim(shell_exec("whoami"));
+	file_put_contents("testFile", "test");
+    $user_id = fileowner("testFile");
+    unlink("testFile");
+    $user = posix_getpwuid($user_id);
 	$user['level'] =check_sudo($user['name']);
+	//print_r($user);
+	$groupid = $user['gid'];
+	$groupinfo = posix_getgrgid($groupid);
+	//print_r($groupinfo);
+	$user['members'] = $groupinfo['members'];
+    //die(print_r($user));
 	exec("quota 2> /dev/null",$quota,$ret);
 	//print_r($quota);
+	//die();
 	$q_len = count($quota)-1;
 	if (isset($quota[1])){
 		// user has quota
@@ -257,7 +267,7 @@ function get_user_info ($Disk_info) {
 				$user['disk_locations'] = 1;
 			}
 	}
-	
+	//print_r($user);
 	return $user;    
 	
 }
@@ -423,21 +433,21 @@ $boot = array_values($boot);
 $boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
 if($boot == $root) {
 	//echo '$boot matches $root'.cr;
-	unset($boot);
+	unset($root);
 	}
-if($home[0] == $root[0]) {
+if($home[0] == $boot[0]) {
 	unset($home);
 	}
 //die();
-		$disk_info['boot_filesystem'] = trim($root[0]);
-		$disk_info['boot_size'] = trim($root[1]);
-		$disk_info['boot_used'] = trim($root[2]);
-		$disk_info['boot_free'] = trim($root[3]);
-		$disk_info['boot_pc'] = trim($root[4]);
-		$disk_info['boot_mount'] = trim($root[5]);
-		$disk_info['boot_hide'] = "ok";
-		
-		
+	if(isset($root)) {
+		$disk_info['root_filesystem'] = trim($root[0]);
+		$disk_info['root_size'] = trim($root[1]);
+		$disk_info['root_used'] = trim($root[2]);
+		$disk_info['root_free'] = trim($root[3]);
+		$disk_info['root_pc'] = trim($root[4]);
+		$disk_info['root_mount'] = trim($root[5]);
+	}
+				
 	if(isset($home)) {
 		//echo 'oh home is set'.cr;
 		$disk_info['home_filesystem'] = trim($home[0]);
@@ -446,6 +456,15 @@ if($home[0] == $root[0]) {
 		$disk_info['home_free'] = trim($home[3]);
 		$disk_info['home_pc'] = trim($home[4]);
 		$disk_info['home_mount'] = trim($home[5]);
+	}
+	if(isset($boot)) {
+		//echo 'oh home is set'.cr;
+		$disk_info['boot_filesystem'] = trim($boot[0]);
+		$disk_info['boot_size'] = trim($boot[1]);
+		$disk_info['boot_used'] = trim($boot[2]);
+		$disk_info['boot_free'] = trim($home[3]);
+		$disk_info['boot_pc'] = trim($boot[4]);
+		$disk_info['boot_mount'] = trim($boot[5]);
 	}
 	//print_r($disk_info);	
 	return $disk_info;
