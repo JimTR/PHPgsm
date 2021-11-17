@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38766-3077798380";
+	$build = "38922-765794209";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -223,8 +223,9 @@ function get_user_info () {
 	$groupid = $user['gid'];
 	$groupinfo = posix_getgrgid($groupid);
 	//print_r($groupinfo);
-	$user['members'] = $groupinfo['members'];
+	if (!empty($user['members'])) {$user['members'] = $groupinfo['members'];}
 	$gecos = explode(',',$user['gecos']); // split data
+	unset($user['gecos']);
 	foreach ($gecos as $k => $v) {
 		switch ($k) {
 			case 0:
@@ -234,7 +235,13 @@ function get_user_info () {
 				$user['room_number'] = $v;
 				break;
 			case 2:
-				$user['work_phone'] = $v;		
+				$user['work_phone'] = $v;	
+				break;
+			case 3:
+				$user['home_phone'] = $v;
+				break;
+			case 4:
+				$user['other'] = $v;
 			}
 		}
     //die(print_r($user));
