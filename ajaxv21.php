@@ -359,5 +359,56 @@ function output ($content, $type,$node,$sub_node) {
 		default:
 				echo "Did not understand Output Option";	
 	}
+}
+
+function exe($cmds) {
+	// run a command this array needs to be in a settings file
+	$sudo = false;
+	//$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo');
+	include 'includes/allowed_cmds.php';
+	//we could go php 8 here and use str_starts_with
+	if (strpos($cmds['cmd'],'sudo ')) {
+		// trying to run sudo
+		$cmds['cmd'] = str_replace('sudo ','');
+		$sudo = true;
+	}
+	foreach ($allowed as $find) {
+       if (strpos($cmds['cmd'], $find) !== FALSE ) { 
+        //echo $cmds['cmd']." Match found".cr;
+        $run_cmd =  $find; // store what we are going to run  
+        $can_do = true;
+		}
+	}
+	if(empty($can_do)) {
+		return 61912;
+	}
+	
+	if($can_do == true) {
+	/* 
+	 * Exit codes
+	 * 0 = ran correctly
+	 * 127 = file not found
+	 * 139 = segmentation
+	 */ 
+	if ($sudo) { $cmds['cmd'] = 'sudo '.$cmds['cmd'];} // glue sudo back in
+		exec($cmds['cmd'],$output,$retval);
+	
+			if (isset($cmds['debug'])) {
+				//echo ' ready to do command '.$cmds['cmd'].cr;
+				//print_r($output);
+				foreach ($output as $line) {
+					$return .= $line.cr;
+				}
+				return $return;
+				//$return ; //.= $retval.cr; // put the return value in the array
+		}
+		else {
+			// put retval as the first element of the array
+			$return = array_unshift($output,$retval);
+			return $return;
+		}
+ 
+		return false; // just in case anything slips through
+	}
 }	
 ?>
