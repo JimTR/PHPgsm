@@ -43,25 +43,21 @@ $sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
 $games = $database->get_results($sql);
 	foreach ($games as $game) {
 		
-		try{
+			try{
 				$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE ); // may need to up SQ_TIMEOUT if on a slow server 
-				$sub_cmd = 'GetInfo';
 				$info = $Query->GetInfo();
-				
-			   }
-		catch( Exception $e ){
-												$restart[] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=r';
-												//$restart[] = $game;
-	     	}
+			}
+			catch( Exception $e ){
+				$restart[] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=r';
+			}
 		$Query->Disconnect( );
 		}
 	
 if(isset($restart)) {
-	echo 'Starting '.count($restart).'/'.count($games).' server(s)'.cr;
+	echo 'Restarting '.count($restart).' server(s)'.cr;
 	foreach ($restart as $game) {
 			//$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&cmd=r&debug=true';
-			$cmd = $game;
-			$result =geturl($cmd);
+			$result =geturl($game);
 			if (!$result == 0) {
 				echo $result.cr;
 			}
