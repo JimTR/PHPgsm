@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38536-3213837468";
+	$build = "37881-3827137066";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -408,74 +408,44 @@ function get_disk_info() {
 	/* return disk info as array
 	//echo 'root stuff ! or no quota !'.cr;
 	*/ 
-exec('df -h ',$df,$ret); //need this for sdd or sep system partition
-unset ($df[0]);
-$df = array_values($df);
-//print_r($df);
-exec('df -h |grep -w / ',$tmps,$ret); //got the stuff
-//echo '$tmps'.cr;
-//tmps contains ?
-//print_r($tmps);
-//echo 'end $tmps'.cr;
-if (empty($tmps)) {
-	exec('df -h |grep  /boot',$boot,$ret);
-}
-$boot= array_partial_search( $df, '/boot' );
-$home = array_partial_search( $df, '/home' );
-//foreach ($tmps as $tmp) {
-	///$df[]=$tmp;
-//}
-foreach ($df as $disk) {
-	$tmp = explode('  ',trim($disk));
-	
-	foreach ($tmp as $k =>$v) {
-		//squash blanks
-		if (empty(trim($v))) {
-
-                        unset($tmp[$k]);
-                }
-              else {
-				  $x = strpos($v,"%");
-				  if ($x) {
-					  $tmp[$k] = substr($v,0,$x+1);
-					  $tmp[] = trim(substr($v,$x+1));
-				  }
-				  else {
-				  $tmp[$k] = trim($v);
-			  }
-			  }
-			  
-			}
-	$tmp = array_values($tmp);		
-	
-}
-$r[]=explode('  ',$boot[0]);
-$r['boot']=explode('  ',$tmps[0]);
-if (isset($home[0])) {
-	$r['home']=array_values(array_filter(explode('  ',$home[0])));   
-}
-	//echo print_r($r,true).cr;
-//if ($r[0] == $r[1]) {unset($r[0]);}
-		//echo  'whatever'.cr;
-		$x = strpos($r['boot'][4],"%");
-		$disk_info['boot_filesystem'] = trim($r['boot'][0]);
-		$disk_info['boot_size'] = trim($r['boot'][1]);
-		$disk_info['boot_used'] = trim($r['boot'][2]);
-		$disk_info['boot_free'] = trim($r['boot'][3]);
-		$disk_info['boot_pc'] = substr($r['boot'][4],0,$x+1);
-		$disk_info['boot_mount'] = trim(substr($r['boot'][4],$x+1));
+exec('df -h /',$root,$ret); //need this for sdd or sep system partition
+unset ($root[0]);
+$root = array_values($root);
+$root = array_values(array_filter(preg_split('/(\s)/', $root[0])));
+exec('df -h /home',$home,$ret); //got the stuff
+unset($home[0]);
+$home = array_values($home);
+$home = array_values(array_filter(preg_split('/(\s)/', $home[0])));
+exec('df -h /boot',$boot,$ret); //got the stuff
+unset($boot[0]);
+$boot = array_values($boot);
+//$home = explode("   ",$home[0]);
+$boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
+if($boot == $root) {
+	//echo '$boot matches $root'.cr;
+	unset($boot);
+	}
+if($home[0] == $root[0]) {
+	unset($home);
+	}
+//die();
+		$disk_info['boot_filesystem'] = trim($root[0]);
+		$disk_info['boot_size'] = trim($root[1]);
+		$disk_info['boot_used'] = trim($root[2]);
+		$disk_info['boot_free'] = trim($root[3]);
+		$disk_info['boot_pc'] = trim($root[4]);
+		$disk_info['boot_mount'] = trim($root[5]);
 		$disk_info['boot_hide'] = "ok";
 		
 		
-	if(isset($r['home'][0])) {
+	if(isset($home)) {
 		//echo 'oh home is set'.cr;
-		$x = strpos($r['home'][4],"%");
-		$disk_info['home_filesystem'] = trim($r['home'][0]);
-		$disk_info['home_size'] = trim($r['home'][1]);
-		$disk_info['home_used'] = trim($r['home'][2]);
-		$disk_info['home_free'] = trim($r['home'][3]);
-		$disk_info['home_pc'] = substr($r['home'][4],0,$x+1);
-		$disk_info['home_mount'] = trim(substr($r['home'][4],$x+1));
+		$disk_info['home_filesystem'] = trim($home[0]);
+		$disk_info['home_size'] = trim($home[1]);
+		$disk_info['home_used'] = trim($home[2]);
+		$disk_info['home_free'] = trim($home[3]);
+		$disk_info['home_pc'] = trim($home[4]);
+		$disk_info['home_mount'] = trim($home[5]);
 	}
 	//print_r($disk_info);	
 	return $disk_info;
