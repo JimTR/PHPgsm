@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "25061-2914064207";
+	$build = "25648-1266240775";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -517,7 +517,7 @@ function help() {
 			$table->addRow(array($cc->convert("%y\tDisk Free%n"),$disk_info['home_free']));
 		}
 		if(isset($disk_info['root_filesystem'])) {
-			$table->addRow(array($da2,''));
+			$table->addRow(array($da1,''));
 			$table->addRow(array(trim($cc->convert("%y\tFile System%n")),$disk_info['root_filesystem']));
 			$table->addRow(array($cc->convert("%y\tMount Point%n"),$disk_info['root_mount']));
 			$table->addRow(array($cc->convert("%y\tDisk Size%n"),$disk_info['root_size']));
