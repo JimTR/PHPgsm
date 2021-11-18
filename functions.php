@@ -483,7 +483,7 @@ if($boot == $root) {
 		$disk_info['boot_filesystem'] = trim($boot[0]);
 		$disk_info['boot_size'] = trim($boot[1]);
 		$disk_info['boot_used'] = trim($boot[2]);
-		$disk_info['boot_free'] = trim($home[3]);
+		$disk_info['boot_free'] = trim($boot[3]);
 		$disk_info['boot_pc'] = trim($boot[4]);
 		$disk_info['boot_mount'] = trim($boot[5]);
 	}
