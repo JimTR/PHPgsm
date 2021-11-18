@@ -158,7 +158,7 @@ if ($file == 'all') {
             $domain = $a1[1];
 			$full_date = date($settings['date_format'].' - '.$settings['time_format']);
 			$to = $settings['adminemail'];
-			$subject = "User Scan at $full_date";
+			$subject = "PHPgsm User Scan at $full_date";
 			$txt = $display;
 			$headers = "From: PHPgsm <phpgsm@$domain>" . cr;
 			mail($to,$subject,$txt,$headers);
@@ -455,8 +455,8 @@ function user_data($value) {
 function update_server($server){
 	// if found stop the server and update
 	//Your server needs to be restarted in order to receive the latest update.
-	global $database, $update_done,$settings;
-	$s = 'Server Update via Scanlog '.VERSION.cr;
+	global $database, $update_done,$settings,$prog;
+	$s = "Server Update via $prog ".VERSION.cr;
 	$sql = 'select * from server1 where host_name="'.$server.'"';
 	$steamcmd = '/usr/games/steamcmd'; // needs to be full path for sudo
 	$game = $database->get_row($sql);
@@ -469,8 +469,8 @@ function update_server($server){
 			}
 	$cmd = $stub.'q';
 	$s .= geturl($cmd).cr; // stopped server
-	// need to check if this is a root install, if so elevate the privs  
-	$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	// need to check if this is a root install, if so elevate the privs  TODO update app version number 
+	$exe = urlencode("sudo $steamcmd +login anonymous +force_install_dir ".$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=geturl($cmd);
 	//echo 'updated server using '.$cmd.cr;
