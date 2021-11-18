@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38934-490207494";
+	$build = "39203-36278294";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -174,6 +174,7 @@ function get_mem_info() {
 }
 function get_cpu_info() {
 	//get cpu info & return as array
+	global $settings;
 	$cpu = file('/proc/cpuinfo');
 		
 		foreach ($cpu as &$value) {
@@ -196,10 +197,20 @@ function get_cpu_info() {
 		$local = shell_exec('hostname -I');
 		$local = str_replace(' ', ', ',trim($local));
 		$all_ip =explode(',',$local);
+		if ($settings['router_ip'] == true) {
+			// get outer ip
+			//echo 'hit this'.cr;
+			//print_r($settings);
+			$public_ip = geturl('ifconfig.me');
+		}
 		//interfaces ! netstat -i  |sed 1,2d
 		// ip addr | grep "^ *inet " checks virtual adaptors
 		$cpu_info['local_ip'] = $all_ip[0];
 		$cpu_info['ips'] = $local;
+		if(isset($public_ip)){
+		
+			$cpu_info['ips']="$public_ip, ".$cpu_info['ips'];
+			}
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
@@ -452,10 +463,11 @@ $boot = array_values($boot);
 //$home = explode("   ",$home[0]);
 $boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
 if($home[0] == $root[0]) {
+	//$home matches $root
 	unset($home);
 	}
 if($boot == $root) {
-	//echo '$boot matches $root'.cr;
+	//$boot matches $root;
 	unset($root);
 	}
 
