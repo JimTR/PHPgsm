@@ -1,7 +1,7 @@
 <?php
 //echo 'functions 1.04';
 	define('fversion',2.04);
-	$build = "38933-3229711034";
+	$build = "38934-490207494";
 	if (isset($argv)) {
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
@@ -451,13 +451,14 @@ unset($boot[0]);
 $boot = array_values($boot);
 //$home = explode("   ",$home[0]);
 $boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
+if($home[0] == $root[0]) {
+	unset($home);
+	}
 if($boot == $root) {
 	//echo '$boot matches $root'.cr;
 	unset($root);
 	}
-if($home[0] == $boot[0]) {
-	unset($home);
-	}
+
 //die();
 	if(isset($root)) {
 		$disk_info['root_filesystem'] = trim($root[0]);
