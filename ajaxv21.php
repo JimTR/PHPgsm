@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12523-2679921336";
+	$build = "12507-3959290419";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -79,7 +79,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
 				include 'modules/console.php'; //load the module
 			    $output = readlog($cmds,$file); // run the command
-			   output($output,$cmds['output'],$cmds['output'],'<console/>','output'); //output the result				
+			   output($output,$cmds['output'],'<console/>','output'); //output the result				
 			   
 		   default:
 				$error[] = 'invalid endpoint'; // we can add extra messages to this array
