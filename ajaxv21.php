@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12443-1157600958";
+	$build = "12442-2299218028";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -103,7 +103,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
                 
                       //  echo 'in cli'.CR;
 			$shortopts ="a:A:s:S:d::D::v::V::h::H::t:T:o:O:";
-			$longopts[] = "debug::";
+			$longopts[] = "debug";
 			$longopts[] = "DEBUG::";
 			$longopts[] = "action:";
 			$longopts[] = "server:";
