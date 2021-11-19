@@ -111,18 +111,29 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
 				//echo "we will use $file".cr;
 				include 'modules/console.php';
-			    echo '<body style="background:#000;color:#ccc;">';
+			    //echo '<body style="background:#000;color:#ccc;">';
 			    //echo 'returned $cmds '.cr,printr($cmds).cr;
 			    $output = readlog($cmds,$file);
 			    //if(!isset($cmds['colour']) or $cmds['colour'] == false) {
 					//$output = strip_tags($output,'<br> <table> <tr> <td>');
 				//}
 
-				foreach ($output as $show) {
-					echo $show;
+				switch ($cmds['output']) {
+				case 'json':
+					echo json_encode($output);
+					break;
+				case 'xml':
+						echo (header('Content-Type: text/xml; charset=UTF-8'));
+						echo  arrayToXML($output, new SimpleXMLElement('<scanlog/>'), 'output');
+						break;
+				case 'text':	
+					foreach ($output as $line) {echo $line.cr;}
+					//printr($content);
+					break;
+				 default:
+					echo json_encode($output);
+                    //echo "i is not equal to 0, 1 or 2";	
 				}
-                 echo '</body>';
-			    break;
           }
 
 	function startup() {
@@ -357,7 +368,7 @@ function output ($content, $type,$node,$sub_node) {
 				printr($content);
 				break;
 		default:
-				echo "Did not understand Output Option";	
+				echo json_encode($content);	
 	}
 }
 
