@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12520-426549196";
+	$build = "12682-3599861896";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -66,6 +66,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
           
         case 'scanlog':
              //printr($cmds);
+             if(!isset($cmds['server'])) {$cmds['server'] = 'all';}
              $exe = './scanlog.php -s'.$cmds['server'];
              if(isset($cmds['silent'])) {$exe.=' --silent';}
 			exec($exe,$content,$ret_val);
@@ -73,6 +74,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			break; 
 			
 			case 'console':
+				if(empty($cmds['server'])) {goto error_default;}
+				if(empty($cmds['rows'])){$cmds['rows']= 0;}
 				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"'; // sql to get details
 				$server = $database->get_row($sql); // get server details
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log'; // get the correct file name
@@ -83,9 +86,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			   break;
 			   
 		   default:
-				$error[] = 'invalid endpoint'; // we can add extra messages to this array
-				$error[] = $cmds['action'];
-				output($error,$cmds['output'],'<error/>','output'); //send back error message
+				error_default:
+				$cmds['error'] = 'invalid endpoint'; // we can add extra messages to this array
+				output($cmds,$cmds['output'],'<error/>','output'); //send back error message
           }
 
 	function startup() {
@@ -145,7 +148,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$cmds['server'] = $options['s'];
 			}
 			else {
-				$cmds['server'] = 'all';
+				//$cmds['server'] = 'all';
 			}
             if(isset($options['help'])||isset($options['h'])){
 				$cmds['action'] ='help';
