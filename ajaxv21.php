@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12807-2239929956";
+	$build = "12807-3422502300";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -80,7 +80,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$server = $database->get_row($sql); // get server details
 				if(empty($server['location']))
 				 {
-					 $cmds['error_server'] = 'Invalid server ';
+					 $cmds['error_reason'] = 'Invalid server ';
 					 goto error_default;
 				 }
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log'; // get the correct file name
