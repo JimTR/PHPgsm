@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12445-1360844339";
+	$build = "12449-2127851811";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -97,7 +97,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			global $argv; 
 			//$method = $argv";
                         define ('cr',PHP_EOL);
-			 echo 'raw argv '.print_r($argv,true);
+			 //echo 'raw argv '.print_r($argv,true);
                 $argv = array_map('strtolower',$argv);
                 //echo 'lowered argv '.printr($argv,true);
                 
@@ -129,7 +129,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			if(isset($options['debug'])) {
 				$cmds['debug']= true;
 				//define('debug',true); // maybe not define cmds later ?
-				print_r($argv);
+				//print_r($argv);
 			}
             if(isset($options['v']) or isset($options['version'])) {$cmds['action'] ='version';}
             if(isset($options['silent'])) {$cmds['silent'] ='--silent';}
