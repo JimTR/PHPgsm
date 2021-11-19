@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12442-2299218028";
+	$build = "12439-3703995897";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -48,7 +48,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
 	}
-	if (isset($cmds['debug'])){ die(print_r($cmds));}
+	if (isset($cmds['debug'])){ print_r($cmds);}
 	switch ($cmds['action']) {
         case 'version' :
            echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
@@ -137,7 +137,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$cmds['output'] = $options['o'];
 				} 
 				else {
-					$cmds['output'] ='text';
+					//$cmds['output'] ='text';
 					}
 				
             if(isset($options['s'])) {
