@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12449-2127851811";
+	$build = "12522-1593777954";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -102,7 +102,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
                 //echo 'lowered argv '.printr($argv,true);
                 
                       //  echo 'in cli'.CR;
-			$shortopts ="a:A:s:S:d::D::v::V::h::H::t:T:o:O:";
+			$shortopts ="a:A:s:S:d::D::v::V::h::H::t:T:o:O:R:r:";
 			$longopts[] = "debug";
 			$longopts[] = "DEBUG::";
 			$longopts[] = "action:";
@@ -159,7 +159,8 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 					//$cmds['helpopt'] = null;
 				}
 			//}
-            if(isset($options['a'])) {$cmds['action'] = $options['a'];} 
+            if(isset($options['a'])) {$cmds['action'] = $options['a'];}
+            if(isset($option['r'])) {$cmds['rows'] = $options['r'];} 
             //switch ($options) {
             $cmds['valid'] = true; // we trust the console
             //return $cmds;
