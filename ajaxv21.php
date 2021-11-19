@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12450-696746534";
+	$build = "12440-452416615";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -97,13 +97,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			global $argv; 
 			//$method = $argv";
                         define ('cr',PHP_EOL);
-			 //echo 'raw argv '.print_r($argv,true);
+			 echo 'raw argv '.print_r($argv,true);
                 $argv = array_map('strtolower',$argv);
-                //echo 'lowered argv '.printr($argv,true);
+                echo 'lowered argv '.printr($argv,true);
                 
                       //  echo 'in cli'.CR;
 			$shortopts ="a:A:s:S:d::D::v::V::h::H::t:T:o:O:";
-			$longopts[] = "debug::";
+			$longopts[] = "debug:";
 			$longopts[] = "DEBUG::";
 			$longopts[] = "action:";
 			$longopts[] = "server:";
@@ -119,9 +119,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			
 			$options = array_change_key_case($options,CASE_LOWER);
 			$options = array_map('strtolower',$options);
-			//echo 'case changed '.printr($options);
+			echo 'case changed '.printr($options);
 			// running from the command line
-			//echo 'options '.printr($options,true).CR;
+			echo 'options '.printr($options,true).CR;
 			$method = 'cli';
 			if (!isset($cmds['action'])) { 
 				$cmds = convert_to_argv($argv,"",true);
