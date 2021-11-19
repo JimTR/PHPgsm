@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12897-1040397073";
+	$build = "12994-629503818";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -318,7 +318,7 @@ function output ($content, $type,$node,$sub_node) {
 	switch ($type) {
 		case "json":
 			if ($node == '<error/>') {
-				$error[$node]=$content;
+				$error['error'] = $content;
 				$content = $error; 
 			}
 			echo json_encode($content);
@@ -331,6 +331,10 @@ function output ($content, $type,$node,$sub_node) {
 			//echo '</pre>';
 			break;	
 		case "text":
+				if ($node == '<error/>') {
+				$error['error'] = $content;
+				$content = $error; 
+				}
 				printr($content);
 				break;
 		default:
