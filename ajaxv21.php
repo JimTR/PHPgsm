@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12347-1139630875";
+	$build = "12379-2247441014";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -82,6 +82,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 			   
 		   default:
 				$error[] = 'invalid endpoint'; // we can add extra messages to this array
+				$error[] = $cmds['action'];
 				output($error,$cmds['output'],'<error/>','output'); //send back error message
           }
 
