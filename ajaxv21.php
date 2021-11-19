@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "11516-3839391991";
+	$build = "12281-1659621801";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -57,83 +57,31 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				$content =game_detail();
 				//echo 'doing new function'.cr;
 				output($content,$cmds['output'],'<game_detail/>','player');
-				//echo 'returned from function'.cr;
-				//header('Content-Type: text/xml; charset=UTF-8');
-				/*switch ($cmds['output']) {
-					case 'json':
-						echo json_encode($content);
-						break;
-					case 'xml':
-						echo (header('Content-Type: text/xml; charset=UTF-8'));
-						echo  arrayToXML($content, new SimpleXMLElement('<game_detail/>'), 'player');
-						break;
-					case 'text':
-						printr($content);
-						break;
-					default:
-						echo "Did not understand Output Option";	
-				}*/
 				break;
         case 'help' :
 			if(empty($cmds['topic'])) {$cmds['topic'] = null;} 
           die(help($cmds['topic']));
           break;
+          
         case 'scanlog':
              //printr($cmds);
              $exe = './scanlog.php -s'.$cmds['server'];
-             if(isset($cmds['silent'])) { 
-				 $exe.=' --silent';
-				 }
+             if(isset($cmds['silent'])) {$exe.=' --silent';}
 			exec($exe,$content,$ret_val);
-			//printr($content);
-			switch ($cmds['output']) {
-				case 'json':
-					echo json_encode($content);
-					break;
-				case 'xml':
-						echo (header('Content-Type: text/xml; charset=UTF-8'));
-						echo  arrayToXML($content, new SimpleXMLElement('<scanlog/>'), 'output');
-						break;
-				case 'text':	
-					foreach ($content as $line) {echo $line.cr;}
-					//printr($content);
-					break;
-				 default:
-					echo json_encode($content);
-                    echo "i is not equal to 0, 1 or 2";	
-				}
+			output($content,$cmds['output'],'<scan_log/>','output');
 			break; 
 			
 			case 'console':
-				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"';
-				$server = $database->get_row($sql);
-				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log';
+				$sql = 'select * from server1 where host_name ="'.$cmds['server'].'"'; // sql to get details
+				$server = $database->get_row($sql); // get server details
+				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log'; // get the correct file name
 				$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
-				//echo "we will use $file".cr;
-				include 'modules/console.php';
-			    //echo '<body style="background:#000;color:#ccc;">';
-			    //echo 'returned $cmds '.cr,printr($cmds).cr;
-			    $output = readlog($cmds,$file);
-			    //if(!isset($cmds['colour']) or $cmds['colour'] == false) {
-					//$output = strip_tags($output,'<br> <table> <tr> <td>');
-				//}
-
-				switch ($cmds['output']) {
-				case 'json':
-					echo json_encode($output);
-					break;
-				case 'xml':
-						echo (header('Content-Type: text/xml; charset=UTF-8'));
-						echo  arrayToXML($output, new SimpleXMLElement('<scanlog/>'), 'output');
-						break;
-				case 'text':	
-					foreach ($output as $line) {echo $line.cr;}
-					//printr($content);
-					break;
-				 default:
-					echo json_encode($output);
-                    //echo "i is not equal to 0, 1 or 2";	
-				}
+				include 'modules/console.php'; //load the module
+			    $output = readlog($cmds,$file); // run the command
+			   output($output,$cmds['output'],$cmds['output'],'<console/>','output'); //output the result				
+			   
+		   default:
+				output('invalid endpoint',$cmds['output'],'<error/>','output'); //send back error message
           }
 
 	function startup() {
