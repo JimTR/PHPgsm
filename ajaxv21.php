@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "12522-1593777954";
+	$build = "12523-2679921336";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -160,7 +160,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 				}
 			//}
             if(isset($options['a'])) {$cmds['action'] = $options['a'];}
-            if(isset($option['r'])) {$cmds['rows'] = $options['r'];} 
+            if(isset($options['r'])) {$cmds['rows'] = $options['r'];} 
             //switch ($options) {
             $cmds['valid'] = true; // we trust the console
             //return $cmds;
