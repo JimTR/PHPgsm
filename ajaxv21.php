@@ -37,13 +37,13 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "13218-1136097209";
+	$build = "13140-2556136171";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
 	//echo 'returned $cmds '.cr,printr($cmds).cr;
-	if ($cmds['valid'] === false) {
-		//die( 'invalid API entry point');
+	if ($cmds['valid'] === false ) {
+		die( 'invalid API entry point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
@@ -54,7 +54,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	if (isset($cmds['debug'])){ print_r($cmds);}
 	switch ($cmds['action']) {
         case 'version' :
-           echo 'Ajax v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+           echo "Ajax v$version-$build Copyright Noideer Software ".date('Y').cr;
             break;
          case 'game_detail':
 				include 'modules/game_detail.php';
@@ -325,10 +325,7 @@ function output ($content, $type,$node,$sub_node) {
 				$error['error'] = $content;
 				$content = $error; 
 			}
-			if ($node == '<console/>'){
-				$tmp['console'] = $content;
-				$content = $tmp;
-			}
+			
 			echo json_encode($content);
 			break;
 		case "xml":
@@ -346,6 +343,7 @@ function output ($content, $type,$node,$sub_node) {
 				printr($content);
 				break;
 		default:
+				header('Content-Type: application/json');
 				echo json_encode($content);	
 	}
 }
