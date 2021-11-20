@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "50601-591002345";
+	$build = "50617-3332589756";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -719,7 +719,7 @@ function exescreen ($cmds) {
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
 	
-	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo');
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
         //echo $cmds['cmd']." Match found".cr; 
