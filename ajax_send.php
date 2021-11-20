@@ -64,6 +64,9 @@ if (isset($cmds['debug'])) {
 }
 $options['phpgsm-auth'] = "true";
 //$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
+//print_r($query);
+if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
+if ($query['output'] == 'json') {header('Content-Type: application/json');}
 echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query);
 
 function split_query($query) {
