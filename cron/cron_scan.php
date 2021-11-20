@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16697-2486459187";
+	$build = "16701-2788931268";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -39,7 +39,7 @@ define("VERSION",$version);
 	$longopts[]="remote::";
 	$longopts[]="silent::";
 	$longopts[]="force-modify::";
-	$longopts[]="no-emal::";
+	$longopts[]="no-email::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -154,6 +154,7 @@ if ($file == 'all') {
 		echo $display;
 	}
 	else {
+		
 		if(!empty(trim($display))) {
 			if(isset($options['no-email'])) {
 				echo $display;
