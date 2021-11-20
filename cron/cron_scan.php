@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16597-1108388988";
+	$build = "16697-2486459187";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -39,6 +39,7 @@ define("VERSION",$version);
 	$longopts[]="remote::";
 	$longopts[]="silent::";
 	$longopts[]="force-modify::";
+	$longopts[]="no-emal::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -154,6 +155,10 @@ if ($file == 'all') {
 	}
 	else {
 		if(!empty(trim($display))) {
+			if(isset($options['no-email'])) {
+				echo $display;
+			}
+			else{
 			$a1 = explode("@", $settings['adminemail']);
             $domain = $a1[1];
 			$full_date = date($settings['date_format'].' - '.$settings['time_format']);
@@ -162,6 +167,7 @@ if ($file == 'all') {
 			$txt = $display;
 			$headers = "From: PHPgsm <phpgsm@$domain>" . cr;
 			mail($to,$subject,$txt,$headers);
+		}
 		}
 	}
 }
