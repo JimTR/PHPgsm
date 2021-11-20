@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16560-3305919149";
+	$build = "16597-1108388988";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -270,7 +270,7 @@ function scan_log($server,$data) {
 			$user_result = $database->get_row($sql); // get user info
 				if(!empty($user_result)) {
 					// now process user
-					$user_output = "\t $user_name (".$user_result['country'].") ";
+					$user_output = "\t$user_name (".$user_result['country'].") ";
 					unset($user_result['id']); // take out id
 					unset($user_result['steam_id']);// dont save native steam_id
 					$where['steam_id64'] = $user['id2']; // database update clause
