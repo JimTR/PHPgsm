@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "13129-3746471052";
+	$build = "13218-1136097209";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -324,6 +324,10 @@ function output ($content, $type,$node,$sub_node) {
 			if ($node == '<error/>') {
 				$error['error'] = $content;
 				$content = $error; 
+			}
+			if ($node == '<console/>'){
+				$tmp['console'] = $content;
+				$content = $tmp;
 			}
 			echo json_encode($content);
 			break;
