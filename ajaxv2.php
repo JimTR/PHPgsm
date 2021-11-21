@@ -32,7 +32,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "50620-1995757910";
+	$build = "50641-3921290076";
 	$version = 2.07;
 error_reporting (0);
 $update_done= array();
@@ -95,7 +95,7 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 //$rip = $_SERVER['REMOTE_ADDR'];
-//$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".cr;
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".print_r($_SERVER,true).cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
