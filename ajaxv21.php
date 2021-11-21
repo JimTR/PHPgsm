@@ -32,18 +32,18 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
-	define( 'LOG',	'logs/ajax.log');
+	define( 'LOG',	'logs/ajaxv21.log');
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "13140-2556136171";
+	$build = "13136-690315444";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
 	//echo 'returned $cmds '.cr,printr($cmds).cr;
 	if ($cmds['valid'] === false ) {
-		die( 'invalid API entry point');
+		die( 'invalid end point');
 	}
 	if (!isset($cmds['action']) || empty($cmds['action'])){
 		die('I don\'t know what you mean'.cr);
