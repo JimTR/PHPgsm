@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6306-1771142547";
+	$build = "6410-168364584";
 }
 else {
 	//
@@ -46,7 +46,7 @@ require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 define( 'SQ_ENGINE',      SourceQuery::SOURCE );
-define( 'LOG',DOC_ROOT.'/logs/cron.log'); 
+define( 'LOG',DOC_ROOT.'/logs/cron_r.log'); 
 $done = array();
 $Query = new SourceQuery( ); 
 if(isset($argv[1])) {
@@ -129,7 +129,9 @@ foreach ($games as $game) {
 				$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
-				echo geturl($cmd);
+				$output = geturl($cmd);
+				echo $output;
+				file_put_contents(LOG,$output.cr,FILE_APPEND); //see what is comming back
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
 			}
 			// log prune
