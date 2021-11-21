@@ -346,11 +346,11 @@ for (var i in data1) {
             $('#cpu_cache'+server_id).text(data.cache_size);
             $('#ip'+server_id).text(data.ips);
             $('#reboot'+server_id).text(data.reboot);
-            $('#boot_filesystem'+server_id).text(data.boot_filesystem);
-            $('#boot_mount'+server_id).text(data.boot_mount);
-            $('#boot_size'+server_id).text(data.boot_size);
-            $('#boot_used'+server_id).text(data.boot_used+' ('+data.boot_pc+')');
-            $('#boot_free'+server_id).text(data.boot_free);
+            $('#boot_filesystem'+server_id).text(data.root_filesystem);
+            $('#boot_mount'+server_id).text(data.root_mount);
+            $('#boot_size'+server_id).text(data.root_size);
+            $('#boot_used'+server_id).text(data.root_used+' ('+data.root_pc+')');
+            $('#boot_free'+server_id).text(data.root_free);
             $('#memtotal'+server_id).text(data.MemTotal);
             $('#memfree'+server_id).text(data.MemFree);
             $('#memcached'+server_id).text(data.Cached);
