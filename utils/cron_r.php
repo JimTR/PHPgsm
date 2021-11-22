@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
  define('VERSION',2.03);
  if (!defined('BUILD')) {
-	$build = "6410-168364584";
+	$build = "6456-4179175356";
 }
 else {
 	//
@@ -130,6 +130,7 @@ foreach ($games as $game) {
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
 				$output = geturl($cmd);
+				$output = str_replace('^[[0','',$output);
 				echo $output;
 				file_put_contents(LOG,$output.cr,FILE_APPEND); //see what is comming back
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
