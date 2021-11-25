@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "25648-1266240775";
+	$build = "25907-1069680238";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -164,6 +164,8 @@ $cc = new Color();
 	$banner = 'cli v'.$version.'-'.$build.' Noideer Software ©'.date('Y').cr;
 	echo $cc->convert("%y$banner%n");
 	if (empty($cmds['action'])) {help();}
+	//print_r($cmds);
+	//die();
 switch ($cmds['action']) {
 	
 	case 'v' :
@@ -180,6 +182,7 @@ switch ($cmds['action']) {
 	break;
 	case 'l':
 	case 'log':
+	
 	//echo $cmds['server'].cr;
 	if(!isset($cmds['server'])) {
 		echo 'no Server ID supplied'.cr;
@@ -187,7 +190,7 @@ switch ($cmds['action']) {
 		}
 		if ($cmds['server'] == 'all' || empty($cmds['server'])) {
 			echo $cc->convert("%bLog scan%n").cr;
-			$exe = urlencode ('./scanlog.php -sall');
+			$exe = urlencode ('cron/cron_scan.php -sall --no-email');
 			$cmd = $settings['url'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			//echo $cmd.cr;
 			$content = geturl($cmd);
@@ -638,7 +641,7 @@ function help() {
 	}
 	
 	$file = file_get_contents($file_name);
-	$fsize = filesize($file_name);
+	$fsize = filesize($file_name)+1;
 	$nf = explode(cr,$file);
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
 	$v = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
@@ -652,16 +655,21 @@ function help() {
 	$return['build'] ='';
 	return $return;
 	}
-	//echo 'file '.$file_name.' - '.$matches[0];
-	$tmp = str_replace($matches[0],'',$file);
-    $ns = crc32($tmp);
-    //echo 'file '.$file_name.' - '.$matches[0].' '.$ns.cr;
-	$build = trim($matches[0]);
+	//echo 'file '.$file_name.' - '.$matches[0].cr;
+	$oldbp = strpos($file,'$build');
+	$eol = strpos($file,';',$oldbp);
+	$build = substr($file,$oldbp,$eol-$oldbp);
+	$tmp = substr_replace($file,'',$oldbp,$eol-$oldbp);
+	$ns = crc32($tmp);
+    $length= strlen($tmp);
+    //echo 'file '.$file_name.' - '.$tmp.' '.$ns.cr;
+	//$build = trim($matches[0]);
 	$build = str_replace('$build = "','',$build);
-	$build = str_replace('";','',$build);
+	$build = str_replace('"','',$build);
 	$b_detail = explode('-',$build);
-	
-	if ($b_detail[0] == $fsize and $ns == $b_detail[1]) {
+	//echo print_r($b_detail,true).cr;
+	//echo "\$fsize = $fsize \$ns = $ns strlen = $length".cr;
+	if ($b_detail[0] == $length and $ns == $b_detail[1]) {
 		
 		//echo advice.' '.$file_name.$tick.cr;
 		$return['file_name'] = $file_name;
