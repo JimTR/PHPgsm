@@ -23,18 +23,19 @@
  */
 require ('includes/master.inc.php');
 include ('functions.php');
+// map ajaxv21.php to somewhere else (so ajaxv21.php's actual file name & location is only known to this script )
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-	$build = "2326-1139582117";
-$version= 1.01;
-if(is_cli()) {
-$cmds = convert_to_argv($argv,"",true);
-define('cr',PHP_EOL);
-}
-if(!defined('cr')){
-	define('cr','<br>');
-}
+	$build = "2514-1776270920";
+	$version= 1.01;
+	if(is_cli()) {
+		$cmds = convert_to_argv($argv,"",true);
+		define('cr',PHP_EOL);
+	}
+	if(!defined('cr')){
+		define('cr','<br>');
+	}
 	if (!empty($_POST)) {
 		$cmds = convert_to_argv($_POST,"",true);
 	}
@@ -63,11 +64,9 @@ if (isset($cmds['debug'])) {
 	echo "cmd = $cmd".cr;
 }
 $options['phpgsm-auth'] = "true";
-//$cmd = 'https://api.noideersoftware.co.uk/rp.php?_=1633778352841';
-//print_r($query);
 if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
 if ($query['output'] == 'json') {header('Content-Type: application/json');}
-echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query);
+echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query); //password set file
 
 function split_query($query) {
 	// split up query

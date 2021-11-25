@@ -37,7 +37,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "13136-690315444";
+	$build = "13142-236997202";
 	$version = 2.101;
 	$cmds = startup();
 	//print_r($argv);
@@ -377,7 +377,7 @@ function exe($cmds) {
 	 * 127 = file not found
 	 * 139 = segmentation
 	 */ 
-	if ($sudo) { $cmds['cmd'] = 'sudo '.$cmds['cmd'];} // glue sudo back in
+	if ($sudo) { $cmds['cmd'] = 'sudo '.$cmds['cmd'];} // glue sudo back in and be sure the user can run it
 		exec($cmds['cmd'],$output,$retval);
 	
 			if (isset($cmds['debug'])) {

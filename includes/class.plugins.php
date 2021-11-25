@@ -7,7 +7,7 @@
  * the class needs to workout the location the plugin needs to run
  * plugin class version 2
  */
-	$build = "2848-1566089089";
+	$build = "2822-1752386032";
 class plugin {
 	
 	//start load function

@@ -27,7 +27,7 @@ require '../includes/master.inc.php';
 include '../functions.php';
 define ('cr',PHP_EOL);
 define ('CR',PHP_EOL);
-	$build = "1692-3881238490";
+	$build = "1666-3400310146";
 if (is_cli()) {
 	echo 'log prune live'.cr;
 }

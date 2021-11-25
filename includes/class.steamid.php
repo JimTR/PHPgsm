@@ -19,7 +19,7 @@ declare(strict_types=1);
  * @author xPaw
  * @license MIT
  */
-	$build = "15627-4050019237";
+	$build = "15600-3676494398";
 class SteamID
 {
 	/**

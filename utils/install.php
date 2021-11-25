@@ -40,7 +40,7 @@ if (!defined('DOC_ROOT')) {
  define ('cr',PHP_EOL);
  define('CR',cr);
  define ('VERSION',2.02);
-	$build = "21470-4038716450";
+	$build = "21443-2458940580";
  define ('quit','<ctl-c> to quit ');
   echo 'defines done'.cr;
     require_once DOC_ROOT.'/includes/class.table.php';

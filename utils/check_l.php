@@ -23,7 +23,7 @@
  *  example cat ~/games/gmod/serverfiles/steamapps/appmanifest_4020.acf | sed '3,17!d'
  */
 define ('cr',PHP_EOL);
-	$build = "2002-1803275355";
+	$build = "1976-1300356041";
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
 	exit;
