@@ -1,6 +1,6 @@
 <?php
 if (!defined("IN_PHPGSM")) die( "phpgsm didn't include me :-(");
-	$build = "9795-4109573305";
+	$build = "9770-653636511"";
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	//define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );

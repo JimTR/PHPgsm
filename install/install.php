@@ -3,7 +3,7 @@
 define ('cr',PHP_EOL);
 define ('br','<br>');
 define('DOC_ROOT', dirname(__FILE__,2));
-	$build = "11322-2734911782";
+	$build = "11295-276919259";
 include DOC_ROOT.'/includes/master.inc.php';
 include 'includes/functions.php';
 include 'includes/class.color.php';
