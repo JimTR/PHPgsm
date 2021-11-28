@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "25907-1069680238";
+	$build = "26078-4251476566";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -359,6 +359,11 @@ switch ($cmds['action']) {
 				$check = check_file($filename);
 				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 				
+		}
+		foreach (glob("cron/*.php") as $filename) {
+		
+				$check = check_file($filename);
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason']));
 		}
 		foreach (glob("install/*.php") as $filename) {
 		

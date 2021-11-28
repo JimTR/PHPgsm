@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16701-2788931268";
+	$build = "16550-731107379"";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -284,8 +284,7 @@ function scan_log($server,$data) {
 					$last_logon = strtotime($user['time']); // latest login time
 					//print_r($user_result);
 					// start to check log data against user data
-					if ($last_logon <=  $user_result['last_log_on']) {
-						//$return .= "old login for $user_name, on $server continuing".cr; // screen display
+					if ($last_logon <  $user_result['last_log_on']) {
 						continue; // re reading the same as before let's move on
 					}
 					else {
@@ -313,7 +312,6 @@ function scan_log($server,$data) {
 								$user_result['type'] ='n/a';
 							}
 							$user_result['threat'] = $ip_data['threat']['is_threat'];
-							//$user_result['ip'] = $ip;
 							$user_output.= ' IP Changed from '.long2ip($user_result['ip']).' to '.long2ip($ip); //screen display
 						}
 						if (trim($user_name) <> trim($user_result['name'])) {
@@ -326,12 +324,12 @@ function scan_log($server,$data) {
 						}
 						$user_output.=cr;
 						$return .= $user_output; //screen output
-						$user_result = $database->escape($user_result); // escape the changes read to insert into the database
+						$user_result = $database->escape($user_result); // escape the changes ready to insert into the database
 						$update = $database->update('players',$user_result,$where); // udate the database
 						if ($update === false) {
 							echo cr.'Database Update failed with'.cr;
 							print_r($result);
-							$update_users--;
+							//$update_users--;
 						}
 						else {
 							// database updated do second update
