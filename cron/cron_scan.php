@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16550-731107379"";
+	$build = "16550-731107379";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
