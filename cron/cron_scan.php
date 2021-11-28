@@ -31,7 +31,7 @@ require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = 1.01;
 define("VERSION",$version);
-	$build = "16550-412771006";
+	$build = "16550-731107379";
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -284,7 +284,7 @@ function scan_log($server,$data) {
 					$last_logon = strtotime($user['time']); // latest login time
 					//print_r($user_result);
 					// start to check log data against user data
-					if ($last_logon >  $user_result['last_log_on']) {
+					if ($last_logon <  $user_result['last_log_on']) {
 						continue; // re reading the same as before let's move on
 					}
 					else {
