@@ -29,7 +29,7 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8798-3302569062";
+	$build = "8798-1687911233";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -146,7 +146,7 @@ foreach ($localIPs as $lip) {
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
 				    // use $install_path + game
-				    $cmd = $steamcmd.' +login anonymous +force_install_dir '.$install_path.'/'.$data['game'].' +app_update '.$data['server_id'].' +quit';
+				    $cmd = $steamcmd.' +force_install_dir +login anonymous '.$install_path.'/'.$data['game'].' +app_update '.$data['server_id'].' +quit';
 				    $updatetxt = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $updatetxt.cr;
