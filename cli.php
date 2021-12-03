@@ -63,7 +63,7 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "26078-4251476566";
+	$build = "26003-2303001689";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -162,7 +162,9 @@ $cc = new Color();
 		}
 	//if(isset($options['q'])) {$cmds['action'] = 'q';}
 	$banner = 'cli v'.$version.'-'.$build.' Noideer Software ©'.date('Y').cr;
-	echo $cc->convert("%y$banner%n");
+	if ($cmds['action'] <> 'v'){
+		echo $cc->convert("%y$banner%n");
+	}
 	if (empty($cmds['action'])) {help();}
 	//print_r($cmds);
 	//die();
@@ -170,7 +172,7 @@ switch ($cmds['action']) {
 	
 	case 'v' :
 	case 'version':	
-		//echo 'Cli interface v'.$version.' © '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo $banner;
 	exit;
 	case 'd':
 	case 'details':
