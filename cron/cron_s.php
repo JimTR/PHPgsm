@@ -28,8 +28,8 @@ if (!defined('DOC_ROOT')) {
     }
 
  define('cr',PHP_EOL);
- define('VERSION',2.05);
-	$build = "2396-3831736644";
+    $version = "2.05";
+	$build = "2258-1522717829";
 require_once DOC_ROOT.'/includes/master.inc.php';
 include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';

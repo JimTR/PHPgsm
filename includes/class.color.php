@@ -46,7 +46,11 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT License
  * @link     http://pear.php.net/package/Console_Color
  */
-	$build = "10466-1053110956";
+
+$version = "2.00";
+
+$build = "10487-1518713422";
+
 class Color
 {
 

@@ -28,10 +28,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-	define( 'VERSION', 'V2.02');
+	$version = "2.02";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
-	
+	$build = "19669-1772104034";	
 error_reporting (0);
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
@@ -45,7 +45,7 @@ if(is_cli()) {
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if (isset($cmds['debug'])) {
 		error_reporting( -1 );
-		echo 'Ajax '.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
+		echo 'Ajax '.$version.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 	    print_r($cmds);
 	}
 	else {error_reporting( 0 );}

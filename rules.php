@@ -25,8 +25,8 @@
 require ('includes/master.inc.php');
  define('cr','<br>');
  define ('CR',PHP_EOL);
- define('VERSION',2.01);
-	$build = "2457-2983991524";
+$version = "2.01";
+$build = "2450-3347490875";
   if ($argv[1] =='v' || $argv[1] == '-v' ) {
 	 echo 'Rules v'.VERSION.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').CR;
 	 exit; 

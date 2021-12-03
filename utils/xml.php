@@ -25,8 +25,8 @@
 include '../includes/master.inc.php';
 include '../functions.php';
 define ('cr',PHP_EOL);
-define ('version',2.01);
-	$build = "11328-1544574938";
+$version = "2.01";
+$build = "11321-2105832208";
 //run from cli
 //error_reporting (0);
 if(is_cli()) {

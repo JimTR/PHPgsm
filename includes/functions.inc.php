@@ -1,6 +1,7 @@
 <?PHP
 global $database;
-	$build = "49044-1553303340";
+	$version = "2.00";
+	$build = "49064-2098552367";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();

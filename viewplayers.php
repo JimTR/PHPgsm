@@ -26,7 +26,11 @@ require ('includes/master.inc.php');
 require 'includes/class.emoji.php';
 require __DIR__ . '/xpaw/SourceQuery/bootstrap.php';
 define('CR',PHP_EOL);
-	$build = "4827-31529084";
+
+$version = "2.00";
+
+$build = "4848-3725238791";
+
 use xPaw\SourceQuery\SourceQuery;
 $x = strpos($_GET['host'],':');
 $sport = substr($_GET['host'],$x+1);

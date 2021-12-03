@@ -27,9 +27,10 @@
  * this does check update status and does the update perhaps this is the way to go ?
  * move this to the utilities folder & make sure it's pathed. ??
  */
+$version = "1.07"; 
+$build = "8817-2586340459";
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8798-1687911233";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');

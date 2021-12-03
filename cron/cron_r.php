@@ -30,9 +30,9 @@ if (!defined('DOC_ROOT')) {
  define('cr',PHP_EOL);
  define('plus','%2B');
  define('space','%20');  
- define('VERSION',2.03);
+ $version = "2.03";
  if (!defined('BUILD')) {
-	$build = "6260-3808767217";
+	$build = "6229-3604949545";
 }
 else {
 	//

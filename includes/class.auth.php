@@ -1,5 +1,6 @@
 <?PHP
-	$build = "10920-3251929122";
+$version = "2.00";
+$build = "10938-1036513089";
     class Auth
     {
         const SALT = 'insert some random text here';

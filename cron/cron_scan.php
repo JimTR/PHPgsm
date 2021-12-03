@@ -29,9 +29,11 @@ if (!defined('DOC_ROOT')) {
 require (DOC_ROOT.'/includes/master.inc.php');
 require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
-$version = 1.01;
+$version = "1.01";
 define("VERSION",$version);
-	$build = "16551-1149737173";
+
+$build = "17211-1608133526";
+
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -40,6 +42,7 @@ define("VERSION",$version);
 	$longopts[]="silent::";
 	$longopts[]="force-modify::";
 	$longopts[]="no-email::";
+	$longopts[]="dry-run::";
 	$options = getopt($shortopts,$longopts);
 	define ('options',$options);
 	if(isset($options['debug'])) {
@@ -76,6 +79,15 @@ define("VERSION",$version);
 	else {
 		define('modify',false);
 	}
+	
+	if(isset($options['dry-run'])) {
+		define('dryrun',true);
+		
+	}
+	else {
+		define('dryrun',false);
+	}
+	
 	if(debug) {
 		echo 'current options '.cr.print_r($options,true).cr;
 		echo '$argv is '.cr.print_r ($argv,true).cr;
@@ -95,6 +107,7 @@ if (is_cli() == false){
 echo 'wrong enviroment';
 exit;
 }
+//if(dryrun){die('dry run set'.cr);}
 if(empty($options['s'])) {
 	echo "$prog v$version - $build © NoIdeer Software ".date('Y').cr;
 	if (!isset(options['help'])) {
@@ -106,10 +119,13 @@ if(empty($options['s'])) {
 	//echo "\t--quick scans the current steam log rather than the full log faster but not so thorough, works with all other options".cr;
 	echo "\t--debug logs technical details to the console, works with all other options".cr;
 	echo "\t--force-modify updates user information even if their IP address has not changed".cr;
+	echo "\t--no-email does not send email to the sever owner".cr;
+	echo "\t--dry-run does not update the database used with --debug".cr;
 	echo "\t--help this information".cr;
 	exit(0);
 }
 $update_done= array();
+
 $file =options['s'];
 if ($file == 'all') {
 	    if(isset($options['i'] )) {
@@ -150,27 +166,36 @@ if ($file == 'all') {
 				echo 'no output'.cr;
 			}
 	}
-	if(debug) {
-		echo $display;
-	}
-	else {
+	//if(debug) {
+		//echo $display;
+	//}
+	//else {
 		
 		if(!empty(trim($display))) {
 			if(isset($options['no-email'])) {
 				echo $display;
 			}
 			else{
-			$a1 = explode("@", $settings['adminemail']);
-            $domain = $a1[1];
-			$full_date = date($settings['date_format'].' - '.$settings['time_format']);
-			$to = $settings['adminemail'];
-			$subject = "PHPgsm User Scan at $full_date";
-			$txt = $display;
-			$headers = "From: PHPgsm <phpgsm@$domain>" . cr;
-			mail($to,$subject,$txt,$headers);
+				if(debug) {
+					echo "\t sending email to ".$settings['adminemail'].cr;
+					echo $display;
+					}
+				if(!dryrun) {	 
+					$a1 = explode("@", $settings['adminemail']);
+					$domain = $a1[1];
+					$full_date = date($settings['date_format'].' - '.$settings['time_format']);
+					$to = $settings['adminemail'];
+					$subject = "PHPgsm User Scan at $full_date";
+					$txt = $display;
+					$headers = "From: PHPgsm <phpgsm@$domain>" . cr;
+					mail($to,$subject,$txt,$headers);
+				}
+				else{
+					echo 'Dry run notification not sent'.cr;
+				}
+			}
 		}
-		}
-	}
+	//}
 }
 else {
 	// do supplied file
@@ -281,7 +306,7 @@ function scan_log($server,$data) {
 					unset($user_result['id']); // take out id
 					unset($user_result['steam_id']);// dont save native steam_id
 					$where['steam_id64'] = $user['id2']; // database update clause
-					$last_logon = strtotime($user['time']); // latest login time
+					$last_logon = $user['time_stamp']; // latest login time
 					//print_r($user_result);
 					// start to check log data against user data
 					if ($last_logon <=  $user_result['last_log_on']) {
@@ -294,7 +319,7 @@ function scan_log($server,$data) {
 						//$return .= "new login from $user_name on $server ";
 						$user_result['last_log_on'] = $last_logon; // update time
 						$user_result['log_ons'] ++; // add the logon
-						$user_output.= ' new logon  at '.date($settings['date_format'],$lastlogon).'  '.date($settings['time_format'],$lastlogon).' (total '.$user_result['log_ons'].')'; //screen display
+						$user_output.= ' new logon  at '.date($settings['date_format'],$lastlogon).'  '.date($settings['time_format'],$lastlogon).' (total '.$user_result['log_ons'].')'; //screen display need to alter this
 						if ($ip <> $user_result['ip'] or modify) {
 							// we have a changed IP or forcing an update
 							$ip_data = get_ip_detail($user['ip']); // get new ip information
@@ -325,16 +350,18 @@ function scan_log($server,$data) {
 						$user_output.=cr;
 						$return .= $user_output; //screen output
 						$user_result = $database->escape($user_result); // escape the changes ready to insert into the database
-						$update = $database->update('players',$user_result,$where); // udate the database
-						if ($update === false) {
-							echo cr.'Database Update failed with'.cr;
-							print_r($result);
+						if(!dryrun) {
+							$update = $database->update('players',$user_result,$where); // udate the database
+							if ($update === false) {
+								echo cr.'Database Update failed with'.cr;
+								print_r($result);
 							//$update_users--;
-						}
-						else {
+							}
+							else {
 							// database updated do second update
-							$sql = 'call update_logins ('.$user_result['steam_id64'].',"'.$server.'",'.$user_result['last_log_on'].')';  //add more to this ?
-							$database->query($sql);
+								$sql = 'call update_logins ('.$user_result['steam_id64'].',"'.$server.'",'.$user_result['last_log_on'].')';  //add more to this ?
+								$database->query($sql);
+							}
 						}
 					}
 				}
@@ -361,19 +388,20 @@ function scan_log($server,$data) {
 				else {$insert['type'] = 'N/A';}
 				$insert['threat'] = $ip_data['threat']['is_threat'];
 				$insert['server'] = $server.'*';
-				$insert = $database->escape($insert); // escape data
-				$update = $database->insert('players',$insert); // add to database
-				if ($update === true ){
-					$return .="\t".$user_name.' ('.$insert['country'].') New User Record added at '.date($settings['date_format'],$last_logon).' '.date($settings['time_format'],$last_logon).cr;
-					$sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
-					$database->query($sql);
-				}
+				if(!dryrun) {
+					$insert = $database->escape($insert); // escape data
+					$update = $database->insert('players',$insert); // add to database
+						if ($update === true ){
+							$return .="\t".$user_name.' ('.$insert['country'].') New User Record added at '.date($settings['date_format'],$last_logon).' '.date($settings['time_format'],$last_logon).cr;
+							$sql = 'call update_logins ('.$insert['steam_id64'].',"'.$server.'",'.$insert['last_log_on'].')';
+							$database->query($sql);
+						}
 			 
-			else {
-				echo 'Database Insertion failed with'.cr;
-				print_r($insert);		 
-			}
-
+					else {
+						echo 'Database Insertion failed with'.cr;
+						print_r($insert);		 
+					}
+				}
 		}	
 	}
 	$mask = "%15.15s %4.4s \n";
@@ -445,8 +473,9 @@ function user_data($value) {
 	 $vx[2] = $s[1];
 	 $vx[3] = strtok( $sx3[2], ':' );
 	 $steam_id = new SteamID( $vx[2] );
-	 $vx[] = $steam_id->ConvertToUInt64();
+	 //$vx[] = $steam_id->ConvertToUInt64();
 	 $return['time'] = $vx[0];
+	 $return['time_stamp'] = strtotime($vx[0]);
 	 $return['name'] = $vx[1];
 	 $return['id'] = $vx[2];
 	 $return['id2'] = $steam_id->ConvertToUInt64();
@@ -475,7 +504,7 @@ function update_server($server){
 	$cmd = $stub.'q';
 	$s .= geturl($cmd).cr; // stopped server
 	// need to check if this is a root install, if so elevate the privs  TODO update app version number 
-	$exe = urlencode("sudo $steamcmd +login anonymous +force_install_dir ".$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	$exe = urlencode("sudo $steamcmd  +force_install_dir +login anonymous ".$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=geturl($cmd);
 	//echo 'updated server using '.$cmd.cr;

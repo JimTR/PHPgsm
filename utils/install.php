@@ -39,9 +39,10 @@ if (!defined('DOC_ROOT')) {
  require_once DOC_ROOT.'/functions.php';
  define ('cr',PHP_EOL);
  define('CR',cr);
- define ('VERSION',2.02);
-	$build = "21443-2458940580";
+ $version = "2.02";
+	$build = "22076-3718590778";
  define ('quit','<ctl-c> to quit ');
+define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
   echo 'defines done'.cr;
     require_once DOC_ROOT.'/includes/class.table.php';
     require_once DOC_ROOT.'/includes/class.color.php';
@@ -56,12 +57,9 @@ $cross = $cc->convert("%r✖%n");
  $cmds =convert_to_argv($argv,"",true);
  $steam_i = false;
  system('clear');
-  $table = new Table(
-    CONSOLE_TABLE_ALIGN_RIGHT,
-    array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-);
+  $table = new Table(CONSOLE_TABLE_ALIGN_RIGHT,borders);
  $quit ='(ctl+c to quit) '; 
-  echo 'PHPgsm Game Installer '.VERSION.cr;
+  echo "PHPgsm Game Installer $version".cr;
   if (isset($cmds)){
   if ($cmds['action'] == 'show') { 
 	  list_games();
@@ -70,10 +68,11 @@ $cross = $cc->convert("%r✖%n");
 	  if (!$rerun) { exit;}
   }
 }
-//$table->addRow(array('','',''));
-$table->addRow(array('Mount Point','Free Space' ));
+//$table->setHeaders(
+$table->setHeaders(array('Mount Point','Free Space' ));
  echo 'Available disk space'.cr;
  $diskinfo = get_disk_info();
+//do here
  if (isset($diskinfo['boot_free'])) {
 	 //echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
 	 $table->addRow(array($diskinfo['boot_mount'],$diskinfo['boot_free']));
@@ -153,28 +152,26 @@ else {
 		// exit;
 	 }
         //echo cr.print_r($installing).cr;
-       
+     $table = new Table(CONSOLE_TABLE_ALIGN_RIGHT,borders);
 	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
 	 //echo $cmd.cr;	
      exec($cmd,$g_locate,$ret);
      //echo 'locations '.print_r($g_locate,true).cr;
      if (count($g_locate)) {
-		 $table = new Table(
-			CONSOLE_TABLE_ALIGN_LEFT,
-			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-			);
-			echo $server.' installed at these locations'.cr; 
-			$table->addRow(array('Location',"  Size on disk"));
-		 foreach ($g_locate as $ins) {
-			 $loc = dirname($ins,1);
-			 exec('du -hs '. dirname($ins,2),$dir_size,$r);
-			 $ds=explode("\t",$dir_size[0]);
-			 //echo '$ds = '.print_r($ds,true).cr;
-			 
-			 $table->addRow(array(dirname($ins,2),"\t".$ds[0]));
-			 unset($dir_size);
-		 }
-		 echo $table->getTable(); 
+		$table->setHeaders(array('Mount Point','Free Space' ));
+		echo 'Available disk space'.cr;
+//do here
+ if (isset($diskinfo['boot_free'])) {
+	 //echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
+	 $table->addRow(array($diskinfo['boot_mount'],$diskinfo['boot_free']));
+	 
+ }
+ if(isset($diskinfo['home_free']))  {
+	 //echo $diskinfo['home_mount'].' ( '.$diskinfo['home_free'].' free )'.cr;
+	 $table->addRow(array($diskinfo['home_mount'],$diskinfo['home_free']));
+	 }
+ echo $table->getTable();
+		  
 	 }
 	 else {
 		echo $output[1].cr;
@@ -663,4 +660,18 @@ function clean_up($action) {
 		}
 	}
 }
+ /*foreach ($g_locate as $ins) {
+			 $loc = dirname($ins,1);
+             $path_loc = dirname($ins,2);
+             echo "\$loc = $loc \$path_loc = $path_loc".cr;
+			 exec('du -hs '. $path_loc,$dir_size,$r);
+			 $ds=explode("\t",$dir_size[0]);
+			 echo '$ds = '.print_r($ds,true).cr;
+			 $ds0 = trim($ds[0]);
+			 if(!empty($ds0)) {
+				 echo "\$ds0 = $ds0".PHP_EOL;
+			 $table->addRow(array($path_loc,$ds0));
+			 unset($dir_size);
+			}*/
+		 //}
 ?>

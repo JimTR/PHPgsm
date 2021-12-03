@@ -27,8 +27,9 @@ include ('functions.php');
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-	$build = "2514-1776270920";
-	$version= 1.01;
+$version = "1.012";
+	$build = "2519-2682779641";
+	
 	if(is_cli()) {
 		$cmds = convert_to_argv($argv,"",true);
 		define('cr',PHP_EOL);

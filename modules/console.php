@@ -2,7 +2,8 @@
 //$cmds = $argv;
 include 'console_colour.php';
 include 'colours/'.$cmds['game'].'-console_colour.php';
-$build = "10355-1754488349";
+$version = "1.00";
+$build = "10374-4026955264";
 //print_r($cmds);
 function readlog($cmds,$file='') {
 global $console, $settings;

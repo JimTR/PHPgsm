@@ -24,9 +24,10 @@
  * utility for console app
  */
  //header('Access-Control-Allow-Origin: *');
- require_once 'includes/master.inc.php';
- define ('VERSION', 2.01);
-	$build = "5176-3749747768";
+ 
+$version = "2.01";
+$build = "5169-2686274782";
+	require_once 'includes/master.inc.php';
  define ('cr', PHP_EOL);
  define ('br','<br/>');
  if(is_cli()) {
