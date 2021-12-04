@@ -23,7 +23,11 @@
  * example steamcmd +app_info_update 1 +app_info_print 295230 +quit |  sed '1,/branches/d' 
  */
 define ('cr',PHP_EOL);
-	$build = "5851-2044385944";
+
+$version = "2.00";
+
+$build = "5872-1712756322";
+
 $dir= dirname($_SERVER['PHP_SELF']);
 if ($dir == '.'){
 $dir = dirname($_SERVER['PWD']);

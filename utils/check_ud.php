@@ -23,7 +23,8 @@
  * 
  */
 define ('cr',PHP_EOL);
-	$build = "4422-341828679";
+$version = "2.00";
+$build = "4440-4116720586";
 if (!isset($argv[1])) {
 	echo 'supply a server ID !'.cr;
 	help();

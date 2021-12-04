@@ -30,10 +30,9 @@ if (!defined('DOC_ROOT')) {
  define('cr',PHP_EOL);
  define('plus','%2B');
  define('space','%20');  
- define('VERSION',2.03);
- if (!defined('BUILD')) {
-	$build = "6430-3278097153";
-}
+$version = "2.03";
+$build = "6396-3609835525";
+
 else {
 	//
 	define('NEW_ALLEGRO_ID', 5);

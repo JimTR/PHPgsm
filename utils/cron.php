@@ -24,7 +24,10 @@
 include '../includes/master.inc.php';
 include '../functions.php';
 define ("cr",PHP_EOL);
-	$build = "2704-2022334202";
+$version = "2.00";
+
+$build = "2724-1464696445";
+
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;

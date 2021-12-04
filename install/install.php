@@ -3,13 +3,16 @@
 define ('cr',PHP_EOL);
 define ('br','<br>');
 define('DOC_ROOT', dirname(__FILE__,2));
-	$build = "11295-276919259";
+	$build = "11321-3885503233;
 include DOC_ROOT.'/includes/master.inc.php';
 include 'includes/functions.php';
 include 'includes/class.color.php';
 include 'includes/class.table.php';
 $cc = new Color();
-define('version',1.01);
+$version = "1.01";
+
+$build = "11316-1654291034";
+
 $os = lsb();
 if ($os['ID_LIKE'] !== 'debian') {
 	echo 'Currently this installer only works with debian type OS\'s'.cr;

@@ -29,7 +29,9 @@
  */
 include 'includes/master.inc.php';
 include 'functions.php';
-	$build = "8029-3573006092;
+$version = "2.00";
+
+$build = "8048-1295372037";
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
