@@ -30,16 +30,9 @@ if (!defined('DOC_ROOT')) {
  define('cr',PHP_EOL);
  define('plus','%2B');
  define('space','%20');  
-$version = "2.03";
-$build = "6396-3609835525";
-
-else {
-	//
-	define('NEW_ALLEGRO_ID', 5);
-	//use const NEW_ALLEGRO_ID as BUILD;
-}
 require_once DOC_ROOT.'/includes/master.inc.php';
- 
+$version = "2.03";
+$build = "6396-3609835525"; 
  include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
