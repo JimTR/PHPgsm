@@ -32,7 +32,7 @@ if (!defined('DOC_ROOT')) {
  define('space','%20');  
 require_once DOC_ROOT.'/includes/master.inc.php';
 $version = "2.03";
-$build = "6396-3609835525"; 
+$build = "6313-1092783628"; 
  include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;

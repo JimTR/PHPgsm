@@ -10,7 +10,8 @@
  * @date 2014/12/09 3:27:02
  * @remark 截止iOS 8,共有845个Emoji表情(there are 845 emojis in iOS 8 and OS X)
  **/
-	$build = "1980-3415914525";
+$version = "1.00";
+$build = "1998-4188524648";
 class Emoji
 {
 	/**

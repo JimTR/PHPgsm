@@ -21,7 +21,8 @@
  * 
  * 
  */
-	$build = "5460-1226856513";
+$version = "2.00";
+$build = "5478-3632390826";
 class Template {
 
    public $template;

@@ -63,7 +63,7 @@ $version = "2.071";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "26505-2174287902";
+$build = "26832-1804914684";
 		
 	if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -653,6 +653,7 @@ function help() {
 	$nf = explode(cr,$file);
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
 	$v = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
+	$v1 = array_values(preg_grep('/\$version = "\d+.\d+.\d+"/', $nf));
 	if (!empty($v)) {
 	//print_r($v);
 	$version = trim(str_replace('$version = "','',$v[0]));
@@ -660,7 +661,14 @@ function help() {
 	//echo $version.cr;
 	//print_r($matches);
 	}
-	if (empty($matches)) {
+	if (!empty($v1)) {
+	//print_r($v);
+	$version = trim(str_replace('$version = "','',$v1[0]));
+	$version = trim(str_replace('";','',$version));
+	//echo $version.cr;
+	//print_r($matches);
+	}
+	if (empty($matches) and empty($version)) {
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
 	$return['file_name'] = $file_name;
 	$return['reason'] = error." Unable To Check ! The file structure is incorrect";
@@ -668,9 +676,10 @@ function help() {
 	$return['status'] = false;
 	$return['fsize'] = $fsize;
 	$return['build'] ='';
-	$return['version'] = '';
+	$return['full_version'] = $version;
 	return $return;
 	}
+	
 	//echo 'file '.$file_name.' - '.$matches[0].cr;
 	$oldbp = strpos($file,'$build');
 	$eol = strpos($file,';',$oldbp);
@@ -685,11 +694,21 @@ function help() {
 	$b_detail = explode('-',$build);
 	//echo print_r($b_detail,true).cr;
 	//echo "\$fsize = $fsize \$ns = $ns strlen = $length".cr;
+	if (!empty($version) and empty($matches)) {
+	$return['file_name'] = $file_name;
+	$return['reason'] = pass.", user configured file";
+	$return['symbol'] = $tick;
+	$return['status'] = true;
+	$return['fsize'] = $fsize;
+	$return['build'] ='';
+	$return['full_version'] = "$version-$fsize-$ns";
+	return $return;
+	}	
 	if ($b_detail[0] == $length and $ns == $b_detail[1]) {
 		
 		//echo advice.' '.$file_name.$tick.cr;
 		$return['file_name'] = $file_name;
-		$return['reason'] = pass ;//." File Passed Integrity Check";
+		$return['reason'] = pass .", File is up to date";
 		$return['symbol'] = trim($tick);
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
@@ -708,6 +727,7 @@ function help() {
 		$return['fsize'] = $fsize;
 		$return['build'] = $ns;
 		$return['version'] = $version;
+		$return['full_version'] = "$version-$fsize-$ns";
 		return $return;
 	}
 }

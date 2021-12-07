@@ -45,7 +45,8 @@ define('CONSOLE_TABLE_ALIGN_LEFT', -1);
 define('CONSOLE_TABLE_ALIGN_CENTER', 0);
 define('CONSOLE_TABLE_ALIGN_RIGHT', 1);
 define('CONSOLE_TABLE_BORDER_ASCII', -1);
-	$build = "32828-3840304868";
+$version = "2.00";
+$build = "32846-1745497937";
 /**
  * The main class.
  *
