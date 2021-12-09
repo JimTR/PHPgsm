@@ -1,4 +1,4 @@
-Steam Game Server Controller
+Steam Game Server Controller V3
 Written in PHP v8
 <p><h2>PHP Controller for Steam games</h2>Currently <b>stable</b></p>
 <p>if you clone this project you will, most likely, need help installing the project</p>
