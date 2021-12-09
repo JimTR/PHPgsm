@@ -40,7 +40,6 @@
 	$options = getopt($shortopts,$longopts);
 	require_once 'includes/master.inc.php';
     include 'functions.php';
-	
 	define ('options',$options);
 	if(isset($options['debug'])) {
 		define('debug',true);
@@ -59,12 +58,14 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
+
+$build = "27142-3684627863";
+
 $version = "2.071";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "27144-6480449994";
-		
+
 	if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;

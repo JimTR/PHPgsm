@@ -30,10 +30,10 @@ require (DOC_ROOT.'/includes/master.inc.php');
 require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = "1.01";
-define("VERSION",$version);
 
-$build = "17211-1608133526";
+$build = "17158-2024797336";
 
+define ('VERSION',$version);
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -166,11 +166,7 @@ if ($file == 'all') {
 				echo 'no output'.cr;
 			}
 	}
-	//if(debug) {
-		//echo $display;
-	//}
-	//else {
-		
+	
 		if(!empty(trim($display))) {
 			if(isset($options['no-email'])) {
 				echo $display;
@@ -195,7 +191,7 @@ if ($file == 'all') {
 				}
 			}
 		}
-	//}
+
 }
 else {
 	// do supplied file
