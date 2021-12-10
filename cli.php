@@ -58,10 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30212-384765815";
-
+$build = "30308-1439716112";
 $version = "3.00";
-$time = "1639147877";
+$time = "1639148567";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -96,8 +95,10 @@ $cc = new Color();
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPass%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
+	define ('update',$cc->convert("%CUpdate%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
+    $update = $cc->convert("%C=>%n");
     //print_r($options);
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
@@ -639,7 +640,7 @@ function help() {
  
  function check_file($file_name) {
 	  // test file
-	global $tick,$cross;
+	global $tick,$cross,$update;
 	$cc = new Color; 
 	$return=array();
 	if(is_file($file_name) == false){
@@ -725,7 +726,7 @@ function help() {
 		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in source";$return['symbol'] = $cross;}
 		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .", File is up to date"; $return['symbol'] = trim($tick);}
 		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.", local file is newer than source";$return['symbol'] = fail;}
-		elseif ($remote_file['time'] > $t) { $return['reason'] = pass." This file has an update";$return['symbol'] = $tick;}
+		elseif ($remote_file['time'] > $t) { $return['reason'] = update." This file has an update";$return['symbol'] = $update;}
 		
 		
 		$return['status'] = 1;
