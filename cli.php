@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "29980-4162468285";
+$build = "30273-1912059334";
 $version = "3.01";
-$time = "1639154105";
+$time = "1639157232";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -700,8 +700,8 @@ function help() {
 	$b_detail = explode('-',$build);
     
 	if (!empty($version) and $b_match == '' ) {
-	$return['file_name'] = $file_name;
-	$return['reason'] = pass.", user configured file";
+	$return['file_name'] = $cc->convert("%W $file_name%n");
+	$return['reason'] = pass.", " .$cc->convert("%Cuser configured file%n");
 	$return['symbol'] = $tick;
 	$return['status'] = true;
 	$return['fsize'] = $fsize;
@@ -712,13 +712,13 @@ function help() {
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
 		$remote_file = check_remote_file($file_name); // see if there's an update
-		$return['file_name'] = $file_name;
-		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in ".settings['branch'];$return['symbol'] = $cross;}
-		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .", File is up to date"; $return['symbol'] = trim($tick);}
-		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.", local file is newer than source";$return['symbol'] = fail;}
+		
+		if (empty($remote_file['time'])) { $return['reason'] = error.$cc->convert("%R file not found in ".settings['branch']."%n");$return['symbol'] = $cross;$file_name= $cc->convert("%R ".$file_name."%n");}
+		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); $return['symbol'] = trim($tick); $file_name = $cc->convert("%c ".$file_name."%n");}
+		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.",".$cc->convert("%Rlocal file is newer than source. ! %n");$return['symbol'] = fail; $file_name = $cc->convert("%y ".$file_name."%n");}
 		elseif ($remote_file['time'] > $t) { $return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);$return['symbol'] = " ".$update;}
 		
-		
+		$return['file_name'] = $file_name;
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
@@ -730,8 +730,8 @@ function help() {
 	else {
 		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-		$return['file_name'] = $file_name;
-		$return['reason'] = warning." File has altered !";
+		$return['file_name'] = $cc->convert("%y $file_name%n");
+		$return['reason'] = warning.$cc->convert("%C File has altered !%n");
 		$return['symbol'] = fail;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
