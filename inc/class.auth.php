@@ -1,8 +1,8 @@
 <?PHP
-$version = "2.00";
-$time = "1639123545";
+$build = "10915-2645781980";
+$version = "3.00";
+$time = "1639128588";
     class Auth
-$build = "10917-1547890183";
     {
         const SALT = 'insert some random text here';
 
@@ -24,7 +24,7 @@ $build = "10917-1547890183";
             $this->id         = null;
             $this->nid        = null;
             $this->username   = null;
-            //$this->user       = null;
+            $this->user       = null;
             $this->loggedIn   = false;
             $this->expiryDate = $d->format("U"); 
             //$this->user       = new User();
