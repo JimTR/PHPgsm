@@ -58,10 +58,10 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30192-4236609883";
+$build = "30212-384765815";
 
 $version = "3.00";
-$time = "1639147453";
+$time = "1639147877";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -782,7 +782,7 @@ function arrayInsert($array, $position, $insertArray)
 }
 
 function check_remote_file($file_name) {
-	$file ="https://raw.githubusercontent.com/JimTR/PHPgsm/v3/$file_name"; // need to have this as a branch setting
+	$file ="https://raw.githubusercontent.com/JimTR/PHPgsm/".settings['branch']."/$file_name"; // need to have this as a branch setting
 	$raw = geturl($file);
 	$nf = explode(cr,$raw);// turn file to array
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
