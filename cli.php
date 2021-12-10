@@ -58,10 +58,10 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "28214-2978627289";
+$build = "30192-4236609883";
 
 $version = "3.00";
-$time = "1639123801";
+$time = "1639131497";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -720,11 +720,14 @@ function help() {
 	return $return;
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
-		
-		//echo advice.' '.$file_name.$tick.cr;
+		$remote_file = check_remote_file($file_name); // see if there's an update
 		$return['file_name'] = $file_name;
-		$return['reason'] = pass .", File is up to date";
-		$return['symbol'] = trim($tick);
+		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in source";$return['symbol'] = $cross;}
+		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .", File is up to date"; $return['symbol'] = trim($tick);}
+		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.", local file is newer than source";$return['symbol'] = fail;}
+		elseif ($remote_file['time'] > $t) { $return['reason'] = pass." This file has an update";$return['symbol'] = $tick;}
+		
+		
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
@@ -776,5 +779,29 @@ function arrayInsert($array, $position, $insertArray)
     }
 
     return $ret;
+}
+
+function check_remote_file($file_name) {
+	$file ="https://raw.githubusercontent.com/JimTR/PHPgsm/v3/$file_name"; // need to have this as a branch setting
+	$raw = geturl($file);
+	$nf = explode(cr,$raw);// turn file to array
+	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
+	if (!empty($matches)){$b_match =$matches[0];} else{ $b_match = '';} 
+	$matches = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
+	if (!empty($matches)){$v_match =$matches[0];} else{ $v_match = '';} 
+	$matches = array_values(preg_grep('/\$version = "\d+.\d+.\d+"/', $nf));
+	if (!empty($matches)){$v1_match =$matches[0];} else{ $v1_match = '';} 
+	$matches = array_values(preg_grep('/\$time = "\d+"/', $nf));
+	if (!empty($matches)){$t_match =$matches[0];} else{ $t_match = '';}
+	$time = trim(str_replace('$time = "','',$t_match));
+	$time = trim(str_replace('";','',$time));
+	$version = trim(str_replace('$version = "','',$v_match));
+	$version = trim(str_replace('";','',$version));
+	$build = str_replace('$build = "','',$b_match);
+	$build = str_replace('";','',$build);
+	$return['build'] = $build;
+	$return['time'] = $time;
+	$return['version'] = $version;
+	return $return;
 }
 ?>
