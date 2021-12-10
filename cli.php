@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "29967-3775943908";
+$build = "29980-4162468285";
 $version = "3.01";
-$time = "1639152914";
+$time = "1639154105";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -713,7 +713,7 @@ function help() {
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
 		$remote_file = check_remote_file($file_name); // see if there's an update
 		$return['file_name'] = $file_name;
-		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in source";$return['symbol'] = $cross;}
+		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in ".settings['branch'];$return['symbol'] = $cross;}
 		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .", File is up to date"; $return['symbol'] = trim($tick);}
 		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.", local file is newer than source";$return['symbol'] = fail;}
 		elseif ($remote_file['time'] > $t) { $return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);$return['symbol'] = " ".$update;}
