@@ -1,7 +1,7 @@
 #!/usr/bin/php -d memory_limit=2048M
 <?php
 /*
- * cli2.php
+ * cli.php v3
  * 
  * Copyright 2021 Jim Richardson <jim@noideersoftware.co.uk>
  * 
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * 
+ *  
  */
 	$shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
 	$longopts[]="debug::";
