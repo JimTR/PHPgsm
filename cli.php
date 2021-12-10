@@ -98,7 +98,7 @@ $cc = new Color();
 	define ('update',$cc->convert("%CUpdate%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
-    $update = $cc->convert("%C=>%n");
+    $update = $cc->convert("%C =>%n");
     //print_r($options);
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
