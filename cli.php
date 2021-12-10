@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "29989-3189194891";
+$build = "29967-3775943908";
 $version = "3.01";
-$time = "1639152651";
+$time = "1639152914";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -624,7 +624,6 @@ function help() {
 			$info['MaxPlayers'] = $info['MaxPlayers'].' ';
 		}
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
-	//echo $playersd.cr;
 	$host = $cc->convert("%y".$info['HostName']."%n")	;
 	$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
 	$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
