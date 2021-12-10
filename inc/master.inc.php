@@ -5,27 +5,23 @@
     }
     
     require DOC_ROOT . '/inc/functions.inc.php';  // spl_autoload_register() is contained in this file
-    require DOC_ROOT . '/inc/class.dbquick.php'; // DB quick class may replace dbobject.php... and has done 
-    require DOC_ROOT . '/inc/class.mobile_detect.php'; // device type class
     require DOC_ROOT. '/inc/config.php'; // get config
     include DOC_ROOT. '/inc/settings.php'; // get settings 
-    include DOC_ROOT.'/inc/functions.lin.php';
-$build = "2188-998310327";
+    include DOC_ROOT.'/inc/functions.lin.php'; // linux os functions there will be a windoze version functions.win.php
+$build = "1846-2639169383";
 $version = "3.00";
-$time = "1639127049";
+$time = "1639146189";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
-    define( 'DB_HOST', $config['database']['hostname'] ); // set database host
-	define( 'DB_USER', $config['database']['username'] ); // set database user
-	define( 'DB_PASS', $config['database']['password'] ); // set database password
-	define( 'DB_NAME', $config['database']['database'] ); // set database name
+    $db_settings = $config['database']; // load default db connection settings
 	define( 'SEND_ERRORS_TO', $config['database']['errors'] ); //set email notification email address
 	define( 'DISPLAY_DEBUG', $config['database']['display_error'] ); //display db errors?
 	define( 'DB_COMMA',  '`'); // back tick 
 	define( 'TIME_NOW', time()); //time stamp
     define( 'FORMAT_TIME',  date($time_format)); // format the time
     define( 'GIG',1073741824);
+    define('settings',$settings); // read only but global !
      if ($settings['send_cors'] ==1) {
 		 header("Access-Control-Allow-Origin: *");
 	}
@@ -37,15 +33,11 @@ $time = "1639127049";
    }
     else {
 	 define ("COPY_YEAR", date("Y")); 
-         define ("START_YEAR",$settings['start_year']);
+     define ("START_YEAR",$settings['start_year']);
       }
 
     const SALT = 'insert some random text here';
-    $database = new db();
-    $detect = new Mobile_Detect;
-    $isMobile = $detect->isMobile();
-    $isTablet = $detect->isTablet();
-    
+    $database = new db($db_settings); // start up a db class just in case we need it
     // Fix magic quotes
         $_POST    = fix_slashes($_POST);
         $_GET     = fix_slashes($_GET);
