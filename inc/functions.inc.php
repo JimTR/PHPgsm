@@ -1,7 +1,11 @@
 <?PHP
 global $database;
-	$version = "2.00";
-	$build = "49064-2098552367";
+
+	$version = "3.00";
+$time = "1639126981";
+
+
+$build = "49082-235063019";
     function set_option($key, $val)
     {
         $db = Database::getDatabase();
@@ -31,6 +35,7 @@ global $database;
        
         if(is_cli()) {
 			$output='';
+                   if(is_array($var)) {
 			foreach($var as $k=>$v){
 				// parse array
 				if (is_array($v)) {
@@ -47,6 +52,7 @@ global $database;
 					}
 				}
 			}
+		}
 			if ($return === false) {
 				echo $output;
 			}

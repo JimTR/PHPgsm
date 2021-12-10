@@ -4,13 +4,15 @@
     	define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
     }
     
-    require DOC_ROOT . '/includes/functions.inc.php';  // spl_autoload_register() is contained in this file
-    require DOC_ROOT . '/includes/class.dbquick.php'; // DB quick class may replace dbobject.php... and has done 
-    require DOC_ROOT . '/includes/class.mobile_detect.php'; // device type class
-    require DOC_ROOT. '/includes/config.php'; // get config
-    include DOC_ROOT. '/includes/settings.php'; // get settings 
-$build = "2187-1168086988";
-$version = "2.00";
+    require DOC_ROOT . '/inc/functions.inc.php';  // spl_autoload_register() is contained in this file
+    require DOC_ROOT . '/inc/class.dbquick.php'; // DB quick class may replace dbobject.php... and has done 
+    require DOC_ROOT . '/inc/class.mobile_detect.php'; // device type class
+    require DOC_ROOT. '/inc/config.php'; // get config
+    include DOC_ROOT. '/inc/settings.php'; // get settings 
+    include DOC_ROOT.'/inc/functions.lin.php';
+$build = "2188-998310327";
+$version = "3.00";
+$time = "1639127049";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 

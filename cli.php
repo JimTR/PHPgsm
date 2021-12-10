@@ -58,9 +58,10 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "27142-3684627863";
+$build = "28214-2978627289";
 
 $version = "3.00";
+$time = "1639123801";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -355,12 +356,13 @@ switch ($cmds['action']) {
 	    $use = $cc->convert("%cStatus%n");
 	    $notes = $cc->convert("%cResult%n");
 	    $v = $cc->convert("%cVersion%n");
+	    $t = $cc->convert("%cRelease Date%n");
 	    echo $cc->convert("%BFile Integrity Checker%n").cr;;
-		$table->setHeaders(array($option,$use,$notes,$v));
+		$table->setHeaders(array($option,$use,$notes,$v,$t));
 		//echo 'doing all php files'.cr;
 			foreach (glob("*.php") as $filename) {
 				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
 				
 		}
 		foreach (glob("cron/*.php") as $filename) {
@@ -381,12 +383,12 @@ switch ($cmds['action']) {
 		foreach (glob("inc/*.php") as $filename) {
 		
 				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
 		}
 		foreach (glob("modules/*.php") as $filename) {
 		
 				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
 		}
 		echo $table->getTable();
 		break;
@@ -648,27 +650,42 @@ function help() {
 		return $return;
 	}
 	
-	$file = file_get_contents($file_name);
-	$fsize = filesize($file_name)+1;
-	$nf = explode(cr,$file);
+	$file = file_get_contents($file_name); // got the file
+	$fsize = filesize($file_name)+1; // not sure with this
+	$nf = explode(cr,$file);// turn file to array
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
-	$v = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
-	$v1 = array_values(preg_grep('/\$version = "\d+.\d+.\d+"/', $nf));
-	if (!empty($v)) {
+	if (!empty($matches)){$b_match =$matches[0];} else{ $b_match = '';} 
+	$matches = array_values(preg_grep('/\$version = "\d+.\d+"/', $nf));
+	if (!empty($matches)){$v_match =$matches[0];} else{ $v_match = '';} 
+	$matches = array_values(preg_grep('/\$version = "\d+.\d+.\d+"/', $nf));
+	if (!empty($matches)){$v1_match =$matches[0];} else{ $v1_match = '';} 
+	$matches = array_values(preg_grep('/\$time = "\d+"/', $nf));
+	if (!empty($matches)){$t_match =$matches[0];} else{ $t_match = '';}
+	$nf = remove_item($nf,$b_match); // build info
+	$nf = remove_item($nf,$v_match); // duplet
+	$nf = remove_item($nf,$v1_match); //triplet
+	$nf = remove_item($nf,$t_match); // time string
+	$length = strlen(implode(cr,$nf)); // string length
+	$crc = crc32(implode(cr,$nf)); // crc the remaining
+	if (!empty($t_match)) {
+		$t = trim(str_replace('$time = "','',$t_match));
+		$t = trim(str_replace('";','',$t));
+		$time = date("d-m-Y H:i:s",$t);
+	}
+	if (!empty($v_match)) {
 	//print_r($v);
-	$version = trim(str_replace('$version = "','',$v[0]));
+	$version = trim(str_replace('$version = "','',$v_match));
+	$version = trim(str_replace('";','',$version));
+	}
+	if (!empty($v1_match)) {
+	//print_r($v);
+	$version = trim(str_replace('$version = "','',$v1_match));
 	$version = trim(str_replace('";','',$version));
 	//echo $version.cr;
 	//print_r($matches);
 	}
-	if (!empty($v1)) {
-	//print_r($v);
-	$version = trim(str_replace('$version = "','',$v1[0]));
-	$version = trim(str_replace('";','',$version));
-	//echo $version.cr;
-	//print_r($matches);
-	}
-	if (empty($matches) and empty($version)) {
+	if ($b_match=='' and empty($version)) {
+		$version = '';
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
 	$return['file_name'] = $file_name;
 	$return['reason'] = error." Unable To Check ! The file structure is incorrect";
@@ -681,30 +698,28 @@ function help() {
 	}
 	
 	//echo 'file '.$file_name.' - '.$matches[0].cr;
-	$oldbp = strpos($file,'$build');
-	$eol = strpos($file,';',$oldbp);
-	$build = substr($file,$oldbp,$eol-$oldbp);
-	$tmp = substr_replace($file,'',$oldbp,$eol-$oldbp);
-	$ns = crc32($tmp);
-    $length= strlen($tmp);
-    //echo 'file '.$file_name.' - '.$tmp.' '.$ns.cr;
-	//$build = trim($matches[0]);
-	$build = str_replace('$build = "','',$build);
-	$build = str_replace('"','',$build);
+	//$oldbp = strpos($file,'$build');
+	//$eol = strpos($file,';',$oldbp);
+	//$build = substr($file,$oldbp,$eol-$oldbp);
+	//$tmp = substr_replace($file,'',$oldbp,$eol-$oldbp);
+	//$ns = crc32($nf);
+    //$length=  strlen(implode(cr,$nf));
+  	$build = str_replace('$build = "','',$b_match);
+	$build = str_replace('";','',$build);
 	$b_detail = explode('-',$build);
-	//echo print_r($b_detail,true).cr;
-	//echo "\$fsize = $fsize \$ns = $ns strlen = $length".cr;
-	if (!empty($version) and empty($matches)) {
+    
+	if (!empty($version) and $b_match == '' ) {
 	$return['file_name'] = $file_name;
 	$return['reason'] = pass.", user configured file";
 	$return['symbol'] = $tick;
 	$return['status'] = true;
 	$return['fsize'] = $fsize;
 	$return['build'] ='';
-	$return['full_version'] = "$version-$fsize-$ns";
+	$return['full_version'] = "$version-$fsize-$crc";
+	$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 	return $return;
 	}	
-	if ($b_detail[0] == $length and $ns == $b_detail[1]) {
+	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
 		
 		//echo advice.' '.$file_name.$tick.cr;
 		$return['file_name'] = $file_name;
@@ -712,9 +727,10 @@ function help() {
 		$return['symbol'] = trim($tick);
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
-		$return['build'] = $ns;
+		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = "$version-$fsize-$ns";
+		$return['full_version'] = "$version-$fsize-$crc";
+		$return['time'] = $time;
 		return $return;
 	}
 	else {
@@ -725,10 +741,40 @@ function help() {
 		$return['symbol'] = fail;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
-		$return['build'] = $ns;
+		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = "$version-$fsize-$ns";
+		$return['full_version'] = "$version-$fsize-$crc";
+		$return['time'] = $time;
 		return $return;
 	}
+}
+
+function remove_item($array,$value) {
+	// remove item from array
+	$remove = array_search_partial($array,$value);
+	if(!$remove == false ) {
+		unset($array[$remove]);
+	}
+	return $array;
+}
+function arrayInsert($array, $position, $insertArray)
+{
+    $ret = [];
+
+    if ($position == count($array)) {
+        $ret = $array + $insertArray;
+    }
+    else {
+        $i = 0;
+        foreach ($array as $key => $value) {
+            if ($position == $i++) {
+                $ret += $insertArray;
+            }
+
+            $ret[] = $value;
+        }
+    }
+
+    return $ret;
 }
 ?>

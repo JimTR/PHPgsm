@@ -25,9 +25,10 @@
  * @version     2.8.12
  */
 
-$build = "75178-3046956306";
-
-$version = "2.8.12";
+$build = "75154-218662708";
+$version = "2.812";
+$time = "1639125546";
+$version = "2.812";
 
 class Mobile_Detect
 {

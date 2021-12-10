@@ -23,13 +23,15 @@
  */
 require ('inc/master.inc.php');
 include ('inc/functions.lin.php');
-// map ajaxv21.php to somewhere else (so ajaxv21.php's actual file name & location is only known to this script )
+// map ajaxv30.php to somewhere else (so ajaxv30.php's actual file name & location is only known to this script )
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
-$version = "1.012";
-	$build = "2519-2682779641";
+$version = "3.00";
+$time = "1639123412";
+
 	
+$build = "2500-1308444719";
 	if(is_cli()) {
 		$cmds = convert_to_argv($argv,"",true);
 		define('cr',PHP_EOL);

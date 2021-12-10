@@ -19,9 +19,10 @@ declare(strict_types=1);
  * @author xPaw
  * @license MIT
  */
-$version = "1.00";
 
-$build = "15619-3962618219";
+$build = "15598-4050019237";
+$version = "3.00";
+$time = "1639126801";
 class SteamID
 {
 	/**

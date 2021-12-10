@@ -3,9 +3,10 @@
 * add system commands you want PHPgsm to be allowed to run
 * supply full paths if you wish (required if you are running something with elevated privs) 
 */
-$version = "1.00";
-$build = "312-1936565686";
+$version = "3.00";
+$time = "1639123512";
 $allowed[]='steamcmd';
+$build = "291-2463105029";
 $allowed[]='tmpreaper';
 $allowed[]='scanlog.php';
 $allowed[]='cron_u.php';

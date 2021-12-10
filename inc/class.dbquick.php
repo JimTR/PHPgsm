@@ -44,8 +44,9 @@
  * Altered by JimTR December 18th 2019
 ********************************/
 $version = "2.00";
-$build = "25565-1237741432";
+$time = "1639124745";
 
+$build = "25544-3780633116";
 class db
 {
     public $link;

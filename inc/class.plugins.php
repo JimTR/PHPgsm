@@ -7,13 +7,17 @@
  * the class needs to workout the location the plugin needs to run
  * plugin class version 2
  */
-$version = "2.00";
-$build = "2840-2669598095";
+$build = "2821-1405522408";
+$time = "1639126885";
+
+$version = "3.00";
 class plugin {
-	
+
+
 	//start load function
 	function load($plugin)
 	{
+
 		$can_run = false;
 		
 				if(file_exists(DOC_ROOT."/includes/plugins/".$plugin.".php")) // test if the plugin is there

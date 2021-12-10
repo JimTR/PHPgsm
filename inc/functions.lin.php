@@ -1,8 +1,9 @@
 <?php
 //echo 'functions 1.04';
-	$version = "2.041";
-	$build = "39171-3654919592";	
+	$version = "3.00";
+$time = "1639124873";
 if (isset($argv)) {
+$build = "39146-4055311276";
 		$runfile = basename($argv[0]);
 			if (isset($argv[1])  and $runfile == 'functions.php') {
 				echo "Functions v$version".PHP_EOL;
