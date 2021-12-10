@@ -42,19 +42,19 @@
  All examples provided below assume that this class has been initiated
  Examples below assume the class has been iniated using $database = DB::getInstance();
  * Altered by JimTR December 18th 2019
+ * further revisions December 10th 2021 allow user defined connections/ send connnection info as an array
 ********************************/
-$version = "2.00";
-$time = "1639124745";
+$build = "26121-541393554";
+$version = "3.00";
+$time = "1639145726";
 
-$build = "25544-3780633116";
 class db
 {
     public $link;
     public $filter;
     static $inst = null;
     public static $counter = 0;
-    
-    /**
+     /**
      * Allow the class to send admins a message alerting them to errors
      * on production sites
      *
@@ -100,11 +100,22 @@ class db
     }
     
     
-    public function __construct()
+    public function __construct($settings =  '')
     {
 		//change here ?
         mb_internal_encoding( 'UTF-8' );
         mb_regex_encoding( 'UTF-8' );
+		$const =get_defined_constants(true);
+		$x = $const['user'];
+        if (!isset($x['DB_HOST'])) {define('DB_HOST',$settings['hostname']);	}
+		if ( !isset($x['DB_USER'])) {define ('DB_USER',$settings['username']);}
+		if ( !isset($x['DB_PASS'])) {define ('DB_PASS',$settings['password']);}
+		if ( !isset($x['DB_NAME'])) {define ('DB_NAME',$settings['database']);}
+	//$const =get_defined_constants(true);
+	//print_r($const['user']);
+        //exit;
+        //}
+
         $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
         if( $this->link->connect_errno )
         {
