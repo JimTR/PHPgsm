@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30292-1315179328";
+$build = "30024-405487612";
 $version = "3.01";
-$time = "1639150268";
+$time = "1639150738";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -98,7 +98,7 @@ $cc = new Color();
 	define ('update',$cc->convert("%CUpdate%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
-    $update = $cc->convert("%C  =>%n");
+    $update = $cc->convert("%C >%n");
    
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
@@ -697,15 +697,7 @@ function help() {
 	$return['full_version'] = $version;
 	return $return;
 	}
-	
-	//echo 'file '.$file_name.' - '.$matches[0].cr;
-	//$oldbp = strpos($file,'$build');
-	//$eol = strpos($file,';',$oldbp);
-	//$build = substr($file,$oldbp,$eol-$oldbp);
-	//$tmp = substr_replace($file,'',$oldbp,$eol-$oldbp);
-	//$ns = crc32($nf);
-    //$length=  strlen(implode(cr,$nf));
-  	$build = str_replace('$build = "','',$b_match);
+	$build = str_replace('$build = "','',$b_match);
 	$build = str_replace('";','',$build);
 	$b_detail = explode('-',$build);
     
@@ -726,7 +718,7 @@ function help() {
 		if (empty($remote_file['time'])) { $return['reason'] = error." file not found in source";$return['symbol'] = $cross;}
 		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .", File is up to date"; $return['symbol'] = trim($tick);}
 		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.", local file is newer than source";$return['symbol'] = fail;}
-		elseif ($remote_file['time'] > $t) { $return['reason'] = update." This file has an update";$return['symbol'] = $update;}
+		elseif ($remote_file['time'] > $t) { $return['reason'] = update." This file has an update ".$remote_file['time'];$return['symbol'] = $update;}
 		
 		
 		$return['status'] = 1;
