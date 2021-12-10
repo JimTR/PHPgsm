@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30273-1912059334";
+$build = "30672-3619637724";
 $version = "3.01";
-$time = "1639157232";
+$time = "1639160163";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -671,6 +671,7 @@ function help() {
 		$t = trim(str_replace('";','',$t));
 		$time = date("d-m-Y H:i:s",$t);
 	}
+	else {$time='0';}
 	if (!empty($v_match)) {
 	//print_r($v);
 	$version = trim(str_replace('$version = "','',$v_match));
@@ -686,13 +687,14 @@ function help() {
 	if ($b_match=='' and empty($version)) {
 		$version = '';
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
-	$return['file_name'] = $file_name;
-	$return['reason'] = error." Unable To Check ! The file structure is incorrect";
+	$return['file_name'] = $cc->convert("%R $file_name%n");
+	$return['reason'] = error.$cc->convert("%R Unable To Check ! The file structure is incorrect%n");
 	$return['symbol'] = $cross;
 	$return['status'] = false;
 	$return['fsize'] = $fsize;
 	$return['build'] ='';
 	$return['full_version'] = $version;
+	//$return['time'] = 0;
 	return $return;
 	}
 	$build = str_replace('$build = "','',$b_match);
@@ -701,43 +703,63 @@ function help() {
     
 	if (!empty($version) and $b_match == '' ) {
 	$return['file_name'] = $cc->convert("%W $file_name%n");
-	$return['reason'] = pass.", " .$cc->convert("%Cuser configured file%n");
+	$return['reason'] = pass.", " .$cc->convert("%Wuser configured file%n");
 	$return['symbol'] = $tick;
 	$return['status'] = true;
 	$return['fsize'] = $fsize;
 	$return['build'] ='';
-	$return['full_version'] = "$version-$fsize-$crc";
+	$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
 	$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 	return $return;
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
 		$remote_file = check_remote_file($file_name); // see if there's an update
 		
-		if (empty($remote_file['time'])) { $return['reason'] = error.$cc->convert("%R file not found in ".settings['branch']."%n");$return['symbol'] = $cross;$file_name= $cc->convert("%R ".$file_name."%n");}
-		elseif ($remote_file['time'] == $t) { $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); $return['symbol'] = trim($tick); $file_name = $cc->convert("%c ".$file_name."%n");}
-		elseif ($remote_file['time'] < $t) { $return['reason'] = warning.",".$cc->convert("%Rlocal file is newer than source. ! %n");$return['symbol'] = fail; $file_name = $cc->convert("%y ".$file_name."%n");}
-		elseif ($remote_file['time'] > $t) { $return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);$return['symbol'] = " ".$update;}
+		if (empty($remote_file['time'])) { 
+			$return['reason'] = error.$cc->convert("%R file not found in ".settings['branch']."%n");
+			$return['symbol'] = $cross;
+			$file_name= $cc->convert("%R ".$file_name."%n");
+			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
+			}
+		elseif ($remote_file['time'] == $t) {
+			 $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); 
+			 $return['symbol'] = trim($tick); 
+			 $file_name = $cc->convert("%C ".$file_name."%n");
+			 $d_version = $cc->convert("%C$version-$fsize-$crc"."%n");
+			 }
+		elseif ($remote_file['time'] < $t) 
+		{
+			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source. ! %n");
+			 $return['symbol'] = fail; $file_name = $cc->convert("%Y ".$file_name."%n");
+			 $d_version = $cc->convert("%Y$version-$fsize-$crc"."%n");
+			 }
+		elseif ($remote_file['time'] > $t) 
+		{ 
+			$return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);
+			$return['symbol'] = " ".$update;
+			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
+			}
 		
 		$return['file_name'] = $file_name;
 		$return['status'] = 1;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = "$version-$fsize-$crc";
+		$return['full_version'] = $d_version;
 		$return['time'] = $time;
 		return $return;
 	}
 	else {
 		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-		$return['file_name'] = $cc->convert("%y $file_name%n");
-		$return['reason'] = warning.$cc->convert("%C File has altered !%n");
+		$return['file_name'] = $cc->convert("%Y $file_name%n");
+		$return['reason'] = warning.$cc->convert("%Y File has altered%n");
 		$return['symbol'] = fail;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = "$version-$fsize-$crc";
+		$return['full_version'] = $cc->convert("%Y$version-$fsize-$crc%n");
 		$return['time'] = $time;
 		return $return;
 	}
