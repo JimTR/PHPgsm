@@ -1,0 +1,34 @@
+20/06/2021 03:20:23pm (46.32.237.232:27039) Failed to read any data from socket Module (Cron_r - Game Detail GetInfo)
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss%2Fcstrike%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Fdab%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Fdab%2Fdab%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof2%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof2%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof3%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof3%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof4%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof4%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof5%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof5%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof6%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof6%2Ffof%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Ftf2%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Ftf2%2Ftf%2Flogs%2F
+Array
+(
+    [0] => /usr/games/css
+    [1] => /usr/games/dab
+    [2] => /usr/games/fof
+    [3] => /usr/games/tf2
+)
+
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss%2Fcstrike%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss1%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fwarmmail%2Fgames%2Fcss1%2Fcstrike%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Fdab%2Flog%2Fconsole%2F
+Prune here also tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Fdab%2Fdab%2Flogs%2F
+Prune command  tmpreaper++--mtime+1d+%2Fhome%2Fnod%2Fgames%2Ffof%2Flog%2Fconsole%2F
