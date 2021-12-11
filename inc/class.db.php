@@ -44,9 +44,9 @@
  * Altered by JimTR December 18th 2019
  * further revisions December 10th 2021 allow user defined connections/ send connnection info as an array
 ********************************/
-$build = "26121-541393554";
+$build = "26091-1086599557";
 $version = "3.00";
-$time = "1639145726";
+$time = "1639218644";
 
 class db
 {
@@ -107,16 +107,18 @@ class db
         mb_regex_encoding( 'UTF-8' );
 		$const =get_defined_constants(true);
 		$x = $const['user'];
-        if (!isset($x['DB_HOST'])) {define('DB_HOST',$settings['hostname']);	}
-		if ( !isset($x['DB_USER'])) {define ('DB_USER',$settings['username']);}
-		if ( !isset($x['DB_PASS'])) {define ('DB_PASS',$settings['password']);}
-		if ( !isset($x['DB_NAME'])) {define ('DB_NAME',$settings['database']);}
-	//$const =get_defined_constants(true);
-	//print_r($const['user']);
-        //exit;
-        //}
+        if (isset($x['DB_HOST'])) {$host = DB_HOST;}
+		if (isset($x['DB_USER'])) {$user = DB_USER; }
+		if (isset($x['DB_PASS'])) {$pass = DB_PASS;}
+		if (isset($x['DB_NAME'])) {$database = DB_NAME ;}
+		if (!empty($settings)) {
+			$host = $settings['hostname'];
+			$user = $settings['username'];
+			$pass = $settings['password'];
+			$database = $settings['database'];
+		}
 
-        $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
+        $this->link = new mysqli( $host, $user, $pass, $database );
         if( $this->link->connect_errno )
         {
             $this->log_db_errors( "Connect failed\r\n", $this->link->connect_error );
