@@ -1,16 +1,17 @@
 <?php
 //echo 'functions 1.04';
-	$version = "3.00";
-$time = "1639124873";
+$build = "39153-974489631";
+$version = "3.00";
+$time = "1639214396";
 if (isset($argv)) {
-$build = "39146-4055311276";
 		$runfile = basename($argv[0]);
-			if (isset($argv[1])  and $runfile == 'functions.php') {
+			if (isset($argv[1])  and $runfile == 'functions.lin.php') {
 				echo "Functions v$version".PHP_EOL;
 				echo 'Build '.$build.PHP_EOL;
 				exit;
 			}
 		}
+		
 function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    

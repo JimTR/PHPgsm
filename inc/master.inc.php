@@ -10,7 +10,7 @@
     include DOC_ROOT.'/inc/functions.lin.php'; // linux os functions there will be a windoze version functions.win.php
 $build = "1846-2639169383";
 $version = "3.00";
-$time = "1639146189";
+$time = "1639214413";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 

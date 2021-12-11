@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30891-1767855082";
+$build = "30895-2462625676";
 $version = "3.01";
-$time = "1639212961";
+$time = "1639213733";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -650,7 +650,7 @@ function help() {
 	}
 	
 	$file = file_get_contents($file_name); // got the file
-	$fsize = filesize($file_name)+1; // not sure with this
+	$fsize = filesize($file_name); // not sure with this
 	$nf = explode(cr,$file);// turn file to array
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
 	if (!empty($matches)){$b_match =$matches[0];} else{ $b_match = '';} 
@@ -690,7 +690,7 @@ function help() {
 	$return['reason'] = error.$cc->convert("%R Unable To Check ! The file structure is incorrect%n");
 	$return['symbol'] = $cross;
 	$return['status'] = false;
-	$return['fsize'] = $fsize;
+	$return['fsize'] = $length;
 	$return['build'] ='';
 	$return['full_version'] = $version;
 	//$return['time'] = 0;
@@ -705,7 +705,7 @@ function help() {
 	$return['reason'] = pass.", " .$cc->convert("%Wuser configured file%n");
 	$return['symbol'] = $tick;
 	$return['status'] = true;
-	$return['fsize'] = $fsize;
+	$return['fsize'] = $length;
 	$return['build'] ='';
 	$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
 	$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
@@ -725,14 +725,14 @@ function help() {
 			 $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); 
 			 $return['symbol'] = trim($tick); 
 			 $file_name = $cc->convert("%C ".$file_name."%n");
-			 $d_version = $cc->convert("%C$version-$fsize-$crc"."%n");
+			 $d_version = $cc->convert("%C$version-$length-$crc"."%n");
 			 $time  = $cc->convert("%C$time%n");
 			 }
 		elseif ($remote_file['time'] < $t) 
 		{
 			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source. ! %n");
 			 $return['symbol'] = fail; $file_name = $cc->convert("%Y ".$file_name."%n");
-			 $d_version = $cc->convert("%Y$version-$fsize-$crc"."%n");
+			 $d_version = $cc->convert("%Y$version-$length-$crc"."%n");
 			 $time  = $cc->convert("%Y$time%n");
 			 			 		 }
 		elseif ($remote_file['time'] > $t) 
@@ -740,7 +740,7 @@ function help() {
 			$return['reason'] = update." ".$cc->convert("%c".date("d-m-Y H:i:s",$remote_file['time'])."%n");
 			$return['symbol'] = " ".$update;
 			$file_name = $cc->convert("%C ".$file_name."%n");
-			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
+			$d_version = $cc->convert("%R$version-$length-$crc"."%n");
 			$time  = $cc->convert("%C$time%n");
 			}
 		
@@ -763,7 +763,7 @@ function help() {
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = $cc->convert("%Y$version-$fsize-$crc%n");
+		$return['full_version'] = $cc->convert("%Y$version-$length-$crc%n");
 		$return['time'] = $time;
 		return $return;
 	}
