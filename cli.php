@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30690-1312264638";
+$build = "30813-3495392118";
 $version = "3.01";
-$time = "1639160525";
+$time = "1639211631";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -681,8 +681,7 @@ function help() {
 	//print_r($v);
 	$version = trim(str_replace('$version = "','',$v1_match));
 	$version = trim(str_replace('";','',$version));
-	//echo $version.cr;
-	//print_r($matches);
+
 	}
 	if ($b_match=='' and empty($version)) {
 		$version = '';
@@ -720,24 +719,28 @@ function help() {
 			$return['symbol'] = $cross;
 			$file_name= $cc->convert("%R ".$file_name."%n");
 			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
+			$time  = $cc->convert("%C$time%n");
 			}
 		elseif ($remote_file['time'] == $t) {
 			 $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); 
 			 $return['symbol'] = trim($tick); 
 			 $file_name = $cc->convert("%C ".$file_name."%n");
 			 $d_version = $cc->convert("%C$version-$fsize-$crc"."%n");
+			 $time  = $cc->convert("%C$time%n");
 			 }
 		elseif ($remote_file['time'] < $t) 
 		{
 			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source. ! %n");
 			 $return['symbol'] = fail; $file_name = $cc->convert("%Y ".$file_name."%n");
 			 $d_version = $cc->convert("%Y$version-$fsize-$crc"."%n");
-			 }
+			 $time  = $cc->convert("%Y$time%n");
+			 			 		 }
 		elseif ($remote_file['time'] > $t) 
 		{ 
 			$return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);
 			$return['symbol'] = " ".$update;
 			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
+			$time  = $cc->convert("%C$time%n");
 			}
 		
 		$return['file_name'] = $file_name;
