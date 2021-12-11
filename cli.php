@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30813-3495392118";
+$build = "30891-1767855082";
 $version = "3.01";
-$time = "1639211631";
+$time = "1639212961";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -95,7 +95,7 @@ $cc = new Color();
 	define ('advice', $cc->convert("%BAdvice%n"));
 	define ('pass',$cc->convert("%GPass%n"));
 	define ('fail', $cc->convert("%Y  ✖%n"));
-	define ('update',$cc->convert("%CUpdate%n"));
+	define ('update',$cc->convert("%CUpdated%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
     $update = $cc->convert("%C >%n");
@@ -737,8 +737,9 @@ function help() {
 			 			 		 }
 		elseif ($remote_file['time'] > $t) 
 		{ 
-			$return['reason'] = update." ".date("d-m-Y H:i:s",$remote_file['time']);
+			$return['reason'] = update." ".$cc->convert("%c".date("d-m-Y H:i:s",$remote_file['time'])."%n");
 			$return['symbol'] = " ".$update;
+			$file_name = $cc->convert("%C ".$file_name."%n");
 			$d_version = $cc->convert("%R$version-$fsize-$crc"."%n");
 			$time  = $cc->convert("%C$time%n");
 			}
