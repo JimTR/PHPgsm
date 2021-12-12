@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "32066-3485271818";
+$build = "32110-331588901";
 $version = "3.01";
-$time = "1639320611";
+$time = "1639322387";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -715,7 +715,7 @@ function help() {
 	$return['fsize'] = $length;
 	$return['build'] ='';
 	$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
-	$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
+	$return['time'] = $cc->convert("%W".date ("d-m-Y H:i:s", filectime($file_name))."%n");
 	return $return;
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
@@ -771,7 +771,7 @@ function help() {
 		$return['build'] = $crc;
 		$return['version'] = $version;
 		$return['full_version'] = $cc->convert("%Y$version-$length-$crc%n");
-		$return['time'] = $time;
+		$return['time'] = $cc->convert("%Y$time%n");
 		return $return;
 	}
 }
