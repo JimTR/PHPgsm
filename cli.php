@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30928-2318189491";
+$build = "32067-3102379262";
 $version = "3.01";
-$time = "1639296248";
+$time = "1639319101";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -360,37 +360,43 @@ switch ($cmds['action']) {
 	    $t = $cc->convert("%cRelease Date%n");
 	    echo $cc->convert("%BFile Integrity Checker%n").cr;;
 		$table->setHeaders(array($option,$use,$notes,$v,$t));
-		//echo 'doing all php files'.cr;
-			foreach (glob("*.php") as $filename) {
+		
+		if (settings['use_git']) {
+			exec('git ls-tree -r --name-only '.settings['branch'],$remote_files,$ret);
+			foreach ($remote_files as $file) {
+			// check what we have
+				if (str_starts_with($file, 'inc/xpaw')) {continue;}
+				if (str_starts_with($file, 'logs')) {continue;}
+				if (str_starts_with($file, '.')) {continue;}
+				if (str_starts_with($file, 'samples')) {continue;}
+				if (str_contains($file, 'README.md')) {continue;} 
+				$check = check_file($file);
+				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
+			}
+	}
+		else {
+					$files = dirToArray(getcwd());
+					
+					foreach ($files as $k =>$v) {
+						if (str_contains($v, '.git')) {unset($files[$k]); }
+						elseif (str_contains($v, '/xpaw/')) {unset($files[$k]);} 
+						elseif (str_contains($v, 'README.md')) {unset($files[$k]);}
+						else {
+							//echo 'found removal ';
+						//echo "cwd = ".getcwd().cr;
+						$v = str_replace(getcwd().'/','',$v);
+						$files[$k] = $v;
+				//
+					}
+			}
+			
+			foreach ($files as $filename) {
 				$check = check_file($filename);
 				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
 				
 		}
-		foreach (glob("cron/*.php") as $filename) {
 		
-				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
-		}
-		foreach (glob("install/*.php") as $filename) {
-		
-				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
-		}
-		foreach (glob("utils/*.php") as $filename) {
-		
-				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version']));
-		}
-		foreach (glob("inc/*.php") as $filename) {
-		
-				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
-		}
-		foreach (glob("modules/*.php") as $filename) {
-		
-				$check = check_file($filename);
-				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
-		}
+	}
 		echo $table->getTable();
 		break;
 			
@@ -823,4 +829,47 @@ function check_remote_file($file_name) {
 	$return['version'] = $version;
 	return $return;
 }
+
+function dirToArray($dir) {
+  if (debug) {
+          echo 'dirToArray: start';
+  }
+  $fileSPLObjects =  new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+try {
+    foreach( $fileSPLObjects as $fullFileName => $fileSPLObject ) {
+       
+                if(is_file($fullFileName)){
+        $result[] = $fullFileName;
+        if (debug) {
+                        echo "found $fullFileName".cr;
+                        $tmp[] = explode("/",substr($fullFileName,1));
+                        $key =array_key_last($tmp);
+                        array_unshift($tmp[$key],$fullFileName);
+                        
+                }
+        }
+    }
+}
+catch (UnexpectedValueException $e) {
+    printf("Directory [%s] contained a directory we can not recurse into", $directory);
+}
+
+
+foreach ($result as $k => $v) {
+        if (is_dir($v))  {
+                unset( $result[$k]);
+        }
+}
+$result= array_values($result);
+//echo "temp = ".print_r($tmp,true).cr;
+//echo  "result = ".print_r($result,true).cr;
+//die();
+  
+   return $result;
+}
+
+
 ?>
