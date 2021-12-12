@@ -1,5 +1,7 @@
 <?php
+$version = "3.00";
 //maps
+
 $console[' fof_winterlong'] = '<span style="color:orange;"> fof_winterlong</span>';
 $console[' fof_impact'] = '<span style="color:orange;"> fof_impact</span>';
 $console[' fof_fistful'] = '<span style="color:dodgerblue;"> fof_fistful</span>';

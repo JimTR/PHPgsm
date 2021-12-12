@@ -1,4 +1,5 @@
 <?php
+$version = "3.00";
 $console['Reached Time Limit'] = '<span style="color:orange;">Reached Time Limit</span>';
 $console['team Red']= 'team <span style="color:red;">Red</span>';
 $console['team Blue']= 'team <span style="color:blue;">Blue</span>';
