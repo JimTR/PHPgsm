@@ -1,9 +1,9 @@
 <?php
 if (!defined("IN_PHPGSM")) die( "phpgsm didn't include me :-(");
-$build = "9773-3714550196";
+$build = "9784-3586219992";
 
  $version = "3.00";
-$time = "1639127020";
+$time = "1639320657";
 
 require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
@@ -17,7 +17,7 @@ function game_detail() {
 	$gameq  = new SourceQuery( );
 	
 	global $cmds; // get options 
-	$db = new db();
+	$db = new db(db_settings);
 	$mem =0;
 	$cpu = 0;
 	$total_players = 0;

@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "32067-3102379262";
+$build = "32066-3485271818";
 $version = "3.01";
-$time = "1639319101";
+$time = "1639320611";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -98,7 +98,7 @@ $cc = new Color();
 	define ('update',$cc->convert("%CUpdated%n"));
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
-    $update = $cc->convert("%C  ►%n");
+    $update = $cc->convert("%C ►%n");
    
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
