@@ -8,9 +8,9 @@
     require DOC_ROOT. '/inc/config.php'; // get config
     include DOC_ROOT. '/inc/settings.php'; // get settings 
     include DOC_ROOT.'/inc/functions.lin.php'; // linux os functions there will be a windoze version functions.win.php
-$build = "1846-2639169383";
+$build = "1851-192877646";
 $version = "3.00";
-$time = "1639214413";
+$time = "1639295545";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
@@ -22,6 +22,7 @@ $time = "1639214413";
     define( 'FORMAT_TIME',  date($time_format)); // format the time
     define( 'GIG',1073741824);
     define('settings',$settings); // read only but global !
+    
      if ($settings['send_cors'] ==1) {
 		 header("Access-Control-Allow-Origin: *");
 	}

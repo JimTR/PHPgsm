@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "30895-2462625676";
+$build = "30925-1478332564";
 $version = "3.01";
-$time = "1639213733";
+$time = "1639295486";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -575,10 +575,11 @@ function help() {
  function games($data) {
 	 // review games
 	 		//system('clear');
+	 		global $database;
 	 		$Query = new SourceQuery( );
 	 		$cc = new Color();
 	 		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
-	$database = new db(); // connect to database
+	//$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
     $res = $database->get_results($sql); // pull results
     //echo print_r($res,true).cr;
@@ -687,7 +688,7 @@ function help() {
 		$version = '';
 	//echo error.' unable to check '.$file_name.' file structure is incorrect'.$cross.cr;
 	$return['file_name'] = $cc->convert("%R $file_name%n");
-	$return['reason'] = error.$cc->convert("%R Unable To Check ! The file structure is incorrect%n");
+	$return['reason'] = error.$cc->convert("%R The file structure is incorrect%n");
 	$return['symbol'] = $cross;
 	$return['status'] = false;
 	$return['fsize'] = $length;
@@ -730,7 +731,7 @@ function help() {
 			 }
 		elseif ($remote_file['time'] < $t) 
 		{
-			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source. ! %n");
+			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source.%n");
 			 $return['symbol'] = fail; $file_name = $cc->convert("%Y ".$file_name."%n");
 			 $d_version = $cc->convert("%Y$version-$length-$crc"."%n");
 			 $time  = $cc->convert("%Y$time%n");
@@ -800,6 +801,7 @@ function arrayInsert($array, $position, $insertArray)
 
 function check_remote_file($file_name) {
 	$file ="https://raw.githubusercontent.com/JimTR/PHPgsm/".settings['branch']."/$file_name"; // need to have this as a branch setting
+	//echo "file = $file".cr;
 	$raw = geturl($file);
 	$nf = explode(cr,$raw);// turn file to array
 	$matches = array_values(preg_grep('/\$build = "\d+-\d+"/', $nf));
