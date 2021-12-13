@@ -1,9 +1,9 @@
 <?php
 if (!defined("IN_PHPGSM")) die( "phpgsm didn't include me :-(");
-$build = "9784-3586219992";
+$build = "9793-3634654362";
 
  $version = "3.00";
-$time = "1639320657";
+$time = "1639389071";
 
 require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
@@ -150,7 +150,7 @@ function game_detail() {
 						$server_count = $db->get_row($sql);
 						if (empty($server_count['location'])) {
 							$cmds['debug']='true';
-							$return = 'No Servers found for '.$ip;
+							$return['error'] = 'No Servers found for '.$ip;
 							return $return;
 						}
 						$du = shell_exec('du -s '.dirname($server_count['location']));
