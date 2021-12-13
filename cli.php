@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "32110-331588901";
+$build = "32621-4214099206";
 $version = "3.01";
-$time = "1639322387";
+$time = "1639383330";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -99,7 +99,7 @@ $cc = new Color();
 	$tick = $cc->convert("%g  ✔%n");
     $cross = $cc->convert("%r  ✖%n");
     $update = $cc->convert("%C ►%n");
-   
+    
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
 		
@@ -368,7 +368,7 @@ switch ($cmds['action']) {
 				if (str_starts_with($file, 'inc/xpaw')) {continue;}
 				if (str_starts_with($file, 'logs')) {continue;}
 				if (str_starts_with($file, '.')) {continue;}
-				if (str_starts_with($file, 'samples')) {continue;}
+				//if (str_starts_with($file, 'samples')) {continue;}
 				if (str_contains($file, 'README.md')) {continue;} 
 				$check = check_file($file);
 				$table->addRow(array($check['file_name'],$check['symbol'],$check['reason'],$check['full_version'],$check['time']));
@@ -706,20 +706,31 @@ function help() {
 	$build = str_replace('$build = "','',$b_match);
 	$build = str_replace('";','',$build);
 	$b_detail = explode('-',$build);
-    
+    $remote_file = check_remote_file($file_name); // see if there's an update
 	if (!empty($version) and $b_match == '' ) {
-	$return['file_name'] = $cc->convert("%W $file_name%n");
-	$return['reason'] = pass.", " .$cc->convert("%Wuser configured file%n");
-	$return['symbol'] = $tick;
-	$return['status'] = true;
-	$return['fsize'] = $length;
-	$return['build'] ='';
-	$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
-	$return['time'] = $cc->convert("%W".date ("d-m-Y H:i:s", filectime($file_name))."%n");
+		
+		if ($remote_file['version'] === $version) {
+			$return['file_name'] = $cc->convert("%W $file_name%n");
+			$return['reason'] = $cc->convert("%WPass user configured file%n");
+			$return['symbol'] = $cc->convert("%W  ✔%n");
+			$return['status'] = true;
+			$return['fsize'] = $length;
+			$return['build'] ='';
+			$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
+			$return['time'] = $cc->convert("%W".date ("d-m-Y H:i:s", filectime($file_name))."%n");
+		}
+		else {
+			$return['reason'] = $cc->convert("%CStructure Update Available%n");
+			$return['symbol'] = " ".$update;
+			$return['file_name'] = $cc->convert("%C ".$file_name."%n");
+			$return['full_version'] = $cc->convert("%C$version-$fsize-$crc"."%n");
+			$return['builld'] = '';
+			$return['fsize'] = $length;
+			$return['time'] = $cc->convert("%C".date ("d-m-Y H:i:s", filectime($file_name))."%n");
+		}
 	return $return;
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
-		$remote_file = check_remote_file($file_name); // see if there's an update
 		
 		if (empty($remote_file['time'])) { 
 			$return['reason'] = error.$cc->convert("%R file not found in ".settings['branch']."%n");
@@ -729,22 +740,23 @@ function help() {
 			$time  = $cc->convert("%C$time%n");
 			}
 		elseif ($remote_file['time'] == $t) {
-			 $return['reason'] = pass .$cc->convert("%C, File is up to date%n"); 
+			 $return['reason'] = pass .$cc->convert("%G, File is up to date%n"); 
 			 $return['symbol'] = trim($tick); 
-			 $file_name = $cc->convert("%C ".$file_name."%n");
-			 $d_version = $cc->convert("%C$version-$length-$crc"."%n");
-			 $time  = $cc->convert("%C$time%n");
+			 $file_name = $cc->convert("%G ".$file_name."%n");
+			 $d_version = $cc->convert("%G$version-$length-$crc"."%n");
+			 $time  = $cc->convert("%G$time%n");
 			 }
 		elseif ($remote_file['time'] < $t) 
 		{
-			 $return['reason'] = warning.",".$cc->convert("%Ylocal file is newer than source.%n");
-			 $return['symbol'] = fail; $file_name = $cc->convert("%Y ".$file_name."%n");
-			 $d_version = $cc->convert("%Y$version-$length-$crc"."%n");
-			 $time  = $cc->convert("%Y$time%n");
+			 $return['reason'] = $cc->convert("%rWarning, local file is newer than source%n");
+			 $return['symbol'] = $cc->convert("%r$cross%n"); 
+			 $file_name = $cc->convert("%r ".$file_name."%n");
+			 $d_version = $cc->convert("%r$version-$length-$crc"."%n");
+			 $time  = $cc->convert("%r$time%n");
 			 			 		 }
 		elseif ($remote_file['time'] > $t) 
 		{ 
-			$return['reason'] = update." ".$cc->convert("%c".date("d-m-Y H:i:s",$remote_file['time'])."%n");
+			$return['reason'] = $cc->convert("%CUpdate Available%n");
 			$return['symbol'] = " ".$update;
 			$file_name = $cc->convert("%C ".$file_name."%n");
 			$d_version = $cc->convert("%R$version-$length-$crc"."%n");
@@ -763,15 +775,16 @@ function help() {
 	else {
 		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-		$return['file_name'] = $cc->convert("%Y $file_name%n");
-		$return['reason'] = warning.$cc->convert("%Y File has altered%n");
-		$return['symbol'] = fail;
+		$cross = $cc->convert("%P  ✖%n");
+		$return['file_name'] = $cc->convert("%P $file_name%n");
+		$return['reason'] = $cc->convert("%PWarning File has altered%n");
+		$return['symbol'] = $cross;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = $cc->convert("%Y$version-$length-$crc%n");
-		$return['time'] = $cc->convert("%Y$time%n");
+		$return['full_version'] = $cc->convert("%P$version-$length-$crc%n");
+		$return['time'] = $cc->convert("%P$time%n");
 		return $return;
 	}
 }
