@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "32621-4214099206";
+$build = "32466-2454945253";
 $version = "3.01";
-$time = "1639383330";
+$time = "1639389261";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -710,23 +710,23 @@ function help() {
 	if (!empty($version) and $b_match == '' ) {
 		
 		if ($remote_file['version'] === $version) {
-			$return['file_name'] = $cc->convert("%W $file_name%n");
-			$return['reason'] = $cc->convert("%WPass user configured file%n");
+			$return['file_name'] = $cc->convert("%w $file_name%n");
+			$return['reason'] = "user configured file";
 			$return['symbol'] = $cc->convert("%W  ✔%n");
 			$return['status'] = true;
 			$return['fsize'] = $length;
 			$return['build'] ='';
-			$return['full_version'] = $cc->convert("%W$version-$fsize-$crc%n");
-			$return['time'] = $cc->convert("%W".date ("d-m-Y H:i:s", filectime($file_name))."%n");
+			$return['full_version'] = "$version-$fsize-$crc";
+			$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 		}
 		else {
 			$return['reason'] = $cc->convert("%CStructure Update Available%n");
 			$return['symbol'] = " ".$update;
 			$return['file_name'] = $cc->convert("%C ".$file_name."%n");
-			$return['full_version'] = $cc->convert("%C$version-$fsize-$crc"."%n");
+			$return['full_version'] = "$version-$fsize-$crc";
 			$return['builld'] = '';
 			$return['fsize'] = $length;
-			$return['time'] = $cc->convert("%C".date ("d-m-Y H:i:s", filectime($file_name))."%n");
+			$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 		}
 	return $return;
 	}	
@@ -740,11 +740,11 @@ function help() {
 			$time  = $cc->convert("%C$time%n");
 			}
 		elseif ($remote_file['time'] == $t) {
-			 $return['reason'] = pass .$cc->convert("%G, File is up to date%n"); 
+			 $return['reason'] = "File is up to date"; 
 			 $return['symbol'] = trim($tick); 
-			 $file_name = $cc->convert("%G ".$file_name."%n");
-			 $d_version = $cc->convert("%G$version-$length-$crc"."%n");
-			 $time  = $cc->convert("%G$time%n");
+			 $file_name = $cc->convert("%w ".$file_name."%n");
+			 $d_version = "$version-$length-$crc";
+			 //$time  = $cc->convert("%G$time%n");
 			 }
 		elseif ($remote_file['time'] < $t) 
 		{
