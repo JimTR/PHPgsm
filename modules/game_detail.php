@@ -1,9 +1,9 @@
 <?php
 if (!defined("IN_PHPGSM")) die( "phpgsm didn't include me :-(");
-$build = "9799-2575713534";
+$build = "9864-753898526";
 
  $version = "3.00";
-$time = "1639559142";
+$time = "1639559918";
 
 require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
@@ -209,6 +209,7 @@ function game_detail() {
 												$server['mem'] = $top[$count-3];
 												$server['cpu'] = $top[$count-4];
 												$server['size'] = formatBytes(floatval($size)*1024,2);
+												$server['disk_space'] = trim($server['disk_space']);
 													if (empty($server['host_name'])) {
 															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
