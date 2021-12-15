@@ -28,12 +28,12 @@ include ('inc/functions.lin.php');
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
 $version = "3.00";
-$time = "1639123412";
+$time = "1639575822";
 
 	
-$build = "2500-1308444719";
 	if(is_cli()) {
 		$cmds = convert_to_argv($argv,"",true);
+$build = "2500-1308444719";
 		define('cr',PHP_EOL);
 	}
 	if(!defined('cr')){
