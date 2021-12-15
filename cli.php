@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "32466-2454945253";
+$build = "33579-2632818517";
 $version = "3.01";
-$time = "1639389261";
+$time = "1639562345";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -97,9 +97,9 @@ $cc = new Color();
 	define ('fail', $cc->convert("%Y  ✖%n"));
 	define ('update',$cc->convert("%CUpdated%n"));
 	$tick = $cc->convert("%g  ✔%n");
-    $cross = $cc->convert("%r  ✖%n");
+    $cross = "  ✖";
     $update = $cc->convert("%C ►%n");
-    
+    $downdate = "◄";
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
 		
@@ -351,6 +351,15 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
+		if ($options['t'] == 'g') {
+			switch ($settings['use_git'] ) {
+				case true :
+					$settings['use_git'] = false;
+					break;
+				default :
+					$settings['use_git'] = true;	
+			}
+		}
 		$table = new table(CONSOLE_TABLE_ALIGN_LEFT,borders,3,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 		$option = $cc->convert("%cFile%n");
 		$space = chr(032);
@@ -361,7 +370,7 @@ switch ($cmds['action']) {
 	    echo $cc->convert("%BFile Integrity Checker%n").cr;;
 		$table->setHeaders(array($option,$use,$notes,$v,$t));
 		
-		if (settings['use_git']) {
+		if ($settings['use_git']) {
 			exec('git ls-tree -r --name-only '.settings['branch'],$remote_files,$ret);
 			foreach ($remote_files as $file) {
 			// check what we have
@@ -645,7 +654,7 @@ function help() {
  
  function check_file($file_name) {
 	  // test file
-	global $tick,$cross,$update;
+	global $tick,$cross,$update,$downdate;
 	$cc = new Color; 
 	$return=array();
 	if(is_file($file_name) == false){
@@ -719,7 +728,7 @@ function help() {
 			$return['full_version'] = "$version-$fsize-$crc";
 			$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 		}
-		else {
+		elseif ( $remote_file['version'] > $version){
 			$return['reason'] = $cc->convert("%CStructure Update Available%n");
 			$return['symbol'] = " ".$update;
 			$return['file_name'] = $cc->convert("%C ".$file_name."%n");
@@ -728,6 +737,25 @@ function help() {
 			$return['fsize'] = $length;
 			$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
 		}
+	elseif ( $remote_file['version'] < $version and !empty($remote_file['version'])){
+			$return['reason'] = $cc->convert("%YLocal file is newer than Source.%n");
+			$return['symbol'] = $cc->convert("%Y  $downdate%n");
+			$return['file_name'] = $cc->convert("%Y ".$file_name."%n");
+			$return['full_version'] = "$version-$fsize-$crc";
+			$return['builld'] = '';
+			$return['fsize'] = $length;
+			$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
+		}
+	elseif (empty($remote_file['version'])) {
+		// not in
+		$return['reason'] = error.$cc->convert("%R file not found in ".settings['branch']."%n");
+		$return['symbol'] = $cross;
+		$return['file_name'] = $cc->convert("%Y ".$file_name."%n");
+		$return['full_version'] = "$version-$fsize-$crc";
+		$return['builld'] = '';
+		$return['fsize'] = $length;
+		$return['time'] = date ("d-m-Y H:i:s", filectime($file_name));
+	}		
 	return $return;
 	}	
 	if ($b_detail[0] == $length and $crc == $b_detail[1]) {
@@ -775,16 +803,16 @@ function help() {
 	else {
 		//echo $file_name.' has an error !, it\'s not as we coded it  '.cr;
 		//echo 'have you editied the file ? If so you need to re install a correct copy.'.cr;
-		$cross = $cc->convert("%P  ✖%n");
-		$return['file_name'] = $cc->convert("%P $file_name%n");
-		$return['reason'] = $cc->convert("%PWarning File has altered%n");
+		$cross = $cc->convert("%R  ✖%n");
+		$return['file_name'] = $cc->convert("%R $file_name%n");
+		$return['reason'] = $cc->convert("%RWarning File has altered%n");
 		$return['symbol'] = $cross;
 		$return['status'] = 2;
 		$return['fsize'] = $fsize;
 		$return['build'] = $crc;
 		$return['version'] = $version;
-		$return['full_version'] = $cc->convert("%P$version-$length-$crc%n");
-		$return['time'] = $cc->convert("%P$time%n");
+		$return['full_version'] = $cc->convert("%R$version-$length-$crc%n");
+		$return['time'] = $cc->convert("%R$time%n");
 		return $return;
 	}
 }
