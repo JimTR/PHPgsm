@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "33579-2632818517";
+$build = "33590-3230957700";
 $version = "3.01";
-$time = "1639577083";
+$time = "1639643475";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -557,7 +557,7 @@ function help() {
 	}
 	 if($data['option'] =='s' || $data['option'] =='a') {
 	 $table = new Table(CONSOLE_TABLE_ALIGN_LEFT,"",4,null,true);
-    $database= new db();
+    $database= new db(db_settings);
     $software = get_software_info($database);
     //echo print_r($data,true).cr;
     //echo print_r($software,true).cr;
