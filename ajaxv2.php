@@ -32,8 +32,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "50616-3334846756";
+$build = "50620-708908795";
 	$version = "2.07";
+$time = "1639647799";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -87,7 +88,7 @@ else {
 }
 
 if(!$valid) { 
-	die( 'invalid request '.$ip.cr );
+	die( 'invalid request '.$_SERVER['REMOTE_ADDR'] .cr );
 }
 $entry ='';
 foreach ($cmds as $k=>$v) {
@@ -95,7 +96,7 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 //$rip = $_SERVER['REMOTE_ADDR'];
-$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry$HTTP_AUTH".print_r($_SERVER,true).cr;
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry".cr."$HTTP_AUTH".print_r($_SERVER,true).cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
