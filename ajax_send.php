@@ -22,18 +22,19 @@
  * send proxy requests to server
  */
 require ('inc/master.inc.php');
-include ('inc/functions.lin.php');
+//include ('inc/functions.lin.php');
 // map ajaxv30.php to somewhere else (so ajaxv30.php's actual file name & location is only known to this script )
 //print_r($settings);
 //print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
+$build = "3018-3237046157";
 $version = "3.00";
-$time = "1639575822";
+$time = "1639728131";
 
 	
 	if(is_cli()) {
 		$cmds = convert_to_argv($argv,"",true);
-$build = "2500-1308444719";
+
 		define('cr',PHP_EOL);
 	}
 	if(!defined('cr')){
@@ -55,6 +56,8 @@ $build = "2500-1308444719";
 }
 if (isset($cmds['query'])) {
 	$query = split_query($cmds['query']);
+	if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
+	if ($query['output'] == 'json') {header('Content-Type: application/json');}
 	if (isset($cmds['debug'])){
 		print_r($query);
 	}
@@ -66,9 +69,28 @@ else {
 if (isset($cmds['debug'])) {
 	echo "cmd = $cmd".cr;
 }
+if (isset($_SERVER['REMOTE_ADDR'] )) {
+	// check a valid IP your login code needs to set this
+	$rip = ip2long($_SERVER['REMOTE_ADDR']);
+	$sql = "select * from allowed_ip where ip = \"$rip\"";
+	$valid = $database->num_rows($sql);
+	if (!$valid) {
+		$output[] = 'invalid IP call';
+		switch ($query['output']) {
+			// send the error back in the correct format
+			case 'json' :
+				echo json_encode($output,true);
+				break;
+			case 'xml' :
+				// make xml
+				break;
+			default :
+				// send just text back
+		}
+	}
+}
 $options['phpgsm-auth'] = "true";
-if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
-if ($query['output'] == 'json') {header('Content-Type: application/json');}
+
 echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query); //password set file
 
 function split_query($query) {
