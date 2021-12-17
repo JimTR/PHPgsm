@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "33590-3230957700";
+$build = "33663-285557021";
 $version = "3.01";
-$time = "1639643475";
+$time = "1639730134";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -163,7 +163,7 @@ $cc = new Color();
 		}
 		}
 	//if(isset($options['q'])) {$cmds['action'] = 'q';}
-	$banner = "cli v $version-$build Noideer Software ©".date('Y').cr;
+	$banner = "cli v $version-$build Noideer Software © ".COPY_YEAR.cr;
 	if ($cmds['action'] <> 'v'){
 		echo $cc->convert("%y$banner%n");
 	}
@@ -351,6 +351,10 @@ switch ($cmds['action']) {
 	break;
 	case 't':
 	case'test':
+	if ($options['t'] == 'erm') {
+		echo 'terminal called'.cr;
+		break;
+	}
 		if ($options['t'] == 'g') {
 			switch ($settings['use_git'] ) {
 				case true :
