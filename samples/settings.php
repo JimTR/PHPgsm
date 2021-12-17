@@ -16,7 +16,7 @@ $settings['https'] = "1"; // forces https not used
 $settings['url'] = ""; // resolvable url to where the api is installed
 $settings['steamkey'] = ""; // steam api key
 $settings['SQ_TIMEOUT'] = 2; // timeout for game server queries
-$settings['year'] = "0"; // set to 1 if you want dates in roman numerals
+$settings['year'] = false; // set to true if you want dates in roman numerals
 $settings['start_year'] = "2014";
 $settings['time_format'] = "h:i:s a"; // all times are displayed  in this format
 $settings['date_format'] = "d/m/Y"; // all dates are displayed in this format
@@ -26,7 +26,7 @@ $settings['scanlog'] = 1; //unused currently
 $settings['send_cors'] = 0; // send cors headers or not 0 = not 1 = send header
 $settings['secure_user'] =''; // ajax secure user
 $settings['secure_password']=''; // ajax secure password
-$settings['mux'] = "screen"; // set to tmux if you want to use tmux
+$settings['mux'] = "screen"; // set to tmux if you want to use tmux as multiplexer
 $settings['router_ip'] = true; // show all router ip's in the list
 $settings['branch'] = "v3"; // which branch to  to track
 ?>
