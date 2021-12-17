@@ -8,9 +8,9 @@
     require DOC_ROOT. '/inc/config.php'; // get config
     include DOC_ROOT. '/inc/settings.php'; // get settings 
     include DOC_ROOT.'/inc/functions.lin.php'; // linux os functions there will be a windoze version functions.win.php
-$build = "1892-696723436";
+$build = "1892-1363311387";
 $version = "3.00";
-$time = "1639320635";
+$time = "1639730055";
 	$time_format = "h:i:s A";  // force time display
 	$tz = $settings['server_tz']; // set a default time zone
    	date_default_timezone_set($tz); // and set it 
@@ -27,7 +27,7 @@ $time = "1639320635";
      if ($settings['send_cors'] ==1) {
 		 header("Access-Control-Allow-Origin: *");
 	}
-    if ($settings['year'] === "1")
+    if ($settings['year'] == true)
    {
 	// set data to roman numerals
        define ("COPY_YEAR", romanNumerals(date("Y"))); 
