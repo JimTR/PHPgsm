@@ -58,9 +58,9 @@ require DOC_ROOT. '/inc/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
 
-$build = "33663-285557021";
+$build = "33790-991098875";
 $version = "3.01";
-$time = "1639730134";
+$time = "1639732624";
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
@@ -69,9 +69,11 @@ $time = "1639730134";
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
+	chdir(dirname($argv[0])); // make sure we are in the zone
 	
 	if (debug) {
 		echo 'debug'.cr;
+		echo 'moving to '.dirname($argv[0]).cr;
 		error_reporting( -1 );
 		//echo 'Cli interface v'.$version.' '.$build.' Copyright Noideer Software '.$settings['start_year'].' - '.date('Y').cr;
 		if (isset($cmds)) {
@@ -88,6 +90,7 @@ $time = "1639730134";
 else {
 	die ('invalid enviroment');
 }
+//print_r($_SERVER);
 //system('clear');
 $cc = new Color();
 	define ('warning', $cc->convert("%YWarning%n"));
@@ -100,6 +103,7 @@ $cc = new Color();
     $cross = "  ✖";
     $update = $cc->convert("%C ►%n");
     $downdate = "◄";
+    
     if(isset($options['g']) or isset($options['games'])) {
 		$cmds['action']='g';
 		
