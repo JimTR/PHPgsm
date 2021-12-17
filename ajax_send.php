@@ -29,7 +29,7 @@ require ('inc/master.inc.php');
 //$cmds =convert_to_argv($argv,"",true);
 $build = "3018-3237046157";
 $version = "3.00";
-$time = "1639728131";
+$time = "1639728155";
 
 	
 	if(is_cli()) {
