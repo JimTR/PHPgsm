@@ -30,9 +30,10 @@ require (DOC_ROOT.'/includes/master.inc.php');
 require DOC_ROOT.'/includes/class.emoji.php';
 require DOC_ROOT.'/includes/class.steamid.php';
 $version = "1.01";
+$time = "1639826920";
 
-$build = "17158-2024797336";
 
+$build = "17137-2963110465";
 define ('VERSION',$version);
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";
@@ -500,7 +501,7 @@ function update_server($server){
 	$cmd = $stub.'q';
 	$s .= geturl($cmd).cr; // stopped server
 	// need to check if this is a root install, if so elevate the privs  TODO update app version number 
-	$exe = urlencode("sudo $steamcmd  +force_install_dir +login anonymous ".$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	$exe = urlencode("sudo $steamcmd  +force_install_dir ".$game['install_dir']." +login anonymous +app_update ".$game['server_id'].' +quit');
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=geturl($cmd);
 	//echo 'updated server using '.$cmd.cr;
