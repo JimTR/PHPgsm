@@ -27,8 +27,11 @@
  * this does check update status and does the update perhaps this is the way to go ?
  * move this to the utilities folder & make sure it's pathed. ??
  */
-$version = "1.07"; 
-$build = "8817-2586340459";
+ 
+$build = "8797-3304326975";
+$version = "2.08"; 
+$time = "1641016929";
+
 include 'includes/master.inc.php';
 include 'functions.php';
 define ("cr",PHP_EOL);
@@ -147,7 +150,7 @@ foreach ($localIPs as $lip) {
 					if ($settings['update'] = 1) {
 				    echo 'Auto Update Set'.cr;
 				    // use $install_path + game
-				    $cmd = $steamcmd.' +force_install_dir +login anonymous '.$install_path.'/'.$data['game'].' +app_update '.$data['server_id'].' +quit';
+				    $cmd = $steamcmd.' +force_install_dir '.$install_path.'/'.$data['game'].' +login anonymous +app_update '.$data['server_id'].' +quit';
 				    $updatetxt = shell_exec($cmd);
 				    // this appears to work so update the database ? or wait for the next run ?
 				    echo $updatetxt.cr;
