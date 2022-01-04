@@ -465,7 +465,7 @@ function game_detail() {
 												// running server add live data 
 												$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
 												$kv = VDFParse($server['vdf_file']);
-												$server['vdf_data'] =$k['AppState'];
+												$server['vdf_data'] =$kv['AppState'];
 												if ($server['running']) {
 													$server['online'] = 'Online';
 													try
