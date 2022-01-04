@@ -34,6 +34,8 @@ $time = "1641016929";
 
 include 'includes/master.inc.php';
 include 'functions.php';
+include("includes/vdfparser.php");
+
 define ("cr",PHP_EOL);
 $processed= array();
 //define('plus','%2B');
@@ -233,26 +235,9 @@ return $return;
 }
 
 function check_local($file) {
-$data = shell_exec('cat '.$file.' |sed \'3,17!d\'');
-$arry = explode(cr,trim($data));
-foreach ($arry as $key=>$value) {
-	// clear blanks
-	if(empty(trim($value))) 
-	{ 
-		unset ($arry[$key]);
-		continue;
-		}
-	else {
-		$value =substr(trim($value),1);
-		$z = strpos($value,'"');
-		$nz = substr($value,0,$z);
-		$value =trim(str_replace($nz.'"','',$value));
-        $value=trim(str_replace('"','',$value));
-        $arry[$key]=$value;
-        $return[$nz]=$value;
-	}	
-	}
-	return $return;
+$kv = VDFParse($file);
+return $kv['AppState'];
+
 }
 
 ?>
