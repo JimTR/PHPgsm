@@ -357,7 +357,7 @@ function game_detail() {
 					$server_data['cpu'] = $temp[count($temp)-4];
 					$server_data['size'] = formatBytes(floatval($size)*1024,2);
 					$server_data['beta'] = 'running';
-					echo print_r($server_data,true).cr;
+					//echo print_r($server_data,true).cr;
 					$server['online'] = 'Online';
 													try
 														{
