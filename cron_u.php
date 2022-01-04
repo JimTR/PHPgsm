@@ -86,7 +86,7 @@ foreach ($localIPs as $lip) {
 		        $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
 				$disk_size = trim(shell_exec('du -hs '.$data['location']));
 				$ds = substr($disk_size,0,strpos($disk_size,'/'));
-	    
+				$ds = trim($ds); 
 			    $local =  check_local($acf_loc);
 			    
 			    
