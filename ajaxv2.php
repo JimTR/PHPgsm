@@ -20,7 +20,7 @@
  * MA 02110-1301, USA.
  * 
  * ajax v2 to go with xml v2 & mybb.js perhaps
- *  requires PHP  >= 7.4
+ *  requires PHP  >= 7.4 
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
