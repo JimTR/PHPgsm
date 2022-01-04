@@ -464,7 +464,8 @@ function game_detail() {
 											$total_slots  += $server['max_players'];	
 												// running server add live data 
 												$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
-												$server['kv'] = VDFParse($server['vdf_file']);
+												$kv = VDFParse($server['vdf_file']);
+												$server['vdf_data'] =$k['AppState'];
 												if ($server['running']) {
 													$server['online'] = 'Online';
 													try
