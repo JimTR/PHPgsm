@@ -286,7 +286,7 @@ function lsof($cmds) {
 			
 function game_detail() {
 	// get processes
-	
+	include 'includes/vdfparser.php';
 	$gameq  = new SourceQuery( );
 	
 	global $cmds; // get options 
@@ -463,6 +463,7 @@ function game_detail() {
 										if (array_find($server['host_name'].'-console.log',$tmp) >= 0) {
 											$total_slots  += $server['max_players'];	
 												// running server add live data 
+												$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
 												if ($server['running']) {
 													$server['online'] = 'Online';
 													try
