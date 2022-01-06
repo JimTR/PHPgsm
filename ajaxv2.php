@@ -95,7 +95,7 @@ foreach ($cmds as $k=>$v) {
 	//
 	$entry .="$k=>$v ";
 }
-//$rip = $_SERVER['REMOTE_ADDR'];
+$rip = $_SERVER['REMOTE_ADDR'];
 $logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry".cr."$HTTP_AUTH".print_r($_SERVER,true).cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
@@ -409,59 +409,44 @@ function game_detail() {
 					$ip= trim(shell_exec("hostname -I | awk '{print $1}'"));
 				}
 				$checkip = $ip; 
-				//if($cmds['debug']='true') {echo "checkip=$ip";}
-				// alter this bit	
-				// use screen to test 	
-				exec('ps -C screen -o pid,cmd |sed 1,1d',$tmp,$val); // this gets running only needs rework may 2021
+				
+				// use srcds_linux to test 
+				//ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d
+				exec('ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d',$game_list,$val); // this gets running only needs rework may 2021 for sure jan 2022
+				foreach ($game_list as $game) {
+					$tmp = array_values(array_filter(explode (" ",$game)));
+					$result = find_string_in_array($tmp,'.cfg');
+					$tmp['host'] = pathinfo(implode('; ', $result), PATHINFO_FILENAME); 
+					$output[] = $tmp;
+				}
+
 				//$tmp = explode(PHP_EOL,$t);
 				$i=0;
 				
-				if(empty($tmp)) {
+				if(empty($output)) {
 						// nothing running
-						
-						//$sql =  'SET sql_mode = \'\'';
-						//$a= $db->query( 'SET sql_mode = \'\''); 
-						
-							$sql ='select  servers.location,count(*) as total from servers where servers.host like "'.$checkip.'%"';
-						
-						//echo $sql;
+						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
 						$server_count = $db->get_row($sql);
-						if (empty($server_count['location'])) {
-							$cmds['debug']='true';
-							$return = 'No Servers found for '.$ip;
+						
+						if ($server_count['host'] <> $ip){
+							$return = $cmds['server'].' is not hosted here';
 							return $return;
-						}
+						}    
+						
 						$du = shell_exec('du -s '.dirname($server_count['location']));
 						list ($tsize,$location) = explode(" ",$du);
 				}
 			else{
-						// here we have the runners in $tmp array
-						if (count($localIPs) >1) {
-							//
-							 $sql = "select * from server1 where ";
-							foreach ($localIPs as $lip) {
-								// glue the sql together with $sql = "select * from server1 where (host like \"185%\") or (host like \"109%\") and enabled=1 order by server_name ASC";
-								if(!isset($subsql)) {
-									$subsql = '(host like "'.$lip.'") ';
-								}
-								else {
-									$subsql .=  'or (host like "'.$lip.'") ';
-									// more
-								} 
-							}
-							$sql .=$subsql." and enabled=1 order by server_name ASC";
-						}
-						else {
-							$sql = 'select * from server1 where host like "'.$checkip.'%" and enabled=1 order by server_name ASC';
-						}
-						//$sql = "SELECT DISTINCT `host_name`,`server_name`,`url`,`bport`,`location`,`host`,`port`,`running` FROM server1 where `running` = 1 order by `host_name`";
-						$servers = $db->get_results($sql);
-						$server_count = $db->num_rows($sql);
+					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
+					$servers = $db->get_results($sql);
+					$server_count = $db->num_rows($sql);
 						
 						foreach ($servers as $server) {
-															
-										if (array_find($server['host_name'].'-console.log',$tmp) >= 0) {
-											$total_slots  += $server['max_players'];	
+										//$key = array_search('100', array_column($userdb, 'uid'));
+										$run_record = get_key($server['host_name'],$output) ;					
+										if (get_key($server['host_name'],$output) >= 0) {
+											
+											
 												// running server add live data 
 												$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
 												$kv = VDFParse($server['vdf_file']);
@@ -487,7 +472,7 @@ function game_detail() {
 															if (strpos($Exception,'Failed to read any data from socket')) {
 																$Exception = 'Failed to read any data from socket (Game Detail=>'.$sub_cmd.')';
 														}
-						
+														
 														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
 														//sprintf("[%14.14s]",$str2)
 														$mask = "%17.17s %-30.30s \n";
@@ -495,8 +480,9 @@ function game_detail() {
 														//$server['Players'] = 0;
 														}
 													}
-												
-												$pid = get_pid($server['host'].':'.$server['port']); 
+												$total_slots  += $server['MaxPlayers'];	
+												//$pid = get_pid($server['host'].':'.$server['port']);
+												$pid = $output[$run_record][0]; 
 												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
 												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 												$count = count($top); // how many records  ?
@@ -1525,5 +1511,28 @@ function array2xml($array, $xml = false){
     }
 
     return $xml->asXML();
+}
+
+function find_string_in_array ($arr, $string) {
+
+    return array_filter($arr, function($value) use ($string) {
+        return strpos($value, $string) !== false;
+    });
+
+}
+
+function get_key ($search,$array) {
+	$found = array_filter($array,function($v,$k) use ($search){
+  return $v['host'] == $search;
+},ARRAY_FILTER_USE_BOTH); // With latest PHP third parameter is optional.. Available Values:- ARRAY_FILTER_USE_BOTH OR ARRAY_FILTER_USE_KEY  
+$keys =  array_keys($found); 
+if (count($keys) == 1) {
+ return $keys[0];
+}
+else {
+	return false;
+}
+
+	//
 }
 ?>
