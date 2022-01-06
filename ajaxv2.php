@@ -439,7 +439,8 @@ function game_detail() {
 			else{
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 					$servers = $db->get_results($sql);
-					$server_count = $db->num_rows($sql);
+					$server_count = count($servers);
+					$server_count1 = count($output); //running servers
 						
 						foreach ($servers as $server) {
 										//$key = array_search('100', array_column($userdb, 'uid'));
@@ -517,7 +518,7 @@ function game_detail() {
 			}
 	// add computed items
 				$return['general']['server_id'] = $server['fname'];
-				$return['general']['live_servers'] = $i;
+				$return['general']['live_servers'] = $server_count1;
 				$return['general']['total_players'] = $total_players;
 				$return['general']['total_bots'] = $total_bots;
 				$return['general']['used_slots'] = $total_players+$total_bots;
