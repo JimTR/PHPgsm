@@ -575,15 +575,21 @@ function exescreen ($cmds) {
 		$choices = print_r($localIPs,true);
 		return "This Server is not hosted here $localip /".$server['host']." choices are $choices the key was $key"; // we know this one but it's elsewhere
 	}
+	//if (strtolower($server['managed_by']) == 'phpgsm'){
 	// valid so do it
 	switch ($server['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 			break;
 		default:
 				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
 		}
+	//}
+	//else {
+		// lgsm & tmux
+		
+	//}
 		//echo $cmd.cr;
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
@@ -597,9 +603,16 @@ function exescreen ($cmds) {
 			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
 			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
 			rename($logFile, $savedLogfile); // log rotate
-			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-			exec($cmd); // open session
-			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+			if (strtolower($server['managed_by']) == 'phpgsm'){
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+				exec($cmd); // open session
+				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+				
+			}
+			else {
+				//lgsm ??
+				$cmd = $server['startcmd'].' st';
+			}
 			exec($cmd);
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
@@ -614,6 +627,7 @@ function exescreen ($cmds) {
 				$return = $exe.' is not running';
 				break;
 			}
+	if (strtolower($server['managed_by']) == 'phpgsm'){	
 			switch ($server['binary_file']) {
 		case 'srcds_run':
 			//$cmd = 'screen -X -S '.$server['host_name'] .' quit';
@@ -623,13 +637,18 @@ function exescreen ($cmds) {
 				$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			break;
 		}
-			
+	}	
+	else {
+			$cmd = $server['startcmd']. 'sp';
+		}
 			exec($cmd,$content,$ret_val);
 			$return = 'Stopping Server '.$server['host_name'];
 			if ($ret_val == 0) {
 				// tidy up screen 
+			if (strtolower($server['managed_by']) == 'phpgsm'){	
 				$cmd = 'screen -X -S '.$server['host_name'] .' quit';
 				exec($cmd);
+			}
 			}
 			$update['running'] = 0;
 			$update['starttime'] = '';
