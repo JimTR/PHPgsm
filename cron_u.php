@@ -197,7 +197,6 @@ foreach ($localIPs as $lip) {
 $cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
 //echo $cmd.' ('.$steamcmd.')'.cr;
 //exit;
-//file_put_contents("$appid.txt",$data);
 $data= shell_exec($cmd);
 file_put_contents("$appid.txt","\"appstate\"\n$data");
 $data = str_replace('{','',$data);
@@ -233,11 +232,8 @@ else
 }
 }
 $kv = VDFParse("$appid.txt");
-echo 'Parsed'.cr;
-print_r($kv['AppState']);
-echo cr.'home brew'.cr;
-print_r($return);
-
+unlink("$appid.txt");
+$return = $kv['appstate'];
 return $return;
 
 }

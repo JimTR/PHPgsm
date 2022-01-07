@@ -26,8 +26,13 @@ function VDFParse($filename) {
 	$value = "";			// The discovered corresponding value
 	$reading = false;		// Currently consuming characters
 	$lastCharSeen = "";		// Tracks the last character seen
+	
 	if (is_file($filename)) {
 		$filecontent = file_get_contents($filename);
+	}
+	else {
+		$filecontent = $filename;
+                echo "filename = $filename".PHP_EOL;
 	}
 	// Strip all comments before parsing
 	$filecontent = str_replace('!//.*!', '', $filecontent);
