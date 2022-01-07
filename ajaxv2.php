@@ -426,7 +426,7 @@ function game_detail() {
 				if(empty($output)) {
 						// nothing running
 						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
-						$server_count = $db->get_row($sql);
+						$server_count = $db->get_row($sql); // total servers
 						
 						if ($server_count['host'] <> $ip){
 							$return = $cmds['server'].' is not hosted here';
@@ -439,8 +439,8 @@ function game_detail() {
 			else{
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 					$servers = $db->get_results($sql);
-					$server_count = count($servers);
-					$server_count1 = count($output); //running servers
+					$server_count1 = count($servers);
+					//$server_count1 = count($output); //running servers
 						
 						foreach ($servers as $server) {
 										//$key = array_search('100', array_column($userdb, 'uid'));
