@@ -422,13 +422,16 @@ function game_detail() {
 
 				//$tmp = explode(PHP_EOL,$t);
 				$i=0;
-				
-				if(empty($output)) {
-						// nothing running
-						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
+				$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
 						$server_no = $db->get_row($sql); // total servers
 						$server_count = $server_no['total'];
 						if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
+				if(empty($output)) {
+						// nothing running
+						//$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
+						//$server_no = $db->get_row($sql); // total servers
+						//$server_count = $server_no['total'];
+						//if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
 							 
 						if ($server_count['host'] <> $ip){
 							$return = $cmds['server'].' is not hosted here';
@@ -441,7 +444,7 @@ function game_detail() {
 			else{
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 					$servers = $db->get_results($sql);
-					$server_count = count($servers);
+					//$server_count = count($servers);
 					//$server_count1 = count($output); //running servers
 						
 						foreach ($servers as $server) {
