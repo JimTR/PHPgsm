@@ -441,7 +441,7 @@ function game_detail() {
 			else{
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 					$servers = $db->get_results($sql);
-					$server_count1 = count($servers);
+					$server_count = count($servers);
 					//$server_count1 = count($output); //running servers
 						
 						foreach ($servers as $server) {
