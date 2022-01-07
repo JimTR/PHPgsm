@@ -426,7 +426,8 @@ function game_detail() {
 				if(empty($output)) {
 						// nothing running
 						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
-						$server_count = $db->get_row($sql); // total servers
+						$server_no = $db->get_row($sql); // total servers
+						$server_count = $server_no['total'];
 						
 						if ($server_count['host'] <> $ip){
 							$return = $cmds['server'].' is not hosted here';
@@ -518,7 +519,7 @@ function game_detail() {
 			}
 	// add computed items
 				$return['general']['server_id'] = $server['fname'];
-				$return['general']['live_servers'] = $server_count1;
+				$return['general']['live_servers'] = $i;
 				$return['general']['total_players'] = $total_players;
 				$return['general']['total_bots'] = $total_bots;
 				$return['general']['used_slots'] = $total_players+$total_bots;
