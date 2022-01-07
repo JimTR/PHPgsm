@@ -522,7 +522,7 @@ function game_detail() {
 						$tsize = str_replace(dirname($server['location']),'',$du);
 			}
 	// add computed items
-				$return['general']['server_id'] = $server['fname'];
+				$return['general']['server_id'] = $cmds['server'];
 				$return['general']['live_servers'] = $i;
 				$return['general']['total_players'] = $total_players;
 				$return['general']['total_bots'] = $total_bots;
