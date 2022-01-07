@@ -45,8 +45,8 @@ if (!isset($argv)) {
 }
 $host= gethostname();
 $ip = gethostbyname($host);
-$ip = file_get_contents('https://api.ipify.org');
-if(empty($ip)) { $ip = file_get_contents("http://ipecho.net/plain");}
+$ip = geturl('https://api.ipify.org');
+if(empty($ip)) { $ip = geturl("http://ipecho.net/plain");}
 $localIP = trim(shell_exec('hostname -I'));
 $localIPs = explode(' ',$localIP);
 echo 'Starting Check For '.$localIP.cr;
@@ -78,7 +78,7 @@ foreach ($localIPs as $lip) {
 							$sql .='('.$subsql.") and enabled=1 and is_steam=1 order by server_name ASC";
 						}
 						else {
-							$sql = 'select * from server1 where host like "'.$ip.'%" and enabled=1 and is_steam=1 order by server_name ASC';
+							$sql = 'select * from server1 where host like "'.$ip.'%" and is_steam=1 order by server_name ASC';
 						}
 	$res = $database->get_results($sql);
 	
@@ -232,6 +232,12 @@ else
      
 }
 }
+$kv = VDFParse("$appid.txt");
+echo 'Parsed'.cr;
+print_r($kv['AppState']);
+echo cr.'home brew'.cr;
+print_r($return);
+
 return $return;
 
 }
