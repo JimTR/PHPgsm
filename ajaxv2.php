@@ -428,7 +428,8 @@ function game_detail() {
 						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
 						$server_no = $db->get_row($sql); // total servers
 						$server_count = $server_no['total'];
-						
+						if ($cmds['debug']) { "\$server_count = $server_count"; }
+							 
 						if ($server_count['host'] <> $ip){
 							$return = $cmds['server'].' is not hosted here';
 							return $return;
