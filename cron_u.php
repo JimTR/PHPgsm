@@ -199,7 +199,7 @@ $cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit 
 //exit;
 //file_put_contents("$appid.txt",$data);
 $data= shell_exec($cmd);
-file_put_contents("$appid.txt","\"appstate\"\n$data");
+file_put_contents("$appid.txt","\"AppState\"\n$data");
 $data = str_replace('{','',$data);
 $data = str_replace('}','',$data);
 $data= trim($data);
