@@ -19,3 +19,5 @@ $console['fof_standoff_vec_x'] = '<span style="color:red;">fof_standoff_vec_x</s
 $console['fof_standoff_vec_y'] = '<span style="color:red;">fof_standoff_vec_y</span>';
 $console['fof_standoff_vec_z'] = '<span style="color:red;">fof_standoff_vec_z</span>';
 $console['fof_standoff_scale'] = '<span style="color:red;">fof_standoff_scale</span>';
+$console['deathmatch'] = '<span style="color:cyan;">deathmatch</span>';
+$console['Shootout'] = '<span style="color:yellow;">Shootout</span>'; 
