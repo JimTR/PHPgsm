@@ -195,46 +195,11 @@ foreach ($localIPs as $lip) {
  */ 	
  
 $cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
-//echo $cmd.' ('.$steamcmd.')'.cr;
-//exit;
 $data= shell_exec($cmd);
 file_put_contents("$appid.txt","\"AppState\"\n$data");
-$data = str_replace('{','',$data);
-$data = str_replace('}','',$data);
-$data= trim($data);
-$arry = explode(cr,$data);
-foreach ($arry as $key=>$value) {
-	// clear blanks
-	if(empty(trim($value))) 
-	{ 
-		unset ($arry[$key]);
-		continue;
-		}
-	else {
-		$arry[$key] = trim($arry[$key]);
-	}	
-	if (preg_match("/\t/", $arry[$key])) {
-    
-    // setting
-   $value= substr(trim($value),1);
-   $z = strpos($value,'"');
-   $nz = substr($value,0,$z);
-   $value =trim(str_replace($nz.'"','',$value));
-   $value=trim(str_replace('"','',$value));
-   $return[$branch][$nz]= trim($value);
-}
-else
-{
-    // heading
-     $y= trim(preg_replace('/\t+/', '', $value));
-     $branch = str_replace('"','',$y);
-     
-}
-}
 $kv = VDFParse("$appid.txt");
 unlink("$appid.txt");
-$return = $kv['appstate'];
-return $return;
+return  $kv['appstate'];
 
 }
 
