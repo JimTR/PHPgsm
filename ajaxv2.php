@@ -96,7 +96,8 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $rip = $_SERVER['REMOTE_ADDR'];
-$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry".cr."$HTTP_AUTH".print_r($_SERVER,true).cr;
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry auth = $HTTP_AUTH".cr. print_r($_SERVER,true).cr;
+if ($method == 'POST') {$logline .= print_r($_POST,true).cr;}
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
