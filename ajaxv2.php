@@ -296,7 +296,8 @@ function game_detail() {
 	$total_players = 0;
 	$total_bots = 0;
 	$total_slots = 0;
-	$r=1;
+	$sql = 'select * from server1 where fname like "'.$cmds['server'].'" order by server_name ASC';
+	$total_s = $database->num_rows($sql);
 	
 			if(isset($cmds['ip'])) {
 				$ip = $cmds['ip'];
@@ -317,7 +318,6 @@ function game_detail() {
 				$checkip = $ip; 
 				
 				// use srcds_linux to test 
-				//ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d
 				exec('ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d',$game_list,$val); // this gets running only needs rework may 2021 for sure jan 2022
 				foreach ($game_list as $game) {
 					$tmp = array_values(array_filter(explode (" ",$game)));
@@ -334,11 +334,7 @@ function game_detail() {
 						if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
 				if(empty($output)) {
 						// nothing running
-						//$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
-						//$server_no = $db->get_row($sql); // total servers
-						//$server_count = $server_no['total'];
-						//if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
-							 
+								 
 						if ($server_count['host'] <> $ip){
 							$return = $cmds['server'].' is not hosted here';
 							return $return;
@@ -398,7 +394,6 @@ function game_detail() {
 														}
 													}
 												$total_slots  += $server['MaxPlayers'];	
-												//$pid = get_pid($server['host'].':'.$server['port']);
 												$pid = $output[$run_record][0];
 												$server['mem'] = $output[$run_record][2];
 												$server['cpu'] = $output[$run_record][1];
@@ -409,8 +404,6 @@ function game_detail() {
 												$cpu += $server['cpu']; // cpu %
 												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
 												$size = str_replace($server['location'],'',$du);
-												//$server['mem'] = $top[$count-3];
-												//$server['cpu'] = $output[$run_record][1];
 												$server['size'] = formatBytes(floatval($size)*1024,2);
 													if (empty($server['host_name'])) {
 															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
@@ -452,7 +445,7 @@ function game_detail() {
 				$return['general']['total_bots'] = $total_bots;
 				$return['general']['used_slots'] = $total_players+$total_bots;
 				$return['general']['total_slots'] = $total_slots;
-				$return['general']['total_servers'] = $server_count;
+				$return['general']['total_servers'] = $total_s;
 				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
