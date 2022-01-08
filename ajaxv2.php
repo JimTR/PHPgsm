@@ -442,7 +442,7 @@ function game_detail() {
 						list ($tsize,$location) = explode(" ",$du);
 				}
 			else{
-				if(issset($cmds['filter'])) {
+				if(isset($cmds['filter'])) {
 					//filtered output
 					$sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
 				}
