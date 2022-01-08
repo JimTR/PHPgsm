@@ -298,7 +298,7 @@ function game_detail() {
 	$total_slots = 0;
 	$r=1;
 	if(isset($cmds['filter'])) {
-		$ip = file_get_contents('https://api.ipify.org');// get ip
+		/*$ip = file_get_contents('https://api.ipify.org');// get ip
 		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
 		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
 		 //echo "sql = $sql".cr;
@@ -388,10 +388,10 @@ function game_detail() {
 					}
 		$gameq->Disconnect( );			
 		$return[$server_data['host_name']] = $server_data;
-		return $return;
+		return $return;*/
 	}
 // no filter start
-	else{
+	//else{
 			if(isset($cmds['ip'])) {
 				$ip = $cmds['ip'];
 			}
@@ -442,7 +442,13 @@ function game_detail() {
 						list ($tsize,$location) = explode(" ",$du);
 				}
 			else{
+				if(issset($cmds['filter'])) {
+					//filtered output
+					$sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
+				}
+				else{
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
+				}
 					$servers = $db->get_results($sql);
 					//$server_count = count($servers);
 					//$server_count1 = count($output); //running servers
@@ -534,7 +540,7 @@ function game_detail() {
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 				$return['general']['total_size_raw'] = floatval($tsize);
 				return $return;
-		}
+		//}
 }		
 function all($cmds) {
 	//get the lot
