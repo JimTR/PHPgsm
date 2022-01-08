@@ -24,6 +24,7 @@
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
+require 'includes/class.emoji.php';
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -376,6 +377,7 @@ function game_detail() {
 																$total_players += ($info1['Players']-$info1['Bots']);
 																$total_bots += $info1['Bots'];
 																$server['players']  = $gameq->GetPlayers( ) ;
+																$server['players'] = add_steamid($server['players']);
 																}
 														}
 													catch( Exception $e )
@@ -759,25 +761,22 @@ function viewserver($cmds) {
 		file_put_contents('sql.txt',$sql);
 		$server =$database->get_row($sql);
 		
-try 
-	{
-$Query->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
-$info = $Query->GetInfo();
-$players = $Query->GetPlayers( ) ;
-$rules = $Query->GetRules( );
+try{
+	$Query->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
+	$info = $Query->GetInfo();
+	$players = $Query->GetPlayers( ) ;
+	$rules = $Query->GetRules( );
+}
+catch( Exception $e ) {
+	$Exception = $e;
+	if (strpos($Exception,'Failed to read any data from socket')) {
+		$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
 	}
-	catch( Exception $e )
-					{
-						$Exception = $e;
-						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
-						}
-						
-						  $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
-						  //sprintf("[%14.14s]",$str2)
-						  $mask = "%17.17s %-30.30s \n";
-						 file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
-					}
+	 $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
+	 //sprintf("[%14.14s]",$str2)
+	$mask = "%17.17s %-30.30s \n";
+	file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+}
 $Query->Disconnect( );
 //we now have data
 jump:
@@ -1476,5 +1475,39 @@ else {
 }
 
 	//
+}
+
+function add_steamid($players) {
+	if (count($players)) {
+	// we have players
+	orderBy($players,'Frags','d'); // score order
+	foreach ($players as $k=>$v) {
+		//loop  add flag & country $v being the player array 
+		// don't update player here let scanlog do it
+		$players[$k]['Name'] =$emoji->Encode($v['Name']);
+		$player_data = $database->get_row($sql.$database->escape($players[$k]['Name']).'"'); // player info from db
+		if (!empty($player_data)) {
+			// here we go
+			//echo 'Result '.print_r($player_data,true).cr;
+			//$player_data= reset($player_data);
+			$players[$k]['Name'] = $emoji->Decode($players[$k]['Name']);
+			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
+			$players[$k]['country'] = $player_data['country'];
+			$players[$k]['steam_id'] = $player_data['steam_id64']; // user steam_id
+			$players[$k]['ip'] = long2ip($player_data['ip']); // recorded ip address
+		}
+		else {
+			// no current flag or country
+			// add a default image for the flag
+			// random country
+			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Spectator';}
+			$players[$k]['flag'] = 'src ="/img/'.'unknown.png"'; // windows don't do emoji flags use image
+			$players[$k]['country'] = 'unknown';
+			
+		}
+	}
+	return $players;
+}
+return  false;
 }
 ?>
