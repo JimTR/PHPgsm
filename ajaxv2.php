@@ -399,16 +399,18 @@ function game_detail() {
 													}
 												$total_slots  += $server['MaxPlayers'];	
 												//$pid = get_pid($server['host'].':'.$server['port']);
-												$pid = $output[$run_record][0]; 
-												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
-												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
-												$count = count($top); // how many records  ?
-												$mem += $top[$count-3]; // memory %
-												$cpu += $top[$count-4]; // cpu %
+												$pid = $output[$run_record][0];
+												$server['mem'] = $output[$run_record][2];
+												$server['cpu'] = $output[$run_record][1];
+												//$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
+												//$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
+												//$count = count($top); // how many records  ?
+												$mem += $server['mem']; // memory %
+												$cpu += $server[$cpu]; // cpu %
 												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
 												$size = str_replace($server['location'],'',$du);
-												$server['mem'] = $top[$count-3];
-												$server['cpu'] = $top[$count-4];
+												//$server['mem'] = $top[$count-3];
+												//$server['cpu'] = $output[$run_record][1];
 												$server['size'] = formatBytes(floatval($size)*1024,2);
 													if (empty($server['host_name'])) {
 															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
