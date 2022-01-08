@@ -214,3 +214,24 @@ function add_steamid($players) {
 }
 return  false;
 }
+
+function find_string_in_array ($arr, $string) {
+
+    return array_filter($arr, function($value) use ($string) {
+        return strpos($value, $string) !== false;
+    });
+
+}
+
+function get_key ($search,$array) {
+	$found = array_filter($array,function($v,$k) use ($search){
+  return $v['host'] == $search;
+},ARRAY_FILTER_USE_BOTH); // With latest PHP third parameter is optional.. Available Values:- ARRAY_FILTER_USE_BOTH OR ARRAY_FILTER_USE_KEY  
+$keys =  array_keys($found); 
+	if (count($keys) == 1) {
+		return $keys[0];
+	}
+	else {
+		return false;
+	}
+}
