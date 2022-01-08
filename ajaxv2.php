@@ -406,7 +406,7 @@ function game_detail() {
 												//$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
 												//$count = count($top); // how many records  ?
 												$mem += $server['mem']; // memory %
-												$cpu += $server[$cpu]; // cpu %
+												$cpu += $server['cpu']; // cpu %
 												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
 												$size = str_replace($server['location'],'',$du);
 												//$server['mem'] = $top[$count-3];
