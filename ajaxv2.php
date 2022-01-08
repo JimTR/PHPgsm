@@ -1483,15 +1483,16 @@ function add_steamid($players) {
 	$emoji = new Emoji;
 	$database = new db();
 	orderBy($players,'Frags','d'); // score order
+	$sql = 'select * from players where BINARY name="';
 	foreach ($players as $k=>$v) {
 		//loop  add flag & country $v being the player array 
 		// don't update player here let scanlog do it
 		$players[$k]['Name']=$emoji->Encode($v['Name']);
-		$player_data = $database->get_row($sql.$database->escape($players[$k]['Name']).'"'); // player info from db
+		$player_data = $database->get_results($sql.$database->escape($players[$k]['Name']).'"'); // player info from db
 		if (!empty($player_data)) {
 			// here we go
 			//echo 'Result '.print_r($player_data,true).cr;
-			//$player_data= reset($player_data);
+			$player_data= reset($player_data);
 			$players[$k]['Name'] = $emoji->Decode($players[$k]['Name']);
 			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
 			$players[$k]['country'] = $player_data['country'];
