@@ -297,101 +297,7 @@ function game_detail() {
 	$total_bots = 0;
 	$total_slots = 0;
 	$r=1;
-	if(isset($cmds['filter'])) {
-		/*$ip = file_get_contents('https://api.ipify.org');// get ip
-		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
-		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
-		 //echo "sql = $sql".cr;
-		 if ($db->num_rows($sql) >0) {		 
-			$server_data = $db->get_results($sql);
-			$server_data=reset($server_data);
-		  if (empty($server_data['base_ip'])) {         
-                if ($ip <> trim($server_data['host'])) {
-					echo 'Invalid enviroment '.cr;
-					exit;
-				}
-			}
-		}
-		else {
-			      echo 'Invalid enviroment '.cr;
-					exit;
-				}
-				        
-       switch ($server_data['binary_file']) {
-		case 'srcds_run':
-			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
-			break;
-		default:
-				$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server_data['binary_file'];
-				//echo "cmd = $cmd".cr;
-			break;
-		}
-               
-                $new = trim(shell_exec($cmd));
-                // temp log
-				$logline =date("d/m/Y h:i:sa").' => Filtered Output '.$cmds['filter'].cr;
-				file_put_contents(LOG,$logline,FILE_APPEND);
-                if (empty($new)) {
-					$du = shell_exec('du -s '.$server_data['location']); // get size of game
-					$du = str_replace('<br>','',$du);
-					$x = strpos(trim($du),'/');
-					$size = trim(substr($du,0,$x-1));
-					$server_data['cpu'] = '0';
-					$server_data['size'] = formatBytes(floatval($size)*1024,2);
-					$server_data['mem'] = '0';
-					$server_data['beta'] = 'not running';
-				}
-               
-                $tmp = explode(' ',$new);
-				if (!empty($tmp[0])) {
-					//print_r($tmp);
-					$pid = $tmp[0];
-					$count = count($tmp);
-					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajaxv2.php?action=top&filter='.$pid)); // works on remote ?
-					$temp = array_values(array_filter(explode(' ',$temp)));
-					$du = shell_exec('du -s '.$server_data['location']); // get size of game
-					$x = strpos(trim($du),'/');
-					$size = trim(substr($du,0,$x-1));
-					//$server_data['count'] =  count($temp);
-					$server_data['mem'] = count ($temp);
-					$server_data['cpu'] = $temp[count($temp)-4];
-					$server_data['size'] = formatBytes(floatval($size)*1024,2);
-					$server_data['beta'] = 'running';
-					//echo print_r($server_data,true).cr;
-					$server['online'] = 'Online';
-													try
-														{
-															$gameq->Connect( $server_data['host'], $server_data['port'], SQ_TIMEOUT, SQ_ENGINE );
-															$sub_cmd = 'GetInfo';
-															$info1 = $gameq->GetInfo();
-															
-															//echo print_r($info1,true).cr;
-															$server_data  = array_merge($server_data ,$info1);
-															if ($info1['Players'] > 0) {
-																$total_players += $info1['Players'];
-																$sub_cmd = 'GetPlayers';
-																$server_data['players']  = $gameq->GetPlayers( ) ;
-																}
-														}
-													catch( Exception $e )
-														{
-															$Exception = $e;
-															if (strpos($Exception,'Failed to read any data from socket')) {
-																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
-														}
-						
-														$error = date("d/m/Y h:i:sa").' ('.$server_data['host'].':'.$server_data['port'].') '.$Exception;
-														//sprintf("[%14.14s]",$str2)
-														$mask = "%17.17s %-30.30s \n";
-														file_put_contents(LOG,$error.cr,FILE_APPEND);
-														}
-					}
-		$gameq->Disconnect( );			
-		$return[$server_data['host_name']] = $server_data;
-		return $return;*/
-	}
-// no filter start
-	//else{
+	
 			if(isset($cmds['ip'])) {
 				$ip = $cmds['ip'];
 			}
@@ -450,8 +356,7 @@ function game_detail() {
 					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 				}
 					$servers = $db->get_results($sql);
-					//$server_count = count($servers);
-					//$server_count1 = count($output); //running servers
+					
 						
 						foreach ($servers as $server) {
 										//$key = array_search('100', array_column($userdb, 'uid'));
@@ -540,7 +445,7 @@ function game_detail() {
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 				$return['general']['total_size_raw'] = floatval($tsize);
 				return $return;
-		//}
+		
 }		
 function all($cmds) {
 	//get the lot
