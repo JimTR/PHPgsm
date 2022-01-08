@@ -84,8 +84,8 @@ foreach ($arr as  $v) {
                                 //echo $type.PHP_EOL;
                                 $count=0;
                                 if($count == 0){
-                                   if($type =='IP') {$v = "<table style='width:30%;'><tr><td style='width:50%;text-align:center;'>IP Address</td><td>Ban Period</td></tr>";}
-                                   else {$v = "<table style='width:30%;'><tr><td style='width:50%;text-align:center;'>User ID</td><td>Ban Period</td></tr>";}     
+                                   if($type =='IP') {$v = "<table style='width:45%;'><tr><td style='width:50%;text-align:center;'>IP Address</td><td>Ban Period</td></tr>";}
+                                   else {$v = "<table style='width:45%;'><tr><td style='width:50%;text-align:center;'>User ID</td><td>Ban Period</td></tr>";}     
                                  } 
 				
 				$count = intval($data[1]);

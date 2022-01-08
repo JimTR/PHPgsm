@@ -11,6 +11,7 @@ $console['VAC secure mode disabled.'] = '<span style="color:orange;">VAC secure 
 $console['Writing'] = '<span style="color:cyan;">Writing </span>'; 
 $console['not present; '] = '<span style="color:orange;">not present; </span>';
 $console['not executing.'] = '<span style="color:red;">not executing.</span>';
+$console['nextlevel'] =  '<span style="color:cyan;">nextlevel</span>';
 $console['Server is hibernating'] = '<span style="color:cyan;">Server is hibernating</span>';
 $console['server is hibernating'] = '<span style="color:cyan;">server is hibernating</span>';
 $console['Server waking up from hibernation'] = '<span style="color:cyan;">Server waking up from hibernation</span>';
@@ -68,4 +69,9 @@ $console['for rcon hacking attempts'] = '<span style="color:orange;">for rcon ha
 $console['Banning'] = '<span style="color:red;">Banning</span>'; 
 $console['Attempted to create unknown entity type'] = '<span style="color:orange;">Attempted to create unknown entity type</span>';
 $console['Can\'t init'] = '<span style="color:red;">Can\'t init</span>';
+$console['Couldn\'t open'] = '<span style="color:red;">Couldn\'t open</span>';
+$console['was not found'] = '<span style="color:red;">was not found</span>';
+$console['coop'] = '<span style="color:cyan;">coop</span>';
+$console['deathmatch'] = '<span style="color:cyan;">deathmatch</span>';
+$console['SV_ActivateServer'] = '<span style="color:cyan;">SV_ActivateServer</span>';
 ?>
