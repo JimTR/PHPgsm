@@ -426,7 +426,13 @@ function game_detail() {
 												$server['cpu'] = 0;
 												$server['online'] = 'Offline';
 												$server['size'] = formatBytes(floatval($size)*1024,2);
-												$return[$server['fname']][$server['host_name']] = $server;
+												if (isset($cmds['filter'])) {
+													// run a different array
+													$return['server'] = $server;
+												}
+												else {
+													$return[$server['fname']][$server['host_name']] = $server;
+												}
 										} 
 						}	
 						$du = shell_exec('du -s '.dirname($server['location']));
