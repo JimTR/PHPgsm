@@ -296,8 +296,7 @@ function game_detail() {
 	$total_players = 0;
 	$total_bots = 0;
 	$total_slots = 0;
-	$sql = 'select * from server1 where fname like "'.$cmds['server'].'" order by server_name ASC';
-	$total_s = $database->num_rows($sql);
+	
 	
 			if(isset($cmds['ip'])) {
 				$ip = $cmds['ip'];
@@ -445,7 +444,7 @@ function game_detail() {
 				$return['general']['total_bots'] = $total_bots;
 				$return['general']['used_slots'] = $total_players+$total_bots;
 				$return['general']['total_slots'] = $total_slots;
-				$return['general']['total_servers'] = $total_s;
+				$return['general']['total_servers'] = $server_count;
 				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
