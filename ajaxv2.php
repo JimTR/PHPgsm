@@ -1480,11 +1480,13 @@ else {
 function add_steamid($players) {
 	if (count($players)) {
 	// we have players
+	$emoji = new Emoji;
+	$database = new db();
 	orderBy($players,'Frags','d'); // score order
 	foreach ($players as $k=>$v) {
 		//loop  add flag & country $v being the player array 
 		// don't update player here let scanlog do it
-		$players[$k]['Name'] =$emoji->Encode($v['Name']);
+		$players[$k]['Name']=$emoji->Encode($v['Name']);
 		$player_data = $database->get_row($sql.$database->escape($players[$k]['Name']).'"'); // player info from db
 		if (!empty($player_data)) {
 			// here we go
