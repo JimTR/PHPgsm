@@ -415,8 +415,13 @@ function game_detail() {
 															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 															continue;
 													}
-													
+													if (isset($cmds['filter'])) {
+														// run a different array
+														$return['server'] = $server;
+													}
+												else {	
 													$return[$server['fname']][$server['host_name']] = $server;
+												}
 													$i++;
 										}
 										else {
