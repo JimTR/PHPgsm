@@ -79,11 +79,11 @@ else {
 	else {
 		if (isset($cmds)) {
 			$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
-			$method .='/GET';
+			$method .='/GET ';
 		}
 		else {
 			$cmds = convert_to_argv($_GET,"",true);
-			$method = 'GET';
+			$method = 'GET ';
 		}
 	}
 }
