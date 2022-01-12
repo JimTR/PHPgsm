@@ -155,7 +155,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 					//
 					$logline .= " $k => $v".cr;
 				}
-				file_put_contents(LOG,$logline,FILE_APPEND);
+				//file_put_contents(LOG,$logline,FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
 				
 			}
