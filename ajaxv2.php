@@ -50,7 +50,7 @@ if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER[
                         //echo 'auth on'.cr;
                         }
                         else{
-							$HTTP_AUTH = ' insecure requst ';
+							$HTTP_AUTH = ' HTTP_AUTH off ';
 						}
 if(is_cli()) {
 	$valid = 1; // we trust the console
