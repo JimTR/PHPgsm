@@ -50,7 +50,7 @@ if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER[
                         //echo 'auth on'.cr;
                         }
                         else{
-							$HTTP_AUTH = ' insecure requst ';
+							$HTTP_AUTH = ' HTTP_AUTH off ';
 						}
 if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -79,11 +79,11 @@ else {
 	else {
 		if (isset($cmds)) {
 			$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
-			$method .='/GET';
+			$method .='/GET ';
 		}
 		else {
 			$cmds = convert_to_argv($_GET,"",true);
-			$method = 'GET';
+			$method = 'GET ';
 		}
 	}
 }
@@ -97,7 +97,7 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $rip = $_SERVER['REMOTE_ADDR'];
-$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr. print_r($_SERVER,true).cr;
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
@@ -155,7 +155,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 					//
 					$logline .= " $k => $v".cr;
 				}
-				file_put_contents(LOG,$logline,FILE_APPEND);
+				//file_put_contents(LOG,$logline,FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
 				
 			}
@@ -165,7 +165,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				foreach ($cmds as $k => $v) {
 					$logline .= " $k => $v".cr;
 				}
-				   file_put_contents(LOG,$logline,FILE_APPEND); 
+				   //file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo file_get_contents($cmds['file']);
 				}
 			exit;	

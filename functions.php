@@ -257,34 +257,23 @@ function get_user_info () {
 		}
     //die(print_r($user));
 	exec("quota 2> /dev/null",$quota,$ret);
-	//print_r($quota);
-	//die();
-	$q_len = count($quota)-1;
-	if (isset($quota[1])){
+	if (isset($quota[3])){
 		// user has quota
-		$tmp =trim($quota[$q_len]);
-		$tmp = explode(' ',$tmp);
+		$tmp = trim($quota[3]);
+		$tmp = array_values(array_filter(explode(" ",$tmp),'strlen'));
+		$tmp[] = $tmp[1]-$tmp[0]; 
 		foreach ($tmp as $k => $v) {
-                if (empty(trim($v))) {
-                   unset($tmp[$k]);
-                }
+			$item = dataSize($v*1024);
+			if($k <> 3) {
+				$tmp[$k] = $item;
 			}
-			if(is_numeric($tmp[0])) {
-                $q_len=count($quota)-2;
-                array_unshift($tmp,trim($quota[$q_len]));
-                //print_r($tmp);
-        }
-
-        $tmp = array_values($tmp);
-        // now all renumbered
-        $used = dataSize($tmp[1]*1024);
-        $total = dataSize($tmp[2]*1024);
-        $free = dataSize(($tmp[2]*1024)-($tmp[1]*1024));
-        $user['quota_used'] = $used;
-        $user['quota'] = $total; 
-        $user['quota_free'] = $free;
+		}
+        
+        $user['quota_used'] = $tmp[0];
+        $user['quota'] = $tmp[1]; 
+        $user['quota_free'] = $tmp[6];
        
-}
+	}
 	else {
 			if(isset($Disk_info['home_free'])){
 				$free =floatval( $Disk_info['home_free'])+floatval($Disk_info['boot_free']).' GB';
