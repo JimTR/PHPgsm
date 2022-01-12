@@ -165,7 +165,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				foreach ($cmds as $k => $v) {
 					$logline .= " $k => $v".cr;
 				}
-				   file_put_contents(LOG,$logline,FILE_APPEND); 
+				   //file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo file_get_contents($cmds['file']);
 				}
 			exit;	
