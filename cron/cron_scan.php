@@ -145,7 +145,11 @@ if ($file == 'all') {
 			
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
+			$logfile = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			$secure = $run['url'].':'.$run['bport'].'/ajax_send.php';
+			$exe = '?url='.$run['url'].':'.$run['bport']."/ajaxv2.php&query=action=get_file:file=$logfile";
+			$path = $secure.$exe.cr;
+			//$path = $run['url'].':'.$run['bport']."/ajaxv2.php?action=get_file&file=$logfile"; //used for screen log
 					}
 		$tmp = geturl($path);
 		if(debug) {
