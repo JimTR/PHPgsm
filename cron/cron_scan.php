@@ -147,8 +147,8 @@ if ($file == 'all') {
 		else {
 			$logfile = $run['location'].'/log/console/'.$run['host_name'].'-console.log';
 			$secure = $run['url'].':'.$run['bport'].'/ajax_send.php';
-			$exe = '?url='.$run['url'].':'.$run['bport']."/ajaxv2.php&query=action=get_file:file=$logfile";
-			$path = $secure.$exe.cr;
+			$exe = '?url='.$run['url'].':'.$run['bport']."/ajaxv2.php&query=action=get_file:file=$logfile&output=";
+			$path = $secure.$exe;
 			//$path = $run['url'].':'.$run['bport']."/ajaxv2.php?action=get_file&file=$logfile"; //used for screen log
 					}
 		$tmp = geturl($path);
