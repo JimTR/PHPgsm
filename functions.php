@@ -273,8 +273,8 @@ function get_user_info () {
 	}
 	else {
 			if(isset($Disk_info['home_free'])){
-				$free =floatval( $Disk_info['home_free'])+floatval($Disk_info['boot_free']).' GB';
-				$user['quota'] = $Disk_info['home_size'];	
+				//$free =floatval( $Disk_info['home_free'])+floatval($Disk_info['boot_free']).' GB';
+				$user['quota'] = $Disk_info['root_size'];	
 				$user['quota_free'] = $free;
 				$user['disk_locations'] = 2;
 			}
@@ -435,15 +435,15 @@ function get_disk_info() {
 	/* return disk info as array
 	//echo 'root stuff ! or no quota !'.cr;
 	*/ 
-exec('df -h /',$root,$ret); //need this for sdd or sep system partition
+exec('df  /',$root,$ret); //need this for sdd or sep system partition
 unset ($root[0]);
 $root = array_values($root);
 $root = array_values(array_filter(preg_split('/(\s)/', $root[0])));
-exec('df -h /home',$home,$ret); //got the stuff
+exec('df  /home',$home,$ret); //got the stuff
 unset($home[0]);
 $home = array_values($home);
 $home = array_values(array_filter(preg_split('/(\s)/', $home[0])));
-exec('df -h /boot',$boot,$ret); //got the stuff
+exec('df  /boot',$boot,$ret); //got the stuff
 unset($boot[0]);
 $boot = array_values($boot);
 //$home = explode("   ",$home[0]);
@@ -460,9 +460,10 @@ if($boot == $root) {
 //die();
 	if(isset($root)) {
 		$disk_info['root_filesystem'] = trim($root[0]);
-		$disk_info['root_size'] = trim($root[1]);
-		$disk_info['root_used'] = trim($root[2]);
-		$disk_info['root_free'] = trim($root[3]);
+		$disk_info['root_size'] = dataSize(trim($root[0]) *1024);
+		$disk_info['root_size_raw'] = trim($root[1]);
+		$disk_info['root_used'] = dataSize(trim($root[2])*1024);;
+		$disk_info['root_free'] = dataSize(trim($root[3])*1024);
 		$disk_info['root_pc'] = trim($root[4]);
 		$disk_info['root_mount'] = trim($root[5]);
 	}
@@ -470,18 +471,18 @@ if($boot == $root) {
 	if(isset($home)) {
 		//echo 'oh home is set'.cr;
 		$disk_info['home_filesystem'] = trim($home[0]);
-		$disk_info['home_size'] = trim($home[1]);
-		$disk_info['home_used'] = trim($home[2]);
-		$disk_info['home_free'] = trim($home[3]);
+		$disk_info['home_size'] = dataSize(trim($home[1])*1024);
+		$disk_info['home_used'] = dataSize(trim($home[2])*1024);
+		$disk_info['home_free'] = dataSize(trim($home[3])*1024);
 		$disk_info['home_pc'] = trim($home[4]);
 		$disk_info['home_mount'] = trim($home[5]);
 	}
 	if(isset($boot)) {
 		//echo 'oh home is set'.cr;
 		$disk_info['boot_filesystem'] = trim($boot[0]);
-		$disk_info['boot_size'] = trim($boot[1]);
-		$disk_info['boot_used'] = trim($boot[2]);
-		$disk_info['boot_free'] = trim($boot[3]);
+		$disk_info['boot_size'] = dataSize(trim($boot[1])*1024);
+		$disk_info['boot_used'] = dataSize(trim($boot[2])*1024);
+		$disk_info['boot_free'] = dataSize(trim($boot[3])*1024);
 		$disk_info['boot_pc'] = trim($boot[4]);
 		$disk_info['boot_mount'] = trim($boot[5]);
 	}
