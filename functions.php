@@ -230,11 +230,12 @@ function get_user_info () {
     unlink("testFile");
     $user = posix_getpwuid($user_id);
 	$user['level'] =check_sudo($user['name']);
-	//print_r($user);
 	$groupid = $user['gid'];
 	$groupinfo = posix_getgrgid($groupid);
-	$user['group'] = $groupinfo;
-	if (!empty($groupinfo['members'])) {$user['members'] = $groupinfo['members'];}
+	//$user['group'] = $groupinfo;
+	if (!empty($groupinfo['members'])) {
+		$user['members'] = $groupinfo['members'];
+	}
 	$gecos = explode(',',$user['gecos']); // split data
 	unset($user['gecos']);
 	foreach ($gecos as $k => $v) {
@@ -262,16 +263,12 @@ function get_user_info () {
 		$tmp = trim($quota[3]);
 		$tmp = array_values(array_filter(explode(" ",$tmp),'strlen'));
 		$tmp[] = $tmp[1]-$tmp[0]; 
-		foreach ($tmp as $k => $v) {
-			$item = dataSize($v*1024);
-			if($k <> 3) {
-				$tmp[$k] = $item;
-			}
-		}
-        
-        $user['quota_used'] = $tmp[0];
-        $user['quota'] = $tmp[1]; 
-        $user['quota_free'] = $tmp[6];
+		$user['quota_used'] = dataSize($tmp[0]*1024);
+        $user['quota_used_raw'] = $tmp[0];
+        $user['quota'] = dataSize($tmp[1]*1024);
+        $user['quota_raw'] =$tmp[1]; 
+        $user['quota_free'] = dataSize($tmp[6]*1024);
+        $user['quota_free_raw'] = $tmp[6];        
        
 	}
 	else {
