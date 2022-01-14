@@ -97,8 +97,8 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $entry = rtrim($entry);
-if(isset($_SERVER['REMOTER_ADDR'])) {
-	$rip = $_SERVER['REMOTER_ADDR'];
+if(isset($_SERVER['REMOTE_ADDR'])) {
+	$rip = $_SERVER['REMOTE_ADDR'];
 }
 else {
 	$rip = 'Not Known';
