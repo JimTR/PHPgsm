@@ -450,7 +450,7 @@ $boot = array_values($boot);
 $boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
 if($home[0] == $root[0]) {
 	//$home matches $root
-	unset($home);
+	//unset($home);
 	}
 if($boot == $root) {
 	//$boot matches $root;
