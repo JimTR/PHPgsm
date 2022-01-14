@@ -97,6 +97,14 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $entry = rtrim($entry);
+if(isset($_SERVER['REMOTER_ADDR'])) {
+	$rip = $_SERVER['REMOTER_ADDR'];
+}
+else {
+	$rip = 'Not Known';
+}
+$logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
+file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "all" :
