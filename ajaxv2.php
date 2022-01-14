@@ -45,12 +45,12 @@ $valid = $database->num_rows($sql); // get result if the ip can use the data the
 if ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ){$valid=1;}
 if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
                         //$cmds['valid'] = true;
-                        $HTTP_AUTH =' HTTP_AUTH on ';
+                        $HTTP_AUTH ='http_auth=>on ';
                          //file_put_contents(LOG,$logline,FILE_APPEND);
                         //echo 'auth on'.cr;
                         }
                         else{
-							$HTTP_AUTH = ' HTTP_AUTH off ';
+							$HTTP_AUTH = 'http_auth=>off ';
 						}
 if(is_cli()) {
 	$valid = 1; // we trust the console
@@ -97,7 +97,7 @@ foreach ($cmds as $k=>$v) {
 	$entry .="$k=>$v ";
 }
 $rip = $_SERVER['REMOTE_ADDR'];
-$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
+$logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
