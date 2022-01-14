@@ -374,7 +374,7 @@ function game_detail() {
 						file_put_contents(LOG,$error.cr,FILE_APPEND);
 					}
 				}
-				$total_slots  += $server['MaxPlayers'];	
+				if (isset($server['MaxPlayers'])) {$total_slots  += $server['MaxPlayers'];}	
 				$pid = $output[$run_record][0];
 				$server['mem'] = $output[$run_record][2];
 				$server['cpu'] = $output[$run_record][1];
