@@ -273,7 +273,7 @@ function get_user_info () {
 	}
 	else {
 			if(isset($Disk_info['home_free'])){
-				//$free =floatval( $Disk_info['home_free'])+floatval($Disk_info['boot_free']).' GB';
+				$free =floatval( $Disk_info['home_free']);
 				$user['quota'] = $Disk_info['root_size'];	
 				$user['quota_free'] = $free;
 				$user['disk_locations'] = 2;
