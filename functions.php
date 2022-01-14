@@ -459,12 +459,13 @@ if($boot == $root) {
 
 //die();
 	if(isset($root)) {
-		print_r($root);
 		$disk_info['root_filesystem'] = trim($root[0]);
 		$disk_info['root_size'] = dataSize(floatval($root[1]) *1024);
 		$disk_info['root_size_raw'] = trim($root[1]);
-		$disk_info['root_used'] = dataSize(floatval($root[2])*1024);;
+		$disk_info['root_used'] = dataSize(floatval($root[2])*1024);
+		$disk_info['root_used_raw'] = trim($root[2]);
 		$disk_info['root_free'] = dataSize(floatval($root[3])*1024);
+		$disk_info['root_free_raw'] = trim($root[3]);
 		$disk_info['root_pc'] = trim($root[4]);
 		$disk_info['root_mount'] = trim($root[5]);
 	}
@@ -473,8 +474,11 @@ if($boot == $root) {
 		//echo 'oh home is set'.cr;
 		$disk_info['home_filesystem'] = trim($home[0]);
 		$disk_info['home_size'] = dataSize(floatval($home[1])*1024);
+		$disk_info['home_size_raw'] = trim($home[1]);
 		$disk_info['home_used'] = dataSize(floatval($home[2])*1024);
+		$disk_info['home_used_raw'] = trim($home[2]);
 		$disk_info['home_free'] = dataSize(floatval($home[3])*1024);
+		$disk_info['home_free_raw'] = trim($home[3]);
 		$disk_info['home_pc'] = trim($home[4]);
 		$disk_info['home_mount'] = trim($home[5]);
 	}
@@ -482,12 +486,15 @@ if($boot == $root) {
 		//echo 'oh home is set'.cr;
 		$disk_info['boot_filesystem'] = trim($boot[0]);
 		$disk_info['boot_size'] = dataSize(floatval($boot[1])*1024);
+		$disk_info['boot_size_raw'] = trim($boot[1]);
 		$disk_info['boot_used'] = dataSize(floatval($boot[2])*1024);
+		$disk_info['boot_size_raw'] = trim($boot[2]);
 		$disk_info['boot_free'] = dataSize(floatval($boot[3])*1024);
+		$disk_info['boot_free_raw'] = trim($boot[3]);
 		$disk_info['boot_pc'] = trim($boot[4]);
 		$disk_info['boot_mount'] = trim($boot[5]);
 	}
-	print_r($disk_info);	
+	//print_r($disk_info);	
 	return $disk_info;
 }
 function format_num ($string) {
