@@ -274,8 +274,9 @@ function get_user_info () {
 	else {
 			if(isset($Disk_info['home_free'])){
 				$free =floatval( $Disk_info['home_free']);
-				$user['quota'] = $Disk_info['root_size'];	
-				$user['quota_free'] = $free;
+				$user['quota'] = $Disk_info['root_size'];
+				$user['quota_used'] = $disk_info['root_used']; 	
+				$user['quota_free'] = $Disk_info['root_free'];
 				$user['disk_locations'] = 2;
 			}
 			else {
