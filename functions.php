@@ -197,7 +197,7 @@ function get_cpu_info() {
 		$local = shell_exec('hostname -I');
 		$local = str_replace(' ', ', ',trim($local));
 		$all_ip =explode(',',$local);
-		if ($settings['router_ip'] == true) {
+		if (isset($settings['router_ip']) and $settings['router_ip'] == true) {
 			// get outer ip
 			//echo 'hit this'.cr;
 			//print_r($settings);
