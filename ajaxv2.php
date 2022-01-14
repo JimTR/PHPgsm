@@ -377,7 +377,7 @@ function game_detail() {
 						if (strpos($Exception,'Failed to read any data from socket')) {
 							$Exception = 'Failed to read any data from socket (Game Detail=>'.$sub_cmd.')';
 						}
-						$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
+						$error = date("d-m-Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
 						$mask = "%17.17s %-30.30s \n";
 						file_put_contents(LOG,$error.cr,FILE_APPEND);
 					}
@@ -392,7 +392,7 @@ function game_detail() {
 				$size = str_replace($server['location'],'',$du);
 				$server['size'] = formatBytes(floatval($size)*1024,2);
 				if (empty($server['host_name'])) {
-					$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
+					$logline =date("d-m-Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
 					file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
 					continue;
 				}
@@ -741,7 +741,7 @@ catch( Exception $e ) {
 	if (strpos($Exception,'Failed to read any data from socket')) {
 		$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
 	}
-	 $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
+	 $error = date("d-m-Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
 	 //sprintf("[%14.14s]",$str2)
 	$mask = "%17.17s %-30.30s \n";
 	file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
