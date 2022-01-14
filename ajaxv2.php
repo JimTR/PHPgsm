@@ -43,7 +43,7 @@ $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_AD
 //echo $sql.'<br>';
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
 $sql = 'select * from allowed users where `ip` = '.ip2long($_SERVER['REMOTE_ADDR']); // this should not happen but just incase some one tries it
-$valid +=  $database->num_rows($sql); // needs a minimum of 1 
+//$valid +=  $database->num_rows($sql); // needs a minimum of 1 
 //if ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ){$valid=1;} //dev code
 if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
      // command has arrived via ajax-send so should be good
