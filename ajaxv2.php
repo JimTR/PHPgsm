@@ -338,7 +338,7 @@ function game_detail() {
 			echo "IP to check is $ip".cr;
 			print_r($server_count);
 		} 
-		if ($server_count['host'] <> $ip){
+		if ($server_no['host'] <> $ip){
 			$return = $cmds['server'].' is not hosted here';
 			return $return;
 		}    
