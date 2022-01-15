@@ -355,6 +355,7 @@ function game_detail() {
 		}
 		$servers = $db->get_results($sql);
 		foreach ($servers as $server) {
+			unset ($server['id']);
 			//$key = array_search('100', array_column($userdb, 'uid'));
 			$run_record = get_key($server['host_name'],$output) ;					
 			if (get_key($server['host_name'],$output) >= 0) {
