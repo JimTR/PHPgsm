@@ -102,7 +102,7 @@ if(isset($_SERVER['REMOTE_ADDR'])) {
 	$rip = $_SERVER['REMOTE_ADDR'];
 }
 else {
-	$rip = 'Not Known';
+	$rip = "UnKnown\t";
 }
 $logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
