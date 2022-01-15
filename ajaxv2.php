@@ -431,7 +431,7 @@ function game_detail() {
 	}
 	// add computed items
 	$return['general']['server_id'] = $cmds['server'];
-	$return['general']['live_servers'] = $i;
+	$return['general']['live_servers'] = count($output);
 	$return['general']['total_players'] = $total_players;
 	$return['general']['total_bots'] = $total_bots;
 	$return['general']['used_slots'] = $total_players+$total_bots;
