@@ -336,7 +336,7 @@ function game_detail() {
 		// nothing running
 		if ($cmds['debug']) {
 			echo "IP to check is $ip".cr;
-			print_r($server_count);
+			print_r($server_no);
 		} 
 		if ($server_no['host'] <> $ip){
 			$return = $cmds['server'].' is not hosted here';
@@ -408,7 +408,9 @@ function game_detail() {
 				else {	
 					$return[$server['fname']][$server['host_name']] = $server;
 				}
+				if($server['running'] = 1) {
 				$i++;
+			}
 			}
 			else {
 				$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
@@ -431,7 +433,7 @@ function game_detail() {
 	}
 	// add computed items
 	$return['general']['server_id'] = $cmds['server'];
-	$return['general']['live_servers'] = count($output);
+	$return['general']['live_servers'] = $i;
 	$return['general']['total_players'] = $total_players;
 	$return['general']['total_bots'] = $total_bots;
 	$return['general']['used_slots'] = $total_players+$total_bots;
