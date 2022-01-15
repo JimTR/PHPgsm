@@ -56,6 +56,7 @@ if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
+	$method = 'argv';
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
