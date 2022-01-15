@@ -334,6 +334,10 @@ function game_detail() {
 	if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
 	if(empty($output)) {
 		// nothing running
+		if ($cmds['debug']) {
+			echo "IP to check is $ip".cr;
+			print_r($server_count);
+		} 
 		if ($server_count['host'] <> $ip){
 			$return = $cmds['server'].' is not hosted here';
 			return $return;
