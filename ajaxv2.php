@@ -408,7 +408,7 @@ function game_detail() {
 				else {	
 					$return[$server['fname']][$server['host_name']] = $server;
 				}
-				if($server['running'] = 1) {
+				if($server['running'] == '1') {
 				$i++;
 			}
 			}
