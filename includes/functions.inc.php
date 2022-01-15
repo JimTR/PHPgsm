@@ -1223,7 +1223,7 @@ $user=trim($user);
 // centos = wheel not sudo
 $j= shell_exec('getent group sudo | cut -d: -f4');
 $yes= strpos($j, $user);
-if ($yes ===0 or $yes>1) {
+if ($yes ===0 or $yes>1 or $user='root') {
 return true;
 }
 else {   
