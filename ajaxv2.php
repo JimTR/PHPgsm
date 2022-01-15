@@ -342,7 +342,7 @@ function game_detail() {
 			$return = $cmds['server'].' is not hosted here';
 			return $return;
 		}    
-		$du = shell_exec('du -s '.dirname($server_count['location']));
+		$du = shell_exec('du -s '.dirname($server_no['location']));
 		list ($tsize,$location) = explode(" ",$du);
 	}
 	else{
