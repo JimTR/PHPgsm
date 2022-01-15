@@ -340,7 +340,14 @@ function getVersion($app, $apt=false) {
 			if ($x) {
 				$dbtype = ' (MariaDB)';
 			}
-		}		
+			
+		}
+		 else if ($app == 'tmpreaper') {
+             shell_exec('tmpreaper 2> tr.txt');
+             $output = file_get_contents('tr.txt');
+             unlink('tr.txt');
+        }
+		
 			else{
 				$output = shell_exec($app. '  2> /dev/null'); 
 			}
