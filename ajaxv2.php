@@ -451,7 +451,7 @@ function game_detail() {
 function all($cmds) {
 	//get the lot
 	global $database;
-	$return=get_cpu_info();
+	$return = get_cpu_info();
 	$return = array_merge($return,get_software_info($database));
 	$return = array_merge($return,get_disk_info());
 	$return = array_merge($return,get_mem_info());
