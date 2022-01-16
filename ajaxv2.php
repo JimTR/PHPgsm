@@ -546,8 +546,9 @@ function exescreen ($cmds) {
 		}
 	}	
 	else {
+			chdir($server['location']);
 			$cmd = $server['startcmd']. ' sp';
-                        echo "non phpgsm server stopping with $cmd"; 
+            echo "non phpgsm server stopping with $cmd"; 
 		}
 			exec($cmd,$content,$ret_val);
 			$return = 'Stopping Server '.$server['host_name'];
