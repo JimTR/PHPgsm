@@ -56,7 +56,7 @@ if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
-	$method = 'argv';
+	$method = 'ARGV';
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
@@ -102,8 +102,9 @@ if(isset($_SERVER['REMOTE_ADDR'])) {
 	$rip = $_SERVER['REMOTE_ADDR'];
 }
 else {
-	$rip = "UnKnown\t";
+	$rip = "UnKnown \t";
 }
+
 $logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
 file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
@@ -457,6 +458,11 @@ function all($cmds) {
 	$return = array_merge($return,get_user_info($return));
 	$tmp = game_detail();
 	$add = $tmp['general'];
+	unset($tmp['general']);
+	$games = $tmp[$cmds['server']];
+	if ($cmds['debug']) {
+		print_r($games);
+	}
 	$x = floatval($return['quota_used']); // get size
 	$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 	$return = array_merge($return,$add);
