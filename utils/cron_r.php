@@ -122,7 +122,7 @@ foreach ($games as $game) {
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
 				$output = geturl($cmd);
-				$output = str_replace('^[[0','',$output);
+				$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 				echo $output;
 				file_put_contents(LOG,$output.cr,FILE_APPEND); //see what is comming back
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
