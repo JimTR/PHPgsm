@@ -515,12 +515,14 @@ function exescreen ($cmds) {
 				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
 				exec($cmd); // open session
 				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+				exec($cmd);
 			}
 			else {
 				//lgsm ??
 				$cmd = $server['startcmd'].' st';
+				geturl("https://emandjim.co.uk/tmux.php");
 			}
-			exec($cmd);
+			
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
 			$update['starttime'] = time();
@@ -611,9 +613,13 @@ function exescreen ($cmds) {
 				// should we just start or quit ??
 				break;
 			}
-			
+			if (strtolower($server['managed_by']) == 'phpgsm'){	
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.trim($cmds['text']).'^M"';
 			$return = $cmd;
+			}
+			else {
+				//$cmd =
+			} 
 			exec($cmd);
 		  	$return = 'Command Sent'; // send console command
 			break;
