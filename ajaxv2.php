@@ -519,8 +519,8 @@ function exescreen ($cmds) {
 			}
 			else {
 				//lgsm ??
-				$cmd = $server['startcmd'].' st';
-				geturl("https://emandjim.co.uk/tmux.php");
+				$cmd = $server['startcmd'].'?option=st';
+				geturl("cmd");
 			}
 			
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
@@ -549,7 +549,7 @@ function exescreen ($cmds) {
 	}	
 	else {
 			chdir($server['location']);
-			$cmd = $server['startcmd']. ' sp';
+			$cmd = $server['startcmd']. '?option=sp';
             echo "non phpgsm server stopping with $cmd"; 
 		}
 			exec($cmd,$content,$ret_val);
@@ -618,7 +618,8 @@ function exescreen ($cmds) {
 			$return = $cmd;
 			}
 			else {
-				//$cmd =
+				$cmd = $server['startcmd']. '?option=sd&text='.$cmds['text'];
+				geturl($cmd);
 			} 
 			exec($cmd);
 		  	$return = 'Command Sent'; // send console command
