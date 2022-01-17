@@ -43,6 +43,13 @@ if (!isset($argv)) {
 	echo 'Wrong Enviroment';
 	exit;
 }
+if(empty($argv[1])) {
+	echo 'no server ID supplied'.cr;
+	exit;
+}
+else {
+	$server_id = argv[1];
+} 
 $host= gethostname();
 $ip = gethostbyname($host);
 $ip = geturl('https://api.ipify.org');
@@ -70,10 +77,10 @@ if (count($localIPs) >1) {
 			// more
 		} 
 	}
-	$sql .='('.$subsql.") and enabled=1 and is_steam=1 and `fname` = 'ickleh' order by server_name ASC";
+	$sql .='('.$subsql.") and enabled=1 and is_steam=1 and `fname` = $server_id order by server_name ASC";
 }
 else {
-	$sql = 'select * from server1 where host like "'.$ip.'%" and is_steam=1 and `fname` = "ickleh" order by server_name ASC';
+	$sql = "select * from server1 where host like \"$ip%\" and is_steam=1 and `fname` = $server_id order by server_name ASC";
 }
 $res = $database->get_results($sql);
 foreach ($res as $data) {
@@ -103,7 +110,6 @@ foreach ($res as $data) {
 			$update['rbuildid'] = $remote['public']['buildid']; 
 			$update['rserver_update']= $remote['public']['timeupdated'];
 			$update['server_update']= $man_check['update'];
-			//echo 'app id '.$local['update'].cr;
 			$where['server_id'] = $local['appid']; // update all servers with that app with the current build 
 			$database->update('servers',$update,$where);
 			echo cr.'Details for '.$local['name'].' ('.$local['appid'].')'.cr;
