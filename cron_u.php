@@ -75,11 +75,12 @@ foreach ($localIPs as $lip) {
 									// more
 								} 
 							}
-							$sql .='('.$subsql.") and enabled=1 and is_steam=1 and `fname' = 'ickleh' order by server_name ASC";
+							$sql .='('.$subsql.") and enabled=1 and is_steam=1 and `fname` = 'ickleh' order by server_name ASC";
 						}
 						else {
 							$sql = 'select * from server1 where host like "'.$ip.'%" and is_steam=1 and `fname` = "ickleh" order by server_name ASC';
 						}
+echo $sql.cr;
 	$res = $database->get_results($sql);
 	
 	foreach ($res as $data) {
@@ -194,12 +195,15 @@ foreach ($localIPs as $lip) {
  * $appid is the server/game code to  check
  */ 	
  
-$cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
+$cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit '; //|  sed \'1,/branches/d\'';
 $data= shell_exec($cmd);
-file_put_contents("$appid.txt","\"AppState\"\n$data");
-$kv = VDFParse("$appid".'txt');
-unlink("$appid"."txt");
-return  $kv['appstate'];
+//echo $data.cr;
+file_put_contents("$appid.txt",$data);
+$kv = VDFParse("$appid".'.txt');
+unlink("$appid".".txt");
+//print_r($kv[$appid]['depots']['branches']);
+//die();
+return  $kv[$appid]['depots']['branches'];
 
 }
 
