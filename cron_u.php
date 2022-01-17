@@ -77,10 +77,10 @@ if (count($localIPs) >1) {
 			// more
 		} 
 	}
-	$sql .='('.$subsql.") and enabled=1 and is_steam=1 and  fname = \"$server_id\" order by server_name ASC";
+	$sql .='('.$subsql.") and enabled=1 and is_steam=1 and  fname = '$server_id' order by server_name ASC";
 }
 else {
-	$sql = "select * from server1 where host like \"$ip%\" and is_steam=1 and fname = \"$server_id\" order by server_name ASC";
+	$sql = "select * from server1 where host like \"$ip%\" and is_steam=1 and fname = '$server_id' order by server_name ASC";
 }
 echo $sql.cr;
 $res = $database->get_results($sql);
