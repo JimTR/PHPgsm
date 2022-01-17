@@ -180,7 +180,7 @@ function check_branch($appid,$steamcmd) {
 $cmd = "$steamcmd +app_info_update 1 +app_info_print $appid +quit "; 
 $data= shell_exec($cmd);
 file_put_contents("$appid.txt",$data);
-$kv = VDFParse("$appid..txt");
+$kv = VDFParse("$appid.txt");
 unlink("$appid.txt");
 return  $kv[$appid]['depots']['branches']; // just send the branches back
 }
