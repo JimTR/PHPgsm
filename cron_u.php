@@ -48,7 +48,7 @@ if(empty($argv[1])) {
 	exit;
 }
 else {
-	$server_id = argv[1];
+	$server_id = $argv[1];
 } 
 $host= gethostname();
 $ip = gethostbyname($host);
