@@ -75,10 +75,10 @@ foreach ($localIPs as $lip) {
 									// more
 								} 
 							}
-							$sql .='('.$subsql.") and enabled=1 and is_steam=1 order by server_name ASC";
+							$sql .='('.$subsql.") and enabled=1 and is_steam=1 and `fname' = 'ickleh' order by server_name ASC";
 						}
 						else {
-							$sql = 'select * from server1 where host like "'.$ip.'%" and is_steam=1 order by server_name ASC';
+							$sql = 'select * from server1 where host like "'.$ip.'%" and is_steam=1 and `fname` = "ickleh" order by server_name ASC';
 						}
 	$res = $database->get_results($sql);
 	
@@ -197,8 +197,8 @@ foreach ($localIPs as $lip) {
 $cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
 $data= shell_exec($cmd);
 file_put_contents("$appid.txt","\"AppState\"\n$data");
-$kv = VDFParse("$appid.txt");
-unlink("$appid.txt");
+$kv = VDFParse("$appid".'txt');
+unlink("$appid"."txt");
 return  $kv['appstate'];
 
 }
