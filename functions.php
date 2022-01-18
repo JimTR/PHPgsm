@@ -184,7 +184,7 @@ function get_cpu_info() {
 		$key = str_replace(['(',')'],'',$key);
 		$cpu2[trim(strtolower($key))] = trim($tmpline[1]);
 	}
-	print_r($cpu2); 	
+	//print_r($cpu2); 	
 		foreach ($cpu as &$value) {
 			//read data
 			$i = strpos($value,":",0);
