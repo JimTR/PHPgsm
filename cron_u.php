@@ -86,7 +86,9 @@ else {
 $res = $database->get_results($sql);
 foreach ($res as $data) {
      $acf_loc = $data['location'].'/steamapps/appmanifest_'.$data['server_id'].'.acf';
-	 $disk_size = trim(shell_exec('du -s '.$data['location']));
+	 $temp =shell_exec('du -s '.$data['location']);
+	 $disk_size = intval($temp)*1024;
+	 //$disk_size = intval(trim(shell_exec('du -s '.$data['location']))*10);
 	 $ds = substr($disk_size,0,strpos($disk_size,'/'));
 	 $ds = trim($ds); 
      $local =  check_local($acf_loc);
@@ -160,7 +162,7 @@ foreach ($res as $data) {
 	unset($update);
 	unset($where);
 	$where['host_name'] = $data['host_name'];
-	$update['disk_space'] = $ds;
+	$update['disk_space'] = $disk_size;
 	$database->update('servers',$update,$where);
 }
 
