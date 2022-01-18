@@ -14,10 +14,11 @@ function get_boot_time() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
    
 //Combined
-$days = floor($tmp[0]/86400);
-$hours = floor($tmp[0] / 3600);
-$mins = floor(($tmp[0] - ($hours*3600)) / 60);
-$secs = floor($tmp[0] % 60);
+$value = intval($tmp[0]);
+$days = floor($value/86400);
+$hours = floor($value / 3600);
+$mins = floor(($value - ($hours*3600)) / 60);
+$secs = floor($value % 60);
 if($days>0){
           //echo $days;exit;
           $hours = $hours - ($days * 24);
@@ -176,7 +177,14 @@ function get_cpu_info() {
 	//get cpu info & return as array
 	global $settings;
 	$cpu = file('/proc/cpuinfo');
-		
+	exec('lscpu',$tmp,$ret);
+	foreach ($tmp as $k => $v) {
+		$tmpline = explode(':',$v);
+		$key = str_replace(' ','_',$tmpline[0]);
+		$key = str_replace(['(',')'],'',$key);
+		$cpu2[trim(strtolower($key))] = trim($tmpline[1]);
+	}
+	print_r($cpu2); 	
 		foreach ($cpu as &$value) {
 			//read data
 			$i = strpos($value,":",0);
@@ -351,30 +359,27 @@ function getVersion($app, $apt=false) {
 			else{
 				$output = shell_exec($app. '  2> /dev/null'); 
 			}
-		} 
-  preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
-  //echo 'try 1 '.print_r($version,true).cr;
-  if (empty($version[0])) {
-		
-		preg_match('@[0-9]+\.[0-9]+@', $output, $version);
-		//echo 'try 2 '.print_r($version,true).cr;
-	}
-  if (empty($version[0])) {
-	   
-	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
-	    //echo 'try 3 '.print_r($version,true).cr; 
-   }
-   
- 
-  if (!empty($version[0])) {
-	
-  return $version[0].$dbtype; 
-}
-else {
-	//echo $app.PHP_EOL;
-	//print_r($version);
-	return 'Not Installed';
-}
+		}
+	if(!empty($output)) {	 
+		preg_match('@[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+		//echo 'try 1 '.print_r($version,true).cr;
+		if (empty($version[0])) {
+			preg_match('@[0-9]+\.[0-9]+@', $output, $version);
+			//echo 'try 2 '.print_r($version,true).cr;
+		}
+		if (empty($version[0])) {
+	   	    preg_match('@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+@', $output, $version);
+			//echo 'try 3 '.print_r($version,true).cr; 
+		}
+		if (!empty($version[0])) {
+		return $version[0].$dbtype; 
+		}
+		else {
+			//echo $app.PHP_EOL;
+			//print_r($version);
+			return 'Not Installed';
+		}
+	}	
 }
 function get_software_info($database) {
 	/* return software info as array
@@ -462,7 +467,7 @@ if($home[0] == $root[0]) {
 	}
 if($boot == $root) {
 	//$boot matches $root;
-	unset($root);
+	//unset($root);
 	}
 
 //die();
