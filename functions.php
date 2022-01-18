@@ -216,9 +216,8 @@ function get_cpu_info() {
 		$cpu_info['local_ip'] = $all_ip[0];
 		$cpu_info['ips'] = $local;
 		if(isset($public_ip)){
-		
 			$cpu_info['ips']="$public_ip, ".$cpu_info['ips'];
-			}
+		}
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
 			$cpu_info['reboot'] ='yes';
@@ -226,6 +225,8 @@ function get_cpu_info() {
 		else {
 			$cpu_info['reboot'] ='no';
 		}
+		$cpu_info = array_merge($cpu_info,$cpu2);
+		//print_r($cpu_info);
 		return $cpu_info;
 }
 function get_user_info () {
