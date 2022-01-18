@@ -379,7 +379,8 @@ function getVersion($app, $apt=false) {
 			//print_r($version);
 			return 'Not Installed';
 		}
-	}	
+	}
+	return 'Not Installed';	
 }
 function get_software_info($database) {
 	/* return software info as array
