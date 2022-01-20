@@ -152,6 +152,7 @@ else {
 		// exit;
 	 }
         //echo cr.print_r($installing).cr;
+       // print_r($diskinfo);
      $table = new Table(CONSOLE_TABLE_ALIGN_RIGHT,borders);
 	 $cmd = 'locate -e appmanifest_'.$installing['app_id'].'.acf';
 	 //echo $cmd.cr;	
@@ -159,29 +160,25 @@ else {
      //echo 'locations '.print_r($g_locate,true).cr;
      if (count($g_locate)) {
 		$table->setHeaders(array('Mount Point','Free Space' ));
-		echo 'Available disk space'.cr;
+		//echo 'Available disk space'.cr;
 //do here
- if (isset($diskinfo['boot_free'])) {
+ if (isset($diskinfo['root_free'])) {
 	 //echo $diskinfo['boot_mount'].' ( '.$diskinfo['boot_free'].' free )'.cr;
-	 $table->addRow(array($diskinfo['boot_mount'],$diskinfo['boot_free']));
+	 $table->addRow(array($diskinfo['root_mount'],$diskinfo['root_free']));
 	 
  }
  if(isset($diskinfo['home_free']))  {
 	 //echo $diskinfo['home_mount'].' ( '.$diskinfo['home_free'].' free )'.cr;
 	 $table->addRow(array($diskinfo['home_mount'],$diskinfo['home_free']));
 	 }
- echo $table->getTable();
+ //echo $table->getTable();
 		  
 	 }
 	 else {
 		echo $output[1].cr;
 	}
-//print_r($installing);
 	  if (intval($installing['disk_size']) >= intval($installing['quota_free'])) {
-			 $table = new Table(
-			CONSOLE_TABLE_ALIGN_RIGHT,
-			array('horizontal' => '', 'vertical' => '', 'intersection' => '')
-			);
+		$table = new Table(CONSOLE_TABLE_ALIGN_RIGHT,'');
 		$game_size = floatval($installing['disk_size']);
 		$remaining = floatval($installing['quota_free']);
 		$need = $game_size -$remaining;
@@ -469,18 +466,19 @@ else {
 }
 
 	 if(!isset($data['validate'] )) {
-			$cmd ='steamcmd +login '.$data['steam_user'].' '.$data['steam_password'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' +quit';
+			$cmd ='steamcmd  +force_install_dir '.$data['path']. ' +login '.$data['steam_user'].' '.$data['steam_password'].' +app_update '.$data['app_id'].$branch.' +quit';
 		}
 	else {
-			$cmd ='steamcmd +login '.$data['steam_user'].' '.$data['steam_password'].' +force_install_dir '.$data['path'].' +app_update '.$data['app_id'].$branch.' validate +quit';
+			$cmd ='steamcmd  +force_install_dir '.$data['path']. ' +login '.$data['steam_user'].' '.$data['steam_password'].' +app_update '.$data['app_id'].$branch.' validate +quit';
 		}		
 		
          $scmd = 'screen -S install -p 0  -X stuff "'.$cmd.'^M"';
+         //die($scmd);
          exec ($scmd); // get steamcmd running
-       
+		//~/phpgsm/utils$ steamcmd  +force_install_dir /home/jim/phpgsm/utils/fof +login anonymous  +app_update 295230 +quit
 $file='install.log';
-$lastpos = 14;
-cursor('off');
+$lastpos = 16;
+//cursor('off');
 $pidof = trim(shell_exec('pidof steamcmd  2>/dev/null'));
 while( $pidof == '') {
 	$pidof = trim(shell_exec('pidof steamcmd'));
@@ -493,7 +491,7 @@ while (!file_exists($file) ){
 		
 	}
 		retry:
-		  $fgc = file_get_contents($file);
+		 $fgc = file_get_contents($file);
 		if($fgc == false) {goto retry;}
 		$fgc = explode(cr,trim(file_get_contents($file)));
 		//print_r($fgc);

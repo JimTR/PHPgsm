@@ -1,6 +1,6 @@
 <?php
 //echo 'functions 1.04';
-	$version = "2.041";
+	$version = "2.042";
 	$build = "39171-3654919592";	
 if (isset($argv)) {
 		$runfile = basename($argv[0]);
@@ -200,6 +200,12 @@ function get_cpu_info() {
 		}
 		$cpu_info['processors'] = trim(shell_exec(" grep -c ^processor /proc/cpuinfo")); // count processors
 		$load = sys_getloadavg();
+		$cpu_info['load_1_min'] = $load[0];
+		$cpu_info['load_10_min'] = $load[1];
+		$cpu_info['load_15_min'] = $load[2];
+		$cpu_info['load_1_min_pc'] = ($load[0]*100)/$cpu2['cpus'];
+		$cpu_info['load_10_min_pc'] = ($load[1]*100)/$cpu2['cpus'];
+		$cpu_info['load_15_min_pc'] = ($load[2]*100)/$cpu2['cpus'];
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['boot_time'] = get_boot_time();
 		$local = shell_exec('hostname -I');
@@ -458,9 +464,10 @@ exec('df  /home',$home,$ret); //got the stuff
 unset($home[0]);
 $home = array_values($home);
 $home = array_values(array_filter(preg_split('/(\s)/', $home[0])));
-exec('df  /boot',$boot,$ret); //got the stuff
-unset($boot[0]);
-$boot = array_values($boot);
+exec('df  |grep boot',$boot,$ret); //got the stuff
+//print_r($boot);
+//unset($boot[0]);
+//$boot = array_values($boot);
 //$home = explode("   ",$home[0]);
 $boot = array_values(array_filter(preg_split('/(\s)/', $boot[0])));
 if($home[0] == $root[0]) {

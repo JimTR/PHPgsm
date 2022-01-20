@@ -46,7 +46,7 @@ if(is_cli()) {
 else {
 	die ('Wrong enviroment');
 }
-$ip = file_get_contents("http://ipecho.net/plain"); // get ip
+$ip = geturl("http://ipecho.net/plain"); // get ip
 //$servers = $database->get_results('select * from server1 where base_ip like "'.$ip.'"'); 
 //print_r($servers);
 if(empty($cmds['action'])) {

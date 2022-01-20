@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "50620-708908795";
-	$version = "2.07";
-$time = "1639647799";
+	$build = "48870-3798094526";
+$version = "2.071";
+$time = "1642399999";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -253,7 +253,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 }
 
 function lsof($cmds) {
-						
+						$cmd = 'ps a -o pid,%cpu,%mem,cmd | grep '.$cmds['filter'].'.cfg |grep srcds_linux | grep -v grep';
 						$tpid = shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
 						$get_pid = explode(' ',trim($tpid));
 						$pid= $get_pid[0];
