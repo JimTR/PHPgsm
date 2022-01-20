@@ -510,7 +510,7 @@ if($boot == $root) {
 		$disk_info['boot_size'] = dataSize(floatval($boot[1])*1024);
 		$disk_info['boot_size_raw'] = trim($boot[1]);
 		$disk_info['boot_used'] = dataSize(floatval($boot[2])*1024);
-		$disk_info['boot_size_raw'] = trim($boot[2]);
+		$disk_info['boot_used_raw'] = trim($boot[2]);
 		$disk_info['boot_free'] = dataSize(floatval($boot[3])*1024);
 		$disk_info['boot_free_raw'] = trim($boot[3]);
 		$disk_info['boot_pc'] = trim($boot[4]);
