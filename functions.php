@@ -226,10 +226,10 @@ function get_cpu_info() {
 		}
 		$cpu_info['process'] = trim(shell_exec("/bin/ps -e | wc -l"));
 		if (is_file('/var/run/reboot-required') === true) {
-			$cpu_info['reboot'] ='yes';
+			$cpu_info['reboot'] ='Yes';
 		}
 		else {
-			$cpu_info['reboot'] ='no';
+			$cpu_info['reboot'] ='No';
 		}
 		$cpu_info = array_merge($cpu_info,$cpu2);
 		//print_r($cpu_info);
