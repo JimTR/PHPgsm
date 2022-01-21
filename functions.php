@@ -202,7 +202,7 @@ function get_cpu_info() {
 		$load = sys_getloadavg();
 		$cpu_info['load_1_min'] = number_format($load[0],2);
 		$cpu_info['load_10_min'] = number_format($load[1],2);
-		$cpu_info['load_15_min'] = number_format($load[2]);
+		$cpu_info['load_15_min'] = number_format($load[2],2);
 		$cpu_info['load_1_min_pc'] = ($load[0]*100)/$cpu2['cpus'];
 		$cpu_info['load_10_min_pc'] = ($load[1]*100)/$cpu2['cpus'];
 		$cpu_info['load_15_min_pc'] = ($load[2]*100)/$cpu2['cpus'];
