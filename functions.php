@@ -873,7 +873,7 @@ foreach ($res as $data) {
 	$info = $Query->GetInfo();
 	$rules = $Query->GetRules( );
 	$Query->Disconnect( );
-	print_r($info);
+	//print_r($info);
 	
 	}
 	require_once('GameQ/Autoloader.php'); //load GameQ
