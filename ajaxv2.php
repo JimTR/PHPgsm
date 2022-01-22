@@ -621,7 +621,7 @@ function exescreen ($cmds) {
 			exec($cmd);
 			}
 			else {
-				$cmd = $server['startcmd']. '?option=sd&text='.$cmds['text'];
+				$cmd = $server['startcmd']. '?option=sd&text='.urlencode($cmds['text']);
 				geturl($cmd);
 			} 
 			
