@@ -466,7 +466,7 @@ function all($cmds) {
 	$x = floatval($return['quota_used']); // get size
 	$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 	$return = array_merge($return,$add);
-	$return = array_merge($return,$games);
+	$return['servers'] = $games;
 	return $return;
 }	
 		
