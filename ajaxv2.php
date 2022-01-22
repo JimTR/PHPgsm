@@ -520,7 +520,7 @@ function exescreen ($cmds) {
 			else {
 				//lgsm ??
 				$cmd = $server['startcmd'].'?option=st';
-				$err = geturl("cmd");
+				$err = geturl("$cmd");
 				file_put_contents('lgsm.txt',$err,FILE_APPEND);
 			}
 			
@@ -617,12 +617,13 @@ function exescreen ($cmds) {
 			if (strtolower($server['managed_by']) == 'phpgsm'){	
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.trim($cmds['text']).'^M"';
 			$return = $cmd;
+			exec($cmd);
 			}
 			else {
 				$cmd = $server['startcmd']. '?option=sd&text='.$cmds['text'];
 				geturl($cmd);
 			} 
-			exec($cmd);
+			
 		  	$return = 'Command Sent'; // send console command
 			break;
 			
