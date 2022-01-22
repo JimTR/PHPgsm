@@ -547,21 +547,22 @@ function exescreen ($cmds) {
 				$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			break;
 		}
+		exec($cmd,$content,$ret_val);
+		if ($ret_val == 0) {
+				// tidy up screen 
+			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+			exec($cmd);
+		}
 	}	
 	else {
 			chdir($server['location']);
 			$cmd = $server['startcmd']. '?option=sp';
             echo "non phpgsm server stopping with $cmd"; 
+            geturl($cmd);
 		}
-			exec($cmd,$content,$ret_val);
+			
 			$return = 'Stopping Server '.$server['host_name'];
-			if ($ret_val == 0) {
-				// tidy up screen 
-			if (strtolower($server['managed_by']) == 'phpgsm'){	
-				$cmd = 'screen -X -S '.$server['host_name'] .' quit';
-				exec($cmd);
-			}
-			}
+			
 			$update['running'] = 0;
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
