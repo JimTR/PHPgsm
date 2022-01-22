@@ -520,7 +520,8 @@ function exescreen ($cmds) {
 			else {
 				//lgsm ??
 				$cmd = $server['startcmd'].'?option=st';
-				geturl("cmd");
+				$err = geturl("cmd");
+				file_put_contents('lgsm.txt',$err,FILE_APPEND);
 			}
 			
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
