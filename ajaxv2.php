@@ -574,13 +574,20 @@ function exescreen ($cmds) {
 				$return = $exe.' is not running, starting instead';
 				// should we just start or quit ??
 				chdir($server['location']);
-				$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-				rename($logFile, $savedLogfile); // log rotate
-				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-				exec($cmd); // open session
-				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
-				exec($cmd);
+				if (strtolower($server['managed_by']) == 'phpgsm'){	
+					$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+					$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+					rename($logFile, $savedLogfile); // log rotate
+					$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+					exec($cmd); // open session
+					$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+					exec($cmd);
+				}
+				else {
+					//lgsm
+					$cmd = $server['startcmd'].'?option=st';
+					geturl($cmd);
+				}	
 				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 				$update['running'] = 1;
 				$update['starttime'] = time();
@@ -589,18 +596,24 @@ function exescreen ($cmds) {
 				//$return = 'Starting Server '.$server['host_name'];
 				break;
 			}
-			
-			$cmd = 'screen -XS '.$server['host_name'] .' quit';
-			exec($cmd); // stop the server 
-			chdir($server['location']);
-			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-			rename($logFile, $savedLogfile); // log rotate
-			sleep(1); //slow the process up
-			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-			exec($cmd); // open session
-			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; 
-			exec($cmd); // restart the server
+			if (strtolower($server['managed_by']) == 'phpgsm'){	
+				$cmd = 'screen -XS '.$server['host_name'] .' quit';
+				exec($cmd); // stop the server 
+				chdir($server['location']);
+				$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				rename($logFile, $savedLogfile); // log rotate
+				sleep(1); //slow the process up
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+				exec($cmd); // open session
+				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; 
+				exec($cmd); // restart the server
+			}
+			else {
+				//lgsm
+				$cmd = $server['startcmd'].'?option=r';
+				geturl($cmd); 
+			}	
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
 			$update['starttime'] = time();
