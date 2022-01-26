@@ -234,6 +234,7 @@ function get_cpu_info() {
 		$cpu_info = array_merge($cpu_info,$cpu2);
 		//print_r($cpu_info);
 		unset($cpu_info['processor']);
+		$cpu_info['model_name'] = rtrim($cpu_info['model_name'],'CPU');
 		$cpu_info['cpu_MHz'] = number_format($cpu_info['cpu_MHz'],2,'.','');
 		return $cpu_info;
 }
