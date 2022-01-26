@@ -235,8 +235,14 @@ function get_cpu_info() {
 		//print_r($cpu_info);
 		unset($cpu_info['processor']);
 		$split_cpu = explode(' ',$cpu_info['model_name']);
-		//print_r($split_cpu);
-		$cpu_info['model_name'] = $split_cpu[0].' '.$split_cpu[1].' '.$split_cpu[2];
+		$vx='';
+		$key = array_search('CPU', $split_cpu);
+		for ($x = 0; $x < $key; $x++) {
+			//echo "The number is: $x".cr;
+			$vx .=$split_cpu[$x].' ';
+		}
+		
+		$cpu_info['model_name'] = trim($vx);
 		$cpu_info['cpu_MHz'] = number_format($cpu_info['cpu_MHz'],2,'.','');
 		return $cpu_info;
 }
