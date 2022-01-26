@@ -143,7 +143,7 @@ foreach ($res as $data) {
 				if ($settings['update'] = 1) {
 					echo 'Auto Update Set'.cr;
 					// use $install_path + game
-					$cmd = $steamcmd.' +force_install_dir '.$install_path.'/'.$data['game'].' +login anonymous +app_update '.$data['server_id'].' +quit';
+					$cmd = $steamcmd.' +force_install_dir '.$install_path.'/'.$data['game'].' +login anonymous +app_update '.$data['server_id'].' +quit 2>/dev/null';
 					$updatetxt = shell_exec($cmd);
 					// this appears to work so update the database ? or wait for the next run ?
 					echo $updatetxt.cr;
@@ -186,7 +186,7 @@ function check_branch($appid,$steamcmd) {
  * $steamcmd is the full path to steamcmd
  */ 	
  
-$cmd = "$steamcmd +app_info_update 1 +app_info_print $appid +quit "; 
+$cmd = "$steamcmd +app_info_update 1 +app_info_print $appid +quit 2>/dev/null"; 
 $data= shell_exec($cmd);
 file_put_contents("$appid.txt",$data);
 $kv = VDFParse("$appid.txt");
