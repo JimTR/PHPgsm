@@ -50,7 +50,7 @@ class Sortplayers  extends Base{
 			//echo 'set sortkeys to $args<br>';
 		} else 
 		if (isset($args['sortkey'])) {
-			echo 'not so sure on this<br>';
+			//echo 'not so sure on this<br>';
 			$sortkeys = array('key' => $args['sortkey'], 'order' => isset($args['order']) ? $args['order'] : self::DEFAULT_ORDER);
 		}
 		//echo "in class sortkeys =>".print_r($sortkeys,true).'<br>';

@@ -106,12 +106,14 @@ class Secondstohuman extends Base
             } elseif (in_array($key, $this->options[self::OPTION_TIMEKEYS])) {
                 // Make sure the value is a float (throws E_WARNING in PHP 7.1+)
                 $value = floatval($value);
+		$value = (int) round($value);
+		//echo $value;
+		//die();
                 // We match one of the keys we are wanting to convert so add it and move on
                 $result[sprintf(self::RESULT_KEY, $key)] = sprintf(
-                    "%02d:%02d:%02d",
-                    floor($value / 3600),
-                    ($value / 60) % 60,
-                    $value % 60
+                    "%02d:%02d:%02d",$value / 3600,
+                       ((int)($value / 60) % 60),
+			$value % 60
                 );
             }
         }
