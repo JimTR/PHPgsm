@@ -42,7 +42,7 @@ class Secondstohuman extends Base
     /**
      * The result key added when applying this filter to a result
      */
-    const RESULT_KEY = 'gq_%s_human';
+    const RESULT_KEY = '%s_f';
 
     /**
      * Holds the default 'time' keys from the response array.  This is key is usually 'time' from A2S responses
