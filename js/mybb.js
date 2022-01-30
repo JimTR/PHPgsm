@@ -143,7 +143,7 @@ for (var i in data1) {
   complete:function(data,data1){
 	 
     // console.log('hide loading '); 
-	setTimeout(online(url),timeout);
+	//setTimeout(online(url),timeout);
 	if (hide == 1 ) {
 		$('#loading').hide();
 		$('#game_block').show();
