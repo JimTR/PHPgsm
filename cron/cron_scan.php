@@ -268,7 +268,7 @@ function scan_log($server,$data) {
 		// save output
 		$log_line=trim($log_line);
 		$tmp = user_data($log_line);
-		$users[] = $tmp;
+		$users[$tmp['name']] = $tmp;
 		
 	}
 	
