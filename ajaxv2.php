@@ -631,14 +631,14 @@ function exescreen ($cmds) {
 			if (strtolower($server['managed_by']) == 'phpgsm'){	
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.trim($cmds['text']).'^M"';
 			$return = $cmd;
-			exec($cmd);
+			exec($cmd); // send console command
 			}
 			else {
 				$cmd = $server['startcmd']. '?option=sd&text='.urlencode($cmds['text']);
-				geturl($cmd);
+				geturl($cmd); // send console command
 			} 
 			
-		  	$return = 'Command Sent'; // send console command
+		  	$return = 'Command Sent'; 
 			break;
 			
 		case 'u':
