@@ -92,17 +92,21 @@ foreach ($games as $game) {
 
 	echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 	foreach ($restart as $game) {
+			$now =  date("d-m-Y h:i:sa");
+			$logline = "$now stopping with ".$game['restart'].'q'.cr;
+			file_put_contents(LOG,$logline,FILE_APPEND);
 			echo geturl($game['restart'].'q').cr; // stop server
 			//print_r($game);
 			$exe = './scanlog.php  -s'.$game['host_name'];
 			$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe); // run scanlog
 			$result = geturl($cmd);
+			$now =  date("d-m-Y h:i:sa");
 			if (!empty($result) ) {
-				file_put_contents(LOG,'Got some data back from '.$game['host_name'].cr,FILE_APPEND);
+				file_put_contents(LOG,"$date Scanlog returned some data for ".$game['host_name'].cr,FILE_APPEND);
 				echo $result.cr;
 			}
 			else {
-				file_put_contents(LOG,'Scanlog failed for '.$game['host_name'].cr,FILE_APPEND);
+				file_put_contents(LOG,"$now Scanlog failed for ".$game['host_name'].cr,FILE_APPEND);
 			}
 					 
 			// check updates
@@ -114,31 +118,40 @@ foreach ($games as $game) {
 				if(empty($steamcmd)) {
 					$steamcmd = './steamcmd'; // need to fix this as steamcmd may need to run as root
 					chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-					$log_line = 'moved to '.getcwd ( );
+					$log_line = "$now moved to ".getcwd ( );
 					file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 				}
 				
 				$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+				$now =  date("d-m-Y h:i:sa");
+				$logline = $now.' '.$game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd=';
+				$logline .= "sudo $steamcmd +login anonymous +force_install_dir ".$game['install_dir'].' +app_update '.$game['server_id'].' +quit'.cr;
+				file_put_contents(LOG,$logline);
 				$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
 				//echo 'will execute '.$cmd.cr; // update full url
 				$output = geturl($cmd);
 				$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 				echo $output;
+				$now =  date("d-m-Y h:i:sa");
 				file_put_contents(LOG,$output.cr,FILE_APPEND); //see what is comming back
 				$done[]=$game['install_dir']; // use this to test if update on core files has been done
 			}
 			// log prune
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
-			$log_line = 'Prune console logs for  '.$exe;
+			$log_line = $now ' Prune console logs for  tmpreaper  --mtime 1d '.$game['location'].'/log/console/';
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo geturl($cmd);
+			file_put_contents(LOG,$cmd.cr,FILE_APPEND);
 			$exe = urlencode('tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 			$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 			echo geturl($cmd);
 			$log_line = 'Prune steam log files for '.$exe;
 			file_put_contents(LOG,$log_line.cr,FILE_APPEND);
 			sleep(1);
+			$now = date("d-m-Y h:i:sa");
+			$logline = "$now retarting with ".$game['restart'].'s'.cr;
+			file_put_contents(LOG,$logline,FILE_APPEND);
 			echo geturl($game['restart'].'s').cr; // start server
 			}
 	     $log_line = print_r($done,true); //test array
