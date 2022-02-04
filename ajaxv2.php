@@ -664,7 +664,9 @@ function exe($cmds) {
 	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
-        //echo $cmds['cmd']." Match found".cr; 
+		$logline = date("d-m-Y h:i:s a"); 
+        $logline .= " function exe => ".$cmds['cmd'].cr;
+        file_put_contents(LOG,$logline,FILE_APPEND); 
         $can_do = true;
 		}
 	}
