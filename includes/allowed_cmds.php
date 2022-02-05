@@ -4,10 +4,10 @@
 * supply full paths if you wish (required if you are running something with elevated privs) 
 */
 $module = "allowed commands";
-$version = "1.00";
-$time = "1644054921";
-$allowed[] = 'steamcmd';
 $build = "381-3744133786";
+$version = "1.00";
+$time = "1644065288";
+$allowed[] = 'steamcmd';
 $allowed[] = 'tmpreaper';
 $allowed[] = 'scanlog.php';
 $allowed[] = 'cron_u.php';
