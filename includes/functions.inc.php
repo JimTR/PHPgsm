@@ -1,35 +1,13 @@
 <?PHP
 global $database;
-	$version = "2.00";
-	$build = "49064-2098552367";
-    function set_option($key, $val)
-    {
-        $db = Database::getDatabase();
-        $db->query('REPLACE INTO options (`key`, `value`) VALUES (:key:, :value:)', array('key' => $key, 'value' => $val));
-    }
-
-    function get_option($key, $default = null)
-    {
-        $db = Database::getDatabase();
-        $db->query('SELECT `value` FROM options WHERE `key` = :key:', array('key' => $key));
-        if($db->hasRows())
-            return $db->getValue();
-        else
-            return $default;
-    }
-
-    function delete_option($key)
-    {
-        $db = Database::getDatabase();
-        $db->query('DELETE FROM options WHERE `key` = :key:', array('key' => $key));
-        return $db->affectedRows();
-    }
+$module = "Web Functions";
+$build = "48470-315987274";
+$version = "2.00";
+$time = "1644050441";
 
     function printr($var,$return=false,$key='')
     {
-		
-       
-        if(is_cli()) {
+		if(is_cli()) {
 			$output='';
 			foreach($var as $k=>$v){
 				// parse array
@@ -1029,7 +1007,7 @@ function writeini ($ini_array,$file,$header,$name)
 		if(!isset($name)) {$name ="ini";} 
 		$writevar ="<?php
 /*********************************\ 
-". $header."
+$header
 \*********************************/\n";
 	foreach ($ini_array as $key => $val) {
       $writevar .=  "\$".$name."['" . $key . "'] = \"".$val."\";\r\n";
@@ -1121,15 +1099,6 @@ function return_tz($tz1)
 		
 		return $tzitem;
 }
-
-
-function ban_check ($user)
-{
-	if ($user->level === 'banned') {
-			   redirect( '/misc.php?action=2');
-		   }
-		   return;
-	   }
 	   
 function check_ip($ip) 
 {
@@ -1324,7 +1293,8 @@ function array_find($needle, array $haystack)
     return -1;
 }	
 
-function convert_to_argv ($type,$arraytype ='',$retain=false) {
+function convert_to_argv ($type,$arraytype ='',$retain=false) 
+{
 	/* convert $argv, $_GET and $_POST to an array
 	 * this allows the running code to reference command line options in a standard array
 	 * renames $argv[0] to file_name
@@ -1337,35 +1307,21 @@ function convert_to_argv ($type,$arraytype ='',$retain=false) {
 	$nums = false;
 	$filename =  pathinfo( __FILE__,PATHINFO_BASENAME);
 	foreach  ($type as $key => $value) {
-		//
-		//if ( $value == $filename ) {continue;} // strip out argv[0]
-		
 		 $value = str_replace("&",' ',$value); 
-		 
 		if (is_int($key)) {
 			// numeric key most likley cli ;)
 			if ( $value == $filename ) {
 				$key = 'file_name';
 				$cmds[$key] = $value;
-				
 				continue;
-				}
-               
-			if (!empty($arraytype)) {$nums = true;} // set numeric array keys
-				
-			
+			}
+            if (!empty($arraytype)) {$nums = true;} // set numeric array keys
 			else {
 				// convert web style
-                
-				$value = str_replace('&',' ',$value);
+            	$value = str_replace('&',' ',$value);
 				$x = strpos($value,'=');
 				if (empty($x)) {
-					// not written cmds correct
-					//echo 'value '.$value. ' incorrectly written'.PHP_EOL;
-					//echo 'example :- '.$filename.' <option>=<value>'.PHP_EOL;
 					$key = 'file_name';
-					//goto t1;
-					//die();
 					continue;
 				}
 				
@@ -1373,20 +1329,31 @@ function convert_to_argv ($type,$arraytype ='',$retain=false) {
 				$value =str_replace($key.'=','',$value);
 				$nums = false;
 			}
-			}
+		}
 		$key = strtolower($key);
 		 if ($retain == true ) {
 			$cmds[$key] = $value;
-}
-else{
-		$cmds[$key] = strtolower($value);
-	}
-		
+		}
+		else{
+			$cmds[$key] = strtolower($value);
+		}
 	}
 	if ($nums == true) {
 	$cmds = array_values($cmds);
+	}
+	if (isset($cmds)) {
+		return $cmds;
+	}
 }
-if (isset($cmds)) {
-	return $cmds;
-}
-}
+
+function my_exec($cmd, $input='')
+	{$proc=proc_open($cmd, array(0=>array('pipe', 'r'), 1=>array('pipe', 'w'), 2=>array('pipe', 'w')), $pipes);
+          fwrite($pipes[0], $input);fclose($pipes[0]);
+          $stdout=stream_get_contents($pipes[1]);fclose($pipes[1]);
+          $stderr=stream_get_contents($pipes[2]);fclose($pipes[2]);
+          $rtn=proc_close($proc);
+          return array('stdout'=>$stdout,
+                       'stderr'=>$stderr,
+                       'return'=>$rtn
+                      );
+	}

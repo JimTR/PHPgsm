@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-	$build = "48870-3798094526";
+$build = "49352-2115201055";
 $version = "2.071";
-$time = "1642399999";
+$time = "1644052984";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -364,6 +364,7 @@ function game_detail() {
 				$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
 				$kv = VDFParse($server['vdf_file']);
 				$server['vdf_data'] =$kv['AppState'];
+				//https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/api_id/<icon>.jpg
 				if ($server['running']) {
 					$server['online'] = 'Online';
 					try {
@@ -664,10 +665,10 @@ function exe($cmds) {
 	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
-		$logline = date("d-m-Y h:i:s a"); 
-        $logline .= " function exe => ".$cmds['cmd'].cr;
-        file_put_contents(LOG,$logline,FILE_APPEND); 
-        $can_do = true;
+			$logline = date("d-m-Y h:i:s"); 
+			$logline .= " function exe => ".$cmds['cmd'].cr;
+			file_put_contents(LOG,$logline,FILE_APPEND); 
+			$can_do = true;
 		}
 	}
 	if(empty($can_do)) {
@@ -682,31 +683,25 @@ function exe($cmds) {
 	 * 139 = segmentation
 	 */ 
 	
-		exec($cmds['cmd'],$output,$retval);
-	
+		//exec($cmds['cmd'],$output,$retval);
+		$output = my_exec($cmds['cmd'],'');
+		$debug = explode(cr,$output['stdout']);
 			if (isset($cmds['debug'])) {
-				//echo ' ready to do command '.$cmds['cmd'].cr;
-				//print_r($output);
-				foreach ($output as $line) {
+				foreach ($debug as $line) {
+					$return .= $line.cr;
+				}
+				$logline = date("d-m-Y h:i:s").'return from stderr = '.$output['stderr'].' return error level was '.$output['return'].cr; 
+				log_to(LOG,$logline); 
+				return $return;
+			}
+			else {
+			// test if no debug needs to return somthing on success
+				foreach ($debug as $line) {
 					$return .= $line.cr;
 				}
 				return $return;
-				//$return ; //.= $retval.cr; // put the return value in the array
-		}
-		else {
-		// test if no debug needs to return somthing on success
-			foreach ($output as $line) {
-				//$return .= $line.cr;
-				//if(strpos($line,'! App ')) {
-					$return = $line.cr;
-				//}
-				//$return ; //.= $retval.cr;
-				}
-	
-	return $return;
-}
- 
-		return false; // just in case anything slips through
+			}
+ 		return false; // just in case anything slips through
 	}
 }
 
