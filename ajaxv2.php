@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "49352-2115201055";
+$build = "49337-3726915313";
 $version = "2.071";
-$time = "1644052984";
+$time = "1644054157";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -666,8 +666,8 @@ function exe($cmds) {
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
 			$logline = date("d-m-Y h:i:s"); 
-			$logline .= " function exe => ".$cmds['cmd'].cr;
-			file_put_contents(LOG,$logline,FILE_APPEND); 
+			$logline .= " function exe => ".$cmds['cmd'];
+			log_to(LOG,$logline); 
 			$can_do = true;
 		}
 	}
@@ -682,7 +682,7 @@ function exe($cmds) {
 	 * 127 = file not found
 	 * 139 = segmentation
 	 */ 
-	
+		$return ='';
 		//exec($cmds['cmd'],$output,$retval);
 		$output = my_exec($cmds['cmd'],'');
 		$debug = explode(cr,$output['stdout']);
@@ -690,7 +690,7 @@ function exe($cmds) {
 				foreach ($debug as $line) {
 					$return .= $line.cr;
 				}
-				$logline = date("d-m-Y h:i:s").'return from stderr = '.$output['stderr'].' return error level was '.$output['return'].cr; 
+				$logline = date("d-m-Y h:i:s").' return from stderr = '.$output['stderr'].' return error level was '.$output['return']; 
 				log_to(LOG,$logline); 
 				return $return;
 			}
