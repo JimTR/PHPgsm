@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * ajax v2 to go with xml v2 & mybb.js perhaps
+ * ajax v2 used for testing functions & modules
  *  requires PHP  >= 7.4 
  */
 require_once 'includes/master.inc.php';
@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "49375-983762429";
-$version = "2.071";
-$time = "1644128416";
+$build = "49371-3630960833";
+$version = "2.078";
+$time = "1644130044";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -105,8 +105,8 @@ else {
 	$rip = "UnKnown \t";
 }
 
-$logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH".cr;
-file_put_contents(LOG,$logline,FILE_APPEND);
+$logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH";
+log_to(LOG,$logline);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "all" :
@@ -205,7 +205,7 @@ file_put_contents(LOG,$logline,FILE_APPEND);
 				    foreach ($cmds as $k => $v) {
 					$logline .= " $k => $v".cr;
 				}
-				   file_put_contents(LOG,$logline,FILE_APPEND); 
+				   log_to(LOG,trim($logline)); 
 					echo scanlog($cmds);
 					exit;
 		case "top" :
@@ -683,15 +683,16 @@ function exe($cmds) {
 	 * 139 = segmentation
 	 */ 
 		$return ='';
-		//exec($cmds['cmd'],$output,$retval);
-		$output = my_exec($cmds['cmd'],'');
+		$output = split_exec($cmds['cmd'],'');
 		$debug = explode(cr,$output['stdout']);
 			if (isset($cmds['debug'])) {
 				foreach ($debug as $line) {
 					$return .= $line.cr;
 				}
-				$logline = date("d-m-Y h:i:s").' return from stderr = '.$output['stderr'].' return error level was '.$output['return']; 
-				log_to(LOG,$logline); 
+				if(!empty($output['stderr'])) {
+					$logline = date("d-m-Y h:i:s").' exe had this error  = '.$output['stderr'].' return error level was '.$output['return'].' when running '.$cmds['cmd']; 
+					log_to(LOG,$logline);
+				} 
 				return $return;
 			}
 			else {
