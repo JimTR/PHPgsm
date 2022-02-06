@@ -114,8 +114,9 @@ function check_branch($appid) {
  * function to check and return steamcmd branches
  * part of cron_u
  * $appid is the server/game code to  check
- */ 	
-$cmd = '/usr/games/steamcmd +app_info_update 1 +app_info_print '.$appid.' +quit |  sed \'1,/branches/d\'';
+ */
+$steamcmd = trim(shell_exec('which steamcmd')); 	
+$cmd = "$steamcmd +app_info_update 1 +app_info_print $appid +quit".' |  sed \'1,/branches/d\'';
 $data= shell_exec($cmd);
 $data = str_replace('{','',$data);
 $data = str_replace('}','',$data);
