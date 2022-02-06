@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "49337-3726915313";
+$build = "49375-983762429";
 $version = "2.071";
-$time = "1644128389";
+$time = "1644128416";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -661,8 +661,8 @@ function exescreen ($cmds) {
 		
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
-	
-	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
+	include 'includes/allowed_cmds.php';
+	//$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
 			$logline = date("d-m-Y h:i:s"); 
