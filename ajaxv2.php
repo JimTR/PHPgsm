@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "49371-3630960833";
+$build = "50908-488049919";
 $version = "2.078";
-$time = "1644130044";
+$time = "1644482638";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -151,7 +151,8 @@ log_to(LOG,$logline);
 					echo cr;
 				}
 				exit;
-				
+		case "exetmux":
+					echo exetmux($cmds);
 		case "exe" :
 				echo exe($cmds);
 				exit;	
@@ -732,10 +733,10 @@ function check_services($cmds) {
 				$service = str_replace('[ + ]','',$service);
 				$id = trim($service);
 				if(isset($cmds['running']) and $cmds['running'] == 'true'){
-					$return[$id] = '✔ ';
+					$return[$id] = true;
 				}
 				elseif (!isset($cmds['running'])) {
-							$return[$id] = '✔ ';
+							$return[$id] = true;
 						}
 			
 		}
@@ -746,10 +747,10 @@ function check_services($cmds) {
 			$service = str_replace('[ - ]','',$service);
 			$id = trim($service);
 			if(isset($cmds['running']) and $cmds['running'] == 'false'){
-					$return[$id] = '✖';
+					$return[$id] = false;
 			}
 			elseif (!isset($cmds['running'])) {
-				$return[$id] = '✖';
+				$return[$id] = false;
 			}
 		}
 		//echo $key.' '.$service.cr;
@@ -1518,5 +1519,48 @@ function add_steamid($players) {
 	return $players;
 }
 return  false;
+}
+
+function exetmux($cmds) {
+	// open tmux windoze
+	global $database;
+	$exe =$cmds['server'];
+	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
+	$server = $database->get_row($sql); // pull results
+	switch ($server['binary_file']) {
+		case 'srcds_run':
+			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			break;
+		default:
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
+			break;
+	}
+	$is_running = shell_exec ($cmd); // are we running ?
+	switch ($cmds['cmd']) {
+		case 's':
+			if($is_running) {
+				return "$exe has an open window";
+			}
+			chdir($server['location']);
+			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+			rename($logFile, $savedLogfile); // log rotate
+			//if (strtolower($server['managed_by']) == 'phpgsm'){
+				$startcmd = $server['startcmd'];
+				// run native
+				//  tmux new-session -d -x "${sessionwidth}" -y "${sessionheight}" -s "${sessionname}" "${preexecutable} ${executable} ${startparameters}" 2> "${lgsmlogdir}/.${selfname}-tmux-error.tmp"
+				$cmd = "tmux new-session-d -s$exe $startcmd"; //let's get this show on the road !
+				//split_exec($cmd,'');
+				echo $cmd.cr;
+				$cmd = "tmux pipe-pane -o -t $exe \"exec cat >> '$logFile'\""; 
+				echo $cmd.cr;
+				
+			//}
+			//else {
+				//run lgsm
+			//}	
+			break;
+		case 'q':	
+	}
 }
 ?>
