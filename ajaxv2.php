@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "50908-488049919";
+$build = "50973-663824499";
 $version = "2.078";
-$time = "1644487687";
+$time = "1644487704";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -469,6 +469,8 @@ function all($cmds) {
 	$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 	$return = array_merge($return,$add);
 	$return['servers'] = $games;
+	$services = check_services();
+	$return['services'] = $services;
 	return $return;
 }	
 		
