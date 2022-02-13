@@ -78,7 +78,7 @@ try
 			$restart[] = $game;
 		}
 		else  {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
+			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&cmd=';
 			$check[] = $game; 
 		}
 	}
@@ -114,7 +114,14 @@ foreach ($restart as $game) {
 		}
 		$install_dir = $game['install_dir'];
 		$server_id = $game['server_id'];
-		$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		if(trim(strtolower($game['managed_by')) !== 'lgsm') {
+			// steam doesn't appear to worry about permissions at run time so sudo the command
+			$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		}
+		else {
+			// lgsm throws it's dollies out the pram if  any file is not owned by the user run, as the user
+			$exe = urlencode("$steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		}
 		$now =  date("d-m-Y h:i:sa");
 		log_to (LOG, "$now sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
