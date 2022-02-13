@@ -31,8 +31,10 @@ define('plus','%2B');
 define('space','%20');  
 require_once DOC_ROOT.'/includes/master.inc.php';
 $version = "2.03";
-$build = "6313-1092783628"; 
-include  DOC_ROOT.'/functions.php';
+$time = "1644734369";
+include  DOC_ROOT.'/functions.php'; // P.O.C functions
+$build = "6233-1294170559";
+include DOC_ROOT.'/includes/vdfparser.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -109,12 +111,12 @@ foreach ($restart as $game) {
 		if(empty($steamcmd)) {
 			$steamcmd = './steamcmd'; // need to fix this as steamcmd may need to run as root
 			chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-			$log_line = "$now moved to ".getcwd ( );
+			$log_line = "$now steamcmd not in user path moved to ".getcwd ( );
 			log_to(LOG,$log_line);
 		}
 		$install_dir = $game['install_dir'];
 		$server_id = $game['server_id'];
-		if(trim(strtolower($game['managed_by')) !== 'lgsm') {
+		if(trim(strtolower($game['managed_by'])) !== 'lgsm') {
 			// steam doesn't appear to worry about permissions at run time so sudo the command
 			$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		}
@@ -129,7 +131,7 @@ foreach ($restart as $game) {
 		$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 		echo $output.cr;
 		$now =  date("d-m-Y h:i:sa");
-		log_to(LOG,$output); //see what is comming back
+		log_to(LOG,$output); //see what is coming back
 		$done[]=$game['install_dir']; // use this to test if update on core files has been done
 	}
 	// log prune
