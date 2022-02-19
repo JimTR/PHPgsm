@@ -37,6 +37,7 @@
 	$longopts[]="restart:";
 	$longopts[] ="quit:";
 	$longopts[]="log:";
+	$longopts[]="loop::";
 	$options = getopt($shortopts,$longopts);
 	require_once 'includes/master.inc.php';
     include 'functions.php';
@@ -161,7 +162,7 @@ $cc = new Color();
 			$cmds['server'] = $options['quit'];
 		}
 		}
-	//if(isset($options['q'])) {$cmds['action'] = 'q';}
+	if(isset($options['loop'])) {$cmds['loop'] = '';}
 	$banner = "cli v $version-$build Noideer Software ©".date('Y').cr;
 	if ($cmds['action'] <> 'v'){
 		echo $cc->convert("%y$banner%n");
@@ -571,17 +572,28 @@ function help() {
     exit;
  }
  
- function games($data) {
+ function games($cmds) {
 	 // review games
-	 		//system('clear');
-	 		$Query = new SourceQuery( );
-	 		$cc = new Color();
-	 		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+	//system('clear');
+$x = 0;
+
+	$Query = new SourceQuery( );
+	$cc = new Color();
+	$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
-    $res = $database->get_results($sql); // pull results
-    //echo print_r($res,true).cr;
-    //^[[0;34mblue^[[0m
+    	$res = $database->get_results($sql); // pull results
+    //echo print_r($cmds,true).cr;
+loopcheck:
+    if(isset($cmds['loop'])) {
+	stream_set_blocking(STDIN, 1);
+	$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+	//system("clear");
+	$x++;
+	echo "\033[?25l";
+	
+	//echo 'loop enabled '.$x.cr;
+    }
     $table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
@@ -611,7 +623,7 @@ function help() {
 	$Query->Disconnect( );
 	//print_r($info);
 	if ($info['Players'] >0) {
-		$p1 = trim($info['Players']);
+		$p1 = trim($info['Players'])-trim($info['Bots']);
 		$info['Players'] = $cc->convert("%B$p1%n");
 		}
 		else {
@@ -625,16 +637,86 @@ function help() {
 	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 	//echo $playersd.cr;
 	$host = $cc->convert("%y".$info['HostName']."%n")	;
-	$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
+	#$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
+	$start_date = time2str($gdata['starttime']); 
 	$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
 	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
 	}
 	$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
 	$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
 	//$table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
+	echo "\0337"; // set cusor position
 	echo $table->getTable();
-    exit;
+	
+	if(isset($cmds['loop'])) {
+		while (FALSE == ($line = CheckSTDIN())){
+			sleep (2);
+			//echo $line.cr;
+			//echo "\033[4A";
+			echo "\0338";
+			//echo "\033[0J";
+			$res = $database->get_results($sql);
+			$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+			$table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")));
+			foreach ($res as $gdata) {
+				try {	 
+					$Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
+					$players = $Query->GetPlayers( ) ;
+					$info = $Query->GetInfo();
+					$rules = $Query->GetRules( );
+				}
+				catch( Exception $e ) {
+					$Exception = $e;
+					if (strpos($Exception,'Failed to read any data from socket')) {
+						$Exception = 'Failed to read any data from socket (module viewplayers)';
+					}
+					$error = date("d/m/Y h:i:sa").' ('.$gdata['host'].':'.$gdata['port'].') '.$Exception;
+					$Query->Disconnect( );
+					continue;
+				}
+				$Query->Disconnect( );
+				if ($info['Players'] >0) {
+					$p1 = trim($info['Players'])-trim($info['Bots']);
+					$info['Players'] = $cc->convert("%B$p1%n");
+				}
+				else {
+					$p1 = trim($info['Players']);
+					$info['Players'] = $cc->convert("%Y$p1%n");
+				}	
+				$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
+				if ($info['MaxPlayers'] <10){
+					$info['MaxPlayers'] = $info['MaxPlayers'].' ';
+				}
+				$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+				$host = $cc->convert("%y".$info['HostName']."%n")	;
+				$start_date = time2str($gdata['starttime']); 
+				$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
+			}
+			$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
+			$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
+			echo $table->getTable();
+			echo "\033[0J";
+			$x++;
+		}
+		
+		echo 'Thanks for watching ! '."\xf0\x9f\x98\x80\x0a\x00".cr;
+		echo "\033[?25h";
+	}
+    
  }
+  function dostuff() {
+	  echo <<<EOL
+
+         (__)
+         (oo)
+  /-------\/ Moooooo
+ / |     ||
+*  ||----||
+   ^^    ^^
+   
+EOL;
+//echo cr;
+  }
  
  function check_file($file_name) {
 	  // test file
@@ -732,4 +814,17 @@ function help() {
 		return $return;
 	}
 }
+
+function CheckSTDIN() {
+    $read = array(STDIN);
+    $wrte = NULL;
+    $expt = NULL;
+    $a = stream_select($read, $wrte, $expt, 0);
+    if ($a && in_array(STDIN, $read)) {
+        // you can read from STDIN now, it'll only be available if there is anything in STDIN
+        // you can return the value or pass it to global or class variable
+        return fread(STDIN, 1); // set your desired string length
+    } else return false;
+}
+
 ?>
