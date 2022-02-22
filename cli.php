@@ -59,11 +59,10 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
 	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
 	define( 'LOG',	'logs/ajax.log');
-
-$build = "27142-3684627863";
-
-$version = "2.071";
+$version = "2.072";
 	define ('cr',PHP_EOL);
+$time = "1645294445";
+$build = "30006-2015855331";
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 
@@ -575,89 +574,65 @@ function help() {
  function games($cmds) {
 	 // review games
 	//system('clear');
-$x = 0;
-
 	$Query = new SourceQuery( );
 	$cc = new Color();
 	$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 	$database = new db(); // connect to database
 	$sql = 'select * from servers where enabled ="1" and running="1" order by servers.host_name'; //select all enabled & running recorded servers
-    	$res = $database->get_results($sql); // pull results
-    //echo print_r($cmds,true).cr;
-loopcheck:
+   	$res = $database->get_results($sql); // pull results
     if(isset($cmds['loop'])) {
-	stream_set_blocking(STDIN, 1);
-	$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
-	//system("clear");
-	$x++;
-	echo "\033[?25l";
-	
-	//echo 'loop enabled '.$x.cr;
-    }
+		stream_set_blocking(STDIN, 1);
+		$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
+		system("clear"); //start from a known good point
+		echo "\033[?25l"; // turn cursor off
+	}
     $table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")));
     echo $cc->convert("%BGame Server Information%n").cr;
     foreach ($res as $gdata) {
-		 //echo print_r($gdata,true).cr;
-	try {	 
-		$Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
-		$players = $Query->GetPlayers( ) ;
-		$info = $Query->GetInfo();
-		$rules = $Query->GetRules( );
-	}
-	catch( Exception $e )
-					{
-						$Exception = $e;
-						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = 'Failed to read any data from socket (module viewplayers)';
-						}
-						
-						  $error = date("d/m/Y h:i:sa").' ('.$gdata['host'].':'.$gdata['port'].') '.$Exception;
-						  //sprintf("[%14.14s]",$str2)
-						  //echo $error.cr;
-						  $mask = "%17.17s %-30.30s \n";
-						 //file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
-						 $Query->Disconnect( );
-						 continue;
-						 
-					}
-	$Query->Disconnect( );
-	//print_r($info);
-	if ($info['Players'] >0) {
-		$p1 = trim($info['Players'])-trim($info['Bots']);
-		$info['Players'] = $cc->convert("%B$p1%n");
+		 try {	 
+			$Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
+			$players = $Query->GetPlayers( ) ;
+			$info = $Query->GetInfo();
+			$rules = $Query->GetRules( );
+		}
+		catch( Exception $e ) {
+			$Exception = $e;
+			if (strpos($Exception,'Failed to read any data from socket')) {
+				$Exception = 'Failed to read any data from socket (module viewplayers)';
+			}
+			$error = date("d/m/Y h:i:sa").' ('.$gdata['host'].':'.$gdata['port'].') '.$Exception;
+			$Query->Disconnect( );
+			continue;
+		}
+		$Query->Disconnect( );
+		if ($info['Players'] >0) {
+			$p1 = trim($info['Players'])-trim($info['Bots']);
+			$info['Players'] = $cc->convert("%Y$p1%n");
 		}
 		else {
 			$p1 = trim($info['Players']);
-		$info['Players'] = $cc->convert("%Y$p1%n");
+			$info['Players'] = $cc->convert("%B$p1%n");
 		}
 		$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
 		if ($info['MaxPlayers'] <10){
 			$info['MaxPlayers'] = $info['MaxPlayers'].' ';
 		}
-	$playersd =$info['Players'].'/'.$info['MaxPlayers'];
-	//echo $playersd.cr;
-	$host = $cc->convert("%y".$info['HostName']."%n")	;
-	#$start_date =date('g:ia \o\n l jS F Y \(e\)',$gdata['starttime']);
-	$start_date = time2str($gdata['starttime']); 
-	$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
-	//printf($headmask,"\e[38;5;82m".$info['HostName'],"\e[97m started at",date('g:ia \o\n l jS F Y \(e\)', $data['starttime']),"Players Online ".$playersd." Map - ".$info["Map"]);
+		$playersd =$info['Players'].'/'.$info['MaxPlayers'];
+		$host = $cc->convert("%y".$info['HostName']."%n")	;
+		$start_date = time2str($gdata['starttime']); 
+		$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
 	}
 	$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
 	$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
-	//$table->setAlign(2, CONSOLE_TABLE_ALIGN_RIGHT);
 	echo "\0337"; // set cusor position
 	echo $table->getTable();
-	
 	if(isset($cmds['loop'])) {
 		while (FALSE == ($line = CheckSTDIN())){
 			sleep (2);
-			//echo $line.cr;
-			//echo "\033[4A";
 			echo "\0338";
-			//echo "\033[0J";
 			$res = $database->get_results($sql);
 			$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
-			$table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")));
+			$table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")."\033[0K"));
 			foreach ($res as $gdata) {
 				try {	 
 					$Query->Connect( $gdata['host'], $gdata['port'], 1,  SourceQuery::SOURCE  );
@@ -677,11 +652,11 @@ loopcheck:
 				$Query->Disconnect( );
 				if ($info['Players'] >0) {
 					$p1 = trim($info['Players'])-trim($info['Bots']);
-					$info['Players'] = $cc->convert("%B$p1%n");
+					$info['Players'] = $cc->convert("%Y$p1%n");
 				}
 				else {
 					$p1 = trim($info['Players']);
-					$info['Players'] = $cc->convert("%Y$p1%n");
+					$info['Players'] = $cc->convert("%B$p1%n");
 				}	
 				$info['MaxPlayers'] = $cc->convert("%b".$info['MaxPlayers']."%n");
 				if ($info['MaxPlayers'] <10){
@@ -690,7 +665,7 @@ loopcheck:
 				$playersd =$info['Players'].'/'.$info['MaxPlayers'];
 				$host = $cc->convert("%y".$info['HostName']."%n")	;
 				$start_date = time2str($gdata['starttime']); 
-				$table->addRow(array($host,$start_date,$playersd,$info["Map"]));
+				$table->addRow(array($host,$start_date,$playersd,$info["Map"]."\033[0K"));
 			}
 			$table->setAlign(0, CONSOLE_TABLE_ALIGN_RIGHT);
 			$table->setAlign(3, CONSOLE_TABLE_ALIGN_RIGHT);
@@ -699,7 +674,7 @@ loopcheck:
 			$x++;
 		}
 		
-		echo 'Thanks for watching ! '."\xf0\x9f\x98\x80\x0a\x00".cr;
+		echo 'Thanks for watching ! '."\xf0\x9f\x98\x80\x0a\x00";
 		echo "\033[?25h";
 	}
     
@@ -715,7 +690,7 @@ loopcheck:
    ^^    ^^
    
 EOL;
-//echo cr;
+echo "\xf0\x9f\x92\xa9\x0a\x00";
   }
  
  function check_file($file_name) {
