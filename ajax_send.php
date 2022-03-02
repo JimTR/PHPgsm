@@ -24,8 +24,6 @@
 require ('includes/master.inc.php');
 include ('functions.php');
 // map ajaxv21.php to somewhere else (so ajaxv21.php's actual file name & location is only known to this script )
-//print_r($settings);
-//print_r($_SERVER);
 //$cmds =convert_to_argv($argv,"",true);
 $version = "1.012";
 	$build = "2519-2682779641";
