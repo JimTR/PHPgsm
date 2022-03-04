@@ -436,7 +436,7 @@ if ($uds == true) {
 	$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
 	$rt .= update_server($server);
 }
-$rt .= cr.'Processed '.$server.cr;
+$rt .= 'Processed '.$server.cr;
 return $rt;
 }
 if (!silent) {
