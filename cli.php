@@ -22,6 +22,7 @@
  * 
  * 
  */
+<<<<<<< HEAD
 $shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
 $longopts[]="debug::";
 $longopts[]="help::";
@@ -64,6 +65,53 @@ $build = "30006-2015855331";
 define ('CR',PHP_EOL);
 define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 if(is_cli()) {
+=======
+	$shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
+	$longopts[]="debug::";
+	$longopts[]="help::";
+	$longopts[]="quick::";
+	$longopts[]="colour::";
+	$longopts[]="server:";
+	$longopts[]="version::";
+	$longopts[]="games::";
+	$longopts[]="details::";
+	$longopts[] ="module::";
+	$longopts[]="id::";
+	$longopts[]="start:";
+	$longopts[]="restart:";
+	$longopts[] ="quit:";
+	$longopts[]="log:";
+	$longopts[]="loop::";
+	$options = getopt($shortopts,$longopts);
+	require_once 'includes/master.inc.php';
+    include 'functions.php';
+	define ('options',$options);
+	if(isset($options['debug'])) {
+		define('debug',true);
+		error_reporting( -1 );
+		unset($options['debug']);
+		print_r($options);
+	}
+	else {
+		define('debug',false);
+		error_reporting(0);
+
+	}
+
+require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
+	use xPaw\SourceQuery\SourceQuery;
+	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
+	define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+	define( 'LOG',	'logs/ajax.log');
+$version = "2.072";
+	define ('cr',PHP_EOL);
+$time = "1645294445";
+$build = "30006-2015855331";
+	define ('CR',PHP_EOL);
+	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
+
+	if(is_cli()) {
+>>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
@@ -533,6 +581,10 @@ function help() {
  
  function games($cmds) {
 	 // review games
+<<<<<<< HEAD
+=======
+	//system('clear');
+>>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 	$Query = new SourceQuery( );
 	$cc = new Color();
 	$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,borders,4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
@@ -586,9 +638,15 @@ function help() {
 	echo "\0337"; // set cusor position
 	echo $table->getTable();
 	if(isset($cmds['loop'])) {
+<<<<<<< HEAD
 		while (false == ($line = CheckSTDIN())){
 			sleep (2);
 			echo "\0338"; //return to saved cursor
+=======
+		while (FALSE == ($line = CheckSTDIN())){
+			sleep (2);
+			echo "\0338";
+>>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 			$res = $database->get_results($sql);
 			$table = new Table(CONSOLE_TABLE_ALIGN_CENTER,'',4,null,true,CONSOLE_TABLE_ALIGN_CENTER);
 			$table->setheaders(array($cc->convert("%cServer%n"), $cc->convert("%cStarted%n"),$cc->convert("%cPlayers Online%n"),$cc->convert("%cCurrent Map%n")."\033[0K"));
@@ -750,9 +808,15 @@ echo "\xf0\x9f\x92\xa9\x0a\x00";
 }
 
 function CheckSTDIN() {
+<<<<<<< HEAD
 	$read = array(STDIN);
 	$wrte = NULL;
 	$expt = NULL;
+=======
+    $read = array(STDIN);
+    $wrte = NULL;
+    $expt = NULL;
+>>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
     $a = stream_select($read, $wrte, $expt, 0);
     if ($a && in_array(STDIN, $read)) {
         // you can read from STDIN now, it'll only be available if there is anything in STDIN

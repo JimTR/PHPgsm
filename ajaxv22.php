@@ -1,6 +1,6 @@
 <?php
 /*
- * ajaxv2t.php
+ * ajaxv2.php
  * 
  * Copyright 2021 Jim Richardson <jim@noideersoftware.co.uk>
  * 
@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * ajax v2 used for testing functions & modules
+ * ajax v2 to go with xml v2 & mybb.js perhaps
  *  requires PHP  >= 7.4 
  */
 require_once 'includes/master.inc.php';
 include 'functions.php';
-require 'includes/class.emoji.php';
 require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	use xPaw\SourceQuery\SourceQuery;
 	define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -33,36 +32,29 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-<<<<<<< HEAD
-$build = "54606-802951692";
-$version = "2.078";
-$time = "1644474313";
-=======
-$build = "50978-1558753148";
-$version = "2.078";
-$time = "1644487850";
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
+$build = "50991-4108993405";
+	$version = "2.07";
+$time = "1642399717";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
 $sql = 'select * from base_servers where base_servers.ip ="'.$_SERVER['REMOTE_ADDR'].'"'; // do we know this ip ? mybb sets this at login
 //echo $sql.'<br>';
 $valid = $database->num_rows($sql); // get result if the ip can use the data the return value >0
-$sql = 'select * from allowed users where `ip` = '.ip2long($_SERVER['REMOTE_ADDR']); // this should not happen but just incase some one tries it
-//$valid +=  $database->num_rows($sql); // needs a minimum of 1 
-//if ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ){$valid=1;} //dev code
+if ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] ){$valid=1;}
 if (isset($_SERVER['HTTP_PHPGSM_AUTH']) and $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
-     // command has arrived via ajax-send so should be good
-     $HTTP_AUTH ='http_auth=>on ';
-}
-else{
-	$HTTP_AUTH = 'http_auth=>off ';
-}
+                        //$cmds['valid'] = true;
+                        $HTTP_AUTH =' HTTP_AUTH on ';
+                         //file_put_contents(LOG,$logline,FILE_APPEND);
+                        //echo 'auth on'.cr;
+                        }
+                        else{
+							$HTTP_AUTH = ' insecure requst ';
+						}
 if(is_cli()) {
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
-	$method = 'ARGV';
 	$logline  = date("d-m-Y H:i:s").' localhost accessed ajax with '.print_r($cmds,true).cr;
 	//file_put_contents(LOG,$logline,FILE_APPEND);
 	if ($cmds['debug'] == 'true') {
@@ -86,11 +78,11 @@ else {
 	else {
 		if (isset($cmds)) {
 			$cmds = array_merge($cmds,convert_to_argv($_GET,"",true));
-			$method .='/GET ';
+			$method .='/GET';
 		}
 		else {
 			$cmds = convert_to_argv($_GET,"",true);
-			$method = 'GET ';
+			$method = 'GET';
 		}
 	}
 }
@@ -103,16 +95,9 @@ foreach ($cmds as $k=>$v) {
 	//
 	$entry .="$k=>$v ";
 }
-$entry = rtrim($entry);
-if(isset($_SERVER['REMOTE_ADDR'])) {
-	$rip = $_SERVER['REMOTE_ADDR'];
-}
-else {
-	$rip = "UnKnown \t";
-}
-
-$logline = date("d-m-Y H:i:s")." $rip valid = $valid method = $method cmds = $entry $HTTP_AUTH";
-log_to(LOG,$logline);
+$rip = $_SERVER['REMOTE_ADDR'];
+$logline = date("d-m-Y H:i:s")." $rip Valid = $valid method = $method cmds = $entry".cr."$HTTP_AUTH".print_r($_SERVER,true).cr;
+file_put_contents(LOG,$logline,FILE_APPEND);
 // do what's needed
 	switch (strtolower($cmds['action'])) {
 		case "all" :
@@ -157,19 +142,7 @@ log_to(LOG,$logline);
 					echo cr;
 				}
 				exit;
-		case "exetmux":
-<<<<<<< HEAD
-			$output = exetmux($cmds);
-			if(is_array($output)) {
-				print_r($output);
-			}
-			else {
-				echo $output;
-			}
-			exit;
-=======
-					echo exetmux($cmds);
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
+				
 		case "exe" :
 				echo exe($cmds);
 				exit;	
@@ -181,7 +154,7 @@ log_to(LOG,$logline);
 					//
 					$logline .= " $k => $v".cr;
 				}
-				//file_put_contents(LOG,$logline,FILE_APPEND);
+				file_put_contents(LOG,$logline,FILE_APPEND);
 				file_put_contents($cmds['file'],$cmds['data']);
 				
 			}
@@ -191,13 +164,11 @@ log_to(LOG,$logline);
 				foreach ($cmds as $k => $v) {
 					$logline .= " $k => $v".cr;
 				}
-				   //file_put_contents(LOG,$logline,FILE_APPEND); 
+				   file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo file_get_contents($cmds['file']);
 				}
 			exit;	
-		case "lgsm" :
-				lgsm($cmds);
-				exit;
+			
 		case "ps_file" :
 			if (isset($cmds['filter'])) {
 				// add the grep filter
@@ -225,7 +196,7 @@ log_to(LOG,$logline);
 				    foreach ($cmds as $k => $v) {
 					$logline .= " $k => $v".cr;
 				}
-				   log_to(LOG,trim($logline)); 
+				   file_put_contents(LOG,$logline,FILE_APPEND); 
 					echo scanlog($cmds);
 					exit;
 		case "top" :
@@ -273,7 +244,7 @@ log_to(LOG,$logline);
 }
 
 function lsof($cmds) {
-						$cmd = 'ps a -o pid,%cpu,%mem,cmd | grep '.$cmds['filter'].'.cfg |grep srcds_linux | grep -v grep';
+						
 						$tpid = shell_exec ('ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg');
 						$get_pid = explode(' ',trim($tpid));
 						$pid= $get_pid[0];
@@ -325,175 +296,260 @@ function game_detail() {
 	$total_players = 0;
 	$total_bots = 0;
 	$total_slots = 0;
-	if(isset($cmds['ip'])) {
-		$ip = $cmds['ip'];
-	}
-	else {
-		$host= gethostname();
-		$ip = gethostbyname($host);
-		$localIP = trim(shell_exec('hostname -I'));
-	    $localIPs = explode(' ',$localIP);
-	     //print_r($localIPs);
-		//$ip = geturl('https://api.ipify.org');
-		if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
-	}
-	if(empty($ip)) {
-		$ip= trim(shell_exec("hostname -I | awk '{print $1}'"));
-		}
-	$checkip = $ip;
-	exec('ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d',$game_list,$val); // this gets running only needs rework may 2021 for sure jan 2022
-	foreach ($game_list as $game) {
-		$tmp = array_values(array_filter(explode (" ",$game)));
-		$result = find_string_in_array($tmp,'.cfg');
-		$tmp['host'] = pathinfo(implode('; ', $result), PATHINFO_FILENAME); 
-		$output[] = $tmp;
-	}
-	$i=0;
-	$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
-	$server_no = $db->get_row($sql); // total servers
-	$server_count = $server_no['total'];
-	
-	if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
-	if(empty($output)) {
-		// nothing running
-		if ($cmds['debug']) {
-			echo "IP to check is $ip".cr;
-			print_r($server_no);
-		} 
-		if ($server_no['host'] <> $ip){
-			$return = $cmds['server'].' is not hosted here';
-			return $return;
-		}    
-		$du = shell_exec('du -s '.dirname($server_no['location']));
-		list ($tsize,$location) = explode(" ",$du);
-	}
-	else{
-		if(isset($cmds['filter'])) {
-			//filtered output
-			$sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
-		}
-		else{
-			$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
-		}
-		
-		$servers = $db->get_results($sql);
-		foreach ($servers as $server) {
-			unset ($server['id']);
-			//$key = array_search('100', array_column($userdb, 'uid'));
-			$run_record = get_key($server['host_name'],$output) ;					
-			if (get_key($server['host_name'],$output) >= 0) {
-				// running server add live data 
-				$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
-				$kv = VDFParse($server['vdf_file']);
-				$server['vdf_data'] =$kv['AppState'];
-				//https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/api_id/<icon>.jpg
-				if ($server['running']) {
-					$server['online'] = 'Online';
-					try {
-						$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
-						$sub_cmd = 'GetInfo';
-						$info1 = $gameq->GetInfo();
-						$server  = array_merge($server ,$info1);
-						if ($info1['Players'] > 0) {
-							$sub_cmd = 'GetPlayers';
-							$total_players += ($info1['Players']-$info1['Bots']);
-							$total_bots += $info1['Bots'];
-							$server['players']  = $gameq->GetPlayers( ) ;
-							$server['players'] = add_steamid($server['players']);
-						}
-					}
-					catch( Exception $e ) {
-						$Exception = $e;
-						if (strpos($Exception,'Failed to read any data from socket')) {
-							$Exception = 'Failed to read any data from socket (Game Detail=>'.$sub_cmd.')';
-						}
-						$error = date("d-m-Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
-						$mask = "%17.17s %-30.30s \n";
-						file_put_contents(LOG,$error.cr,FILE_APPEND);
-					}
+	$r=1;
+	if(isset($cmds['filter'])) {
+		$ip = file_get_contents('https://api.ipify.org');// get ip
+		 if (empty($ip)) { $ip = file_get_contents('http://ipecho.net/plain');} 
+		 $sql = 'select * from server1 where host_name = "'.$cmds['filter'].'"';
+		 //echo "sql = $sql".cr;
+		 if ($db->num_rows($sql) >0) {		 
+			$server_data = $db->get_results($sql);
+			$server_data=reset($server_data);
+		  if (empty($server_data['base_ip'])) {         
+                if ($ip <> trim($server_data['host'])) {
+					echo 'Invalid enviroment '.cr;
+					exit;
 				}
-				if (isset($server['MaxPlayers'])) {$total_slots  += $server['MaxPlayers'];}	
-				$pid = $output[$run_record][0];
-				$server['mem'] = $output[$run_record][2];
-				$server['cpu'] = $output[$run_record][1];
-				$mem += $server['mem']; // memory %
-				$cpu += $server['cpu']; // cpu %
-				$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
-				$size = str_replace($server['location'],'',$du);
-				$server['size'] = formatBytes(floatval($size)*1024,2);
-				if (empty($server['host_name'])) {
-					$logline =date("d-m-Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
-					file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
-					continue;
-				}
-				if (isset($cmds['filter'])) {
-					// run a different array
-					$return['server'] = $server;
-				}
-				else {	
-					$return[$server['fname']][$server['host_name']] = $server;
-				}
-				if($server['running'] == '1') {
-				$i++;
 			}
+		}
+		else {
+			      echo 'Invalid enviroment '.cr;
+					exit;
+				}
+				        
+       switch ($server_data['binary_file']) {
+		case 'srcds_run':
+			$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$cmds['filter'].'.cfg';
+			break;
+		default:
+				$cmd = 'ps -C '.$server_data['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server_data['binary_file'];
+				//echo "cmd = $cmd".cr;
+			break;
+		}
+               
+                $new = trim(shell_exec($cmd));
+                // temp log
+				$logline =date("d/m/Y h:i:sa").' => Filtered Output '.$cmds['filter'].cr;
+				file_put_contents(LOG,$logline,FILE_APPEND);
+                if (empty($new)) {
+					$du = shell_exec('du -s '.$server_data['location']); // get size of game
+					$du = str_replace('<br>','',$du);
+					$x = strpos(trim($du),'/');
+					$size = trim(substr($du,0,$x-1));
+					$server_data['cpu'] = '0';
+					$server_data['size'] = formatBytes(floatval($size)*1024,2);
+					$server_data['mem'] = '0';
+					$server_data['beta'] = 'not running';
+				}
+               
+                $tmp = explode(' ',$new);
+				if (!empty($tmp[0])) {
+					//print_r($tmp);
+					$pid = $tmp[0];
+					$count = count($tmp);
+					$temp =  trim(file_get_contents($server_data['url'].':'.$server_data['bport'].'/ajaxv2.php?action=top&filter='.$pid)); // works on remote ?
+					$temp = array_values(array_filter(explode(' ',$temp)));
+					$du = shell_exec('du -s '.$server_data['location']); // get size of game
+					$x = strpos(trim($du),'/');
+					$size = trim(substr($du,0,$x-1));
+					//$server_data['count'] =  count($temp);
+					$server_data['mem'] = count ($temp);
+					$server_data['cpu'] = $temp[count($temp)-4];
+					$server_data['size'] = formatBytes(floatval($size)*1024,2);
+					$server_data['beta'] = 'running';
+					//echo print_r($server_data,true).cr;
+					$server['online'] = 'Online';
+													try
+														{
+															$gameq->Connect( $server_data['host'], $server_data['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$sub_cmd = 'GetInfo';
+															$info1 = $gameq->GetInfo();
+															
+															//echo print_r($info1,true).cr;
+															$server_data  = array_merge($server_data ,$info1);
+															if ($info1['Players'] > 0) {
+																$total_players += $info1['Players'];
+																$sub_cmd = 'GetPlayers';
+																$server_data['players']  = $gameq->GetPlayers( ) ;
+																}
+														}
+													catch( Exception $e )
+														{
+															$Exception = $e;
+															if (strpos($Exception,'Failed to read any data from socket')) {
+																$Exception = 'Failed to read any data from socket Module (Ajax - Game Detail '.$sub_cmd.')';
+														}
+						
+														$error = date("d/m/Y h:i:sa").' ('.$server_data['host'].':'.$server_data['port'].') '.$Exception;
+														//sprintf("[%14.14s]",$str2)
+														$mask = "%17.17s %-30.30s \n";
+														file_put_contents(LOG,$error.cr,FILE_APPEND);
+														}
+					}
+		$gameq->Disconnect( );			
+		$return[$server_data['host_name']] = $server_data;
+		return $return;
+	}
+// no filter start
+	else{
+			if(isset($cmds['ip'])) {
+				$ip = $cmds['ip'];
 			}
 			else {
-				$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
-				$size = str_replace($server['location'],'',$du);
-				$server['mem'] = 0;
-				$server['cpu'] = 0;
-				$server['online'] = 'Offline';
-				$server['size'] = formatBytes(floatval($size)*1024,2);
-				if (isset($cmds['filter'])) {
-					// run a different array
-					$return['server'] = $server;
+					$host= gethostname();
+					$ip = gethostbyname($host);
+					$localIP = trim(shell_exec('hostname -I'));
+	                $localIPs = explode(' ',$localIP);
+	                //print_r($localIPs);
+					//$ip = geturl('https://api.ipify.org');
+					if (empty($ip)) { $ip = geturl('http://ipecho.net/plain');}
 				}
-				else {
-					$return[$server['fname']][$server['host_name']] = $server;
+				//$checkip = substr($ip,0,strlen($ip)-1);
+				if(empty($ip)) {
+					$ip= trim(shell_exec("hostname -I | awk '{print $1}'"));
 				}
-			} 
-		}	
-		$du = shell_exec('du -s '.dirname($server['location']));
-		$tsize = str_replace(dirname($server['location']),'',$du);
-	}
+				$checkip = $ip; 
+				
+				// use srcds_linux to test 
+				//ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d
+				exec('ps -C srcds_linux -o  pid,%cpu,%mem,cmd |sed 1,1d',$game_list,$val); // this gets running only needs rework may 2021 for sure jan 2022
+				foreach ($game_list as $game) {
+					$tmp = array_values(array_filter(explode (" ",$game)));
+					$result = find_string_in_array($tmp,'.cfg');
+					$tmp['host'] = pathinfo(implode('; ', $result), PATHINFO_FILENAME); 
+					$output[] = $tmp;
+				}
+
+				//$tmp = explode(PHP_EOL,$t);
+				$i=0;
+				
+				if(empty($output)) {
+						// nothing running
+						$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
+						$server_count = $db->get_row($sql);
+						
+						if ($server_count['host'] <> $ip){
+							$return = $cmds['server'].' is not hosted here';
+							return $return;
+						}    
+						
+						$du = shell_exec('du -s '.dirname($server_count['location']));
+						list ($tsize,$location) = explode(" ",$du);
+				}
+			else{
+					$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
+					$servers = $db->get_results($sql);
+					$server_count = $db->num_rows($sql);
+						
+						foreach ($servers as $server) {
+										//$key = array_search('100', array_column($userdb, 'uid'));
+										$run_record = get_key($server['host_name'],$output) ;					
+										if (get_key($server['host_name'],$output) >= 0) {
+											
+											
+												// running server add live data 
+												$server['vdf_file'] = $server['location'].'/steamapps/appmanifest_'.$server['server_id'].'.acf'; 
+												$kv = VDFParse($server['vdf_file']);
+												$server['vdf_data'] =$kv['AppState'];
+												if ($server['running']) {
+													$server['online'] = 'Online';
+													try
+														{
+															$gameq->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
+															$sub_cmd = 'GetInfo';
+															$info1 = $gameq->GetInfo();
+															$server  = array_merge($server ,$info1);
+															if ($info1['Players'] > 0) {
+																$sub_cmd = 'GetPlayers';
+																$total_players += ($info1['Players']-$info1['Bots']);
+																$total_bots += $info1['Bots'];
+																$server['players']  = $gameq->GetPlayers( ) ;
+																}
+														}
+													catch( Exception $e )
+														{
+															$Exception = $e;
+															if (strpos($Exception,'Failed to read any data from socket')) {
+																$Exception = 'Failed to read any data from socket (Game Detail=>'.$sub_cmd.')';
+														}
+														
+														$error = date("d/m/Y h:i:sa").' => '.$server['host_name'].'('.$server['host'].':'.$server['port'].') '.$Exception;
+														//sprintf("[%14.14s]",$str2)
+														$mask = "%17.17s %-30.30s \n";
+														file_put_contents(LOG,$error.cr,FILE_APPEND);
+														//$server['Players'] = 0;
+														}
+													}
+												$total_slots  += $server['MaxPlayers'];	
+												//$pid = get_pid($server['host'].':'.$server['port']);
+												$pid = $output[$run_record][0]; 
+												$cmd = 'top -b -n 1 -p '.$pid.' | sed 1,7d'; // use top to query the process
+												$top = array_values(array_filter(explode(' ',trim(shell_exec($cmd))))); // arrayify
+												$count = count($top); // how many records  ?
+												$mem += $top[$count-3]; // memory %
+												$cpu += $top[$count-4]; // cpu %
+												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
+												$size = str_replace($server['location'],'',$du);
+												$server['mem'] = $top[$count-3];
+												$server['cpu'] = $top[$count-4];
+												$server['size'] = formatBytes(floatval($size)*1024,2);
+													if (empty($server['host_name'])) {
+															$logline =date("d/m/Y h:i:sa").' No Host_name !! '.$server1.PHP_EOL;
+															file_put_contents('logs/ajax.log',$logline,FILE_APPEND);
+															continue;
+													}
+													
+													$return[$server['fname']][$server['host_name']] = $server;
+													$i++;
+										}
+										else {
+												$du = trim(shell_exec('du -s '.$server['location'])); // get size of game
+												$size = str_replace($server['location'],'',$du);
+												$server['mem'] = 0;
+												$server['cpu'] = 0;
+												$server['online'] = 'Offline';
+												$server['size'] = formatBytes(floatval($size)*1024,2);
+												$return[$server['fname']][$server['host_name']] = $server;
+										} 
+						}	
+						$du = shell_exec('du -s '.dirname($server['location']));
+						$tsize = str_replace(dirname($server['location']),'',$du);
+			}
 	// add computed items
-	$return['general']['server_id'] = $cmds['server'];
-	$return['general']['live_servers'] = $i;
-	$return['general']['total_players'] = $total_players;
-	$return['general']['total_bots'] = $total_bots;
-	$return['general']['used_slots'] = $total_players+$total_bots;
-	$return['general']['total_slots'] = $total_slots;
-	$return['general']['total_servers'] = $server_count;
-	$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
-	$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
-	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
-	$return['general']['total_size_raw'] = floatval($tsize);
-	return $return;
-}
-		
+				$return['general']['server_id'] = $server['fname'];
+				$return['general']['live_servers'] = $i;
+				$return['general']['total_players'] = $total_players;
+				$return['general']['total_bots'] = $total_bots;
+				$return['general']['used_slots'] = $total_players+$total_bots;
+				$return['general']['total_slots'] = $total_slots;
+				$return['general']['total_servers'] = $server_count;
+				$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
+				$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
+				$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
+				$return['general']['total_size_raw'] = floatval($tsize);
+				return $return;
+		}
+}		
 function all($cmds) {
 	//get the lot
-	global $database;
-	$return = get_cpu_info();
-	$return = array_merge($return,get_software_info($database));
-	$return = array_merge($return,get_disk_info());
-	$return = array_merge($return,get_mem_info());
-	$return = array_merge($return,get_user_info($return));
-	$tmp = game_detail();
-	$add = $tmp['general'];
-	unset($tmp['general']);
-	$games = $tmp[$cmds['server']];
-	if ($cmds['debug']) {
-		//print_r($games);
-	}
-	$x = floatval($return['quota_used']); // get size
-	$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
-	$return = array_merge($return,$add);
-	$return['servers'] = $games;
-	$services = check_services($cmds);
-	$return['services'] = $services;
-	return $return;
-}	
+			global $database;
+			$return=get_cpu_info();
+			$return = array_merge($return,get_software_info($database));
+			$return = array_merge($return,get_disk_info());
+			$return = array_merge($return,get_mem_info());
+			$return = array_merge($return,get_user_info($return));
+			//if(isset($cmds['servers'])) {
+				$tmp = game_detail();
+				//print_r($tmp);
+				$add = $tmp['general'];
+				//print_r($add);
+				//print_r($return);
+				$x = floatval($add['total_size'])/1000; // get size
+				$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
+				$return = array_merge($return,$add);
+				//}
+			return $return;
+		}	
 		
 		
 		
@@ -508,23 +564,26 @@ function exescreen ($cmds) {
 	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
 	$server = $database->get_row($sql); // pull results
 	$key = array_search($server['host'], $localIPs);
+	//if (!empty($key)) {$localIP = $localIPs[$key];}
 	$localIP = $localIPs[$key];
 	if (empty($server['host'])) {
 		$return = "invalid server $exe"; // don't know this server
 	   	return $return;
 	}
 	if ($server['host'] <> $localIP) {
-		//$choices = print_r($localIPs,true);
-		//return "This Server is not hosted here $localip /".$server['host']." choices are $choices the key was $key"; // we know this one but it's elsewhere
+		$choices = print_r($localIPs,true);
+		return "This Server is not hosted here $localip /".$server['host']." choices are $choices the key was $key"; // we know this one but it's elsewhere
 	}
+	// valid so do it
 	switch ($server['binary_file']) {
 		case 'srcds_run':
-			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
 			break;
 		default:
-			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
+				$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
-	}
+		}
+		//echo $cmd.cr;
 	$is_running = shell_exec ($cmd); // are we running ?
 	switch ($cmds['cmd']) {
 		case 's' :
@@ -532,23 +591,15 @@ function exescreen ($cmds) {
 				$return = $exe.' is already running';
 				break;
 			}
+			
 			chdir($server['location']);
 			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
 			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
 			rename($logFile, $savedLogfile); // log rotate
-			if (strtolower($server['managed_by']) == 'phpgsm'){
-				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-				exec($cmd); // open session
-				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
-				exec($cmd);
-			}
-			else {
-				//lgsm ??
-				$cmd = $server['startcmd'].'?option=st';
-				$err = geturl("$cmd");
-				file_put_contents('lgsm.txt',$err,FILE_APPEND);
-			}
-			
+			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+			exec($cmd); // open session
+			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+			exec($cmd);
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
 			$update['starttime'] = time();
@@ -562,7 +613,6 @@ function exescreen ($cmds) {
 				$return = $exe.' is not running';
 				break;
 			}
-	if (strtolower($server['managed_by']) == 'phpgsm'){	
 			switch ($server['binary_file']) {
 		case 'srcds_run':
 			//$cmd = 'screen -X -S '.$server['host_name'] .' quit';
@@ -572,22 +622,14 @@ function exescreen ($cmds) {
 				$cmd = 'screen -XS '.$server['host_name'] .' quit';
 			break;
 		}
-		exec($cmd,$content,$ret_val);
-		if ($ret_val == 0) {
-				// tidy up screen 
-			$cmd = 'screen -X -S '.$server['host_name'] .' quit';
-			exec($cmd);
-		}
-	}	
-	else {
-			chdir($server['location']);
-			$cmd = $server['startcmd']. '?option=sp';
-            //echo "non phpgsm server stopping with $cmd"; 
-            geturl($cmd);
-		}
 			
+			exec($cmd,$content,$ret_val);
 			$return = 'Stopping Server '.$server['host_name'];
-			
+			if ($ret_val == 0) {
+				// tidy up screen 
+				$cmd = 'screen -X -S '.$server['host_name'] .' quit';
+				exec($cmd);
+			}
 			$update['running'] = 0;
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
@@ -599,20 +641,13 @@ function exescreen ($cmds) {
 				$return = $exe.' is not running, starting instead';
 				// should we just start or quit ??
 				chdir($server['location']);
-				if (strtolower($server['managed_by']) == 'phpgsm'){	
-					$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-					$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-					rename($logFile, $savedLogfile); // log rotate
-					$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-					exec($cmd); // open session
-					$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
-					exec($cmd);
-				}
-				else {
-					//lgsm
-					$cmd = $server['startcmd'].'?option=st';
-					geturl($cmd);
-				}	
+				$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				rename($logFile, $savedLogfile); // log rotate
+				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+				exec($cmd); // open session
+				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; //start server
+				exec($cmd);
 				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 				$update['running'] = 1;
 				$update['starttime'] = time();
@@ -621,24 +656,18 @@ function exescreen ($cmds) {
 				//$return = 'Starting Server '.$server['host_name'];
 				break;
 			}
-			if (strtolower($server['managed_by']) == 'phpgsm'){	
-				$cmd = 'screen -XS '.$server['host_name'] .' quit';
-				exec($cmd); // stop the server 
-				chdir($server['location']);
-				$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-				rename($logFile, $savedLogfile); // log rotate
-				sleep(1); //slow the process up
-				$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
-				exec($cmd); // open session
-				$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; 
-				exec($cmd); // restart the server
-			}
-			else {
-				//lgsm
-				$cmd = $server['startcmd'].'?option=r';
-				geturl($cmd); 
-			}	
+			
+			$cmd = 'screen -XS '.$server['host_name'] .' quit';
+			exec($cmd); // stop the server 
+			chdir($server['location']);
+			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+			rename($logFile, $savedLogfile); // log rotate
+			sleep(1); //slow the process up
+			$cmd = 'screen -L -Logfile '.$logFile.' -dmS '.$server['host_name'];
+			exec($cmd); // open session
+			$cmd = 'screen -S '.$server['host_name'].' -p 0  -X stuff "'.$server['startcmd'].'^M"'; 
+			exec($cmd); // restart the server
 			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
 			$update['running'] = 1;
 			$update['starttime'] = time();
@@ -653,17 +682,11 @@ function exescreen ($cmds) {
 				// should we just start or quit ??
 				break;
 			}
-			if (strtolower($server['managed_by']) == 'phpgsm'){	
+			
 			$cmd = 'screen -S '.$exe.' -p 0 -X stuff "'.trim($cmds['text']).'^M"';
 			$return = $cmd;
-			exec($cmd); // send console command
-			}
-			else {
-				$cmd = $server['startcmd']. '?option=sd&text='.urlencode($cmds['text']);
-				geturl($cmd); // send console command
-			} 
-			
-		  	$return = 'Command Sent'; 
+			exec($cmd);
+		  	$return = 'Command Sent'; // send console command
 			break;
 			
 		case 'u':
@@ -685,14 +708,12 @@ function exescreen ($cmds) {
 		
 function exe($cmds) {
 	// run a command this array needs to be in a settings file
-	include 'includes/allowed_cmds.php';
-	//$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
+	
+	$allowed = array('scanlog.php','cron_u.php','cron_r.php','check_ud.php','steamcmd','tmpreaper', 'sudo','cron_scan.php');
 	foreach ($allowed as $find) {
        if (strpos($cmds['cmd'], $find) !== FALSE ) { 
-			$logline = date("d-m-Y h:i:s"); 
-			$logline .= " function exe => ".$cmds['cmd'];
-			log_to(LOG,$logline); 
-			$can_do = true;
+        //echo $cmds['cmd']." Match found".cr; 
+        $can_do = true;
 		}
 	}
 	if(empty($can_do)) {
@@ -706,27 +727,32 @@ function exe($cmds) {
 	 * 127 = file not found
 	 * 139 = segmentation
 	 */ 
-		$return ='';
-		$output = split_exec($cmds['cmd'],'');
-		$debug = explode(cr,$output['stdout']);
+	
+		exec($cmds['cmd'],$output,$retval);
+	
 			if (isset($cmds['debug'])) {
-				foreach ($debug as $line) {
-					$return .= $line.cr;
-				}
-				if(!empty($output['stderr'])) {
-					$logline = date("d-m-Y h:i:s").' exe had this error  = '.$output['stderr'].' return error level was '.$output['return'].' when running '.$cmds['cmd']; 
-					log_to(LOG,$logline);
-				} 
-				return $return;
-			}
-			else {
-			// test if no debug needs to return somthing on success
-				foreach ($debug as $line) {
+				//echo ' ready to do command '.$cmds['cmd'].cr;
+				//print_r($output);
+				foreach ($output as $line) {
 					$return .= $line.cr;
 				}
 				return $return;
-			}
- 		return false; // just in case anything slips through
+				//$return ; //.= $retval.cr; // put the return value in the array
+		}
+		else {
+		// test if no debug needs to return somthing on success
+			foreach ($output as $line) {
+				//$return .= $line.cr;
+				//if(strpos($line,'! App ')) {
+					$return = $line.cr;
+				//}
+				//$return ; //.= $retval.cr;
+				}
+	
+	return $return;
+}
+ 
+		return false; // just in case anything slips through
 	}
 }
 
@@ -756,10 +782,10 @@ function check_services($cmds) {
 				$service = str_replace('[ + ]','',$service);
 				$id = trim($service);
 				if(isset($cmds['running']) and $cmds['running'] == 'true'){
-					$return[$id] = true;
+					$return[$id] = '✔ ';
 				}
 				elseif (!isset($cmds['running'])) {
-							$return[$id] = true;
+							$return[$id] = '✔ ';
 						}
 			
 		}
@@ -770,10 +796,10 @@ function check_services($cmds) {
 			$service = str_replace('[ - ]','',$service);
 			$id = trim($service);
 			if(isset($cmds['running']) and $cmds['running'] == 'false'){
-					$return[$id] = false;
+					$return[$id] = '✖';
 			}
 			elseif (!isset($cmds['running'])) {
-				$return[$id] = false;
+				$return[$id] = '✖';
 			}
 		}
 		//echo $key.' '.$service.cr;
@@ -791,22 +817,25 @@ function viewserver($cmds) {
 		file_put_contents('sql.txt',$sql);
 		$server =$database->get_row($sql);
 		
-try{
-	$Query->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
-	$info = $Query->GetInfo();
-	$players = $Query->GetPlayers( ) ;
-	$rules = $Query->GetRules( );
-}
-catch( Exception $e ) {
-	$Exception = $e;
-	if (strpos($Exception,'Failed to read any data from socket')) {
-		$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
+try 
+	{
+$Query->Connect( $server['host'], $server['port'], SQ_TIMEOUT, SQ_ENGINE );
+$info = $Query->GetInfo();
+$players = $Query->GetPlayers( ) ;
+$rules = $Query->GetRules( );
 	}
-	 $error = date("d-m-Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
-	 //sprintf("[%14.14s]",$str2)
-	$mask = "%17.17s %-30.30s \n";
-	file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
-}
+	catch( Exception $e )
+					{
+						$Exception = $e;
+						if (strpos($Exception,'Failed to read any data from socket')) {
+							$Exception = $Exception.' Failed to read any data from socket (Function viewplayers)';
+						}
+						
+						  $error = date("d/m/Y h:i:sa").' ('.$cmds['ip'].':'.$cmds['port'].') '.$Exception;
+						  //sprintf("[%14.14s]",$str2)
+						  $mask = "%17.17s %-30.30s \n";
+						 file_put_contents('logs/xpaw.log',$error.CR,FILE_APPEND);
+					}
 $Query->Disconnect( );
 //we now have data
 jump:
@@ -1505,245 +1534,5 @@ else {
 }
 
 	//
-}
-
-function add_steamid($players) {
-	if (count($players)) {
-	// we have players
-	$emoji = new Emoji;
-	$database = new db();
-	orderBy($players,'Frags','d'); // score order
-	$sql = 'select * from players where BINARY name="';
-	foreach ($players as $k=>$v) {
-		//loop  add flag & country $v being the player array 
-		// don't update player here let scanlog do it
-		$players[$k]['Name']=$emoji->Encode($v['Name']);
-		$player_data = $database->get_results($sql.$database->escape($players[$k]['Name']).'"'); // player info from db
-		if (!empty($player_data)) {
-			// here we go
-			//echo 'Result '.print_r($player_data,true).cr;
-			$player_data= reset($player_data);
-			$players[$k]['Name'] = $emoji->Decode($players[$k]['Name']);
-			$players[$k]['flag'] = 'src ="https://ipdata.co/flags/'.trim(strtolower($player_data['country_code'])).'.png"'; // windows don't do emoji flags use image 
-			$players[$k]['country'] = $player_data['country'];
-			$players[$k]['steam_id'] = $player_data['steam_id64']; // user steam_id
-			$players[$k]['ip'] = long2ip($player_data['ip']); // recorded ip address
-		}
-		else {
-			// no current flag or country
-			// add a default image for the flag
-			// random country
-			if(empty(trim($players[$k]['Name']))) { $players[$k]['Name'] = 'Spectator';}
-			$players[$k]['flag'] = 'src ="/img/'.'unknown.png"'; // windows don't do emoji flags use image
-			$players[$k]['country'] = 'unknown';
-			
-		}
-	}
-	return $players;
-}
-return  false;
-}
-
-function exetmux($cmds) {
-	// open tmux windoze
-	global $database;
-<<<<<<< HEAD
-	$filestart = false;
-	$exe = $cmds['server'];
-	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
-	$server = $database->get_row($sql); // pull results
-	$startcmd = trim($server['startcmd']);
-	if(is_file($startcmd) or filter_var($startcmd, FILTER_VALIDATE_URL )) {
-		// looks like lgsm start
-		$filestart = true; // make sure we append the correct tail
-	}
-	$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-	chdir($server['location']);
-=======
-	$exe =$cmds['server'];
-	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
-	$server = $database->get_row($sql); // pull results
-	/*
-	 * replace with 
-	 *  ps -eo pid,%cpu,%mem,args --sort -cp |grep <whatever_you_need> | grep -v grep
-	 */
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
-	switch ($server['binary_file']) {
-		case 'srcds_run':
-			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
-			break;
-		default:
-			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
-			break;
-	}
-<<<<<<< HEAD
-	$is_running = trim(shell_exec ($cmd)); // are we running ?
-	if($is_running) {
-		$tmp = explode(" ",trim($is_running));
-		$pid = $tmp[0]; // get the progs pid so we can wait for it to finish
-	}
-	switch ($cmds['cmd']) {
-		case 's':
-			if($is_running) {
-				return "$exe appears to be running w".cr;
-			}
-
-			if (!$filestart){
-				// run native
-				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-				rename($logFile, $savedLogfile); // log rotate
-				$cmd = "tmux -L $exe new -d -s$exe $startcmd"; //let's get this show on the road !
-				$output = split_exec($cmd,'');
-				$cmd = "tmux -L $exe pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
-				$output = split_exec($cmd,'');
-			}
-			else {
-				$cmd = $startcmd.' st';
-				$output = split_exec($cmd,'');
-			}			
-				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
-				$update['running'] = 1;
-				$update['starttime'] = time();
-				$where['host_name'] = $exe; 
-				$database->update('servers',$update,$where);
-				return "Starting $exe";
-				break;
-		case 'q':
-			if(!$is_running) {
-				return "$exe doesn't appear to be running";
-			}
-			$cmd = "tmux -L linuxgsm send -t $exe  \"quit\" ENTER";
-			$output = split_exec($cmd,'');
-			$update['running'] = 0;
-			$update['starttime'] = '';
-			$where['host_name'] = $exe; 
-			$database->update('servers',$update,$where);
-			return "stopping $exe";
-			break; 
-		case 'c':
-			 if(!$is_running) {
-				return "$exe doesn't appear to be running";
-			}
-			$message = trim($cmds['text']);
-			$cmd = "tmux -L linuxgsm send -t $exe \"$message\" ENTER";
-            $output = split_exec($cmd,'');
-			return "Command sent" ; 
-            break;
-		case 'r':
-			chdir($server['location']);
-			$startcmd = $server['startcmd'];
-			if(!$is_running) {
-				if(!$filestart) {
-					$cmd = "tmux -L linuxgsm new-window -d -s$exe $startcmd";
-				}
-				else {
-					$cmd = $startcmd.' r';
-				}
-				$output = split_exec($cmd,'');
-				return "$exe doesn't appear to be running, starting instead".cr;
-			}
-			if (!$filestart) {
-				$cmd = "tmux -L $exe send -t $exe quit ENTER";
-				$output = split_exec($cmd,'');
-				while (posix_getpgid($pid)){
-			        echo "Waiting for $exe to finish"; 
-    				sleep(2);
-				}
-				$cmd = "tmux -L linuxgsm new-window  -s$exe $startcmd"; //let's get this show on the road !
-				$output = split_exec($cmd,'');
-				$cmd = "tmux -L  linuxgsm pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
-				$output = split_exec($cmd,'');
-			}
-			else {
-				$cmd = $startcmd.' r';
-				$output = split_exec($cmd,'');
-			}
-			return "restarting $exe"; 
-			break;
-		case "w":
-			$cmd = 'tmux -L linuxgsm ls -F "#{window_name},#{session_created}"';
-			$output = split_exec($cmd,'');
-			$tmp = explode(cr,trim($output['stdout']));
-			foreach ($tmp as $line) {
-				$tmpline = explode(',',$line);
-				$return[$tmpline[0]] = $tmpline[1];
-			}
-			return $return;
-	}
-}
-function lgsm($cmds) {
-	// get some more info out of lgsm
-	global $database;
-	$exe = $cmds['server'];
-	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
-	$server = $database->get_row($sql); // pull results
-	$startcmd = trim($server['startcmd']);
-	$cmd = $startcmd.' '.$cmds['cmd'];
-	$output = split_exec($cmd,'');
-	//print_r($output);
-	//$output['stdout'] = str_replace(array("\n", "\t", "\r"), '', $output['stdout']);
-	$output['stdout'] = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $output['stdout']);
-	$r_output = explode(cr,trim($output['stdout']));
-	if (strtolower($cmds['cmd']) == 'dt') {
-		foreach ($r_output as $k => $v) {
-			if (str_starts_with($v,'====================')){
-				unset ($r_output[$k]);
-				continue;
-			}
-			$new = str_replace(array("\n", "\t", "\r"), '', $v);
-			$new = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $new);
-			if (strpos($new,':')) {
-				//do array conversion
-				$tmp = explode(":",$new);
-				$key = strtolower($tmp[0]);
-				if(strpos($key,' ')) {
-					//
-					$key = str_replace(' ','_',$key);
-				}
-				$r_output[$key] = trim($tmp[1]);
-				unset ($r_output[$k]);
-			}
-			else {
-				if(str_starts_with(trim($new),'./')) {
-					$r_output['command_line'] = trim($new);
-					unset($r_output[$k]);
-				}
-				else{
-					unset($r_output[$k]) ;
-				}
-			}
-		}
-		$r_output= array_filter($r_output);
-	}
-	print_r($r_output);
-=======
-	$is_running = shell_exec ($cmd); // are we running ?
-	switch ($cmds['cmd']) {
-		case 's':
-			if($is_running) {
-				return "$exe has an open window";
-			}
-			chdir($server['location']);
-			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-			rename($logFile, $savedLogfile); // log rotate
-			//if (strtolower($server['managed_by']) == 'phpgsm'){
-				$startcmd = $server['startcmd'];
-				// run native
-				//  tmux new-session -d -x "${sessionwidth}" -y "${sessionheight}" -s "${sessionname}" "${preexecutable} ${executable} ${startparameters}" 2> "${lgsmlogdir}/.${selfname}-tmux-error.tmp"
-				$cmd = "tmux new-session-d -s$exe $startcmd"; //let's get this show on the road !
-				//split_exec($cmd,'');
-				echo $cmd.cr;
-				$cmd = "tmux pipe-pane -o -t $exe \"exec cat >> '$logFile'\""; 
-				echo $cmd.cr;
-				
-			//}
-			//else {
-				//run lgsm
-			//}	
-			break;
-		case 'q':	
-	}
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 }
 ?>
