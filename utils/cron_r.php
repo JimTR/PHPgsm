@@ -30,11 +30,9 @@ define('cr',PHP_EOL);
 define('plus','%2B');
 define('space','%20');  
 require_once DOC_ROOT.'/includes/master.inc.php';
-$version = "2.03";
-$time = "1644734369";
-include  DOC_ROOT.'/functions.php'; // P.O.C functions
-$build = "6233-1294170559";
-include DOC_ROOT.'/includes/vdfparser.php';
+$version = "2.04";
+$build = "6313-1092783628"; 
+include  DOC_ROOT.'/functions.php';
 require  DOC_ROOT.'/xpaw/SourceQuery/bootstrap.php';
 use xPaw\SourceQuery\SourceQuery;
 define( 'SQ_TIMEOUT',     $settings['SQ_TIMEOUT'] );
@@ -83,11 +81,7 @@ try
 			$restart[] = $game;
 		}
 		else  {
-<<<<<<< HEAD
 			$game['restart'] = "$url/ajax.php?action=exetmux&server=".$game['host_name'].'&cmd=';
-=======
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&cmd=';
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 			$check[] = $game; 
 		}
 	}
@@ -118,19 +112,12 @@ foreach ($restart as $game) {
 		if(empty($steamcmd)) {
 			$steamcmd = './steamcmd'; // need to fix this as steamcmd may need to run as root
 			chdir(dirname($game['install_dir'])); // move to install dir root steamcmd should be there
-			$log_line = "$now steamcmd not in user path moved to ".getcwd ( );
+			$log_line = "$now moved to ".getcwd ( );
 			log_to(LOG,$log_line);
 		}
 		$install_dir = $game['install_dir'];
 		$server_id = $game['server_id'];
-		if(trim(strtolower($game['managed_by'])) !== 'lgsm') {
-			// steam doesn't appear to worry about permissions at run time so sudo the command
-			$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
-		}
-		else {
-			// lgsm throws it's dollies out the pram if  any file is not owned by the user run, as the user
-			$exe = urlencode("$steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
-		}
+		$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$now =  date("d-m-Y h:i:sa");
 		log_to (LOG, "$now sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe";
@@ -139,11 +126,7 @@ foreach ($restart as $game) {
 		$output = explode(cr, $output);
 		echo end($output).cr;
 		$now =  date("d-m-Y h:i:sa");
-<<<<<<< HEAD
 		log_to(LOG,end($output)); //see what is comming back
-=======
-		log_to(LOG,$output); //see what is coming back
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 		$done[]=$game['install_dir']; // use this to test if update on core files has been done
 	}
 	// log prune

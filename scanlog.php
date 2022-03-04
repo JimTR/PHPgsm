@@ -27,6 +27,7 @@
  * Major re work January 2021 
  */
 //echo cr;
+
 define('cr',PHP_EOL);
     $shortopts ="i:s:v::";
 	$longopts[]="debug::";

@@ -33,15 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-<<<<<<< HEAD
 $build = "54606-802951692";
 $version = "2.078";
 $time = "1644474313";
-=======
-$build = "50978-1558753148";
-$version = "2.078";
-$time = "1644487850";
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -158,7 +152,6 @@ log_to(LOG,$logline);
 				}
 				exit;
 		case "exetmux":
-<<<<<<< HEAD
 			$output = exetmux($cmds);
 			if(is_array($output)) {
 				print_r($output);
@@ -167,9 +160,6 @@ log_to(LOG,$logline);
 				echo $output;
 			}
 			exit;
-=======
-					echo exetmux($cmds);
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 		case "exe" :
 				echo exe($cmds);
 				exit;	
@@ -352,7 +342,6 @@ function game_detail() {
 	$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
 	$server_no = $db->get_row($sql); // total servers
 	$server_count = $server_no['total'];
-	
 	if ($cmds['debug'] == "true") { echo "\$server_count = $server_count".cr; }
 	if(empty($output)) {
 		// nothing running
@@ -375,7 +364,6 @@ function game_detail() {
 		else{
 			$sql = 'select * from server1 where fname like "'.$cmds['server'].'" and enabled=1 order by server_name ASC';
 		}
-		
 		$servers = $db->get_results($sql);
 		foreach ($servers as $server) {
 			unset ($server['id']);
@@ -490,8 +478,6 @@ function all($cmds) {
 	$return['quota_pc'] =  number_format( $x* (100/floatval($return['quota'])) ,2);
 	$return = array_merge($return,$add);
 	$return['servers'] = $games;
-	$services = check_services($cmds);
-	$return['services'] = $services;
 	return $return;
 }	
 		
@@ -1547,7 +1533,6 @@ return  false;
 function exetmux($cmds) {
 	// open tmux windoze
 	global $database;
-<<<<<<< HEAD
 	$filestart = false;
 	$exe = $cmds['server'];
 	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
@@ -1559,15 +1544,6 @@ function exetmux($cmds) {
 	}
 	$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
 	chdir($server['location']);
-=======
-	$exe =$cmds['server'];
-	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
-	$server = $database->get_row($sql); // pull results
-	/*
-	 * replace with 
-	 *  ps -eo pid,%cpu,%mem,args --sort -cp |grep <whatever_you_need> | grep -v grep
-	 */
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 	switch ($server['binary_file']) {
 		case 'srcds_run':
 			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
@@ -1576,7 +1552,6 @@ function exetmux($cmds) {
 			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
 	}
-<<<<<<< HEAD
 	$is_running = trim(shell_exec ($cmd)); // are we running ?
 	if($is_running) {
 		$tmp = explode(" ",trim($is_running));
@@ -1716,34 +1691,5 @@ function lgsm($cmds) {
 		$r_output= array_filter($r_output);
 	}
 	print_r($r_output);
-=======
-	$is_running = shell_exec ($cmd); // are we running ?
-	switch ($cmds['cmd']) {
-		case 's':
-			if($is_running) {
-				return "$exe has an open window";
-			}
-			chdir($server['location']);
-			$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
-			$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-			rename($logFile, $savedLogfile); // log rotate
-			//if (strtolower($server['managed_by']) == 'phpgsm'){
-				$startcmd = $server['startcmd'];
-				// run native
-				//  tmux new-session -d -x "${sessionwidth}" -y "${sessionheight}" -s "${sessionname}" "${preexecutable} ${executable} ${startparameters}" 2> "${lgsmlogdir}/.${selfname}-tmux-error.tmp"
-				$cmd = "tmux new-session-d -s$exe $startcmd"; //let's get this show on the road !
-				//split_exec($cmd,'');
-				echo $cmd.cr;
-				$cmd = "tmux pipe-pane -o -t $exe \"exec cat >> '$logFile'\""; 
-				echo $cmd.cr;
-				
-			//}
-			//else {
-				//run lgsm
-			//}	
-			break;
-		case 'q':	
-	}
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 }
 ?>
