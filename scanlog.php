@@ -118,19 +118,22 @@ if ($file == 'all') {
 	    if(isset($options['i'] )) {
 			die( 'Error  -i can not be set if -s is set to all'.cr);
 		}
-		$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.id <>"" and servers.running="1" order by servers.host_name ASC';
+		$allsql = 'SELECT * from server1 where running =1';
+		//echo $allsql.cr;
 		$game_results = $database->get_results($allsql);
 		$display='';
 	//print_r ($game_results);
 	foreach ($game_results as $run) {
 		//bulid path
-		$server_key = md5( ip2long($run['ipaddr'])) ;
+		//$server_key = md5( ip2long($run['ipaddr'])) ;
+		$uri = parse_url($run['url']);
+		$url = $uri['scheme']."://".$uri['host'].':'.$run['bport'].$uri['path'];
 		if (quick) {
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+			$path = $url.'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 			
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key; //used for screen log
+			$path = $url.'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log'; //used for screen log
 					}
 		$tmp = geturl($path);
 		if(debug) {
@@ -222,7 +225,7 @@ function do_all($server,$data) {
 		// save output
 		$value=trim($value);
 		$tmp = user_data($value);
-		$la[$tmp['name'] ]= $tmp;
+		$la[$tmp['name'] ] = $tmp;
 		
 	}
 		 
@@ -232,7 +235,7 @@ if (debug) {
 		echo 'Found the following:-'.cr. print_r($la,true).cr;
 	} //debug code
 	else {
-		echo "No Logons in selected log for $server since last server start".cr;
+		echo " No Logons in selected log for $server since last server start".cr;
 	}
 }
 if (!isset($la)) { 
@@ -242,7 +245,7 @@ if (!isset($la)) {
 	if ( $pc == 0 ) {
 		if(!silent) {
 			//echo "No Logons in selected log for $server".cr;
-			$rt = "\t No Logons in selected log for $server since last server start".cr;
+			$rt = " No Logons in selected log for $server since last server start".cr;
 		}
 		else {
 			//$rt ='';
@@ -296,6 +299,7 @@ foreach ($la as $user_data) {
 			if(!is_null($user_data)) {
 			$ut.= ' IP Changed from '.long2ip($result['ip']).' to '.long2ip($user_data['ip']);
 			//check ip on change
+			// trap local addresses 
 			$ip_data = get_ip_detail($ip);
 			$result['continent'] = $ip_data['continent_name'];
 			$result['country_code'] = $ip_data['country_code'];
@@ -413,7 +417,9 @@ foreach ($la as $user_data) {
 	//if (isset($ut)) {
 		
 		if ($modify || $added) {
-			$rt = 'Processing server '.$server.cr.cr;		
+			if(empty($rt)) {
+				$rt = 'Processing server '.$server.cr;
+			}		
 			$rt .= $user_stub.' '.$ut;
 		}
 	//}
@@ -433,7 +439,7 @@ $rt .= cr.'Processed '.$server.cr;
 return $rt;
 }
 if (!silent) {
-$rt = "\t No new logons on $server since last scan".cr;
+$rt = " No new logons on $server since last scan".cr;
 }
 if (debug ) {
 	echo strlen($rt).cr;

@@ -48,8 +48,11 @@ if(isset($argv[1])) {
 }
 
 $sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
+
 $games = $database->get_results($sql);
 foreach ($games as $game) {
+$uri = parse_url($game['url']);
+$url = $uri['scheme']."://".$uri['host'].':'.$game['bport'].$uri['path'];
 try
 	{
 		$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
@@ -69,16 +72,16 @@ try
 	}
 	$Query->Disconnect( );
 		if (isset($info['Players'])) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
+			$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
 			$restart[] = $game;
 		}
 
 		elseif ($info['Bots'] == $info['Players']) {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
+			$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
 			$restart[] = $game;
 		}
 		else  {
-			$game['restart'] = $game['url'].':'.$game['bport'].'/ajax.php?action=exescreen&server='.$game['host_name'].'&key='.md5($game['host']).'&cmd=';
+			$game['restart'] = "$url/ajax.php?action=exetmux&server=".$game['host_name'].'&cmd=';
 			$check[] = $game; 
 		}
 	}
@@ -91,7 +94,7 @@ foreach ($restart as $game) {
 	log_to(LOG,$logline);
 	echo geturl($game['restart'].'q').cr; // stop server
 	$exe = './scanlog.php  -s'.$game['host_name'];
-	$cmd =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.urlencode ($exe); // run scanlog
+	$cmd =  "$url/ajaxv2.php?action=exe&cmd=".urlencode ($exe); // run scanlog
 	$result = geturl($cmd);
 	$now =  date("d-m-Y h:i:sa");
 	if (!empty($result) ) {
@@ -117,29 +120,30 @@ foreach ($restart as $game) {
 		$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$now =  date("d-m-Y h:i:sa");
 		log_to (LOG, "$now sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
-		$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe;
+		$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe";
 		$output = geturl($cmd);
 		$output = trim(preg_replace('/\^\[\[0m/', '', $output));
-		echo $output.cr;
+		$output = explode(cr, $output);
+		echo end($output).cr;
 		$now =  date("d-m-Y h:i:sa");
-		log_to(LOG,$output); //see what is comming back
+		log_to(LOG,end($output)); //see what is comming back
 		$done[]=$game['install_dir']; // use this to test if update on core files has been done
 	}
 	// log prune
 	$exe = urlencode('/usr/sbin/tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
 	$log_line = $now ." Prune console logs for  tmpreaper  --mtime 1d ".$game['location']."/log/console/";
 	log_to(LOG,$log_line);
-	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+	$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe&debug=true";
 	echo geturl($cmd);
-	log_to(LOG,$cmd);
+	log_to(LOG,urldecode($cmd));
 	$exe = urlencode('/usr/sbin/tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
-	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
+	$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe&debug=true";
 	echo geturl($cmd);
 	$log_line = 'Prune steam log files for '.$exe;
-	log_to(LOG,$log_line);
+	log_to(LOG,urldecode($log_line));
 	sleep(1);
 	$now = date("d-m-Y h:i:sa");
-	$logline = "$now retarting with ".$game['restart'].'s';
+	$logline = "$now restarting with ".$game['restart'].'s';
 	log_to(LOG,$logline);
 	echo geturl($game['restart'].'s').cr; // start server
 }
