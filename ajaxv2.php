@@ -1,6 +1,6 @@
 <?php
 /*
- * ajaxv2.php
+ * ajaxv2t.php
  * 
  * Copyright 2021 Jim Richardson <jim@noideersoftware.co.uk>
  * 
@@ -33,9 +33,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('cr',PHP_EOL);
 	define ('CR',PHP_EOL);
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
-$build = "49371-3630960833";
+$build = "54606-802951692";
 $version = "2.078";
-$time = "1644130044";
+$time = "1644474313";
 error_reporting (0);
 $update_done= array();
 $ip = $_SERVER['SERVER_ADDR']; // get calling IP
@@ -151,7 +151,15 @@ log_to(LOG,$logline);
 					echo cr;
 				}
 				exit;
-				
+		case "exetmux":
+			$output = exetmux($cmds);
+			if(is_array($output)) {
+				print_r($output);
+			}
+			else {
+				echo $output;
+			}
+			exit;
 		case "exe" :
 				echo exe($cmds);
 				exit;	
@@ -177,7 +185,9 @@ log_to(LOG,$logline);
 					echo file_get_contents($cmds['file']);
 				}
 			exit;	
-			
+		case "lgsm" :
+				lgsm($cmds);
+				exit;
 		case "ps_file" :
 			if (isset($cmds['filter'])) {
 				// add the grep filter
@@ -490,8 +500,8 @@ function exescreen ($cmds) {
 	   	return $return;
 	}
 	if ($server['host'] <> $localIP) {
-		$choices = print_r($localIPs,true);
-		return "This Server is not hosted here $localip /".$server['host']." choices are $choices the key was $key"; // we know this one but it's elsewhere
+		//$choices = print_r($localIPs,true);
+		//return "This Server is not hosted here $localip /".$server['host']." choices are $choices the key was $key"; // we know this one but it's elsewhere
 	}
 	switch ($server['binary_file']) {
 		case 'srcds_run':
@@ -732,10 +742,10 @@ function check_services($cmds) {
 				$service = str_replace('[ + ]','',$service);
 				$id = trim($service);
 				if(isset($cmds['running']) and $cmds['running'] == 'true'){
-					$return[$id] = '✔ ';
+					$return[$id] = true;
 				}
 				elseif (!isset($cmds['running'])) {
-							$return[$id] = '✔ ';
+							$return[$id] = true;
 						}
 			
 		}
@@ -746,10 +756,10 @@ function check_services($cmds) {
 			$service = str_replace('[ - ]','',$service);
 			$id = trim($service);
 			if(isset($cmds['running']) and $cmds['running'] == 'false'){
-					$return[$id] = '✖';
+					$return[$id] = false;
 			}
 			elseif (!isset($cmds['running'])) {
-				$return[$id] = '✖';
+				$return[$id] = false;
 			}
 		}
 		//echo $key.' '.$service.cr;
@@ -1518,5 +1528,168 @@ function add_steamid($players) {
 	return $players;
 }
 return  false;
+}
+
+function exetmux($cmds) {
+	// open tmux windoze
+	global $database;
+	$filestart = false;
+	$exe = $cmds['server'];
+	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
+	$server = $database->get_row($sql); // pull results
+	$startcmd = trim($server['startcmd']);
+	if(is_file($startcmd) or filter_var($startcmd, FILTER_VALIDATE_URL )) {
+		// looks like lgsm start
+		$filestart = true; // make sure we append the correct tail
+	}
+	$logFile = $server['location'].'/log/console/'.$server['host_name'].'-console.log' ;
+	chdir($server['location']);
+	switch ($server['binary_file']) {
+		case 'srcds_run':
+			$cmd = 'ps -C srcds_linux -o pid,%cpu,%mem,cmd |grep '.$exe.'.cfg';
+			break;
+		default:
+			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
+			break;
+	}
+	$is_running = trim(shell_exec ($cmd)); // are we running ?
+	if($is_running) {
+		$tmp = explode(" ",trim($is_running));
+		$pid = $tmp[0]; // get the progs pid so we can wait for it to finish
+	}
+	switch ($cmds['cmd']) {
+		case 's':
+			if($is_running) {
+				return "$exe appears to be running w".cr;
+			}
+
+			if (!$filestart){
+				// run native
+				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
+				rename($logFile, $savedLogfile); // log rotate
+				$cmd = "tmux -L $exe new -d -s$exe $startcmd"; //let's get this show on the road !
+				$output = split_exec($cmd,'');
+				$cmd = "tmux -L $exe pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
+				$output = split_exec($cmd,'');
+			}
+			else {
+				$cmd = $startcmd.' st';
+				$output = split_exec($cmd,'');
+			}			
+				$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+				$update['running'] = 1;
+				$update['starttime'] = time();
+				$where['host_name'] = $exe; 
+				$database->update('servers',$update,$where);
+				return "Starting $exe";
+				break;
+		case 'q':
+			if(!$is_running) {
+				return "$exe doesn't appear to be running";
+			}
+			$cmd = "tmux -L linuxgsm send -t $exe  \"quit\" ENTER";
+			$output = split_exec($cmd,'');
+			$update['running'] = 0;
+			$update['starttime'] = '';
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
+			return "stopping $exe";
+			break; 
+		case 'c':
+			 if(!$is_running) {
+				return "$exe doesn't appear to be running";
+			}
+			$message = trim($cmds['text']);
+			$cmd = "tmux -L linuxgsm send -t $exe \"$message\" ENTER";
+            $output = split_exec($cmd,'');
+			return "Command sent" ; 
+            break;
+		case 'r':
+			chdir($server['location']);
+			$startcmd = $server['startcmd'];
+			if(!$is_running) {
+				if(!$filestart) {
+					$cmd = "tmux -L linuxgsm new-window -d -s$exe $startcmd";
+				}
+				else {
+					$cmd = $startcmd.' r';
+				}
+				$output = split_exec($cmd,'');
+				return "$exe doesn't appear to be running, starting instead".cr;
+			}
+			if (!$filestart) {
+				$cmd = "tmux -L $exe send -t $exe quit ENTER";
+				$output = split_exec($cmd,'');
+				while (posix_getpgid($pid)){
+			        echo "Waiting for $exe to finish"; 
+    				sleep(2);
+				}
+				$cmd = "tmux -L linuxgsm new-window  -s$exe $startcmd"; //let's get this show on the road !
+				$output = split_exec($cmd,'');
+				$cmd = "tmux -L  linuxgsm pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
+				$output = split_exec($cmd,'');
+			}
+			else {
+				$cmd = $startcmd.' r';
+				$output = split_exec($cmd,'');
+			}
+			return "restarting $exe"; 
+			break;
+		case "w":
+			$cmd = 'tmux -L linuxgsm ls -F "#{window_name},#{session_created}"';
+			$output = split_exec($cmd,'');
+			$tmp = explode(cr,trim($output['stdout']));
+			foreach ($tmp as $line) {
+				$tmpline = explode(',',$line);
+				$return[$tmpline[0]] = $tmpline[1];
+			}
+			return $return;
+	}
+}
+function lgsm($cmds) {
+	// get some more info out of lgsm
+	global $database;
+	$exe = $cmds['server'];
+	$sql = 'select * from server1 where host_name like "'.trim($exe).'"';
+	$server = $database->get_row($sql); // pull results
+	$startcmd = trim($server['startcmd']);
+	$cmd = $startcmd.' '.$cmds['cmd'];
+	$output = split_exec($cmd,'');
+	//print_r($output);
+	//$output['stdout'] = str_replace(array("\n", "\t", "\r"), '', $output['stdout']);
+	$output['stdout'] = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $output['stdout']);
+	$r_output = explode(cr,trim($output['stdout']));
+	if (strtolower($cmds['cmd']) == 'dt') {
+		foreach ($r_output as $k => $v) {
+			if (str_starts_with($v,'====================')){
+				unset ($r_output[$k]);
+				continue;
+			}
+			$new = str_replace(array("\n", "\t", "\r"), '', $v);
+			$new = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $new);
+			if (strpos($new,':')) {
+				//do array conversion
+				$tmp = explode(":",$new);
+				$key = strtolower($tmp[0]);
+				if(strpos($key,' ')) {
+					//
+					$key = str_replace(' ','_',$key);
+				}
+				$r_output[$key] = trim($tmp[1]);
+				unset ($r_output[$k]);
+			}
+			else {
+				if(str_starts_with(trim($new),'./')) {
+					$r_output['command_line'] = trim($new);
+					unset($r_output[$k]);
+				}
+				else{
+					unset($r_output[$k]) ;
+				}
+			}
+		}
+		$r_output= array_filter($r_output);
+	}
+	print_r($r_output);
 }
 ?>

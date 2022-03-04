@@ -65,9 +65,19 @@ if (isset($cmds['debug'])) {
 	echo "cmd = $cmd".cr;
 }
 $options['phpgsm-auth'] = "true";
-if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
-if ($query['output'] == 'json') {header('Content-Type: application/json');}
-echo geturl($cmd,$settings['secure_user'],$settings['secure_password'],$options,$query); //password set file
+if(isset($query['output'])) {
+	if ($query['output'] == 'xml'){header('Content-Type: text/xml');}
+	if ($query['output'] == 'json') {header('Content-Type: application/json');}
+}
+	
+//echo $cmd.'<br>';
+//print_r($options);
+//echo '<br>';
+//print_r($query);
+//echo '<br>';
+//echo geturl($cmds,'','',$options,$query);
+//die();
+echo geturl($cmd,null,null,$options,$query); //password set file
 
 function split_query($query) {
 	// split up query
