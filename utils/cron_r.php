@@ -99,7 +99,7 @@ foreach ($restart as $game) {
 	$now =  date("d-m-Y h:i:sa");
 	if (!empty($result) ) {
 		log_to(LOG,"$now Scanlog returned some data for ".$game['host_name']);
-		echo $result.cr;
+		echo trim($result).cr;
 	}
 	else {
 		log_to(LOG,"$now Scanlog failed for ".$game['host_name']);
@@ -124,7 +124,7 @@ foreach ($restart as $game) {
 		$output = geturl($cmd);
 		$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 		$output = explode(cr, $output);
-		echo end($output).cr;
+		echo trim(end($output)).cr;
 		$now =  date("d-m-Y h:i:sa");
 		log_to(LOG,end($output)); //see what is comming back
 		$done[]=$game['install_dir']; // use this to test if update on core files has been done
@@ -134,11 +134,11 @@ foreach ($restart as $game) {
 	$log_line = $now ." Prune console logs for  tmpreaper  --mtime 1d ".$game['location']."/log/console/";
 	log_to(LOG,$log_line);
 	$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe&debug=true";
-	echo geturl($cmd);
+	geturl($cmd);
 	log_to(LOG,urldecode($cmd));
 	$exe = urlencode('/usr/sbin/tmpreaper  --mtime 1d '.$game['location'].'/'.$game['game'].'/logs/');
 	$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe&debug=true";
-	echo geturl($cmd);
+	geturl($cmd);
 	$log_line = 'Prune steam log files for '.$exe;
 	log_to(LOG,urldecode($log_line));
 	sleep(1);
