@@ -112,9 +112,9 @@ $update_done= array();
 $file =options['s'];
 if ($file == 'all') {
 	if(isset($options['i'] )) {
-		die( 'Error  -i can not be set if -s is set to all'.cr);
+		die( "Error  you can not use -i because you have set the 'all' server option".cr);
 	}
-	$allsql = 'SELECT * from server1 where running =1';
+	$allsql = 'SELECT * from server1 where running =1 order by host_name ASC';
 	$game_results = $database->get_results($allsql);
 	$display='';
 	foreach ($game_results as $run) {
@@ -145,36 +145,44 @@ if ($file == 'all') {
 	echo $display;
 }
 else {
-	// do supplied file
 	if(isset(options['i'])) {
 		if (!file_exists(options['i'])) {
+			// check if the file your going to import is there
 			echo 'could not open '.options['i'].cr;
 			exit (1);
 		}
 	}
 	$allsql = 'SELECT servers.* , base_servers.url, base_servers.port as bport, base_servers.fname,base_servers.ip as ipaddr FROM `servers` left join `base_servers` on servers.host = base_servers.ip where servers.host_name="'.options['s'].'"';
 	$run = $database->get_row($allsql);
+	$uri = parse_url($run['url']);
+	$url = $uri['scheme']."://".$uri['host'].':'.$run['bport'].$uri['path'];
 	if(empty($run)) {
 		echo 'Invalid server id '.options['s'].' correct & try again'.cr;
 		exit(2);
 	}
-	$server_key = md5( ip2long($run['ipaddr'])) ;
+	
 	if (!isset(options['i'])) {
 		if (quick) {
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
+			$path = $url.'/ajaxv2.php?action=lsof&filter='.$run['host_name'].'&loc='.$run['location'].'/'.$run['game'].'&return=content'; //used for steam log
 			if (debug) {
 				echo $path.cr;
 			}
 		}
 		else {
-			$path = $run['url'].':'.$run['bport'].'/ajaxv2.php?action=get_file&file='.$run['location'].'/log/console/'.$run['host_name'].'-console.log&key='.$server_key;
+			$path = "$url/ajaxv2.php?action=get_file&file=".$run['location'].'/log/console/'.$run['host_name'].'-console.log';
+			if (debug) {
+				echo $path.cr;
+			}
 		}
 	}
 	else {
-		// assume run local 
+		//  at last process the file to import
 		$path = options['i'];
+		$tmp = file_get_contents($path);
 	}
-	$tmp = geturl($path);
+	if(!isset($tmp)) {
+		$tmp = geturl($path);
+	}
 	echo do_all(options['s'],$tmp);
 }
 
@@ -262,7 +270,7 @@ function do_all($server,$data) {
 			if ($last_logon >  $result['last_log_on']) {
 				$result['last_log_on'] = $last_logon;
 				$result['log_ons'] ++;
-				$ut.= ' new logon  at '.date('d-m-Y  H:i:s',$last_logon).' (total '.$result['log_ons'].')';
+				$ut.= 'new logon at '.date('d-m-Y  H:i:s',$last_logon).' (total '.$result['log_ons'].')';
 				$modify=true;
 				$logon = true;
 			}
@@ -336,9 +344,10 @@ function do_all($server,$data) {
 				echo "adding $username".cr;
 			}
 			$added = true;
-			$ut .= $ut.' New user';
+			$ut .= $ut.'New user';
 			$count ++;
-			$last_logon = time();
+			//$last_logon = time();
+			$last_logon = strtotime($user_data['time']);
 			$ip_data = get_ip_detail($ip);
 			$result['ip'] = $user_data['ip'];
 			$result['steam_id64'] = $user_data['id2'];
@@ -366,7 +375,7 @@ function do_all($server,$data) {
 			$user_stub ="\t".$username.' ('.$result['country'].') ';
 			if ($in === true ){
 				$done++;
-				$ut .=' Record added at '.date('d-m-Y H:i:s',$last_logon).cr;
+				$ut .=' logged in at '.date('d-m-Y H:i:s',$last_logon).cr;
 				$sql = 'call update_logins ('.$result['steam_id64'].',"'.$server.'",'.$result['last_log_on'].')';
 				$database->query($sql);
 			}
@@ -382,7 +391,7 @@ function do_all($server,$data) {
 			if(empty($rt)) {
 				$rt = 'Processing server '.$server.cr;
 			}		
-			$rt .= $user_stub.' '.$ut;
+			$rt .= $user_stub.$ut;
 		}
 	}
 	$mask = "%15.15s %4.4s \n";
@@ -390,14 +399,14 @@ function do_all($server,$data) {
 		$rt .= sprintf($mask,'New Users',$done );
 		$rt .= sprintf($mask,'Modified Users',$update_users );
 		if ($uds == true) {
-			$rt .= cr.'Warning '.$server.' needs updating & restarting'.cr;
+			$rt .= cr."Warning $server needs updating & restarting".cr;
 			$rt .= update_server($server);
 		}
 		$rt .= 'Processed '.$server.cr;
 		return $rt;
 	}
 	if (!silent) {
-		$rt = " No new logons on $server since last scan".cr;
+		$rt = " No Logons in selected log for $server since last scan".cr;
 	}
 	if (debug ) {
 		echo strlen($rt).cr;
@@ -428,21 +437,31 @@ function update_server($server){
 	//Your server needs to be restarted in order to receive the latest update.
 	global $database, $update_done,$settings;
 	$s = "Server Update via Scanlog VERSION".cr;
-	$sql = 'select * from server1 where host_name="'.$server.'"';
-	$steamcmd = '/usr/games/steamcmd';
+	$sql = "select * from server1 where host_name=\"$server\"";
+	$steamcmd = shell_exec('which steamcmd');
+	if(!empty($steamcmd)) {
+		$steamcmd = trim($steamcmd);
+	}
+	else {	
+		$steamcmd = '/usr/games/steamcmd';
+	}
 	$game = $database->get_row($sql);
-	$stub =  $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&cmd='; // used to start & stop
+	$uri = parse_url($game['url']);
+	$url = $uri['scheme']."://".$uri['host'].':'.$game['bport'].$uri['path'];
+	$stub =  $url.'/ajaxv2.php?action=exescreen&server='.$game['host_name'].'&cmd='; // used to start & stop
 	if (in_array($game['install_dir'],$update_done)) {
 		$s .= 'Update already done'.cr;
 		return $s;
 	}
 	$cmd = $stub.'q';
 	$s .= geturl($cmd).cr; // stopped server
-	// need to check if this is a root install, if so elevate the privs  
-	$exe = urlencode('sudo '.$steamcmd.' +login anonymous +force_install_dir '.$game['install_dir'].' +app_update '.$game['server_id'].' +quit');
+	// need to check if this is a root install, if so elevate the privs
+	$install_dir = $game['install_dir'];
+	$server_id = $game['server_id'];  
+	$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 	$cmd = $game['url'].':'.$game['bport'].'/ajaxv2.php?action=exe&cmd='.$exe.'&debug=true';
 	$s .=geturl($cmd);
-	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '".$game['install_dir']."'";
+	$sql = "SELECT * FROM `server1` WHERE `game` like '".$game['game']."' and `install_dir` like '$install_dir'";
 	$restarts = $database->get_results($sql);
 	foreach ($restarts as $restart) {
 		// restart them all
@@ -468,11 +487,11 @@ function user_data($value) {
 	if(debug) {
 		 echo "value = $value".cr;
 		 echo 'count of $vx = '.count($vx).cr;
-		echo '$vx is set to'.cr.print_r($vx,true).cr;
-		echo '$sx is set to'.cr.print_r($sx,true).cr;
-		echo '$sx2 is set to'.cr.print_r($sx2,true).cr;
-		echo '$sx3 is set to'.cr.print_r($sx3,true).cr;
-		echo '$s is set to'.cr.print_r($s,true).cr;
+		 echo '$vx is set to'.cr.print_r($vx,true).cr;
+		 echo '$sx is set to'.cr.print_r($sx,true).cr;
+		 echo '$sx2 is set to'.cr.print_r($sx2,true).cr;
+		 echo '$sx3 is set to'.cr.print_r($sx3,true).cr;
+		 echo '$s is set to'.cr.print_r($s,true).cr;
 	}
 	 $s[1] = str_replace('<','',$sx3[0]);
 	 $s[1] = str_replace('>','',$s[1]);
@@ -487,7 +506,7 @@ function user_data($value) {
 	 $return['id2'] = $steam_id->ConvertToUInt64();
 	 $return['ip'] = $vx[3];
 	 if(debug) {
-		echo 'Returning user data as'.cr.print_r($return,true).cr;
+		echo 'Returning user data as :-'.cr.print_r($return,true).cr;
 	}
 	 return $return;
 }
