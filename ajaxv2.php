@@ -339,6 +339,8 @@ function game_detail() {
 		$output[] = $tmp;
 	}
 	$i=0;
+	$sql = "SELECT game as server,count(*) as today FROM player_history WHERE FROM_UNIXTIME(last_play,'%Y-%m-%d') = CURDATE() group by game";
+	$todays_players = $db->get_results($sql);   
 	$sql ='select  servers.location,count(*) as total,servers.host from servers where servers.fname like "'.$cmds['server'].'"'; //fname not ip
 	$server_no = $db->get_row($sql); // total servers
 	$server_count = $server_no['total'];
@@ -367,6 +369,14 @@ function game_detail() {
 		$servers = $db->get_results($sql);
 		foreach ($servers as $server) {
 			unset ($server['id']);
+			$fname = trim($server['host_name']);
+			$key = searchforkey($fname, $todays_players);
+			if ($key === false) {
+			 $server['player_tot'] = 0;
+			}
+			else {
+			 $server['player_tot'] = $todays_players[$key]['today'];
+			}
 			//$key = array_search('100', array_column($userdb, 'uid'));
 			$run_record = get_key($server['host_name'],$output) ;					
 			if (get_key($server['host_name'],$output) >= 0) {
@@ -1552,7 +1562,7 @@ function exetmux($cmds) {
 			$cmd = 'ps -C '.$server['binary_file'].' -o pid,%cpu,%mem,cmd |grep '.$server['binary_file'];
 			break;
 	}
-	$is_running = trim(shell_exec ($cmd)); // are we running ?
+	$is_running = shell_exec ($cmd); // are we running ?
 	if($is_running) {
 		$tmp = explode(" ",trim($is_running));
 		$pid = $tmp[0]; // get the progs pid so we can wait for it to finish
@@ -1560,7 +1570,7 @@ function exetmux($cmds) {
 	switch ($cmds['cmd']) {
 		case 's':
 			if($is_running) {
-				return "$exe appears to be running w".cr;
+				return "$exe appears to be running".cr;
 			}
 
 			if (!$filestart){
@@ -1593,7 +1603,7 @@ function exetmux($cmds) {
 			$update['starttime'] = '';
 			$where['host_name'] = $exe; 
 			$database->update('servers',$update,$where);
-			return "stopping $exe";
+			return "Stopping $exe";
 			break; 
 		case 'c':
 			 if(!$is_running) {
@@ -1691,5 +1701,14 @@ function lgsm($cmds) {
 		$r_output= array_filter($r_output);
 	}
 	print_r($r_output);
+}
+
+function searchforkey($id, $array) {
+   foreach ($array as $key => $val) {
+       if ($val['server'] === $id) {
+           return $key;
+       }
+   }
+   return false;
 }
 ?>
