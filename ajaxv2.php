@@ -370,7 +370,7 @@ function game_detail() {
 		foreach ($servers as $server) {
 			unset ($server['id']);
 			$fname = trim($server['host_name']);
-			$key = searchforkey($fname, $todays_players);
+			$key = searchforkey($fname, $todays_players,'server');
 			if ($key === false) {
 			 $server['player_tot'] = 0;
 			}
@@ -455,6 +455,16 @@ function game_detail() {
 		$tsize = str_replace(dirname($server['location']),'',$du);
 	}
 	// add computed items
+	$sql = "SELECT `country`,country_code, count(*) as today FROM players WHERE FROM_UNIXTIME(last_log_on,\"%Y-%m-%d\") = CURDATE() group by country_code order by today desc;";
+	$return['general']['countries'] = $db->get_results($sql);
+	//$countries = $db->get_results($sql);
+	$sql = "SELECT * FROM `logins` LIMIT 10 ";
+	//$return['general']['countries'] = $db->get_results($sql);
+	$countries = $db->get_results($sql);
+	
+	$sql = "SELECT sum(players) as player_tot, count(country) as countries, sum(logins) as tot_logins, (select count(*) from servers) as game_tot, (select count(*) from servers where running = 1) as run_tot  FROM `logins` WHERE 1";
+	$return['general']['players'] = $db->get_row($sql);
+	$return['general']['countries'] = build_countrys($countries,$return['general']['countries'],$return);
 	$return['general']['server_id'] = $cmds['server'];
 	$return['general']['live_servers'] = $i;
 	$return['general']['total_players'] = $total_players;
@@ -466,6 +476,7 @@ function game_detail() {
 	$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 	$return['general']['total_size_raw'] = floatval($tsize);
+	
 	return $return;
 }
 		
@@ -1569,6 +1580,8 @@ function exetmux($cmds) {
 	}
 	switch ($cmds['cmd']) {
 		case 's':
+			//print nl2br(shell_exec( 'whoami' ).'\n');
+			//print nl2br(get_current_user().'\n');
 			if($is_running) {
 				return "$exe appears to be running".cr;
 			}
@@ -1597,7 +1610,9 @@ function exetmux($cmds) {
 			if(!$is_running) {
 				return "$exe doesn't appear to be running";
 			}
-			$cmd = "tmux -L linuxgsm send -t $exe  \"quit\" ENTER";
+			//$cmd = "tmux -L linuxgsm send -t $exe  \"quit\" ENTER";
+			$cmd = "tmux -L linuxgsm kill-window -t $exe";
+			//echo "\$cmd = $cmd";
 			$output = split_exec($cmd,'');
 			$update['running'] = 0;
 			$update['starttime'] = '';
@@ -1703,12 +1718,41 @@ function lgsm($cmds) {
 	print_r($r_output);
 }
 
-function searchforkey($id, $array) {
+function searchforkey($id, $array,$col) {
    foreach ($array as $key => $val) {
-       if ($val['server'] === $id) {
+	   //print_r($val);
+       if ($val[$col] === $id) {
            return $key;
        }
    }
+   //print_r($val);
+   if($col == 'country') {
+   //echo "failed to find $id in $col".cr;
+   //print_r($array);
+}
    return false;
+}
+function build_countrys ($top_ten,$other_data,$stats) {
+	// build the country array
+	
+	//print_r ($top_ten);
+	//print_r($other_data);
+	foreach ($top_ten as $k => $v) {
+		$top_ten[$k]['flag'] =  'https://ipdata.co/flags/'.trim(strtolower($top_ten[$k]['country_code'])).'.png';
+		$top_ten[$k]['percent'] = number_format(($top_ten[$k]['logins']/$stats['general']['players']['tot_logins'])*100,2).'%';
+		$top_ten[$k]['ppercent'] = number_format(($top_ten[$k]['players']/$stats['general']['players']['player_tot'])*100,2).'%';
+		$key = searchforkey($v['country'],$other_data,'country');
+		
+		if ($key === false) {
+			// no logins today but in the top 10
+			$top_ten[$k]['today'] = 0;
+		}
+		else{ 
+			$top_ten[$k]['today'] = $other_data[$key]['today'];
+		}
+	}
+	orderBy($top_ten,'logins','d');
+	return $top_ten;
+	 
 }
 ?>
