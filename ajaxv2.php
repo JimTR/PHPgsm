@@ -244,7 +244,8 @@ log_to(LOG,$logline);
 						print($xml->asXML());
 					}	
 					else {
-							echo json_encode(utf8ize($data));
+							//echo json_encode(utf8ize($data));
+							echo json_encode($data);
 						}
 					exit;	
 			
@@ -476,7 +477,27 @@ function game_detail() {
 	$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 	$return['general']['total_size_raw'] = floatval($tsize);
-	
+	$sql = "select players.name,players.country,players.country_code,players.log_ons,players.last_log_on,players.first_log_on from players ORDER BY `players`.`log_ons` DESC LIMIT 10";
+	//$return['general']['top_players']
+	$players  = $db->get_results($sql);
+	foreach ($players as $k => $v) {
+		// top 10 players
+		$players[$k]['name'] = Emoji::Decode(trim($v['name']));
+		//$players[$k]['name'] = utf8_Encode($v['name']);
+		//echo mb_detect_encoding($$players[$k]['name']).cr;;
+		$players[$k]['last_log_on'] = time2str($v['last_log_on']);
+		$players[$k]['flag'] =  'https://ipdata.co/flags/'.trim(strtolower($v['country_code'])).'.png';
+                if ($players[$k]['last_log_on'] == "1 weeks ago") {$players[$k]['last_log_on'] = 'a week ago';}
+		//if ($player['log_ons'] < 100) {$player['log_ons'] =' '.$player['log_ons'];}
+		if ($players[$k]['first_log_on'] >0 ) {
+			$players[$k]['first_log_on'] = time2str($v['first_log_on']);
+		}
+		else {
+			$players[$k]['first_log_on'] = 'N/A';
+		}
+	}
+	$return['top_players']= $players;
+	//header('Content-Type:text/html; charset=gb2312');
 	return $return;
 }
 		
