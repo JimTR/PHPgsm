@@ -52,7 +52,11 @@ $sql = "SELECT * FROM `server1` WHERE running=1 ORDER BY`host_name` ASC";
 $games = $database->get_results($sql);
 foreach ($games as $game) {
 $uri = parse_url($game['url']);
-$url = $uri['scheme']."://".$uri['host'].':'.$game['bport'].$uri['path'];
+$url = $uri['scheme']."://".$uri['host'].':'.$game['bport'];
+if (isset($uri['path'])) {
+	$url .= $uri['path'];
+}
+
 try
 	{
 		$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
@@ -66,7 +70,7 @@ try
 		if (strpos($Exception,'Failed to read any data from socket')) {
 			$Exception = 'Failed to read any data from socket Module (Cron_r - Game Detail '.$sub_cmd.')';
 		}
-		$error = date("d/m/Y h:i:sa").' ('.$game['host'].':'.$game['port'].') '.$Exception;
+		$error = date("d/m/Y H:i:s").' ('.$game['host'].':'.$game['port'].') '.$Exception;
 		$mask = "%17.17s %-30.30s \n";
 		log_to(LOG,$error);
 	}
@@ -75,10 +79,11 @@ try
 			$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
 			$restart[] = $game;
 		}
-
-		elseif ($info['Bots'] == $info['Players']) {
-			$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
-			$restart[] = $game;
+		elseif (isset($info['Bots'])) {
+			if ($info['Bots'] == $info['Players']) {
+				$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
+				$restart[] = $game;
+			}
 		}
 		else  {
 			$game['restart'] = "$url/ajax.php?action=exetmux&server=".$game['host_name'].'&cmd=';
@@ -86,17 +91,21 @@ try
 		}
 	}
 
-
+if (!isset($game)) {
+$game=$check;
+}
 echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 foreach ($restart as $game) {
-	$now =  date("d-m-Y h:i:sa");
+	$now =  date("d-m-Y H:i:s");
 	$logline = "$now stopping with ".$game['restart'].'q';
 	log_to(LOG,$logline);
 	echo geturl($game['restart'].'q').cr; // stop server
 	$exe = './scanlog.php  -s'.$game['host_name'];
 	$cmd =  "$url/ajaxv2.php?action=exe&cmd=".urlencode ($exe); // run scanlog
+	$now = date("d-m-Y H:i:s");
+	log_to(LOG,"$now running scanlog with $cmd and sending $exe to it");
 	$result = geturl($cmd);
-	$now =  date("d-m-Y h:i:sa");
+	$now =  date("d-m-Y H:i:s");
 	if (!empty($result) ) {
 		log_to(LOG,"$now Scanlog returned some data for ".$game['host_name']);
 		echo trim($result).cr;
@@ -117,15 +126,15 @@ foreach ($restart as $game) {
 		}
 		$install_dir = $game['install_dir'];
 		$server_id = $game['server_id'];
-		$exe = urlencode("sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
-		$now =  date("d-m-Y h:i:sa");
-		log_to (LOG, "$now sudo $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		$exe = urlencode("$steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		$now =  date("d-m-Y H:i:s");
+		log_to (LOG, "$now  $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe";
 		$output = geturl($cmd);
 		$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 		$output = explode(cr, $output);
 		echo trim(end($output)).cr;
-		$now =  date("d-m-Y h:i:sa");
+		$now =  date("d-m-Y H:i:s");
 		log_to(LOG,end($output)); //see what is comming back
 		$done[]=$game['install_dir']; // use this to test if update on core files has been done
 	}
@@ -142,7 +151,7 @@ foreach ($restart as $game) {
 	$log_line = 'Prune steam log files for '.$exe;
 	log_to(LOG,urldecode($log_line));
 	sleep(1);
-	$now = date("d-m-Y h:i:sa");
+	$now = date("d-m-Y H:i:s");
 	$logline = "$now restarting with ".$game['restart'].'s';
 	log_to(LOG,$logline);
 	echo geturl($game['restart'].'s').cr; // start server
