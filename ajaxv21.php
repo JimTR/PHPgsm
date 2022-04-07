@@ -37,8 +37,9 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 	define ('no_borders',array('horizontal' => '', 'vertical' => '', 'intersection' => '','left' =>'','right' => '','left_top' => '','right_top'=>'','left_bottom'=>'','right_bottom'=>'','top_intersection'=>''));
 	define ('IN_PHPGSM','');
-	$build = "13144-3446352016";
+$build = "13119-1577542034";
 	$version = "2.101";
+$time = "1643984003";
 	$cmds = startup();
 	//print_r($argv);
 	//echo 'returned $cmds '.cr,printr($cmds).cr;
@@ -87,8 +88,11 @@ require DOC_ROOT. '/xpaw/SourceQuery/bootstrap.php'; // load xpaw
 					 goto error_default;
 				 }
 				$file = $server['location'].'/log/console/'.$cmds['server'].'-console.log'; // get the correct file name
-				$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
+				//$cmds = array_merge($cmds,$server); //merge all server info into the cmds array 
+				define ('server',$server);
+				define ('cmds',$cmds);
 				include 'modules/console.php'; //load the module
+					
 			    $output = readlog($cmds,$file); // run the command
 			   output($output,$cmds['output'],'<console/>','output'); //output the result				
 			   break;
@@ -325,7 +329,7 @@ function output ($content, $type,$node,$sub_node) {
 				$error['error'] = $content;
 				$content = $error; 
 			}
-			
+			//$content = convert_from_latin1_to_utf8_recursively($content);
 			echo json_encode($content);
 			break;
 		case "xml":
@@ -397,5 +401,24 @@ function exe($cmds) {
  
 		return false; // just in case anything slips through
 	}
-}	
+}
+
+function convert_from_latin1_to_utf8_recursively($dat)
+   {
+      if (is_string($dat)) {
+         return utf8_encode($dat);
+      } elseif (is_array($dat)) {
+         $ret = [];
+         foreach ($dat as $i => $d) $ret[ $i ] = convert_from_latin1_to_utf8_recursively($d);
+
+         return $ret;
+      } elseif (is_object($dat)) {
+         foreach ($dat as $i => $d) $dat->$i = convert_from_latin1_to_utf8_recursively($d);
+
+         return $dat;
+      } else {
+         return $dat;
+      }
+   }     
+	
 ?>
