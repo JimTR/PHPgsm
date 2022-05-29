@@ -185,6 +185,7 @@ function get_cpu_info() {
 		$cpu2[trim(strtolower($key))] = trim($tmpline[1]);
 	}
 	//print_r($cpu2); 	
+	$cores = intval($cpu2['cores_per_socket']) * intval($cpu2['sockets']);
 		foreach ($cpu as &$value) {
 			//read data
 			$i = strpos($value,":",0);
@@ -203,10 +204,13 @@ function get_cpu_info() {
 		$cpu_info['load_1_min'] = number_format($load[0],2);
 		$cpu_info['load_10_min'] = number_format($load[1],2);
 		$cpu_info['load_15_min'] = number_format($load[2],2);
-		$cpu_info['load_1_min_pc'] = ($load[0]*100)/$cpu2['cpus'];
-		$cpu_info['load_10_min_pc'] = ($load[1]*100)/$cpu2['cpus'];
-		$cpu_info['load_15_min_pc'] = ($load[2]*100)/$cpu2['cpus'];
+		$cpu_info['load_15_min'] = number_format($load[2],2);
+		$cpu_info['load_1_min_pc'] = number_format(($load[0]*100)/$cores,1)."%";
+		$cpu_info['load_10_min_pc'] = number_format(($load[1]*100)/$cores,1)."%";
+		$cpu_info['load_15_min_pc'] = number_format(($load[2]*100)/$cores,1)."%";
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
+		$cpu_info['load_pc'] = $cpu_info['load_1_min_pc']." (1 min) ".$cpu_info['load_10_min_pc']." (10 Mins) ".$cpu_info['load_15_min_pc']." (15 Mins)";
+		$cpu_info['cores'] = $cores;
 		$cpu_info['boot_time'] = get_boot_time();
 		$local = shell_exec('hostname -I');
 		$local = str_replace(' ', ', ',trim($local));
@@ -220,7 +224,7 @@ function get_cpu_info() {
 		//interfaces ! netstat -i  |sed 1,2d
 		// ip addr | grep "^ *inet " checks virtual adaptors
 		$cpu_info['local_ip'] = $all_ip[0];
-		$cpu_info['ips'] = $local;
+		$cpu_info['ips'] = $all_ip[0];
 		if(isset($public_ip)){
 			$cpu_info['ips']="$public_ip, ".$cpu_info['ips'];
 		}
