@@ -200,14 +200,15 @@ function get_cpu_info() {
 		  $cpu_info[$key] = trim(substr($value,$i+1));
 		}
 		$cpu_info['processors'] = trim(shell_exec(" grep -c ^processor /proc/cpuinfo")); // count processors
+		$p = $cpu_info['processors'];
 		$load = sys_getloadavg();
 		$cpu_info['load_1_min'] = number_format($load[0],2);
 		$cpu_info['load_10_min'] = number_format($load[1],2);
 		$cpu_info['load_15_min'] = number_format($load[2],2);
 		$cpu_info['load_15_min'] = number_format($load[2],2);
-		$cpu_info['load_1_min_pc'] = number_format(($load[0]*100)/$cores,1)."%";
-		$cpu_info['load_10_min_pc'] = number_format(($load[1]*100)/$cores,1)."%";
-		$cpu_info['load_15_min_pc'] = number_format(($load[2]*100)/$cores,1)."%";
+		$cpu_info['load_1_min_pc'] = number_format(($load[0]*100)/$p,1)."%";
+		$cpu_info['load_10_min_pc'] = number_format(($load[1]*100)/$p,1)."%";
+		$cpu_info['load_15_min_pc'] = number_format(($load[2]*100)/$p,1)."%";
 		$cpu_info['load'] = number_format($load[0],2)." (1 min)  ".number_format($load[1],2)." (10 Mins)  ".number_format($load[2],2)." (15 Mins)";
 		$cpu_info['load_pc'] = $cpu_info['load_1_min_pc']." (1 min) ".$cpu_info['load_10_min_pc']." (10 Mins) ".$cpu_info['load_15_min_pc']." (15 Mins)";
 		$cpu_info['cores'] = $cores;
