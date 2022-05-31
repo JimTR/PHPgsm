@@ -838,7 +838,7 @@ catch( Exception $e ) {
 $Query->Disconnect( );
 //we now have data
 jump:
-$sql = 'select * from players where BINARY name="';
+$sql = 'select * from players where name_c="';
 if (count($players)) {
 	// we have players
 	orderBy($players,'Frags','d'); // score order
@@ -1541,7 +1541,7 @@ function add_steamid($players) {
 	$emoji = new Emoji;
 	$database = new db();
 	orderBy($players,'Frags','d'); // score order
-	$sql = 'select * from players where BINARY name="';
+	$sql = 'select * from players where name_c="';
 	foreach ($players as $k=>$v) {
 		//loop  add flag & country $v being the player array 
 		// don't update player here let scanlog do it
@@ -1601,22 +1601,35 @@ function exetmux($cmds) {
 	}
 	switch ($cmds['cmd']) {
 		case 's':
-			//print nl2br(shell_exec( 'whoami' ).'\n');
-			//print nl2br(get_current_user().'\n');
-			if($is_running) {
-				return "$exe appears to be running".cr;
-			}
-
+			$tm = false;
+			$tmux_running = split_exec("tmux -L phpgsm ls",'');
+			if ($tmux_running['return']) {$tm = true;}	
+			if($is_running) {return "$exe appears to be running".cr;}
 			if (!$filestart){
-				// run native
+				//command line start not a script start
 				$savedLogfile = $server['location'].'/log/console/'.$server['host_name'].'-'.date("d-m-Y").'-console.log' ;
-				rename($logFile, $savedLogfile); // log rotate
-				$cmd = "tmux -L $exe new -d -s$exe $startcmd"; //let's get this show on the road !
+				if (is_file($logFile)) {
+					rename($logFile, $savedLogfile); // log rotate
+				}
+				chdir($server['location']);
+				if ($tm) {
+					//echo "going to start tmux with "; 
+					$cmd = "tmux -L phpgsm -f ".DOC_ROOT."/console.conf new -d  -s phpgsm "; // have a window open for shells etc
+					//echo $cmd.cr;
+					$output = split_exec($cmd);
+					print_r($output);
+					$cmd = "tmux -L phpgsm rename-window Utils";
+					$output = split_exec($cmd);
+				}
+				$cmd = "tmux -L phpgsm  new-window -n $exe -t phpgsm $startcmd";  // tmux is running ! so lets add a new window
 				$output = split_exec($cmd,'');
-				$cmd = "tmux -L $exe pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
+				$cmd = "tmux -L phpgsm pipe-pane -o -t $exe \"exec cat >> '$logFile'\""; // bodge to get tmux to write output
 				$output = split_exec($cmd,'');
 			}
 			else {
+				/* lgsm / other start cmd
+				 * $startcmd should just be a root file & and take peram to start stop"
+				 */ 
 				$cmd = $startcmd.' st';
 				$output = split_exec($cmd,'');
 			}			
@@ -1632,7 +1645,7 @@ function exetmux($cmds) {
 				return "$exe doesn't appear to be running";
 			}
 			//$cmd = "tmux -L linuxgsm send -t $exe  \"quit\" ENTER";
-			$cmd = "tmux -L linuxgsm kill-window -t $exe";
+			$cmd = "tmux -L phpgsm kill-window -t $exe";
 			//echo "\$cmd = $cmd";
 			$output = split_exec($cmd,'');
 			$update['running'] = 0;
@@ -1646,7 +1659,7 @@ function exetmux($cmds) {
 				return "$exe doesn't appear to be running";
 			}
 			$message = trim($cmds['text']);
-			$cmd = "tmux -L linuxgsm send -t $exe \"$message\" ENTER";
+			$cmd = "tmux -L phpgsm send -t $exe \"$message\" ENTER";
             $output = split_exec($cmd,'');
 			return "Command sent" ; 
             break;
@@ -1655,7 +1668,7 @@ function exetmux($cmds) {
 			$startcmd = $server['startcmd'];
 			if(!$is_running) {
 				if(!$filestart) {
-					$cmd = "tmux -L linuxgsm new-window -d -s$exe $startcmd";
+					$cmd = "tmux -L phpgsm new-window -d -s$exe $startcmd";
 				}
 				else {
 					$cmd = $startcmd.' r';
@@ -1664,25 +1677,30 @@ function exetmux($cmds) {
 				return "$exe doesn't appear to be running, starting instead".cr;
 			}
 			if (!$filestart) {
-				$cmd = "tmux -L $exe send -t $exe quit ENTER";
+				$cmd = "tmux -L phpgsm kill-window -t $exe";
 				$output = split_exec($cmd,'');
-				while (posix_getpgid($pid)){
-			        echo "Waiting for $exe to finish"; 
-    				sleep(2);
-				}
-				$cmd = "tmux -L linuxgsm new-window  -s$exe $startcmd"; //let's get this show on the road !
+				//while (posix_getpgid($pid)){
+			     ////   echo "Waiting for $exe to finish"; 
+    			//	sleep(2);
+				//}
+				$cmd = "tmux -L phpgsm  new-window -n $exe -t phpgsm $startcmd";  // tmux is running ! so lets add a new window
 				$output = split_exec($cmd,'');
-				$cmd = "tmux -L  linuxgsm pipe-pane -o -t $exe \"exec cat >> '$logFile'\"";
+				$cmd = "tmux -L phpgsm pipe-pane -o -t $exe \"exec cat >> '$logFile'\""; // bodge to get tmux to write output
 				$output = split_exec($cmd,'');
 			}
 			else {
 				$cmd = $startcmd.' r';
 				$output = split_exec($cmd,'');
 			}
+			$sql = 'update servers set running = 1 where host_name = "'.$exe.'"';
+			$update['running'] = 1;
+			$update['starttime'] = time();
+			$where['host_name'] = $exe; 
+			$database->update('servers',$update,$where);
 			return "restarting $exe"; 
 			break;
 		case "w":
-			$cmd = 'tmux -L linuxgsm ls -F "#{window_name},#{session_created}"';
+			$cmd = 'tmux -L linuxgsm list-windows -F "#{window_name},#{session_created}"';
 			$output = split_exec($cmd,'');
 			$tmp = explode(cr,trim($output['stdout']));
 			foreach ($tmp as $line) {
