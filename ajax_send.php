@@ -73,7 +73,8 @@ if(isset($query['output'])) {
 //echo '<br>';
 //print_r($query);
 //echo '<br>';
-//echo geturl($cmds,'','',$options,$query);
+//echo print_r($cmds,true).'<br>';
+//echo geturl($cmd,'','',$options,$query);
 //die();
 echo geturl($cmd,null,null,$options,$query); //password set file
 
