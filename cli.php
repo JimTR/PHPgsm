@@ -22,7 +22,6 @@
  * 
  * 
  */
-<<<<<<< HEAD
 $shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
 $longopts[]="debug::";
 $longopts[]="help::";
@@ -65,7 +64,7 @@ $build = "30006-2015855331";
 define ('CR',PHP_EOL);
 define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 if(is_cli()) {
-=======
+
 	$shortopts ="d::f:s:v::g::t::i::r:q:l::m:";
 	$longopts[]="debug::";
 	$longopts[]="help::";
@@ -111,7 +110,6 @@ $build = "30006-2015855331";
 	define ('borders',array('horizontal' => '─', 'vertical' => '│', 'intersection' => '┼','left' =>'├','right' => '┤','left_top' => '┌','right_top'=>'┐','left_bottom'=>'└','right_bottom'=>'┘','top_intersection'=>'┬'));
 
 	if(is_cli()) {
->>>>>>> 2c4b273e674149be49f6387cdc2c68683633ff39
 	$valid = 1; // we trust the console
 	$sec = true;
 	$cmds =convert_to_argv($argv,"",true);
