@@ -308,7 +308,7 @@ function game_detail() {
 	// get processes
 	include 'includes/vdfparser.php';
 	$gameq  = new SourceQuery( );
-	
+	$cpu_info = get_cpu_info();
 	global $cmds; // get options 
 	$db = new db();
 	$mem =0;
@@ -475,6 +475,7 @@ function game_detail() {
 	$return['general']['total_servers'] = $server_count;
 	$return['general']['total_mem'] = round($mem,2,PHP_ROUND_HALF_UP);
 	$return['general']['total_cpu'] = round($cpu,2,PHP_ROUND_HALF_UP);
+	$return['general']['game_cpu'] = number_format(($cpu/100)  * (intval($cpu_info['load_1_min_pc']) /100)*100,1);
 	$return['general']['total_size'] = formatBytes(floatval($tsize)*1024,2);
 	$return['general']['total_size_raw'] = floatval($tsize);
 	$sql = "select players.name,players.country,players.country_code,players.log_ons,players.last_log_on,players.first_log_on from players ORDER BY `players`.`log_ons` DESC LIMIT 10";
