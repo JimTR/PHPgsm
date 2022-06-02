@@ -30,6 +30,7 @@ define('cr',PHP_EOL);
 define('plus','%2B');
 define('space','%20');  
 require_once DOC_ROOT.'/includes/master.inc.php';
+include DOC_ROOT.'/includes/vdfparser.php';
 $version = "2.04";
 $build = "6313-1092783628"; 
 include  DOC_ROOT.'/functions.php';
@@ -53,16 +54,19 @@ $games = $database->get_results($sql);
 foreach ($games as $game) {
 $uri = parse_url($game['url']);
 $url = $uri['scheme']."://".$uri['host'].':'.$game['bport'];
+$game['wurl'] = $url;
 if (isset($uri['path'])) {
 	$url .= $uri['path'];
 }
-
+//echo $url.cr;
+//print_r($game);
 try
 	{
+		
 		$Query->Connect( $game['host'], $game['port'], SQ_TIMEOUT, SQ_ENGINE );
 		$sub_cmd = 'GetInfo';
 		$info = $Query->GetInfo();
-		//echo print_r($info1,true).cr;
+		//echo print_r($info,true).cr;
 	}
 	catch( Exception $e )
 	{
@@ -76,17 +80,17 @@ try
 	}
 	$Query->Disconnect( );
 		if (isset($info['Players'])) {
-			$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
+			$game['restart'] = "$url/ajaxv2.php?action=exescreen&server=".$game['host_name'].'&cmd=';
 			$restart[] = $game;
 		}
 		elseif (isset($info['Bots'])) {
 			if ($info['Bots'] == $info['Players']) {
-				$game['restart'] = "$url/ajaxv2.php?action=exetmux&server=".$game['host_name'].'&cmd=';
+				$game['restart'] = "$url/ajaxv2.php?action=exescreen&server=".$game['host_name'].'&cmd=';
 				$restart[] = $game;
 			}
 		}
 		else  {
-			$game['restart'] = "$url/ajax.php?action=exetmux&server=".$game['host_name'].'&cmd=';
+			$game['restart'] = "$url/ajax.php?action=exescreen&server=".$game['host_name'].'&cmd=';
 			$check[] = $game; 
 		}
 	}
@@ -94,14 +98,35 @@ try
 if (!isset($game)) {
 $game=$check;
 }
+//print_r($restart);
+//die();
 echo 'Restarting '.count($restart).'/'.count($games).' server(s)'.cr;
 foreach ($restart as $game) {
 	$now =  date("d-m-Y H:i:s");
+	$url = $game['wurl'];
+	if ($game['status'] == 'r') {
+		//get remote vdf
+		$file = $game['location'].'/steamapps/appmanifest_'.$game['server_id'].'.acf';
+		$cmd = "$url/ajaxv2.php?action=get_file&file=$file";
+		$vdf_file = geturl($cmd);
+		$logline = "$now getting remote vdf data";
+		log_to(LOG,$logline); 
+	}
+	else {
+		$vdf_file = $game['location'].'/steamapps/appmanifest_'.$game['server_id'].'.acf';
+	} 
+	//echo $vdf_file.cr;
+	$vdf_data = VDFParse($vdf_file); // find the install dir
+	//print_r ($vdf_data);
+	echo 'check at '.$vdf_data['AppState']['installdir'].cr;
+	//die();
+	//echo "should use this $url".cr;
 	$logline = "$now stopping with ".$game['restart'].'q';
 	log_to(LOG,$logline);
 	echo geturl($game['restart'].'q').cr; // stop server
 	$exe = './scanlog.php  -s'.$game['host_name'];
 	$cmd =  "$url/ajaxv2.php?action=exe&cmd=".urlencode ($exe); // run scanlog
+	//echo "command used $cmd".cr;
 	$now = date("d-m-Y H:i:s");
 	log_to(LOG,"$now running scanlog with $cmd and sending $exe to it");
 	$result = geturl($cmd);
@@ -114,7 +139,7 @@ foreach ($restart as $game) {
 		log_to(LOG,"$now Scanlog failed for ".$game['host_name']);
 	}
 	// check updates
-	if (in_array($game['install_dir'],$done)) {
+	if (in_array($vdf_data['AppState']['installdir'],$done)) {
 	}
 	else{
 		$steamcmd = trim(shell_exec('which steamcmd')); // is steamcmd in the path ? if so great we can sudo
@@ -124,19 +149,20 @@ foreach ($restart as $game) {
 			$log_line = "$now moved to ".getcwd ( );
 			log_to(LOG,$log_line);
 		}
-		$install_dir = $game['install_dir'];
+		$install_dir = $vdf_data['AppState']['installdir'];
 		$server_id = $game['server_id'];
 		$exe = urlencode("$steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$now =  date("d-m-Y H:i:s");
-		log_to (LOG, "$now  $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
+		log_to (LOG, "$now $url -  $steamcmd +force_install_dir $install_dir +login anonymous  +app_update $server_id +quit");
 		$cmd = "$url/ajaxv2.php?action=exe&cmd=$exe";
 		$output = geturl($cmd);
+		log_to (LOG,"$now steamcmd output \n $output");
 		$output = trim(preg_replace('/\^\[\[0m/', '', $output));
 		$output = explode(cr, $output);
 		echo trim(end($output)).cr;
 		$now =  date("d-m-Y H:i:s");
 		log_to(LOG,end($output)); //see what is comming back
-		$done[]=$game['install_dir']; // use this to test if update on core files has been done
+		$done[]=$vdf_data['AppState']['installdir']; // use this to test if update on core files has been done
 	}
 	// log prune
 	$exe = urlencode('/usr/sbin/tmpreaper  --mtime 1d '.$game['location'].'/log/console/');
